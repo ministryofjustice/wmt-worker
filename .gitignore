@@ -1,0 +1,5 @@
+# Exclude all VSCode configuration files.
+**.vscode/
+
+# Ignore all log files.
+**.log*
