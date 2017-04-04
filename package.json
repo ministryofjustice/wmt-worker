@@ -9,7 +9,10 @@
   "scripts": {
     "start": "node start.js",
     "test": "standard && mocha --recursive -u exports test/unit/",
-    "test-unit": "mocha --recursive -u exports test/unit/"
+    "test-unit": "mocha --recursive -u exports test/unit/",
+    "migrations": "knex migrate:latest --env development",
+    "rollback": "knex migrate:rollback --env development",
+    "seed-data": "knex seed:run --env development"
   },
   "standard": {
     "globals": [
