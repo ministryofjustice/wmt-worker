@@ -20,7 +20,7 @@ describe('process-tasks', function () {
 
     processTasks = proxyquire('../../../app/process-tasks', {
       '../config': { ASYNC_WORKER_BATCH_SIZE: batchSize },
-      './services/log': { info: function (message) {} },
+      './services/log': { info: function (message) {}, error: function (message) {} },
       './services/data/get-pending-tasks-and-mark-in-progress': getPendingTasksAndMarkInProgress,
       './services/data/complete-task-with-status': completeTaskWithStatus,
       './services/get-worker-for-task': getWorkerForTask
@@ -44,6 +44,25 @@ describe('process-tasks', function () {
       expect(getWorkerForTask.calledWith('task2')).to.be.true
       expect(completeTaskWithStatus.calledWith(1, statusEnum.COMPLETE)).to.be.true
       expect(completeTaskWithStatus.calledWith(2, statusEnum.COMPLETE)).to.be.true
+    })
+  })
+
+  it('should mark tasks as failed when worker execution fails', function () {
+    getPendingTasksAndMarkInProgress.resolves([{id: 1, type: 'task1'}, {id: 2, type: 'task2'}])
+    getWorkerForTask.returns({
+      execute: function () {
+        return new Promise(function (resolve, reject) {
+          reject(Error('Fail'))
+        })
+      }})
+    completeTaskWithStatus.resolves({})
+
+    return processTasks().then(function () {
+      expect(getPendingTasksAndMarkInProgress.calledWith(batchSize)).to.be.true
+      expect(getWorkerForTask.calledWith('task1')).to.be.true
+      expect(getWorkerForTask.calledWith('task2')).to.be.true
+      expect(completeTaskWithStatus.calledWith(1, statusEnum.FAILED)).to.be.true
+      expect(completeTaskWithStatus.calledWith(2, statusEnum.FAILED)).to.be.true
     })
   })
 })
