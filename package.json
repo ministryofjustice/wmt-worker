@@ -1,0 +1,40 @@
+{
+  "name": "wmt-worker",
+  "version": "0.1.0",
+  "description": "WMT Async worker application",
+  "main": "start.js",
+  "repository": "https://github.com/ministryofjustice/wmt-worker.git",
+  "author": "Tom Swann",
+  "license": "MIT",
+  "scripts": {
+    "start": "node start.js",
+    "test": "standard && mocha --recursive -u exports test/unit/",
+    "test-unit": "mocha --recursive -u exports test/unit/"
+  },
+  "standard": {
+    "globals": [
+      "describe",
+      "before",
+      "beforeEach",
+      "after",
+      "afterEach",
+      "it"
+    ]
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0",
+    "proxyquire": "^1.7.11",
+    "sinon": "^1.17.6",
+    "sinon-bluebird": "^3.1.0",
+    "standard": "^9.0.2"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "bunyan": "^1.8.9",
+    "bunyan-prettystream": "^0.1.3",
+    "cron": "^1.2.1",
+    "knex": "^0.12.9",
+    "pg": "^6.1.5"
+  }
+}
