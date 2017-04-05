@@ -3,3 +3,14 @@
 
 # Ignore all log files.
 **.log*
+
+# npm
+node_modules
+*.log
+*.gz
+
+# OSX
+.DS_Store*
+Icon?
+._*
+
