@@ -1,9 +1,10 @@
 const config = require('../../../knexfile').development
 const knex = require('knex')(config)
 const taskStatus = require('../../constants/task-status')
+const updateTaskStatusByIds = require('./update-task-status-by-ids')
 const Task = require('../domain/task')
 
-module.exports = function (schema, batchSize) {
+module.exports = function (batchSize) {
   return knex.select().table('tasks')
     .where('status', taskStatus.PENDING)
     .orderBy('date_created', 'asc')
@@ -26,8 +27,7 @@ module.exports = function (schema, batchSize) {
       } else {
         return []
       }
-      return knex('tasks').whereIn('id', ids)
-        .update('status', taskStatus.INPROGRESS)
+      return updateTaskStatusByIds(ids, taskStatus.INPROGRESS)
         .then(function () {
           return tasks
         })
