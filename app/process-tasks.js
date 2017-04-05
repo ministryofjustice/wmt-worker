@@ -41,8 +41,9 @@ function executeWorkerForTaskType (worker, task) {
 
   return worker.execute(task)
     .then(function () {
-      log.info(`completed task: ${task.id}-${task.type}`)
-      return completeTaskWithStatus(task.id, statusEnum.COMPLETE)
+      return completeTaskWithStatus(task.id, statusEnum.COMPLETE).then(function () {
+        log.info(`completed task: ${task.id}-${task.type}`)
+      })
     }).catch(function (error) {
       log.error(`error running task: ${task.id}-${task.type}, error: ${error}`)
       log.error({error: error})
