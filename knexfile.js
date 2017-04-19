@@ -12,9 +12,6 @@ module.exports = {
     migrations: {
       tableName: 'knex_migrations'
     },
-    seeds: {
-      directory: './data/dev'
-    },
     debug: true
   }
 }

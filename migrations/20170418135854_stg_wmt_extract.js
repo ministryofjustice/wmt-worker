@@ -5,7 +5,6 @@ exports.up = function (knex, Promise) {
     table.string('trust')
     table.string('region_desc')
     table.string('region_code')
-    table.string('region_code')
     table.string('ldu_desc')
     table.string('ldu_code')
     table.string('team_desc')
