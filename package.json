@@ -40,6 +40,7 @@
     "cron": "^1.2.1",
     "knex": "^0.12.9",
     "lodash": "^4.17.4",
-    "pg": "^6.1.5"
+    "pg": "^6.1.5",
+    "wmt-probation-rules": "https://github.com/ministryofjustice/wmt-probation-rules.git"
   }
 }

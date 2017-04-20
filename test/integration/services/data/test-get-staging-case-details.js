@@ -3,14 +3,14 @@ const expect = require('chai').expect
 const getStagingCaseDetails = require('../../../../app/services/data/get-staging-case-details')
 const caseDetailsHelper = require('../../../helpers/data/staging-case-details-helper')
 
-describe('services/data/get-claim-summary', function () {
+describe('services/data/get-staging-case-details', function () {
   before(function () {
-    caseDetailsHelper.insertOverdueTermination().then(function () {
-      return caseDetailsHelper.insertPriority()
-    }).then(function () {
-      return caseDetailsHelper.insertUnpaidWork()
-    }).then(function () {
-      return caseDetailsHelper.insertWarrant()
+    return caseDetailsHelper.insertOverdueTermination().then(function () {
+      return caseDetailsHelper.insertPriority().then(function () {
+        return caseDetailsHelper.insertUnpaidWork().then(function () {
+          return caseDetailsHelper.insertWarrant()
+        })
+      })
     })
   })
 
