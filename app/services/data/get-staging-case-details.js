@@ -26,9 +26,8 @@ module.exports = function () {
           result.location
         ))
       }
-    } else {
-      return []
     }
+
     return casedetails
   })
 }
