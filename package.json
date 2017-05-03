@@ -10,6 +10,7 @@
     "start": "node start.js",
     "test": "standard && mocha --recursive -u exports test/unit/",
     "test-unit": "mocha --recursive -u exports test/unit/",
+    "test-integration": "mocha --recursive -u exports test/integration/ --timeout 1000",
     "migrations": "knex migrate:latest --env development",
     "rollback": "knex migrate:rollback --env development",
     "seed-data": "knex seed:run --env development"
@@ -38,6 +39,8 @@
     "bunyan-prettystream": "^0.1.3",
     "cron": "^1.2.1",
     "knex": "^0.12.9",
-    "pg": "^6.1.5"
+    "lodash": "^4.17.4",
+    "pg": "^6.1.5",
+    "wmt-probation-rules": "https://github.com/ministryofjustice/wmt-probation-rules.git"
   }
 }
