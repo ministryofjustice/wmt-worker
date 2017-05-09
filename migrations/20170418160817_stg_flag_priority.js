@@ -1,6 +1,6 @@
 
 exports.up = function (knex, Promise) {
-  return knex.schema.withSchema('staging').createTable('stg_flag_priority', function (table) {
+  return knex.schema.withSchema('staging').createTable('flag_priority', function (table) {
     table.increments('id')
     table.string('row_type')
     table.string('case_ref_no')
@@ -16,5 +16,5 @@ exports.up = function (knex, Promise) {
 }
 
 exports.down = function (knex, Promise) {
-  knex.schema.withSchema('staging').dropTable('stg_flag_priority')
+  knex.schema.withSchema('staging').dropTable('flag_priority')
 }
