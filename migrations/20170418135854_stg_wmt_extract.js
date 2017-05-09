@@ -13,6 +13,8 @@ exports.up = function (knex, Promise) {
     table.string('om_Forename')
     table.string('om_grade_code')
     table.string('om_key')
+    table.string('commtierd1a')
+    table.string('commtierc1a')
     table.string('commtier0')
     table.string('commtierd2')
     table.string('commtier1a')
@@ -43,6 +45,7 @@ exports.up = function (knex, Promise) {
     table.string('comIn1st16Weeks')
     table.string('licIn1st16Weeks')
     table.string('datestamp')
+    table.string('vcrn_count')
   }).catch(function (error) {
     console.log(error)
     throw error
