@@ -1,6 +1,6 @@
 
 exports.up = function (knex, Promise) {
-  return knex.schema.createTable('stg_wmt_extract', function (table) {
+  return knex.schema.withSchema('staging').createTable('stg_wmt_extract', function (table) {
     table.increments('id')
     table.string('trust')
     table.string('region_desc')
@@ -53,5 +53,5 @@ exports.up = function (knex, Promise) {
 }
 
 exports.down = function (knex, Promise) {
-  knex.schema.dropTable('stg_wmt_extract')
+  knex.schema.withSchema('staging').dropTable('stg_wmt_extract')
 }
