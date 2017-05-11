@@ -1,7 +1,9 @@
 
 exports.up = function (knex, Promise) {
-  return knex.schema.withSchema('app').createTable('workload_points', function (table) {
+  return knex.schema.createTable('team', function (table) {
     table.increments('id')
+    table.integer('ldu_id').unsigned().notNullable().references('ldu.id')
+    table.string('description')
     table.timestamp('effective_from').defaultTo(knex.fn.now())
     table.timestamp('effective_to')
   }).catch(function (error) {
@@ -11,5 +13,5 @@ exports.up = function (knex, Promise) {
 }
 
 exports.down = function (knex, Promise) {
-  knex.schema.withSchema('app').dropTable('workload_points')
+  knex.schema.dropTable('team')
 }

@@ -1,6 +1,6 @@
 
 exports.up = function (knex, Promise) {
-  return knex.schema.withSchema('app').createTable('working_hours', function (table) {
+  return knex.schema.createTable('working_hours', function (table) {
     table.increments('id')
     table.integer('reduction').unsigned()
     table.text('notes')
@@ -11,5 +11,5 @@ exports.up = function (knex, Promise) {
 }
 
 exports.down = function (knex, Promise) {
-  knex.schema.withSchema('app').dropTable('working_hours')
+  knex.schema.dropTable('working_hours')
 }

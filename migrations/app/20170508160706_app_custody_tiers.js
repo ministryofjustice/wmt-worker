@@ -1,8 +1,8 @@
 
 exports.up = function (knex, Promise) {
-  return knex.schema.withSchema('app').createTable('community_tiers', function (table) {
+  return knex.schema.createTable('custody_tiers', function (table) {
     table.increments('id')
-    table.bigInteger('workload_id').references('id').inTable('workload')
+    table.bigInteger('workload_id').unsigned().notNullable().references('workload.id')
     table.integer('tier_type').unsigned()
     table.string('case_type', 5)
     table.integer('points').unsigned()
@@ -13,5 +13,5 @@ exports.up = function (knex, Promise) {
 }
 
 exports.down = function (knex, Promise) {
-  knex.schema.withSchema('app').dropTable('community_tiers')
+  knex.schema.dropTable('custody_tiers')
 }

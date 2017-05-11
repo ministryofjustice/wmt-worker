@@ -2,8 +2,8 @@
 exports.up = function (knex, Promise) {
   return knex.schema.withSchema('app').createTable('workload', function (table) {
     table.increments('id')
-    table.bigInteger('workload_owner_id').references('id').inTable('workload_owner')
-    table.bigInteger('workload_report_id').references('id').inTable('workload_report')
+    table.integer('workload_owner_id').unsigned().references('workload_owner.id')
+    table.bigInteger('workload_report_id').unsigned().references('workload_report.id')
   }).catch(function (error) {
     console.log(error)
     throw error
@@ -11,5 +11,5 @@ exports.up = function (knex, Promise) {
 }
 
 exports.down = function (knex, Promise) {
-  knex.schema.withSchema('app').dropTable('worload')
+  knex.schema.withSchema('app').dropTable('workload')
 }
