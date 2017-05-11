@@ -59,3 +59,4 @@ knex.schema
     console.log(error)
     process.exit(1)
   })
+  

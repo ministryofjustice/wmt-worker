@@ -19,8 +19,8 @@ knex.schema
   .raw('DROP ROLE IF EXISTS stagingReadWrite;')
 
   // SCHEMAS
-  .raw('DROP SCHEMA IF EXISTS app;')
-  .raw('DROP SCHEMA IF EXISTS staging;')
+  .raw('DROP SCHEMA IF EXISTS app CASCADE;')
+  .raw('DROP SCHEMA IF EXISTS staging CASCADE;')
   .then(function () {
     process.exit(0)
   })
@@ -28,3 +28,4 @@ knex.schema
     console.log(error)
     process.exit(1)
   })
+  
