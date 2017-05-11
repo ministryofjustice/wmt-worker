@@ -11,8 +11,10 @@
     "test": "standard && mocha --recursive -u exports test/unit/",
     "test-unit": "mocha --recursive -u exports test/unit/",
     "test-integration": "mocha --recursive -u exports test/integration/ --timeout 1000",
-    "migrations": "knex migrate:latest --env development",
-    "rollback": "knex migrate:rollback --env development",
+    "migrate-app": "knex migrate:latest --env app",
+    "rollback-app": "knex migrate:rollback --env app",
+    "migrate-stg": "knex migrate:latest --env staging",
+    "rollback-stg": "knex migrate:rollback --env staging",
     "seed-data": "knex seed:run --env development"
   },
   "standard": {
