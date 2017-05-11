@@ -1,6 +1,6 @@
 
-exports.up = function(knex, Promise) {
-  return knex.schema.createTable('ldu', function (table) {
+exports.up = function (knex, Promise) {
+  return knex.schema.withSchema('app').createTable('ldu', function (table) {
     table.increments('id')
     table.string('description')
     table.timestamp('effective_from').defaultTo(knex.fn.now())
@@ -11,6 +11,6 @@ exports.up = function(knex, Promise) {
   })
 }
 
-exports.down = function(knex, Promise) {
-  knex.schema.dropTable('ldu')
+exports.down = function (knex, Promise) {
+  knex.schema.withSchema('app').dropTable('ldu')
 }

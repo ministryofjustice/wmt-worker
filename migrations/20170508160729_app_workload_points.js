@@ -1,6 +1,6 @@
 
-exports.up = function(knex, Promise) {
-  return knex.schema.createTable('workload_points', function (table) {
+exports.up = function (knex, Promise) {
+  return knex.schema.withSchema('app').createTable('workload_points', function (table) {
     table.increments('id')
     table.timestamp('effective_from').defaultTo(knex.fn.now())
     table.timestamp('effective_to')
@@ -10,6 +10,6 @@ exports.up = function(knex, Promise) {
   })
 }
 
-exports.down = function(knex, Promise) {
-  knex.schema.dropTable('workload_points')
+exports.down = function (knex, Promise) {
+  knex.schema.withSchema('app').dropTable('workload_points')
 }

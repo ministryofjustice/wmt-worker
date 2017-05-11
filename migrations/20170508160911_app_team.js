@@ -1,6 +1,6 @@
 
-exports.up = function(knex, Promise) {
-  return knex.schema.createTable('team', function (table) {
+exports.up = function (knex, Promise) {
+  return knex.schema.withSchema('app').createTable('team', function (table) {
     table.increments('id')
     table.bigInteger('ldu_id').references('id').inTable('ldu')
     table.string('description')
@@ -12,6 +12,6 @@ exports.up = function(knex, Promise) {
   })
 }
 
-exports.down = function(knex, Promise) {
-  knex.schema.dropTable('team')
+exports.down = function (knex, Promise) {
+  knex.schema.withSchema('app').dropTable('team')
 }
