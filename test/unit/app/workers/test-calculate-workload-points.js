@@ -1,4 +1,3 @@
-
 const proxyquire = require('proxyquire')
 require('sinon-bluebird')
 
