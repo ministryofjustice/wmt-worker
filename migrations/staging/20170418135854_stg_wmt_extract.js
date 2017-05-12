@@ -10,7 +10,7 @@ exports.up = function (knex, Promise) {
     table.string('team_desc')
     table.string('team_code')
     table.string('om_surname')
-    table.string('om_Forename')
+    table.string('om_forename')
     table.string('om_grade_code')
     table.string('om_key')
     table.string('commtierd1a')
