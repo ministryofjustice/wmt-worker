@@ -18,10 +18,11 @@ knex.schema
   .raw('DROP USER IF EXISTS ??;', [config.MIGRATION_STG_DATABASE_USERNAME])
   .raw('DROP USER IF EXISTS ??;', [config.WORKER_DATABASE_USERNAME])
 
-  .raw('DROP ROLE IF EXISTS appReadWrite;')
-  .raw('DROP ROLE IF EXISTS stagingReadWrite;')
-  .raw('DROP ROLE IF EXISTS stagingMigration;')
-  .raw('DROP ROLE IF EXISTS appMigration;')
+  .raw('DROP ROLE IF EXISTS appreadwrite;')
+  .raw('DROP ROLE IF EXISTS stagingreadwrite;')
+  .raw('DROP ROLE IF EXISTS stagingmigration;')
+  .raw('DROP ROLE IF EXISTS stagingetl;')
+  .raw('DROP ROLE IF EXISTS appmigration;')
 
   .then(function () {
     process.exit(0)
