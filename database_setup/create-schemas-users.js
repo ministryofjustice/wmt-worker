@@ -5,7 +5,6 @@ const knexConfig = require('../knexfile').development
 const knex = require('knex')(knexConfig)
 
 knex.schema
-
   // Create Schemas
   .raw('CREATE SCHEMA app;')
   .raw('CREATE SCHEMA staging;')
@@ -45,6 +44,10 @@ knex.schema
     .raw('ALTER USER ?? SET search_path To app;', [config.WORKER_DATABASE_USERNAME])
     .raw('GRANT appreadwrite TO ??;', [config.WORKER_DATABASE_USERNAME])
 
+    .raw('GRANT ALL ON SCHEMA app TO ??;', [config.ETL_STAGING_DATABASE_USERNAME])
+    .raw('GRANT INSERT, DELETE ON TABLE app.tasks TO ??', [config.ETL_STAGING_DATABASE_USERNAME])
+    .raw('GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA app TO ??', [config.ETL_STAGING_DATABASE_USERNAME])
+
     // staging
     .raw('ALTER USER ?? SET search_path TO staging;', [config.ETL_STAGING_DATABASE_USERNAME])
     .raw('GRANT ALL ON SCHEMA staging TO ??;', [config.ETL_STAGING_DATABASE_USERNAME])
@@ -65,4 +68,3 @@ knex.schema
     console.log(error)
     process.exit(1)
   })
-  
