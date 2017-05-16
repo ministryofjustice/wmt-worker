@@ -45,7 +45,7 @@ knex.schema
     .raw('GRANT appreadwrite TO ??;', [config.WORKER_DATABASE_USERNAME])
 
     .raw('GRANT ALL ON SCHEMA app TO ??;', [config.ETL_STAGING_DATABASE_USERNAME])
-    .raw('GRANT INSERT ON TABLE app.tasks TO ??', [config.ETL_STAGING_DATABASE_USERNAME])
+    .raw('GRANT INSERT, DELETE ON TABLE app.tasks TO ??', [config.ETL_STAGING_DATABASE_USERNAME])
     .raw('GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA app TO ??', [config.ETL_STAGING_DATABASE_USERNAME])
 
     // staging
