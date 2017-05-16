@@ -7,7 +7,7 @@ knex.schema
   // SCHEMAS
   .raw('DROP SCHEMA IF EXISTS app CASCADE;')
   .raw('DROP SCHEMA IF EXISTS staging CASCADE;')
-  
+
   // USERS
   // Drop App Users
   .raw('DROP USER IF EXISTS ??;', [config.WEB_APP_DATABASE_USERNAME])
@@ -31,4 +31,3 @@ knex.schema
     console.log(error)
     process.exit(1)
   })
-  

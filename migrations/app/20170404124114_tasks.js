@@ -5,7 +5,7 @@ exports.up = function (knex, Promise) {
     table.string('submitting_agent')
     table.string('type')
     table.text('additional_data', 1300)
-    table.dateTime('date_created').notNullable()
+    table.dateTime('date_created').defaultTo(new Date().toISOString()).notNullable()
     table.dateTime('date_processed')
     table.string('status', 20).notNullable()
   }).catch(function (error) {
