@@ -2,22 +2,28 @@ const config = require('./config')
 
 module.exports = {
   development: {
-    client: 'pg',
+    client: 'mssql',
     connection: {
       host: config.DATABASE_SERVER,
       user: config.DATABASE_USERNAME,
       password: config.DATABASE_PASSWORD,
-      database: config.DATABASE
+      database: config.DATABASE,
+      options: {
+        encrypt: true
+      }
     },
     debug: true
   },
   staging: {
-    client: 'pg',
+    client: 'mssql',
     connection: {
       host: config.DATABASE_SERVER,
       user: config.MIGRATION_STG_DATABASE_USERNAME,
       password: config.MIGRATION_STG_DATABASE_PASSWORD,
-      database: config.DATABASE
+      database: config.DATABASE,
+      options: {
+        encrypt: true
+      }
     },
     migrations: {
       directory: 'migrations/staging'
@@ -25,12 +31,15 @@ module.exports = {
     debug: true
   },
   app: {
-    client: 'pg',
+    client: 'mssql',
     connection: {
       host: config.DATABASE_SERVER,
       user: config.MIGRATION_APP_DATABASE_USERNAME,
       password: config.MIGRATION_APP_DATABASE_PASSWORD,
-      database: config.DATABASE
+      database: config.DATABASE,
+      options: {
+        encrypt: true
+      }
     },
     migrations: {
       directory: 'migrations/app'
