@@ -14,9 +14,9 @@ describe('app/services/data/insert-workload-report', function () {
         .first()
         .then(function (result) {
           expect(result.status).to.be.equal(workloadReportStatus.PENDING)
-          expect(result['status_description']).to.be.null
-          expect(result['date_created']).not.to.be.null
-          expect(result['date_processed']).to.be.null
+          expect(result['status_description']).to.be.null // eslint-disable-line
+          expect(result['date_created']).not.to.be.null // eslint-disable-line
+          expect(result['date_processed']).to.be.null // eslint-disable-line
           expect(result['records_total']).to.be.equal(0)
         })
     })
