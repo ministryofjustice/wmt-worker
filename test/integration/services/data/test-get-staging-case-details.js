@@ -22,6 +22,6 @@ describe('services/data/get-staging-case-details', function () {
   })
 
   after(function () {
-    caseDetailsHelper.deleteAll()
+    return caseDetailsHelper.deleteAll()
   })
 })

@@ -10,11 +10,11 @@ knex.schema
   .raw('CREATE SCHEMA staging;')
 
   // Create Users
-  .raw('CREATE USER ?? WITH PASSWORD \'' + process.env.WMT_MIGRATION_APP_DATABASE_PASSWORD + '\';', [config.MIGRATION_APP_DATABASE_USERNAME])
-  .raw('CREATE USER ?? WITH PASSWORD \'' + process.env.WMT_MIGRATION_STG_DATABASE_PASSWORD + '\';', [config.MIGRATION_STG_DATABASE_USERNAME])
-  .raw('CREATE USER ?? WITH PASSWORD \'' + process.env.WMT_WORKER_DATABASE_PASSWORD + '\';', [config.WORKER_DATABASE_USERNAME])
-  .raw('CREATE USER ?? WITH PASSWORD \'' + process.env.WMT_WEB_APP_DATABASE_PASSWORD + '\';', [config.WEB_APP_DATABASE_USERNAME])
-  .raw('CREATE USER ?? WITH PASSWORD \'' + process.env.WMT_ETL_STAGING_DATABASE_PASSWORD + '\';', [config.ETL_STAGING_DATABASE_USERNAME])
+  .raw('CREATE USER ?? WITH PASSWORD \'' + config.MIGRATION_APP_DATABASE_PASSWORD + '\';', [config.MIGRATION_APP_DATABASE_USERNAME])
+  .raw('CREATE USER ?? WITH PASSWORD \'' + config.MIGRATION_STG_DATABASE_PASSWORD + '\';', [config.MIGRATION_STG_DATABASE_USERNAME])
+  .raw('CREATE USER ?? WITH PASSWORD \'' + config.WORKER_DATABASE_PASSWORD + '\';', [config.WORKER_DATABASE_USERNAME])
+  .raw('CREATE USER ?? WITH PASSWORD \'' + config.WEB_APP_DATABASE_PASSWORD + '\';', [config.WEB_APP_DATABASE_USERNAME])
+  .raw('CREATE USER ?? WITH PASSWORD \'' + config.ETL_STAGING_DATABASE_PASSWORD + '\';', [config.ETL_STAGING_DATABASE_USERNAME])
 
   // Create Roles:
     // app
@@ -33,8 +33,7 @@ knex.schema
     .raw('CREATE ROLE stagingmigration;')
     .raw('GRANT USAGE, CREATE ON SCHEMA staging TO stagingmigration;')
 
-  // Set User Permissions:
-    // app
+    // Assign roles
     .raw('ALTER USER ?? SET search_path TO app;', [config.WEB_APP_DATABASE_USERNAME])
     .raw('GRANT appreadwrite TO ??;', [config.WEB_APP_DATABASE_USERNAME])
 
@@ -43,17 +42,6 @@ knex.schema
 
     .raw('ALTER USER ?? SET search_path To app;', [config.WORKER_DATABASE_USERNAME])
     .raw('GRANT appreadwrite TO ??;', [config.WORKER_DATABASE_USERNAME])
-
-    .raw('GRANT ALL ON SCHEMA app TO ??;', [config.ETL_STAGING_DATABASE_USERNAME])
-    .raw('GRANT INSERT, DELETE ON TABLE app.tasks TO ??', [config.ETL_STAGING_DATABASE_USERNAME])
-    .raw('GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA app TO ??', [config.ETL_STAGING_DATABASE_USERNAME])
-
-    // staging
-    .raw('ALTER USER ?? SET search_path TO staging;', [config.ETL_STAGING_DATABASE_USERNAME])
-    .raw('GRANT ALL ON SCHEMA staging TO ??;', [config.ETL_STAGING_DATABASE_USERNAME])
-    .raw('GRANT ALL PRIVILEGES ON SCHEMA staging TO ??;', [config.ETL_STAGING_DATABASE_USERNAME])
-    .raw('GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA staging TO ??;', [config.ETL_STAGING_DATABASE_USERNAME])
-    .raw('GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA staging TO ??', [config.ETL_STAGING_DATABASE_USERNAME])
 
     .raw('ALTER USER ?? SET search_path TO staging;', [config.MIGRATION_STG_DATABASE_USERNAME])
     .raw('GRANT stagingmigration TO ??;', [config.MIGRATION_STG_DATABASE_USERNAME])

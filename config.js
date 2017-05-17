@@ -11,6 +11,8 @@ module.exports = {
   DATABASE: process.env.WMT_DB_NAME || 'wmt_db',
   DATABASE_USERNAME: process.env.WMT_DB_USERNAME || 'wmt',
   DATABASE_PASSWORD: process.env.WMT_DB_PASSWORD || 'wmt',
+  DB_APP_SCHEMA: 'app',
+  DB_STG_SCHEMA: 'staging',
 
   // Migration
   MIGRATION_APP_DATABASE_USERNAME: process.env.WMT_MIGRATION_APP_DATABASE_USERNAME || 'wmt_app',

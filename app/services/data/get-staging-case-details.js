@@ -1,14 +1,15 @@
-const config = require('../../../knexfile').development
-const knex = require('knex')(config)
+const config = require('../../../config')
+const knexConfig = require('../../../knexfile').development
+const knex = require('knex')(knexConfig)
 const CaseDetails = require('wmt-probation-rules').CaseDetails
 
 const columns = ['row_type', 'case_ref_no', 'tier_code', 'team_code', 'om_grade_code', 'om_key', 'location']
 
 module.exports = function () {
-  return knex.select(columns).from('stg_flag_warr_4_n').unionAll(function () {
-    return this.select(columns).from('stg_flag_upw').unionAll(function () {
-      return this.select(columns).from('stg_flag_o_due').unionAll(function () {
-        return this.select(columns).from('stg_flag_priority')
+  return knex.select(columns).from(`${config.DB_STG_SCHEMA}.flag_warr_4_n`).unionAll(function () {
+    return this.select(columns).from(`${config.DB_STG_SCHEMA}.flag_upw`).unionAll(function () {
+      return this.select(columns).from(`${config.DB_STG_SCHEMA}.flag_o_due`).unionAll(function () {
+        return this.select(columns).from(`${config.DB_STG_SCHEMA}.flag_priority`)
       })
     })
   })
