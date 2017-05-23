@@ -26,7 +26,7 @@ module.exports.execute = function (task) {
     if (tasksRequired > 0) {
       var nextId = idRange.firstId
 
-      for (var i = 0; i < tasksRequired; i++) {
+      for (let i = 0; i < tasksRequired; i++) {
         var additionalData = new Batch(nextId, batchSize)
         var taskToWrite = new Task(
             undefined,

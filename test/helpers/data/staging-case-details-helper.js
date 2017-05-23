@@ -1,5 +1,6 @@
-const config = require('../../../knexfile').development
-const knex = require('knex')(config)
+const config = require('../../../config')
+const knexConfig = require('../../../knexfile').development
+const knex = require('knex')(knexConfig)
 const stagingHelper = require('wmt-probation-rules').stagingTestHelper
 
 const aliases = {
@@ -12,11 +13,16 @@ const aliases = {
   tierCode: 'tier_code'
 }
 
+const warrantsTableName = `${config.DB_STG_SCHEMA}.flag_warr_4_n`
+const overdueTerminationsTableName = `${config.DB_STG_SCHEMA}.flag_o_due`
+const unpaidWorkTableName = `${config.DB_STG_SCHEMA}.flag_upw`
+const priorityTableName = `${config.DB_STG_SCHEMA}.flag_priority`
+
 // Create a test CaseDetails object, mapping properties to column names
 const testCaseDetails = mapForInsert(getTestCaseDetails(getGeneratedCaseRefNo(), '12345', 'community'))
 
 module.exports.insertWarrant = function () {
-  return knex('stg_flag_warr_4_n')
+  return knex(warrantsTableName)
     .insert(testCaseDetails)
     .returning('id')
     .then(function (insertedIds) {
@@ -25,7 +31,7 @@ module.exports.insertWarrant = function () {
 }
 
 module.exports.insertUnpaidWork = function () {
-  return knex('stg_flag_upw')
+  return knex(unpaidWorkTableName)
     .insert(testCaseDetails)
     .returning('id')
     .then(function (insertedIds) {
@@ -34,7 +40,7 @@ module.exports.insertUnpaidWork = function () {
 }
 
 module.exports.insertOverdueTermination = function () {
-  return knex('stg_flag_o_due')
+  return knex(overdueTerminationsTableName)
     .insert(testCaseDetails)
     .returning('id')
     .then(function (insertedIds) {
@@ -43,7 +49,7 @@ module.exports.insertOverdueTermination = function () {
 }
 
 module.exports.insertPriority = function () {
-  return knex('stg_flag_priority')
+  return knex(priorityTableName)
     .insert(testCaseDetails)
     .returning('id')
     .then(function (insertedIds) {
@@ -52,13 +58,15 @@ module.exports.insertPriority = function () {
 }
 
 module.exports.deleteAll = function () {
-  return knex('stg_flag_warr_4_n').del()
+  return knex(warrantsTableName).del()
     .then(function () {
-      return knex('stg_flag_upw').del()
-    }).then(function () {
-      return knex('stg_flag_o_due').del()
-    }).then(function () {
-      return knex('stg_flag_priority').del()
+      return knex(unpaidWorkTableName).del()
+        .then(function () {
+          return knex(overdueTerminationsTableName).del()
+            .then(function () {
+              return knex(priorityTableName).del()
+            })
+        })
     })
 }
 

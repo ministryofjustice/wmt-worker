@@ -3,7 +3,7 @@ exports.up = function (knex, Promise) {
   return knex.schema.withSchema('app').createTable('workload', function (table) {
     table.increments('id')
     table.integer('workload_owner_id').unsigned().references('workload_owner.id')
-    table.bigInteger('workload_points_calc_id').unsigned().references('workload_points_calculations.id')
+    table.integer('workload_points_calc_id').unsigned().references('workload_points_calculations.id')
     table.integer('total_cases').unsigned().notNullable()
     table.integer('total_cases_inactive').unsigned().notNullable()
     table.integer('monthly_sdrs').unsigned().notNullable()

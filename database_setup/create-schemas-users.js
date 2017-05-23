@@ -10,57 +10,46 @@ knex.schema
   .raw('CREATE SCHEMA staging;')
 
   // Create Users
-  .raw('CREATE USER ?? WITH PASSWORD \'' + process.env.WMT_MIGRATION_APP_DATABASE_PASSWORD + '\';', [config.MIGRATION_APP_DATABASE_USERNAME])
-  .raw('CREATE USER ?? WITH PASSWORD \'' + process.env.WMT_MIGRATION_STG_DATABASE_PASSWORD + '\';', [config.MIGRATION_STG_DATABASE_USERNAME])
-  .raw('CREATE USER ?? WITH PASSWORD \'' + process.env.WMT_WORKER_DATABASE_PASSWORD + '\';', [config.WORKER_DATABASE_USERNAME])
-  .raw('CREATE USER ?? WITH PASSWORD \'' + process.env.WMT_WEB_APP_DATABASE_PASSWORD + '\';', [config.WEB_APP_DATABASE_USERNAME])
-  .raw('CREATE USER ?? WITH PASSWORD \'' + process.env.WMT_ETL_STAGING_DATABASE_PASSWORD + '\';', [config.ETL_STAGING_DATABASE_USERNAME])
+  .raw('CREATE USER ??;', [config.MIGRATION_APP_DATABASE_USERNAME])
+  .raw('CREATE USER ??;', [config.MIGRATION_STG_DATABASE_USERNAME])
+  .raw('CREATE USER ??;', [config.WORKER_DATABASE_USERNAME])
+  .raw('CREATE USER ??;', [config.WEB_APP_DATABASE_USERNAME])
+  .raw('CREATE USER ??;', [config.ETL_STAGING_DATABASE_USERNAME])
 
   // Create Roles:
     // app
     .raw('CREATE ROLE appreadwrite;')
-    .raw('GRANT SELECT, INSERT, UPDATE ON ALL TABLES IN SCHEMA app TO appreadwrite;')
-
-    // app migration
-    .raw('CREATE ROLE appmigration;')
-    .raw('GRANT USAGE, CREATE ON SCHEMA app TO appmigration;')
+    .raw('GRANT SELECT, INSERT, UPDATE ON SCHEMA::app TO appreadwrite;')
 
     // staging
     .raw('CREATE ROLE stagingreadwrite;')
-    .raw('GRANT SELECT, INSERT, UPDATE ON ALL TABLES IN SCHEMA staging TO stagingreadwrite;')
+    .raw('GRANT SELECT, INSERT, UPDATE ON SCHEMA::staging TO stagingreadwrite;')
 
-    // staging migration
-    .raw('CREATE ROLE stagingmigration;')
-    .raw('GRANT USAGE, CREATE ON SCHEMA staging TO stagingmigration;')
+    // Assign roles
+    .raw('ALTER USER ?? WITH DEFAULT_SCHEMA = app;', [config.WEB_APP_DATABASE_USERNAME])
+    .raw('ALTER ROLE appreadwrite ADD MEMBER ??;', [config.WEB_APP_DATABASE_USERNAME])
 
-  // Set User Permissions:
-    // app
-    .raw('ALTER USER ?? SET search_path TO app;', [config.WEB_APP_DATABASE_USERNAME])
-    .raw('GRANT appreadwrite TO ??;', [config.WEB_APP_DATABASE_USERNAME])
+    .raw('ALTER USER ?? WITH DEFAULT_SCHEMA = app;', [config.MIGRATION_APP_DATABASE_USERNAME])
+    .raw('ALTER ROLE db_owner ADD MEMBER ??;', [config.MIGRATION_APP_DATABASE_USERNAME])
 
-    .raw('ALTER USER ?? SET search_path To app;', [config.MIGRATION_APP_DATABASE_USERNAME])
-    .raw('GRANT appmigration TO ??;', [config.MIGRATION_APP_DATABASE_USERNAME])
+    .raw('ALTER USER ?? WITH DEFAULT_SCHEMA = app;', [config.WORKER_DATABASE_USERNAME])
+    .raw('ALTER ROLE appreadwrite ADD MEMBER ??;', [config.WORKER_DATABASE_USERNAME])
 
-    .raw('ALTER USER ?? SET search_path To app;', [config.WORKER_DATABASE_USERNAME])
-    .raw('GRANT appreadwrite TO ??;', [config.WORKER_DATABASE_USERNAME])
+    .raw('ALTER USER ?? WITH DEFAULT_SCHEMA = staging;', [config.MIGRATION_STG_DATABASE_USERNAME])
+    .raw('ALTER ROLE db_owner ADD MEMBER ??;', [config.MIGRATION_STG_DATABASE_USERNAME])
 
-    .raw('GRANT ALL ON SCHEMA app TO ??;', [config.ETL_STAGING_DATABASE_USERNAME])
-    .raw('GRANT INSERT, DELETE ON TABLE app.tasks TO ??', [config.ETL_STAGING_DATABASE_USERNAME])
-    .raw('GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA app TO ??', [config.ETL_STAGING_DATABASE_USERNAME])
+    .raw('ALTER USER ?? WITH DEFAULT_SCHEMA = staging;', [config.WORKER_DATABASE_USERNAME])
+    .raw('ALTER ROLE stagingreadwrite ADD MEMBER ??;', [config.WORKER_DATABASE_USERNAME])
 
-    // staging
-    .raw('ALTER USER ?? SET search_path TO staging;', [config.ETL_STAGING_DATABASE_USERNAME])
-    .raw('GRANT ALL ON SCHEMA staging TO ??;', [config.ETL_STAGING_DATABASE_USERNAME])
-    .raw('GRANT ALL PRIVILEGES ON SCHEMA staging TO ??;', [config.ETL_STAGING_DATABASE_USERNAME])
-    .raw('GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA staging TO ??;', [config.ETL_STAGING_DATABASE_USERNAME])
-    .raw('GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA staging TO ??', [config.ETL_STAGING_DATABASE_USERNAME])
+    .raw('ALTER USER ?? WITH DEFAULT_SCHEMA = staging;', [config.ETL_STAGING_DATABASE_USERNAME])
+    .raw('ALTER ROLE stagingreadwrite ADD MEMBER ??;', [config.ETL_STAGING_DATABASE_USERNAME])
+    .raw('ALTER ROLE appreadwrite ADD MEMBER ??;', [config.ETL_STAGING_DATABASE_USERNAME])
 
-    .raw('ALTER USER ?? SET search_path TO staging;', [config.MIGRATION_STG_DATABASE_USERNAME])
-    .raw('GRANT stagingmigration TO ??;', [config.MIGRATION_STG_DATABASE_USERNAME])
+    .raw('ALTER ROLE db_datawriter ADD MEMBER ??;', [config.ETL_STAGING_DATABASE_USERNAME])
+    .raw('ALTER ROLE db_datareader ADD MEMBER ??;', [config.ETL_STAGING_DATABASE_USERNAME])
 
-    .raw('ALTER USER ?? SET search_path TO staging;', [config.WORKER_DATABASE_USERNAME])
-    .raw('GRANT stagingreadwrite TO ??;', [config.WORKER_DATABASE_USERNAME])
-
+    .raw('ALTER ROLE db_datawriter ADD MEMBER ??;', [config.WORKER_DATABASE_USERNAME])
+    .raw('ALTER ROLE db_datareader ADD MEMBER ??;', [config.WORKER_DATABASE_USERNAME])
   .then(function () {
     process.exit(0)
   })

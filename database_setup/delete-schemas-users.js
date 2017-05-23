@@ -5,8 +5,8 @@ const knex = require('knex')(knexConfig)
 
 knex.schema
   // SCHEMAS
-  .raw('DROP SCHEMA IF EXISTS app CASCADE;')
-  .raw('DROP SCHEMA IF EXISTS staging CASCADE;')
+  .raw('DROP SCHEMA IF EXISTS app;')
+  .raw('DROP SCHEMA IF EXISTS staging;')
 
   // USERS
   // Drop App Users
