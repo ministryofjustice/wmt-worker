@@ -10,9 +10,14 @@ module.exports = function (offenderManager) {
     .first()
     .then(function (result) {
       if (result === 'undefined') {
-        offenderManagerId = knex(offenderManagerTable)
+        knex(offenderManagerTable)
           .insert(offenderManager)
           .returning('id')
+          .then(function (id) {
+            offenderManagerId = id
+          })
+      } else {
+        offenderManagerId = result['id']
       }
       return offenderManagerId
     })
