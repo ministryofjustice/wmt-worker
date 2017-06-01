@@ -1,7 +1,7 @@
 const config = require('../../../config')
 const knexConfig = require('../../../knexfile').development
 const knex = require('knex')(knexConfig)
-const workloadOwnerTable = `${config.DB_STG_SCHEMA}.offender_manager`
+const workloadOwnerTable = `${config.DB_APP_SCHEMA}.offender_manager`
 
 module.exports = function (workloadOwner) {
   var workloadOwnerId
@@ -15,6 +15,11 @@ module.exports = function (workloadOwner) {
         workloadOwnerId = knex(workloadOwnerTable)
           .insert(workloadOwner)
           .returning('id')
+          .then(function (id) {
+            workloadOwnerId = id
+          })
+      } else {
+        workloadOwnerId = result['id']
       }
       return workloadOwnerId
     })

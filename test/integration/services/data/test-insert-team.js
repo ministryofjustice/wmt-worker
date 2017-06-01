@@ -3,11 +3,12 @@ const knexConfig = require('../../../../knexfile').development
 const knex = require('knex')(knexConfig)
 const config = require('../../../../config')
 const insertTeam = require('../../../../app/services/data/insert-team')
+const tableName = `${config.DB_APP_SCHEMA}.team`
+const Team = require('wmt-probation-rules').Team
 
 describe('app/services/data/insert-team', function () {
-  const tableName = `${config.DB_APP_SCHEMA}.team`
   it('should insert a new team record', function () {
-    insertTeam().then(function (teamId) {
+    insertTeam(new Team()).then(function (teamId) {
       return knex.table(tableName)
         .where({'id': teamId})
         .first()

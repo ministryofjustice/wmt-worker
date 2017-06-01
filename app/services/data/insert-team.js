@@ -20,5 +20,5 @@ module.exports = function (team) {
         teamId = result['id']
       }
       return teamId
-  })
+    })
 }
