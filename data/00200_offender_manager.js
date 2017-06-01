@@ -9,7 +9,7 @@ exports.seed = function(knex, Promise) {
     .then(function (probationOfficerTypeId) {
       // Inserts seed entries
       return knex(tableName).insert([
-        { om_type_id: probationOfficerTypeId.id, om_key: "JS01", first_name: "John", last_name: "Smith" }
+        { type_id: probationOfficerTypeId.id, key: "JS01", first_name: "John", last_name: "Smith" }
       ]);
     });
 };
