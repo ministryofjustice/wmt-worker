@@ -44,6 +44,9 @@ module.exports = {
     migrations: {
       directory: 'migrations/app'
     },
+    seeds: {
+      directory: 'data'
+    },
     debug: true
   }
 }

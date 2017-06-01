@@ -12,6 +12,7 @@
     "test-unit": "mocha --recursive -u exports test/unit/",
     "test-integration": "mocha --recursive -u exports test/integration/ --timeout 1000",
     "migrate-app": "knex migrate:latest --env app",
+    "seed-app": "node ./cleanup.js && knex seed:run --env app",
     "rollback-app": "knex migrate:rollback --env app",
     "migrate-stg": "knex migrate:latest --env staging",
     "rollback-stg": "knex migrate:rollback --env staging",
