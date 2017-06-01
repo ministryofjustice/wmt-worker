@@ -9,9 +9,9 @@ module.exports = function (initialId, batchSize) {
 
 
   return knex.select().from('workload')
-    .join('community_tiers', 'workloadId', 'workload.id')
-    .join('licenser_tiers', 'workloadId', 'workload.id')
-    .join('custody_tiers', 'workloadId', 'workload.id')
+    .join('community_tiers', 'workload_id', 'workload.id')
+    .join('licenser_tiers', 'workload_id', 'workload.id')
+    .join('custody_tiers', 'workload_id', 'workload.id')
     .whereBetween('id', [initialId, maxId])
     .then(function (results) {
       var filteredResults = []
