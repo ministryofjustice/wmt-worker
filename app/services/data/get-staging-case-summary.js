@@ -6,7 +6,7 @@ const Tiers = require('wmt-probation-rules').Tiers
 const locations = require('wmt-probation-rules').Locations
 
 module.exports = function (range) {
-  return knex.select().from(`${config.DB_STG_SCHEMA}.wmt_extract`).whereBetween('id', range)
+  return knex.select().from(`${config.DB_APP_SCHEMA}.wmt_extract`).whereBetween('id', range)
     .then(function (results) {
       var caseSummary = []
       var communityTiers = []
@@ -14,8 +14,7 @@ module.exports = function (range) {
       var custodyTiers = []
       if (results !== 'undefined' && results.length > 0) {
         for (var result of results) {
-
-          communityTiers = new Tiers (
+          communityTiers = new Tiers(
             locations.COMMUNITY,
             result['commtier0'],
             result['commtierd2'],
@@ -27,7 +26,7 @@ module.exports = function (range) {
             result['commtiera']
           )
 
-          licenseTiers = new Tiers (
+          licenseTiers = new Tiers(
             locations.LICENSE,
             result['licencetier0'],
             result['licencetierd2'],
@@ -39,7 +38,7 @@ module.exports = function (range) {
             result['licencetiera']
           )
 
-          custodyTiers = new Tiers (
+          custodyTiers = new Tiers(
             locations.CUSTODY,
             result['custtier0'],
             result['custtierd2'],

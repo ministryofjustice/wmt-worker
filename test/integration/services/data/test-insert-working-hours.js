@@ -3,11 +3,12 @@ const knexConfig = require('../../../../knexfile').development
 const knex = require('knex')(knexConfig)
 const config = require('../../../../config')
 const insertWorkingHours = require('../../../../app/services/data/insert-working-hours')
+const WorkingHours = require('wmt-probation-rules').WorkingHours
 
 describe('app/services/data/insert-working-hours', function () {
   const tableName = `${config.DB_APP_SCHEMA}.working_hours`
   it('should insert a new working hours record', function () {
-    insertWorkingHours().then(function (workingHoursId) {
+    insertWorkingHours(new WorkingHours()).then(function (workingHoursId) {
       return knex.table(tableName)
         .where({'id': workingHoursId})
         .first()
