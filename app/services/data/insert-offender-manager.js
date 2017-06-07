@@ -1,20 +1,28 @@
-const config = require('../../../knexfile').development
-const knex = require('knex')(config)
+const config = require('../../../config')
+const knexConfig = require('../../../knexfile').development
+const knex = require('knex')(knexConfig)
 const offenderManagerTable = `${config.DB_APP_SCHEMA}.offender_manager`
 
 module.exports = function (offenderManager) {
   var offenderManagerId
 
-  knex.select().from(offenderManagerTable)
-    .where('key', offenderManager.key)
+  var offenderManagerDbObject = {}
+  offenderManagerDbObject.key = offenderManager.key
+  offenderManagerDbObject.forename = offenderManager.forename
+  offenderManagerDbObject.surname = offenderManager.surname
+  offenderManagerDbObject.type_id = offenderManager.typeId
+  offenderManagerDbObject.grade_code = offenderManager.gradeCode
+
+  return knex(offenderManagerTable)
+    .where({'key': offenderManagerDbObject.key})
     .first()
     .then(function (result) {
-      if (result === 'undefined') {
-        knex(offenderManagerTable)
-          .insert(offenderManager)
+      if (result === undefined) {
+        return knex(offenderManagerTable)
+          .insert(offenderManagerDbObject)
           .returning('id')
           .then(function (id) {
-            offenderManagerId = id
+            return id
           })
       } else {
         offenderManagerId = result['id']

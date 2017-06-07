@@ -4,18 +4,19 @@ const knex = require('knex')(knexConfig)
 const regionTable = `${config.DB_APP_SCHEMA}.region`
 
 module.exports = function (region) {
-  var regionId
-  knex.select().from(regionTable)
-    .where('region_code', region.regionCode)
+  var regionDbObject = {}
+
+  regionDbObject.code = region.code
+  regionDbObject.description = region.description
+
+  return knex.select().from(regionTable)
+    .where('code', regionDbObject.code)
     .first()
     .then(function (result) {
-      if (result === 'undefined') {
-        knex(regionTable)
-          .insert(region)
+      if (result === undefined) {
+        return knex(regionTable)
+          .insert(regionDbObject)
           .returning('id')
-          .then(function (id) {
-            regionId = id
-          })
       } else {
         regionId = result['id']
       }

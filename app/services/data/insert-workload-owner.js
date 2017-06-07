@@ -1,23 +1,25 @@
 const config = require('../../../config')
 const knexConfig = require('../../../knexfile').development
 const knex = require('knex')(knexConfig)
-const workloadOwnerTable = `${config.DB_APP_SCHEMA}.offender_manager`
+const workloadOwnerTable = `${config.DB_APP_SCHEMA}.workload_owner`
 
 module.exports = function (workloadOwner) {
   var workloadOwnerId
 
-  knex.select().from(workloadOwnerTable)
+  var workloadOwnerDatabaseObject = {}
+  workloadOwnerDatabaseObject.offender_manager_id = workloadOwner.offenderManagerId
+  workloadOwnerDatabaseObject.working_hours_id = workloadOwner.workingHoursId
+  workloadOwnerDatabaseObject.team_id = workloadOwner.teamId
+
+  return knex.select().from(workloadOwnerTable)
     .where('offender_manager_id', workloadOwner.offenderManagerId)
     .andWhere('team_id', workloadOwner.teamId)
     .first()
     .then(function (result) {
-      if (result === 'undefined') {
-        workloadOwnerId = knex(workloadOwnerTable)
-          .insert(workloadOwner)
+      if (result === undefined) {
+        return knex(workloadOwnerTable)
+          .insert(workloadOwnerDatabaseObject)
           .returning('id')
-          .then(function (id) {
-            workloadOwnerId = id
-          })
       } else {
         workloadOwnerId = result['id']
       }
