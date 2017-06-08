@@ -1,7 +1,6 @@
 const expect = require('chai').expect
 const knexConfig = require('../../../../knexfile').app
 const knex = require('knex')(knexConfig)
-const config = require('../../../../config')
 const insertLdu = require('../../../../app/services/data/insert-ldu')
 const Ldu = require('wmt-probation-rules').Ldu
 const moment = require('moment')
@@ -10,10 +9,9 @@ const lduHelper = require('../../../helpers/data/ldu-helper')
 var inserts = []
 
 describe('app/services/data/insert-ldu', function () {
-
-  before(function(done) {
+  before(function (done) {
     lduHelper.addDependenciesForLdu()
-      .then(function(insertedFields){
+      .then(function (insertedFields) {
         inserts = insertedFields
         done()
       })

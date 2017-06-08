@@ -10,10 +10,9 @@ const tableName = `${config.DB_APP_SCHEMA}.workload_owner`
 var inserts = []
 
 describe('app/services/data/insert-workload-owner', function () {
-
-  before(function(done) {
+  before(function (done) {
     workloadOwnerHelper.addDepenedenciesForWorkloadOwner()
-      .then(function(insertedFields){
+      .then(function (insertedFields) {
         inserts = insertedFields
         done()
       })

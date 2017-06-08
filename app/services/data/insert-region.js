@@ -5,6 +5,7 @@ const regionTable = `${config.DB_APP_SCHEMA}.region`
 
 module.exports = function (region) {
   var regionDbObject = {}
+  var regionId
 
   regionDbObject.code = region.code
   regionDbObject.description = region.description

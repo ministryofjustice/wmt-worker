@@ -6,7 +6,7 @@ var Promise = require('bluebird').Promise
 module.exports.addDepenedenciesForWorkloadOwner = function () {
   var inserts = []
 
-  var promise = knex('offender_manager_type').returning('id').insert    ({description: 'test'})
+  var promise = knex('offender_manager_type').returning('id').insert({description: 'test'})
     .then(function (ids) {
       inserts.push({ table: 'offender_manager_type', id: ids[0] })
       return knex('offender_manager').returning('id').insert({type_id: ids[0]})
@@ -25,7 +25,7 @@ module.exports.addDepenedenciesForWorkloadOwner = function () {
       return inserts
     })
 
-    return promise
+  return promise
 }
 
 module.exports.removeDependenciesForWorkloadOwner = function (inserts) {

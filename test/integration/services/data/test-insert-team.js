@@ -1,7 +1,6 @@
 const expect = require('chai').expect
 const knexConfig = require('../../../../knexfile').app
 const knex = require('knex')(knexConfig)
-const config = require('../../../../config')
 const insertTeam = require('../../../../app/services/data/insert-team')
 const Team = require('wmt-probation-rules').Team
 const moment = require('moment')
@@ -10,10 +9,9 @@ const teamHelper = require('../../../helpers/data/team-helper')
 var inserts = []
 
 describe('app/services/data/insert-team', function () {
-
-  before(function(done) {
+  before(function (done) {
     teamHelper.addDependenciesForTeam()
-      .then(function(insertedFields){
+      .then(function (insertedFields) {
         inserts = insertedFields
         done()
       })
@@ -44,5 +42,4 @@ describe('app/services/data/insert-team', function () {
     teamHelper.removeDependenciesForTeam(inserts)
     .then(() => done())
   })
-
 })

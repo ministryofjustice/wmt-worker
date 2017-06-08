@@ -1,13 +1,10 @@
 const expect = require('chai').expect
 const knexConfig = require('../../../../knexfile').app
 const knex = require('knex')(knexConfig)
-const config = require('../../../../config')
 const insertRegion = require('../../../../app/services/data/insert-region')
 const Region = require('wmt-probation-rules').Region
-const moment = require('moment')
 
 describe('app/services/data/insert-region', function () {
-
   var regionId
   it('should insert a new region record', function (done) {
     var code = 'U'

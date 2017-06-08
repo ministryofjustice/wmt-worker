@@ -1,7 +1,6 @@
 const expect = require('chai').expect
 const knexConfig = require('../../../../knexfile').app
 const knex = require('knex')(knexConfig)
-const config = require('../../../../config')
 const insertOffenderManager = require('../../../../app/services/data/insert-offender-manager')
 const OffenderManager = require('wmt-probation-rules').OffenderManager
 const moment = require('moment')
@@ -10,7 +9,7 @@ describe('app/services/data/insert-offender-manager', function () {
   var offenderManagerId
 
   var typeId
-  before(function(done) {
+  before(function (done) {
     knex('offender_manager_type').returning('id').insert({description: 'test'})
       .then(function (id) {
         typeId = id[0]
