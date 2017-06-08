@@ -3,11 +3,15 @@ const knex = require('knex')(knexConfig)
 const CaseTypeWeightings = require('wmt-probation-rules').CaseTypeWeightings
 const PointsConfiguration = require('wmt-probation-rules').PointsConfiguration
 const TierPointsConfiguration = require('wmt-probation-rules').TierPointsConfiguration
+const DefaultNominalTargets = require('wmt-probation-rules').DefaultNominalTargets
+const DefaultContractedHours = require('wmt-probation-rules').DefaultContractedHours
 
 module.exports = function (pointsId) {
   return knex.select().from('workload_points')
     .where('id', pointsId)
     .then(function (results) {
+      var defaultNominalTargets = new DefaultNominalTargets(results.nominal_target_spo, results.nominal_target_po)
+      var defaultContractedHours = new DefaultContractedHours(results.default_contract_hours_spo, results.default_contract_hours_po)
       var communityTierPointsConfiguration = new TierPointsConfiguration(results.comm_tier_1,
                                                                          results.comm_tier_2,
                                                                          results.comm_tier_3,
@@ -34,10 +38,8 @@ module.exports = function (pointsId) {
                                                         custodyTierPointsConfiguration,
                                                         results.sdr,
                                                         results.sdr_conversion,
-                                                        results.nominal_target_spo,
-                                                        results.nominal_target_po,
-                                                        results.default_contract_hours_po,
-                                                        results.default_contract_hours_spo,
+                                                        defaultNominalTargets,
+                                                        defaultContractedHours,
                                                         results.parom_enabled,
                                                         results.parom)
 

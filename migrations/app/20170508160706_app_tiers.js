@@ -1,11 +1,14 @@
 
 exports.up = function (knex, Promise) {
-  return knex.schema.createTable('custody_tiers', function (table) {
+  return knex.schema.createTable('tiers', function (table) {
     table.increments('id')
     table.integer('workload_id').unsigned().notNullable().references('workload.id')
-    table.integer('tier_type').unsigned()
-    table.string('case_type', 5)
-    table.string('location')
+    table.integer('tier_number').unsigned().notNullable()
+    table.integer('overdue_terminations_total').unsigned().notNullable()
+    table.integer('warrants_total').unsigned().notNullable()
+    table.integer('unpaid_work_total').unsigned().notNullable()
+    table.integer('total_cases').unsigned().notNullable()
+    table.string('location').notNullable()
   }).catch(function (error) {
     console.log(error)
     throw error
