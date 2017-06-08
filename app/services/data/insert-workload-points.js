@@ -5,15 +5,14 @@ const knex = require('knex')(knexConfig)
 const taskStatus = require('../../constants/task-status')
 const moment = require('moment')
 
-
-module.exports = function (workloadId) {
+module.exports = function (workload) {
   var workloadPointsId = 0
-  return knex(`${config.DB_APP_SCHEMA}.workload_report`)
+  return knex(`${config.DB_APP_SCHEMA}.workload_points`)
     .select()
-    .where('id', workloadId)
+    .where('id', workload.id)
     .then(function (result) {
       if (result !== undefined) {
-        knex('tasks').whereId('id', workloadId)
+        knex('tasks').whereId('id', workload.id)
           .update('effectiveTo', moment.now())
       }
       knex()

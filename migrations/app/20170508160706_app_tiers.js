@@ -16,5 +16,5 @@ exports.up = function (knex, Promise) {
 }
 
 exports.down = function (knex, Promise) {
-  knex.schema.dropTable('custody_tiers')
+  return knex.schema.dropTable('tiers')
 }
