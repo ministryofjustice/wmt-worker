@@ -26,7 +26,7 @@ module.exports.execute = function (task) {
         // create workload report
         var taskToWrite = new Task(
             undefined,
-            submittingAgent.tasWORKER,
+            submittingAgent.WORKER,
             taskType.CREATE_WORKLOAD_REPORT,
             undefined,
             undefined,

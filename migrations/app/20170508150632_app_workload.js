@@ -1,6 +1,6 @@
 
 exports.up = function (knex, Promise) {
-  return knex.schema.withSchema('app').createTable('workload', function (table) {
+  return knex.schema.createTable('workload', function (table) {
     table.increments('id')
     table.integer('workload_owner_id').unsigned().references('workload_owner.id')
     table.integer('workload_points_calc_id').unsigned().references('workload_points_calculations.id')
@@ -23,5 +23,5 @@ exports.up = function (knex, Promise) {
 }
 
 exports.down = function (knex, Promise) {
-  knex.schema.withSchema('app').dropTable('workload')
+  return knex.schema.dropTable('workload')
 }
