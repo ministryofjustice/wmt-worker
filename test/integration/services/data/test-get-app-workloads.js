@@ -1,6 +1,6 @@
 const expect = require('chai').expect
 
-const workloadHelper = require('../../../helpers/data/app-workload-helper')
+/*const workloadHelper = require('../../../helpers/data/app-workload-helper')
 const getAppWorkloads = require('../../../../app/services/data/app-workload-helper')
 
 var inserts = []
@@ -28,4 +28,4 @@ describe('services/data/get-capacity-for-individual', function () {
     workloadHelper.removeWorkloadObjects(inserts)
       .then(() => done())
   })
-})
+})*/

@@ -4,7 +4,6 @@ const knexConfig = require('../../../knexfile').development
 const knex = require('knex')(knexConfig)
 const taskStatus = require('../../constants/task-status')
 
-
 module.exports = function (workload, effectiveFrom) {
   var workloadPointsId = 0
   return knex(`${config.DB_APP_SCHEMA}.workload_points`)

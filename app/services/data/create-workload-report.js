@@ -5,7 +5,6 @@ const knex = require('knex')(knexConfig)
 const taskStatus = require('../../constants/task-status')
 const moment = require('moment')
 
-
 module.exports = function (workloadId) {
   var workloadPointsId = 0
   return knex(`${config.DB_APP_SCHEMA}.workload_report`)
