@@ -4,7 +4,6 @@ var processImport = require('./workers/process-import')
 var createWorkload = require('./workers/create-workload')
 var createWorkloadReport = require('./workers/create-workload-report')
 
-
 // ALL WORKERS SHOULD HAVE A METHOD `execute(task)` that returns a Promise
 module.exports = function (taskType) {
   switch (taskType) {
