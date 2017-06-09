@@ -18,5 +18,5 @@ exports.up = function (knex, Promise) {
 }
 
 exports.down = function (knex, Promise) {
-  knex.schema.dropTable('workload_points_calculations')
+  return knex.schema.dropTable('workload_points_calculations')
 }
