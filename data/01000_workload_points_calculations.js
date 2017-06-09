@@ -23,7 +23,7 @@ exports.seed = function(knex, Promise) {
         return Promise.each(workloadIds, function(workloadId) {
           effectiveFromDate.setDate(effectiveFromDate.getDate() + 30)
           return knex(tableName).insert([
-              { workload_id: workloadId.id, workload_report_id: existingReportId.id, workload_points_id: currentPointsId.id, workload_id: workloadId.id, effective_from: effectiveFromDate, effective_to: effectiveFromDate.getDate() + 30, total_points: 50, available_points: 190, paroms_points: 50, sdr_conversion_points: 50, sdr_points: 50, nominal_target: 0}
+              { workload_id: workloadId.id, workload_report_id: existingReportId.id, workload_points_id: currentPointsId.id, workload_id: workloadId.id, effective_from: effectiveFromDate, effective_to: effectiveFromDate.getDate() + 30, total_points: Math.floor(Math.random() * 25) + 30, available_points: 190, paroms_points: 50, sdr_conversion_points: 50, sdr_points: 50, nominal_target: 0}
           ]);
         })
     })
