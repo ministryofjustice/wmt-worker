@@ -1,4 +1,3 @@
-// Update previous report to effective_to = now and mark new report with effective_from now
 const config = require('../../../config')
 const knexConfig = require('../../../knexfile').development
 const knex = require('knex')(knexConfig)
@@ -8,15 +7,17 @@ const moment = require('moment')
 module.exports = function (workloadId) {
   var workloadPointsId = 0
   return knex(`${config.DB_APP_SCHEMA}.workload_report`)
-    .select()
     .where('id', workloadId)
+    .first()
     .then(function (result) {
       if (result !== undefined) {
         knex('tasks').whereId('id', workloadId)
-          .update('effectiveTo', moment.now())
+          .update('effective_to', moment.now())
       }
-      knex()
-        .insert({effective_from: moment.now(), status: taskStatus.COMPlETE, description: taskStatus.COMPLETE})
+      knex().insert({
+        effective_from: moment.now(),
+        status: taskStatus.COMPlETE,
+        description: taskStatus.COMPLETE})
         .then(function (result) {
           workloadPointsId = result.id
         })

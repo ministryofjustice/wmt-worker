@@ -1,9 +1,9 @@
-const knexConfig = require('').integrationTests
+const knexConfig = require('../../../knexfile').app
 const knex = require('knex')(knexConfig)
+const Locations = require('wmt-probation-rules').Locations
+var Promise = require('bluebird').Promise
 
-module.exports.addWorkloads = function () {
-  var inserts = []
-
+module.exports.insertDependencies = function (inserts) {
   var promise = knex('offender_manager_type').returning('id').insert({description: 'test'})
     .then(function (ids) {
       inserts.push({ table: 'offender_manager_type', id: ids[0] })
@@ -14,72 +14,81 @@ module.exports.addWorkloads = function () {
       return knex('region').returning('id').insert({})
     })
     .then(function (ids) {
-      inserts.push({table: 'workload_owner', id: ids[0]})
-      return knex('workload').returning('id').insert({
-        workload_owner_id: ids[0],
-        total_cases: 0,
-        total_cases_inactive: 0,
-        monthly_sdrs: 0,
-        sdr_due_next_30_days: 0,
-        active_warrants: 0,
-        overdue_terminations: 0,
-        unpaid_work: 0,
-        order_count: 0,
-        paroms_completed_last_30_days: 0,
-        paroms_due_next_30_days: 0,
-        lic_16_week_count: 0
-      })
+      inserts.push({ table: 'region', id: ids[0] })
+      return knex('ldu').returning('id').insert({region_id: ids[0]})
     })
     .then(function (ids) {
-      inserts.push({table: 'workload_report', id: ids[0]})
-      return knex('workload_points').returning('id').insert({
-        comm_tier_1: 0,
-        comm_tier_2: 0,
-        comm_tier_3: 0,
-        comm_tier_4: 0,
-        comm_tier_5: 0,
-        comm_tier_6: 0,
-        comm_tier_7: 0,
-        cust_tier_1: 0,
-        cust_tier_2: 0,
-        cust_tier_3: 0,
-        cust_tier_4: 0,
-        cust_tier_5: 0,
-        cust_tier_6: 0,
-        cust_tier_7: 0,
-        lic_tier_1: 0,
-        lic_tier_2: 0,
-        lic_tier_3: 0,
-        lic_tier_4: 0,
-        lic_tier_5: 0,
-        lic_tier_6: 0,
-        lic_tier_7: 0,
-        user_id: 0,
-        sdr: 0,
-        sdr_conversion: 0,
-        nominal_target_spo: 0,
-        nominal_target_po: 0,
-        default_contracted_hours_po: 0,
-        default_contracted_hours_spo: 0,
-        weighting_o: 0,
-        weighting_w: 0,
-        weighting_u: 0,
-        paroms_enabled: 0,
-        parom: 0
+      inserts.push({ table: 'ldu', id: ids[0] })
+      return knex('team').returning('id').insert({ldu_id: ids[0]})
+    })
+    .then(function (ids) {
+      inserts.push({table: 'team', id: ids[0]})
+      return knex('working_hours').returning('id').insert({})
+    })
+    .then(function (ids) {
+      inserts.push({table: 'working_hours', id: ids[0]})
+      return knex('workload_owner').returning('id')
+        .insert({team_id: inserts.filter((item) => item.table === 'team')[0].id,
+          offender_manager_id: inserts.filter((item) => item.table === 'offender_manager')[0].id})
+    })
+    .then(function (ids) {
+      inserts.push({table: 'workload_owner', id: ids[0]})
+
+      var defaultWorkload = {
+        workload_owner_id: ids[0],
+        total_cases: 8,
+        total_custody_cases: 1,
+        total_community_cases: 2,
+        total_license_cases: 3,
+        monthly_sdrs: 4,
+        sdr_due_next_30_days: 5,
+        paroms_completed_last_30_days: 6,
+        paroms_due_next_30_days: 7
+      }
+
+      var workloads = [
+        Object.assign({}, defaultWorkload, {total_cases: 20}),
+        Object.assign({}, defaultWorkload, {total_cases: 30})
+      ]
+
+      return knex('workload').returning('id').insert(workloads)
+    })
+    .then(function (ids) {
+      var locations = [Locations.COMMUNITY, Locations.CUSTODY, Locations.LICENSE]
+      var cases = []
+      ids.forEach((id) => {
+        inserts.push({table: 'workload', id: id})
+        for (var i = 0; i < 3; i++) {
+          for (var j = 0; j < 8; j++) {
+            cases.push({
+              workload_id: id,
+              tier_number: j,
+              overdue_terminations_total: 1,
+              warrants_total: 1,
+              unpaid_work_total: 1,
+              total_cases: 10,
+              location: locations[i]
+            })
+          }
+        }
       })
+      return knex('tiers').returning('id').insert(cases)
     })
     .then(function (ids) {
       ids.forEach((id) => {
-        inserts.push({table: 'workload_points_calculations', id: id})
-      }, this)
+        inserts.push({table: 'tiers', id: id})
+      })
       return inserts
+    }).catch((error) => {
+        console.error(error)
+        exports.removeDependencies(inserts)
     })
 
   return promise
 }
 
-module.exports.removeWorkloadObjects = function (inserts) {
-  inserts = inserts.revers()
+module.exports.removeDependencies = function (inserts) {
+  inserts = inserts.reverse()
   return Promise.each(inserts, (insert) => {
     return knex(insert.table).where('id', insert.id).del()
   })

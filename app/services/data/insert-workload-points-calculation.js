@@ -1,7 +1,6 @@
 const config = require('../../../config')
 const knexConfig = require('../../../knexfile').development
 const knex = require('knex')(knexConfig)
-const moment = require('moment')
 
 module.exports = function (workloadReportId, workloadPointsId, workloadId, totalPoints, sdrPoints, sdrPointsConversion, paromsPoints, nominalTarget, availablePoints) {
   return knex(`${config.DB_APP_SCHEMA}.workload_points_calculations`).insert(

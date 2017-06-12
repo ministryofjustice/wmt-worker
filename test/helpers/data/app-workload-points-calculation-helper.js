@@ -35,16 +35,13 @@ module.exports.insertDependencies = function (inserts) {
       return knex('workload').returning('id').insert({
         workload_owner_id: ids[0],
         total_cases: 0,
-        total_cases_inactive: 0,
+        total_custody_cases: 1,
+        total_community_cases: 2,
+        total_license_cases: 3,
         monthly_sdrs: 0,
         sdr_due_next_30_days: 0,
-        active_warrants: 0,
-        overdue_terminations: 0,
-        unpaid_work: 0,
-        order_count: 0,
         paroms_completed_last_30_days: 0,
         paroms_due_next_30_days: 0,
-        lic_16_week_count: 0
       })
     })
     .then(function (ids) {

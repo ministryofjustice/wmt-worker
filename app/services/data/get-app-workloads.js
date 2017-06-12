@@ -1,95 +1,77 @@
 const knexConfig = require('../../../knexfile').development
 const knex = require('knex')(knexConfig)
-const Workload = require('wmt-probation-rules').Workload
-const Locations = require('wmt-probation-rules').Locations
 const TierCounts = require('wmt-probation-rules').TierCounts
 const Tiers = require('wmt-probation-rules').Tiers
+const Workload = require('wmt-probation-rules').Workload
+const Locations = require('wmt-probation-rules').Locations
 
 module.exports = function (initialId, batchSize) {
   var maxId = initialId + batchSize
-  // var workloadReports = []
 
-  return knex.select().from('workload')
-    .whereBetween('id', [initialId, maxId])
-    .then(function (workloadResults) {
-      var workloads = []
-      var filteredResults = []
+  return knex('workload').withSchema('app').leftJoin('tiers', 'workload.id', 'workload_id')
+        .whereBetween('workload.id', [initialId, maxId])
+        .select('workload.id',
+                'workload.workload_owner_id',
+                'workload.total_cases',
+                'workload.total_custody_cases',
+                'workload.total_community_cases',
+                'workload.total_license_cases',
+                'workload.monthly_sdrs',
+                'workload.sdr_due_next_30_days',
+                'workload.paroms_due_next_30_days',
+                'workload.paroms_completed_last_30_days',
+                'tiers.total_cases as tiers_total_cases',
+                'tiers.warrants_total',
+                'tiers.unpaid_work_total',
+                'tiers.overdue_terminations_total',
+                'tiers.location',
+                'tiers.tier_number'
+               )
+        .then(function (workloadResults) {
+          var tempWorkloads = new Array(batchSize)
 
-      return knex.select().from('tiers')
-        .whereBetween('workload_id', [initialId, maxId])
-        .then(function (tiersResults) {
-          var workloadResult = {}
-          var communityTier = {}
-          var licenseTier = {}
-          var custodyTier = {}
-          var communityResults = []
-          var custodyResults = []
-          var licenseResults = []
-          var communityTierCountsList = []
-          var licenseTierCountsList = []
-          var custodyTierCountsList = []
-          var communityTiers = {}
-          var licenseTiers = {}
-          var custodyTiers = {}
-
-          for (let i = initialId; i <= maxId; i++) {
-            workloadResult = workloadResults.filter(getById(i))
-            filteredResults = tiersResults.filter(getByWorkloadId(i))
-
-            communityResults = filteredResults.filter(getByLocation(Locations.COMMUNITY))
-            licenseResults = filteredResults.filter(getByLocation(Locations.LICENSE))
-            custodyResults = filteredResults.filter(getByLocation(Locations.CUSTODY))
-
-            for (let x = 0; x <= 7; x++) {
-              communityTier = communityResults.filter(getByTierNumber(x))
-              licenseTier = licenseResults.filter(getByTierNumber(x))
-              custodyTier = custodyResults.filter(getByTierNumber(x))
-
-              communityTierCountsList.push(createTierCounts(communityTier))
-              licenseTierCountsList.push(createTierCounts(licenseTier))
-              custodyTierCountsList.push(createTierCounts(custodyTier))
+          workloadResults.forEach(function (row) {
+            var index = row.id - initialId
+            if (tempWorkloads[index] === undefined) {
+              tempWorkloads[index] = {
+                community: new Array(8),
+                license: new Array(8),
+                custody: new Array(8)
+              }
+              tempWorkloads[index].workloadOwnerId = row.workload_owner_id
+              tempWorkloads[index].totalCases = row.total_cases
+              tempWorkloads[index].totalCustodyCases = row.total_custody_cases
+              tempWorkloads[index].totalCommunityCases = row.total_community_cases
+              tempWorkloads[index].totalLicenseCases = row.total_license_cases
+              tempWorkloads[index].paromsCompletedLast30Days = row.paroms_completed_last_30_days
+              tempWorkloads[index].paromsDueNext30Days = row.paroms_due_next_30_days
+              tempWorkloads[index].monthlySdrs = row.monthly_sdrs
+              tempWorkloads[index].sdrsDueNext30Days = row.sdr_due_next_30_days
             }
-            communityTiers = new Tiers(...communityTierCountsList)
-            licenseTiers = new Tiers(...licenseTierCountsList)
-            custodyTiers = new Tiers(...custodyTierCountsList)
 
-            // Workload Owner and Workload Points Calculations
-            workloads.push(new Workload(workloadResult.workloadOwnerId, workloadResult.totalCases,
-                                        workloadResult.totalCasesInactive, workloadResult.monthlySdrs,
-                                        workloadResult.SdrDueNext30Days, communityTiers, licenseTiers, custodyTiers))
-          }
+            tempWorkloads[index][row.location][row.tier_number] = new TierCounts(
+                            row.tiers_total_cases,
+                            row.warrants_total,
+                            row.unpaid_work_total,
+                            row.overdue_terminations_total)
+          })
 
+          var workloads = []
+          tempWorkloads.forEach(function(tempWorkload) {
+            workloads.push(
+              new Workload(
+                tempWorkload.workloadOwnerId,
+                tempWorkload.totalCases,
+                tempWorkload.monthlySdrs,
+                tempWorkload.sdrsDueNext30Days,
+                tempWorkload.paromsCompletedLast30Days,
+                tempWorkload.paromsDueNext30Days,
+                new Tiers(Locations.CUSTODY, ...tempWorkload[Locations.CUSTODY], tempWorkload.totalCustodyCases),
+                new Tiers(Locations.COMMUNITY, ...tempWorkload[Locations.COMMUNITY], tempWorkload.totalCommunityCases),
+                new Tiers(Locations.LICENSE, ...tempWorkload[Locations.LICENSE], tempWorkload.totalLicenseCases)
+              )
+            )
+          })
           return workloads
         })
-    })
-}
-
-var getByWorkloadId = function (workloadId) {
-  return function (element) {
-    return element.workloadId === workloadId
-  }
-}
-
-var getByLocation = function (location) {
-  return function (element) {
-    return element.location === location
-  }
-}
-
-var getByTierNumber = function (tierNumber) {
-  return function (element) {
-    return element.tier_number === tierNumber
-  }
-}
-
-var getById = function (id) {
-  return function (element) {
-    return element.id === id
-  }
-}
-
-var createTierCounts = function (tier) {
-  var tierCount = new TierCounts(tier.total, tier.warrant_total,
-                                 tier.unpaid_work_total, tier.overdue_termination_total)
-  return tierCount
 }

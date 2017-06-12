@@ -7,7 +7,6 @@ const calculateParomsPoints = require('wmt-probation-rules').calculateParomsPoin
 const getAppWorkloads = require('../../services/data/get-app-workloads')
 const createWorkloadPointsCalcution = require('../../services/data/insert-workload-points-calculation')
 const insertWorkloadReport = require('../../services/data/insert-workload-report')
-const insertWorkloadPoints = require('../../services/data/insert-workload-points')
 const getWorkloadPointsConfiguration = require('../../services/data/get-workload-points-configuration')
 const getOffenderManagerId = require('../../services/data/get-offender-manager-id')
 
@@ -25,15 +24,13 @@ module.exports.execute = function (task) {
     var paromsPoints = 0
     var caseTypeWeightings = {}
 
-    var appWorkloads = getAppWorkloads(id, batchSize)
+    var workloads = getAppWorkloads(id, batchSize)
 
-    logger.info('Calculating base workload values and storing in the database')
-    appWorkloads.array.forEach(function (element) {
+    workloads.array.forEach(function (element) {
       caseTypeWeightings = getWorkloadPointsConfiguration(element.id)
       totalWorkloadPoints = calculateTotalWorkloadPoints(workload, caseTypeWeightings)
 
       workloadReportId = insertWorkloadReport(workload)
-      workloadPointsId = insertWorkloadPoints(workload)
       sdrPoints = calculateSdrPoints(workload.sdrConversionLast30Days, workload.pointsSdrConversion)
       getOffenderManagerId(workload.workloadOwnerId).then(function (offenderManagerTypeId) {
         nominalTargetPoints = calculateNominalTargetPoints(offenderManagerTypeId, caseTypeWeightings.pointsConfiguration.defaultNominalTargets)
