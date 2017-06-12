@@ -8,7 +8,7 @@ const getAppWorkloads = require('../../services/data/get-app-workloads')
 const createWorkloadPointsCalcution = require('../../services/data/insert-workload-points-calculation')
 const insertWorkloadReport = require('../../services/data/insert-workload-report')
 const getWorkloadPointsConfiguration = require('../../services/data/get-workload-points-configuration')
-const getOffenderManagerId = require('../../services/data/get-offender-manager-id')
+const getOffenderManagerTypeId = require('../../services/data/get-offender-manager-type-id')
 
 module.exports.execute = function (task) {
   logger.info('Executing base workload calculations')
@@ -32,7 +32,7 @@ module.exports.execute = function (task) {
 
       workloadReportId = insertWorkloadReport(workload)
       sdrPoints = calculateSdrPoints(workload.sdrConversionLast30Days, workload.pointsSdrConversion)
-      getOffenderManagerId(workload.workloadOwnerId).then(function (offenderManagerTypeId) {
+      getOffenderManagerTypeId(workload.workloadOwnerId).then(function (offenderManagerTypeId) {
         nominalTargetPoints = calculateNominalTargetPoints(offenderManagerTypeId, caseTypeWeightings.pointsConfiguration.defaultNominalTargets)
         paromsPoints = calculateParomsPoints(workload.numberOfParomCompletedInLast30Days, workload.wpParom, caseTypeWeightings.pointsConfiguration.paromsEnabled)
 
