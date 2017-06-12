@@ -5,7 +5,7 @@ const getOffenderManagerTypeId = require('../../../../app/services/data/get-offe
 
 var inserts = []
 
-describe('services/data/get-app-workloads', function () {
+describe('services/data/get-offender-manager-type-id', function () {
   before(function (done) {
     helper.insertDependencies(inserts)
       .then(function (builtInserts) {

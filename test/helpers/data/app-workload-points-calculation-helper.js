@@ -78,7 +78,7 @@ module.exports.insertDependencies = function (inserts) {
         nominal_target_spo: 0,
         nominal_target_po: 0,
         default_contracted_hours_po: 0,
-        default_contracted_hours_spo: 0,
+        default_contracted_hours_pso: 0,
         weighting_o: 0,
         weighting_w: 0,
         weighting_u: 0,

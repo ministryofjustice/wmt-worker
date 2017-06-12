@@ -29,7 +29,7 @@ exports.up = function (knex, Promise) {
     table.integer('nominal_target_spo').unsigned().notNullable()
     table.integer('nominal_target_po').unsigned().notNullable()
     table.double('default_contracted_hours_po').unsigned().notNullable()
-    table.double('default_contracted_hours_spo').unsigned().notNullable()
+    table.double('default_contracted_hours_pso').unsigned().notNullable()
     table.integer('weighting_o').unsigned().notNullable()
     table.integer('weighting_w').unsigned().notNullable()
     table.integer('weighting_u').unsigned().notNullable()

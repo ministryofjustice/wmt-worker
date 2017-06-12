@@ -44,6 +44,6 @@
     "knex": "^0.13.0",
     "lodash": "^4.17.4",
     "mssql": "3.3.0",
-    "wmt-probation-rules": "https://github.com/ministryofjustice/wmt-probation-rules.git#feature/WMT-417/workload-context-map"
+    "wmt-probation-rules": "ministryofjustice/wmt-probation-rules.git#feature/WMT-417/create-workload"
   }
 }
