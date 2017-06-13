@@ -1,7 +1,6 @@
 const Promise = require('bluebird').Promise
 const logger = require('../log')
 const Task = require('../domain/task')
-const Batch = require('../domain/batch')
 const taskType = require('../../constants/task-type')
 
 module.exports.execute = function (task) {

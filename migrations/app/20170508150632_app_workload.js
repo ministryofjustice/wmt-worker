@@ -9,6 +9,7 @@ exports.up = function (knex, Promise) {
     table.integer('total_license_cases').unsigned().notNullable()
     table.integer('monthly_sdrs').unsigned().notNullable()
     table.integer('sdr_due_next_30_days').unsigned().notNullable()
+    table.integer('sdr_conversions_last_30_days').unsigned().notNullable()
     table.integer('paroms_completed_last_30_days').unsigned().notNullable()
     table.integer('paroms_due_next_30_days').unsigned().notNullable()
   }).catch(function (error) {

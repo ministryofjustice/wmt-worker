@@ -8,7 +8,10 @@ const Locations = require('wmt-probation-rules').Locations
 module.exports = function (initialId, batchSize) {
   var maxId = initialId + batchSize
 
-  return knex('workload').withSchema('app').leftJoin('tiers', 'workload.id', 'workload_id')
+  return knex('workload').withSchema('app')
+        .leftJoin('tiers', 'workload.id', 'workload_id')
+        .leftJoin('workload_owner', 'workload.workload_owner_id', 'workload_owner.id')
+        .leftJoin('offender_manager', 'workload_owner.offender_manager_id', 'offender_manager.id')
         .whereBetween('workload.id', [initialId, maxId])
         .select('workload.id',
                 'workload.workload_owner_id',
@@ -17,6 +20,7 @@ module.exports = function (initialId, batchSize) {
                 'workload.total_community_cases',
                 'workload.total_license_cases',
                 'workload.monthly_sdrs',
+                'workload.sdr_conversions_last_30_days',
                 'workload.sdr_due_next_30_days',
                 'workload.paroms_due_next_30_days',
                 'workload.paroms_completed_last_30_days',
@@ -38,6 +42,7 @@ module.exports = function (initialId, batchSize) {
                 license: new Array(8),
                 custody: new Array(8)
               }
+              tempWorkloads[index].id = row.id
               tempWorkloads[index].workloadOwnerId = row.workload_owner_id
               tempWorkloads[index].totalCases = row.total_cases
               tempWorkloads[index].totalCustodyCases = row.total_custody_cases
@@ -46,6 +51,7 @@ module.exports = function (initialId, batchSize) {
               tempWorkloads[index].paromsCompletedLast30Days = row.paroms_completed_last_30_days
               tempWorkloads[index].paromsDueNext30Days = row.paroms_due_next_30_days
               tempWorkloads[index].monthlySdrs = row.monthly_sdrs
+              tempWorkloads[index].sdrConversionsLast30Days = row.sdr_conversions_last_30_days
               tempWorkloads[index].sdrsDueNext30Days = row.sdr_due_next_30_days
             }
 
@@ -57,19 +63,22 @@ module.exports = function (initialId, batchSize) {
           })
 
           var workloads = []
-          tempWorkloads.forEach(function(tempWorkload) {
+          tempWorkloads.forEach(function (tempWorkload) {
             workloads.push(
-              new Workload(
+              { id: tempWorkload.id,
+                values: new Workload(
                 tempWorkload.workloadOwnerId,
                 tempWorkload.totalCases,
                 tempWorkload.monthlySdrs,
                 tempWorkload.sdrsDueNext30Days,
+                tempWorkload.sdrConversionsLast30Days,
                 tempWorkload.paromsCompletedLast30Days,
                 tempWorkload.paromsDueNext30Days,
                 new Tiers(Locations.CUSTODY, ...tempWorkload[Locations.CUSTODY], tempWorkload.totalCustodyCases),
                 new Tiers(Locations.COMMUNITY, ...tempWorkload[Locations.COMMUNITY], tempWorkload.totalCommunityCases),
                 new Tiers(Locations.LICENSE, ...tempWorkload[Locations.LICENSE], tempWorkload.totalLicenseCases)
               )
+              }
             )
           })
           return workloads

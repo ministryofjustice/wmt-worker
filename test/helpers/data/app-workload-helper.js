@@ -42,8 +42,9 @@ module.exports.insertDependencies = function (inserts) {
         total_license_cases: 3,
         monthly_sdrs: 4,
         sdr_due_next_30_days: 5,
-        paroms_completed_last_30_days: 6,
-        paroms_due_next_30_days: 7
+        sdr_conversions_last_30_days: 6,
+        paroms_completed_last_30_days: 7,
+        paroms_due_next_30_days: 8
       }
 
       var workloads = [
@@ -80,8 +81,8 @@ module.exports.insertDependencies = function (inserts) {
       })
       return inserts
     }).catch((error) => {
-        console.error(error)
-        exports.removeDependencies(inserts)
+      console.error(error)
+      exports.removeDependencies(inserts)
     })
 
   return promise

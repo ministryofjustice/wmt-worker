@@ -1,6 +1,6 @@
 var tableName = 'workload_points'
 
-exports.seed = function(knex, Promise) {
+exports.seed = function (knex, Promise) {
   // Deletes ALL existing entries
   return knex(tableName).del()
     .then(function () {
@@ -39,6 +39,6 @@ exports.seed = function(knex, Promise) {
         weighting_u: 0,
         paroms_enabled: 0,
         parom: 0
-    });
-  });
-};
+      })
+    })
+}

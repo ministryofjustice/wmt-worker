@@ -25,7 +25,7 @@ describe('services/data/get-app-workloads', function () {
     getAppWorkloads(initialWorkloadId, batchSize)
       .then(function (queryResults) {
         expect(queryResults.length).to.equal(batchSize)
-        var firstWorkload = queryResults[0]
+        var firstWorkload = queryResults[0].values
         expect(firstWorkload).to.be.an.instanceof(Workload)
         expect(firstWorkload.workloadOwnerId).to.equal(workloadOwnerId)
         expect(firstWorkload.totalCases).to.equal(20)
@@ -34,10 +34,11 @@ describe('services/data/get-app-workloads', function () {
         expect(firstWorkload.licenseTiers.total).to.equal(3)
         expect(firstWorkload.monthlySdrs).to.equal(4)
         expect(firstWorkload.sdrsDueNext30Days).to.equal(5)
-        expect(firstWorkload.paromsCompletedLast30Days).to.equal(6)
-        expect(firstWorkload.paromsDueNext30Days).to.equal(7)
+        expect(firstWorkload.sdrConversionsLast30Days).to.equal(6)
+        expect(firstWorkload.paromsCompletedLast30Days).to.equal(7)
+        expect(firstWorkload.paromsDueNext30Days).to.equal(8)
 
-        var secondWorkload = queryResults[1]
+        var secondWorkload = queryResults[1].values
         expect(secondWorkload.totalCases).to.equal(30)
         done()
       })

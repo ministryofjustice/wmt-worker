@@ -34,8 +34,8 @@ module.exports.insertDependencies = function (inserts) {
       inserts.push({table: 'workload_owner', id: ids[0]})
       return inserts
     }).catch((error) => {
-        console.error(error)
-        exports.removeDependencies(inserts)
+      console.error(error)
+      exports.removeDependencies(inserts)
     })
 
   return promise
