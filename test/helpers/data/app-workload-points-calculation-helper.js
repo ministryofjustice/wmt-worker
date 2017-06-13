@@ -131,7 +131,17 @@ module.exports.insertDependencies = function (inserts) {
 
 module.exports.removeDependencies = function (inserts) {
   inserts = inserts.reverse()
-  return Promise.each(inserts, (insert) => {
-    return knex(insert.table).where('id', insert.id).del()
+  var groupedDeletions = [{table: inserts[0].table, id: [inserts[0].id]}]
+
+  for (var i = 1; i < inserts.length; i++) {
+    if (inserts[i].table === groupedDeletions[groupedDeletions.length - 1].table) {
+      groupedDeletions[groupedDeletions.length - 1].id.push(inserts[i].id)
+    } else {
+      groupedDeletions.push({table: inserts[i].table, id: [inserts[i].id]})
+    }
+  }
+
+  return Promise.each(groupedDeletions, (deletion) => {
+    return knex(deletion.table).whereIn('id', deletion.id).del()
   })
 }
