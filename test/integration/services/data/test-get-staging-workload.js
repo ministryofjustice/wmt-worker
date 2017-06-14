@@ -33,9 +33,6 @@ describe('services/data/get-staging-workload', function () {
         expect(omWorkload[0].courtReports).to.deep.eq(courtReport)
         expect(omWorkload[0].instReports).to.deep.eq(institutionReport)
       })
-
-      // make omKey dynamic and dont lose link between records
-      // add casedetails
   })
 
   after(function () {
