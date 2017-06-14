@@ -7,6 +7,7 @@ exports.up = function (knex, Promise) {
     table.integer('total_cases_inactive').unsigned().notNullable()
     table.integer('monthly_sdrs').unsigned().notNullable()
     table.integer('sdr_due_next_30_days').unsigned().notNullable()
+    table.integer('sdr_conversions_last_30_days').unsigned().notNullable()
     table.integer('active_warrants').unsigned().notNullable()
     table.integer('overdue_terminations').unsigned().notNullable()
     table.integer('unpaid_work').unsigned().notNullable()
