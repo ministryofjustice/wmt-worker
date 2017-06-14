@@ -25,36 +25,24 @@ module.exports.insertWarrant = function () {
   return knex(warrantsTableName)
     .insert(testCaseDetails)
     .returning('id')
-    .then(function (insertedIds) {
-      return insertedIds[0]
-    })
 }
 
 module.exports.insertUnpaidWork = function () {
   return knex(unpaidWorkTableName)
     .insert(testCaseDetails)
     .returning('id')
-    .then(function (insertedIds) {
-      return insertedIds[0]
-    })
 }
 
 module.exports.insertOverdueTermination = function () {
   return knex(overdueTerminationsTableName)
     .insert(testCaseDetails)
     .returning('id')
-    .then(function (insertedIds) {
-      return insertedIds[0]
-    })
 }
 
 module.exports.insertPriority = function () {
   return knex(priorityTableName)
     .insert(testCaseDetails)
     .returning('id')
-    .then(function (insertedIds) {
-      return insertedIds[0]
-    })
 }
 
 module.exports.deleteAll = function () {

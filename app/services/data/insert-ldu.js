@@ -5,17 +5,22 @@ const lduTable = `${config.DB_APP_SCHEMA}.ldu`
 
 module.exports = function (ldu) {
   var lduId
-  knex.select().from(lduTable)
-    .where('ldu_code', ldu.lduCode)
+
+  var lduDbObject = {}
+  lduDbObject.region_id = ldu.regionId
+  lduDbObject.code = ldu.code
+  lduDbObject.description = ldu.description
+  lduDbObject.effective_from = ldu.effectiveFrom
+  lduDbObject.effective_to = ldu.effectiveTo
+
+  return knex.select().from(lduTable)
+    .where('code', lduDbObject.code)
     .first()
     .then(function (result) {
-      if (result === 'undefined') {
-        knex(lduTable)
-          .insert(ldu)
+      if (result === undefined) {
+        return knex(lduTable)
+          .insert(lduDbObject)
           .returning('id')
-          .then(function (id) {
-            lduId = id
-          })
       } else {
         lduId = result['id']
       }

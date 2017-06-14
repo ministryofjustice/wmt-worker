@@ -5,17 +5,22 @@ const teamTable = `${config.DB_APP_SCHEMA}.team`
 
 module.exports = function (team) {
   var teamId
-  knex.select().from(teamTable)
-    .where('team_code', team.teamCode)
+  var teamDbObject = {}
+
+  teamDbObject.ldu_id = team.lduId
+  teamDbObject.code = team.code
+  teamDbObject.description = team.description
+  teamDbObject.effective_from = team.effectiveFrom
+  teamDbObject.effective_to = team.effectiveTo
+
+  return knex.select().from(teamTable)
+    .where('code', teamDbObject.code)
     .first()
     .then(function (result) {
-      if (result === 'undefined') {
-        knex(teamTable)
-          .insert(team)
+      if (result === undefined) {
+        return knex(teamTable)
+          .insert(teamDbObject)
           .returning('id')
-          .then(function (id) {
-            teamId = id
-          })
       } else {
         teamId = result['id']
       }
