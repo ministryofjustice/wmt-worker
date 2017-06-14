@@ -7,14 +7,19 @@ const Tiers = require('wmt-probation-rules').AppTiers
 const TierCounts = require('wmt-probation-rules').TierCounts
 const Locations = require('wmt-probation-rules').Locations
 const moment = require('moment')
+const workloadOwnerHelper = require('../../../helpers/data/app-workload-owner-helper')
 
 var inserts = []
 
 describe('app/services/data/insert-app-workload', function () {
   var workloadId
+  before(function() {
+      return workloadOwnerHelper.insertDependencies(inserts)
+  })
+
   it('should insert a new workload record', function (done) {
     var workload = new Workload(
-        1,
+        inserts.filter((item) => item.table === 'workload_owner')[0].id,
         2,
         3,
         4,
@@ -27,18 +32,27 @@ describe('app/services/data/insert-app-workload', function () {
     )
     insertAppWorkload(workload).then(function (id) {
       workloadId = id
-      return knex.table('workload')
-        .where({'id': workloadId})
+      inserts.push({table:'workload', id: id})
+      return knex('workload')
+        .where({'id': id})
         .first()
         .then(function (result) {
-          console.log(result)
+          expect(result).not.to.be.undefined
+          expect(result.total_cases).to.equal(2)
+          expect(result.monthly_sdrs).to.equal(3)
+          expect(result.sdr_due_next_30_days).to.equal(4)
+          expect(result.sdr_conversions_last_30_days).to.equal(5)
+          expect(result.paroms_completed_last_30_days).to.equal(6)
+          expect(result.paroms_due_next_30_days).to.equal(7)
           done()
         })
     })
   })
 
   after(function () {
-    return knex('workload').where('id', workloadId).del()
+    return knex('tiers').where('workload_id', workloadId).del().then(function () {
+      return workloadOwnerHelper.removeDependencies(inserts)
+    })
   })
 })
 
