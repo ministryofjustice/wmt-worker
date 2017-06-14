@@ -8,7 +8,7 @@ const calcuatePointsWorker = require('../../../../app/services/workers/calculate
 
 var inserts = []
 
-describe('services/data/get-capacity-for-individual', function () {
+describe('services/data/calculate-workload-points', function () {
   before(function (done) {
     helper.insertDependencies(inserts)
       .then(function (builtInserts) {
@@ -18,11 +18,12 @@ describe('services/data/get-capacity-for-individual', function () {
   })
 
   it('creates the expected points calculations', function (done) {
+    var workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
     var insertedWorkloads = inserts.filter((item) => item.table === 'workload')
     var initialWorkloadId = insertedWorkloads[0].id
     var batchSize = insertedWorkloads.length
 
-    var task = { additionalData: { workloadId: initialWorkloadId, batchSize: batchSize, reportId: 1 } }
+    var task = { additionalData: { workloadId: initialWorkloadId, batchSize: batchSize, reportId: workloadReportId } }
 
     calcuatePointsWorker.execute(task).then(() => {
       knex('workload_points_calculations')

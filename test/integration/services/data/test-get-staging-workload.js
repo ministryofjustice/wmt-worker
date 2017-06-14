@@ -25,13 +25,14 @@ describe('services/data/get-staging-workload', function () {
     })
   })
 
-  it('should return the union of all staged case details', function () {
-    return getStagingWorkload([0, 999])
+  it('should return the union of all staged case details', function (done) {
+    getStagingWorkload([0, 999])
       .then(function (omWorkload) {
         expect(omWorkload.length).to.be.equal(1)
         expect(omWorkload[0].casesSummary).to.deep.eq(caseSummaryReport)
         expect(omWorkload[0].courtReports).to.deep.eq(courtReport)
         expect(omWorkload[0].instReports).to.deep.eq(institutionReport)
+        done()
       })
 
       // make omKey dynamic and dont lose link between records

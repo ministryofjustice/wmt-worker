@@ -8,7 +8,7 @@ const insertWorkloadPointsCalculations = require('../../../../app/services/data/
 
 var inserts = []
 
-describe('services/data/get-capacity-for-individual', function () {
+describe('services/data/insert-workload-points-calculation', function () {
   before(function (done) {
     helper.insertDependencies(inserts)
       .then(function (builtInserts) {
