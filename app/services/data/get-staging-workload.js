@@ -6,8 +6,13 @@ const CourtReport = require('wmt-probation-rules').CourtReport
 const InstitutionalReport = require('wmt-probation-rules').InstitutionalReport
 const Tiers = require('wmt-probation-rules').Tiers
 const locations = require('wmt-probation-rules').Locations
+const getStagingCaseDetails = require('../data/get-staging-case-details')
 
 module.exports = function (range) {
+  var omWorkload = []
+  var casesSummary
+  var courtReport
+  var institutionalReport
   return knex('wmt_extract').whereBetween('wmt_extract.id', range)
     .join('court_reports', 'wmt_extract.om_key', 'court_reports.om_key')
     .join('inst_reports', 'wmt_extract.om_key', 'inst_reports.om_key')
@@ -26,7 +31,6 @@ module.exports = function (range) {
       'wmt_extract.custtiera', 'court_reports.om_team_staff_grade', 'court_reports.sdr_last_30', 'court_reports.sdr_due_next_30',
       'court_reports.sdr_conv_last_30', 'inst_reports.parom_due_next_30', 'inst_reports.parom_comp_last_30')
     .then(function (results) {
-      var omWorkload = []
       if (results !== 'undefined' && results.length > 0) {
         for (var result of results) {
           var communityTiers = new Tiers(
@@ -64,6 +68,7 @@ module.exports = function (range) {
             result['custtierb1'],
             result['custtiera']
           )
+
           var casesSummary = new CasesSummary(
             result['trust'],
             result['region_desc'],
@@ -98,13 +103,14 @@ module.exports = function (range) {
             result['parom_due_next_30'],
             result['parom_comp_last_30']
           )
-
-          omWorkload.push(new OmWorkload(
-              casesSummary, courtReport, institutionalReport
-          ))
+          return getStagingCaseDetails().then(function (caseDetails) {
+            omWorkload.push(new OmWorkload(
+                casesSummary, courtReport, institutionalReport, caseDetails
+            ))
+          })
         }
-
-        return omWorkload
       }
+    }).then(function() {
+      return omWorkload
     })
 }
