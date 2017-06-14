@@ -1,7 +1,5 @@
 const Promise = require('bluebird').Promise
 const logger = require('../log')
-const getStagingCaseSummary = require('../data/get-staging-case-summary')
-const getStagingCaseDetails = require('../data/get-staging-case-details')
 const insertOffenderManagerTypeId = require('../data/insert-offender-manager-type-id')
 const insertOffenderManager = require('../data/insert-offender-manager')
 const insertWorkloadOwner = require('../data/insert-workload-owner')
@@ -16,15 +14,21 @@ const OmWorkload = require('wmt-probation-rules').OmWorkload
 const mapWorkload = require('wmt-probation-rules').mapWorkload
 const Ldu = require('wmt-probation-rules').Ldu
 const Region = require('wmt-probation-rules').Region
+const Task = require('../domain/task')
+const taskType = require('../../constants/task-type')
+const taskStatus = require('../../constants/task-status')
+const submittingAgent = require('../../constants/task-submitting-agent')
+const getStagingWorkload = require('../data/get-staging-workload')
+const createNewTasks = require('../data/create-tasks')
 
 module.exports.execute = function (task) {
   var nextId = task.additionalData.startingId
   var lastId = nextId + (task.additionalData.batchSize - 1)
+  var workloads = []
 
-  return getStagingCaseSummary([nextId, lastId]).then(function (caseSummaryRecords) {
-    var caseDetailRecords = getStagingCaseDetails()
-
-    return Promise.each(caseSummaryRecords, function (caseSummary) {
+  return getStagingWorkload([nextId, lastId]).then(function (stagingWorkloads) {
+    return Promise.each(stagingWorkloads, function (stagingWorkload) {
+      var caseSummary = stagingWorkload.casesSummary
       return insertOffenderManagerTypeId(caseSummary.omGradeCode)
           .then(function (typeId) {
             insertOffenderManager(new OffenderManager(
@@ -67,19 +71,13 @@ module.exports.execute = function (task) {
                           ))
           })
           .then(function (workloadOwnerId) {
-            var omWorkload = new OmWorkload(caseSummaryRecords, null, null, caseDetailRecords)
-            return mapWorkload(omWorkload, parseInt(workloadOwnerId))
+            workloads.push(mapWorkload(stagingWorkload, parseInt(workloadOwnerId)))
           })
       })
-      .catch(function (error) {
-        logger.error(error)
-        task.additionalData.batchSize -= 1
-      })
+
     })
-    //
-    // TODO: We need to know the workload ids of the inserted application
-    // workloads before we can created the tasks to recalculate points
-    /* .then(function () {
+    /* Waiting for insert worklaods, into app schema to be written
+    .then(function () {
       var createWorkloadTask = new Task(
                 undefined,
                 submittingAgent.WORKER,
