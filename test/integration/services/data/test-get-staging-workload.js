@@ -27,7 +27,7 @@ describe('services/data/get-staging-workload', function () {
       return caseDetailsHelper.insertUnpaidWork()
     })
     .then(function () {
-       return caseDetailsHelper.insertWarrant()
+      return caseDetailsHelper.insertWarrant()
     })
   })
 

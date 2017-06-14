@@ -10,9 +10,6 @@ const getStagingCaseDetails = require('../data/get-staging-case-details')
 
 module.exports = function (range) {
   var omWorkload = []
-  var casesSummary
-  var courtReport
-  var institutionalReport
   return knex('wmt_extract').whereBetween('wmt_extract.id', range)
     .join('court_reports', 'wmt_extract.om_key', 'court_reports.om_key')
     .join('inst_reports', 'wmt_extract.om_key', 'inst_reports.om_key')
@@ -110,7 +107,7 @@ module.exports = function (range) {
           })
         }
       }
-    }).then(function() {
+    }).then(function () {
       return omWorkload
     })
 }

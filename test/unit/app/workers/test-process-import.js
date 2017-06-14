@@ -1,5 +1,6 @@
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
+require('sinon-bluebird')
 const IdRange = require('../../../../app/services/domain/id-range')
 const expect = require('chai').expect
 
@@ -12,7 +13,7 @@ var getWmtExtractStub
 
 describe(relativeFilePath, function () {
   beforeEach(function () {
-    getWmtExtractStub = sinon.stub().returns(new IdRange(firstId, lastId))
+    getWmtExtractStub = sinon.stub()
     createNewTasksStub = sinon.stub()
     processImport = proxyquire('../../../../app/' + relativeFilePath, {
       '../log': { info: function (message) { console.log(message) } },
@@ -22,6 +23,7 @@ describe(relativeFilePath, function () {
   })
 
   it('should call the database to get the ids', function (done) {
+    getWmtExtractStub.resolves(new IdRange(firstId, lastId))
     processImport.execute({}).then(function () {
       expect(getWmtExtractStub.called).to.be.equal(true)
       done()
@@ -29,6 +31,8 @@ describe(relativeFilePath, function () {
   })
 
   it('should create 2,000 tasks given a batch size of 5', function (done) {
+    createNewTasksStub.resolves()
+    getWmtExtractStub.resolves(new IdRange(firstId, lastId))
     processImport.execute({}).then(function () {
       expect(createNewTasksStub.getCall(0).args[0].length).to.equal(2000)
       done()

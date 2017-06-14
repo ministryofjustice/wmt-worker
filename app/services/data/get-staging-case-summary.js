@@ -1,12 +1,11 @@
-const config = require('../../../config')
-const knexConfig = require('../../../knexfile').development
+const knexConfig = require('../../../knexfile').staging
 const knex = require('knex')(knexConfig)
-const CaseSummary = require('wmt-probation-rules').CaseSummary
+const CasesSummary = require('wmt-probation-rules').CasesSummary
 const Tiers = require('wmt-probation-rules').Tiers
 const locations = require('wmt-probation-rules').Locations
 
 module.exports = function (range) {
-  return knex.select().from(`${config.DB_APP_SCHEMA}.wmt_extract`).whereBetween('id', range)
+  return knex('wmt_extract').whereBetween('id', range)
     .then(function (results) {
       var caseSummary = []
       var communityTiers = []
@@ -49,18 +48,18 @@ module.exports = function (range) {
             result['custtierb1'],
             result['custtiera']
           )
-          caseSummary.push(new CaseSummary(
+          caseSummary.push(new CasesSummary(
             result['trust'],
-            result['regionDesc'],
-            result['regionCode'],
-            result['lduDesc'],
-            result['lduCode'],
-            result['teamDesc'],
-            result['teamCode'],
-            result['omSurname'],
-            result['omForename'],
-            result['omGradeCode'],
-            result['omKey'],
+            result['region_desc'],
+            result['region_code'],
+            result['ldu_desc'],
+            result['ldu_code'],
+            result['team_desc'],
+            result['team_code'],
+            result['om_surname'],
+            result['om_forename'],
+            result['om_grade_code'],
+            result['om_key'],
             communityTiers,
             licenseTiers,
             custodyTiers,

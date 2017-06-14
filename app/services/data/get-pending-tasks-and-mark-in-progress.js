@@ -1,4 +1,4 @@
-const config = require('../../../knexfile').development
+const config = require('../../../knexfile').app
 const knex = require('knex')(config)
 const taskStatus = require('../../constants/task-status')
 const updateTaskStatusByIds = require('./update-task-status-by-ids')
@@ -19,7 +19,7 @@ module.exports = function (batchSize) {
             result.id,
             result.submitting_agent,
             result.type,
-            result.additional_data,
+            JSON.parse(result.additional_data),
             result.date_created,
             result.date_processed,
             taskStatus.INPROGRESS))

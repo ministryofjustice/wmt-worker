@@ -31,9 +31,10 @@ describe('services/workers/calculate-workload-points', function () {
     probationRulesStub.calculateSdrConversionPoints = sinon.stub()
     probationRulesStub.calculateAvailablePoints = sinon.stub()
 
-    task = {id: 1, additionalData: {
-      workloadId: WORKLOAD_ID, batchSize: BATCH_SIZE, reportId: REPORT_ID
-    }}
+    task = {id: 1,
+      additionalData: {
+        workloadId: WORKLOAD_ID, batchSize: BATCH_SIZE, reportId: REPORT_ID
+      }}
 
     calculateWorkloadPoints = proxyquire('../../../../app/services/workers/calculate-workload-points', {
       '../log': { info: function (message) {}, error: function (message) {} },
@@ -48,8 +49,8 @@ describe('services/workers/calculate-workload-points', function () {
   it('calls the get workloads promise correctly', function (done) {
     getWorkloadsStub.resolves()
     calculateWorkloadPoints.execute(task).then(function () {
-        expect(getWorkloadsStub.calledWith(WORKLOAD_ID, BATCH_SIZE)).to.equal(true)
-        done()
+      expect(getWorkloadsStub.calledWith(WORKLOAD_ID, BATCH_SIZE)).to.equal(true)
+      done()
     })
   })
 

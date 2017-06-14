@@ -1,6 +1,5 @@
 const config = require('../../../config')
 
-const Promise = require('bluebird').Promise
 const Task = require('../domain/task')
 const Batch = require('../domain/batch')
 
@@ -15,8 +14,7 @@ const submittingAgent = require('../../constants/task-submitting-agent')
 module.exports.execute = function (task) {
   const batchSize = parseInt(config.ASYNC_WORKER_BATCH_SIZE, 10)
 
-  return new Promise(function (resolve) {
-    var idRange = getExtractIdRange()
+  return getExtractIdRange().then(function (idRange) {
     var tasks = []
     var numberOfRecordsToProcess = idRange.lastId - idRange.firstId
     var tasksRequired = Math.ceil(numberOfRecordsToProcess / batchSize)
@@ -26,7 +24,7 @@ module.exports.execute = function (task) {
     if (tasksRequired > 0) {
       var nextId = idRange.firstId
 
-      for (let i = 0; i < tasksRequired; i++) {
+      for (var i = 0; i < tasksRequired; i++) {
         var additionalData = new Batch(nextId, batchSize)
         var taskToWrite = new Task(
             undefined,
@@ -38,11 +36,10 @@ module.exports.execute = function (task) {
          )
         tasks.push(taskToWrite)
         nextId += batchSize
-        createNewTasks(tasks)
       }
+      return createNewTasks(tasks)
     }
 
     logger.info('Tasks created')
-    resolve()
   })
 }
