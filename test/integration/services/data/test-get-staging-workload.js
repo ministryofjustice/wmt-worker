@@ -7,21 +7,27 @@ describe('services/data/get-staging-workload', function () {
   var caseSummaryReport, courtReport, institutionReport
 
   before(function () {
-    return workloadHelper.insertCaseSummaryReport().then(function (result) {
+    return workloadHelper.insertCaseSummaryReport()
+    .then(function (result) {
       caseSummaryReport = result
-      return workloadHelper.insertCourtReport().then(function (result) {
-        courtReport = result
-        return workloadHelper.insertInstitutionalReport().then(function (result) {
-          institutionReport = result
-          return caseDetailsHelper.insertOverdueTermination().then(function () {
-            return caseDetailsHelper.insertPriority().then(function () {
-              return caseDetailsHelper.insertUnpaidWork().then(function () {
-                return caseDetailsHelper.insertWarrant()
-              })
-            })
-          })
-        })
-      })
+      return workloadHelper.insertCourtReport()
+    })
+    .then(function (result) {
+      courtReport = result
+      return workloadHelper.insertInstitutionalReport()
+    })
+    .then(function (result) {
+      institutionReport = result
+      return caseDetailsHelper.insertOverdueTermination()
+    })
+    .then(function () {
+      return caseDetailsHelper.insertPriority()
+    })
+    .then(function () {
+      return caseDetailsHelper.insertUnpaidWork()
+    })
+    .then(function () {
+       return caseDetailsHelper.insertWarrant()
     })
   })
 
