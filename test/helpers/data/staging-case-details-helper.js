@@ -1,4 +1,3 @@
-const config = require('../../../config')
 const knexConfig = require('../../../knexfile').staging
 const knex = require('knex')(knexConfig)
 const stagingHelper = require('wmt-probation-rules').stagingTestHelper
@@ -26,7 +25,7 @@ module.exports.insertWarrant = function (inserts) {
   return knex(warrantsTableName)
     .insert(testCaseDetails)
     .returning('id')
-    .then(function(id) {
+    .then(function (id) {
       inserts.push({table: warrantsTableName, id: id})
       return inserts
     })
@@ -36,7 +35,7 @@ module.exports.insertUnpaidWork = function (inserts) {
   return knex(unpaidWorkTableName)
     .insert(testCaseDetails)
     .returning('id')
-    .then(function(id) {
+    .then(function (id) {
       inserts.push({table: unpaidWorkTableName, id: id})
       return inserts
     })
@@ -46,7 +45,7 @@ module.exports.insertOverdueTermination = function (inserts) {
   return knex(overdueTerminationsTableName)
     .insert(testCaseDetails)
     .returning('id')
-    .then(function(id) {
+    .then(function (id) {
       inserts.push({table: overdueTerminationsTableName, id: id})
       return inserts
     })
@@ -56,7 +55,7 @@ module.exports.insertPriority = function (inserts) {
   return knex(priorityTableName)
     .insert(testCaseDetails)
     .returning('id')
-    .then(function(id) {
+    .then(function (id) {
       inserts.push({table: priorityTableName, id: id})
       return inserts
     })

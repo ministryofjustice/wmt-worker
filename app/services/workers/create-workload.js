@@ -11,7 +11,6 @@ const insertWorkload = require('../data/insert-app-workload')
 const OffenderManager = require('wmt-probation-rules').OffenderManager
 const Team = require('wmt-probation-rules').Team
 const WorkloadOwner = require('wmt-probation-rules').WorkloadOwner
-const OmWorkload = require('wmt-probation-rules').OmWorkload
 const mapWorkload = require('wmt-probation-rules').mapWorkload
 const Ldu = require('wmt-probation-rules').Ldu
 const Region = require('wmt-probation-rules').Region
@@ -33,7 +32,7 @@ module.exports.execute = function (task) {
       var caseSummary = stagingWorkload.casesSummary
       return insertOffenderManagerTypeId(caseSummary.omGradeCode)
           .then(function (typeId) {
-            insertOffenderManager(new OffenderManager(
+            return insertOffenderManager(new OffenderManager(
                           undefined,
                           caseSummary.omKey,
                           caseSummary.omForename,
@@ -75,16 +74,16 @@ module.exports.execute = function (task) {
           .then(function (workloadOwnerId) {
             return insertWorkload(mapWorkload(stagingWorkload, parseInt(workloadOwnerId)))
                 .then(function (workloadId) {
-                    insertedWorkloadIds.push(workloadId)
+                  insertedWorkloadIds.push(workloadId)
                 })
           })
       })
     })
     .then(function () {
-        var taskDetails = {
-            workloadBatch: new Batch(insertedWorkloadIds[0], insertedWorkloadIds.length),
-            workloadReportId: 1
-        }
+      var taskDetails = {
+        workloadBatch: new Batch(insertedWorkloadIds[0], insertedWorkloadIds.length),
+        workloadReportId: 1
+      }
       var calculateWorkloadPointsTask = new Task(
                 undefined,
                 submittingAgent.WORKER,
@@ -99,6 +98,6 @@ module.exports.execute = function (task) {
             .then(function () {
               logger.info('Tasks created')
             })
-    }) 
+    })
   })
 }

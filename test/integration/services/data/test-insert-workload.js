@@ -6,15 +6,14 @@ const Workload = require('wmt-probation-rules').Workload
 const Tiers = require('wmt-probation-rules').AppTiers
 const TierCounts = require('wmt-probation-rules').TierCounts
 const Locations = require('wmt-probation-rules').Locations
-const moment = require('moment')
 const workloadOwnerHelper = require('../../../helpers/data/app-workload-owner-helper')
 
 var inserts = []
 
 describe('app/services/data/insert-app-workload', function () {
   var workloadId
-  before(function() {
-      return workloadOwnerHelper.insertDependencies(inserts)
+  before(function () {
+    return workloadOwnerHelper.insertDependencies(inserts)
   })
 
   it('should insert a new workload record', function (done) {
@@ -32,12 +31,12 @@ describe('app/services/data/insert-app-workload', function () {
     )
     insertAppWorkload(workload).then(function (id) {
       workloadId = id
-      inserts.push({table:'workload', id: id})
+      inserts.push({table: 'workload', id: id})
       return knex('workload')
         .where({'id': id})
         .first()
         .then(function (result) {
-          expect(result).not.to.be.undefined
+          expect(result).not.to.be.undefined // eslint-disable-line
           expect(result.total_cases).to.equal(2)
           expect(result.monthly_sdrs).to.equal(3)
           expect(result.sdr_due_next_30_days).to.equal(4)
@@ -57,12 +56,12 @@ describe('app/services/data/insert-app-workload', function () {
 })
 
 function buildTier (location) {
-    return new Tiers(location,
-        buildTierCount(),buildTierCount(),buildTierCount(),
-        buildTierCount(),buildTierCount(),buildTierCount(),
-        buildTierCount(),buildTierCount(), 80)
+  return new Tiers(location,
+        buildTierCount(), buildTierCount(), buildTierCount(),
+        buildTierCount(), buildTierCount(), buildTierCount(),
+        buildTierCount(), buildTierCount(), 80)
 }
 
-function buildTierCount() {
-    return new TierCounts(6, 1, 3, 2)
+function buildTierCount () {
+  return new TierCounts(6, 1, 3, 2)
 }

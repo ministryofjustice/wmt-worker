@@ -7,9 +7,10 @@ const InstitutionalReport = require('wmt-probation-rules').InstitutionalReport
 const Tiers = require('wmt-probation-rules').Tiers
 const locations = require('wmt-probation-rules').Locations
 const getStagingCaseDetails = require('../data/get-staging-case-details')
+const Promise = require('bluebird').Promise
 
 module.exports = function (range) {
-  var omWorkload = []
+  var omWorkloads = []
   return knex('wmt_extract').whereBetween('wmt_extract.id', range)
     .join('court_reports', 'wmt_extract.om_key', 'court_reports.om_key')
     .join('inst_reports', 'wmt_extract.om_key', 'inst_reports.om_key')
@@ -29,7 +30,7 @@ module.exports = function (range) {
       'court_reports.sdr_conv_last_30', 'inst_reports.parom_due_next_30', 'inst_reports.parom_comp_last_30')
     .then(function (results) {
       if (results !== 'undefined' && results.length > 0) {
-        for (var result of results) {
+        return Promise.each(results, function (result) {
           var communityTiers = new Tiers(
             locations.COMMUNITY,
             result['commtier0'],
@@ -100,14 +101,15 @@ module.exports = function (range) {
             result['parom_due_next_30'],
             result['parom_comp_last_30']
           )
-          return getStagingCaseDetails().then(function (caseDetails) {
-            omWorkload.push(new OmWorkload(
+          return getStagingCaseDetails(result['om_key']).then(function (caseDetails) {
+            omWorkloads.push(new OmWorkload(
                 casesSummary, courtReport, institutionalReport, caseDetails
             ))
           })
-        }
+        })
+        .then(function () {
+          return omWorkloads
+        })
       }
-    }).then(function () {
-      return omWorkload
     })
 }

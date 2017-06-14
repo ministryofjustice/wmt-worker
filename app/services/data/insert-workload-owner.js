@@ -11,7 +11,7 @@ module.exports = function (workloadOwner) {
   workloadOwnerDatabaseObject.working_hours_id = workloadOwner.workingHoursId
   workloadOwnerDatabaseObject.team_id = workloadOwner.teamId
 
-  return knex.select().from(workloadOwnerTable)
+  return knex(workloadOwnerTable)
     .where('offender_manager_id', workloadOwner.offenderManagerId)
     .andWhere('team_id', workloadOwner.teamId)
     .first()

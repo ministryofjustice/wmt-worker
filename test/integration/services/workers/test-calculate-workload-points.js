@@ -5,6 +5,7 @@ const expect = require('chai').expect
 
 const helper = require('../../../helpers/data/app-workload-points-calculation-helper')
 const calcuatePointsWorker = require('../../../../app/services/workers/calculate-workload-points')
+const Batch = require('../../../../app/services/domain/batch')
 
 var inserts = []
 
@@ -23,7 +24,7 @@ describe('services/data/calculate-workload-points', function () {
     var initialWorkloadId = insertedWorkloads[0].id
     var batchSize = insertedWorkloads.length
 
-    var task = { additionalData: { workloadId: initialWorkloadId, batchSize: batchSize, reportId: workloadReportId } }
+    var task = { additionalData: { workloadBatch: new Batch(initialWorkloadId, batchSize), workloadloadReportId: workloadReportId } }
 
     calcuatePointsWorker.execute(task).then(() => {
       knex('workload_points_calculations')

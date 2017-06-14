@@ -4,6 +4,8 @@ const sinon = require('sinon')
 require('sinon-bluebird')
 const pointsHelper = require('wmt-probation-rules').pointsHelper
 
+const Batch = require('../../../../app/services/domain/batch')
+
 const WORKLOAD_ID = 10
 const BATCH_SIZE = 20
 const REPORT_ID = 30
@@ -33,7 +35,8 @@ describe('services/workers/calculate-workload-points', function () {
 
     task = {id: 1,
       additionalData: {
-        workloadId: WORKLOAD_ID, batchSize: BATCH_SIZE, reportId: REPORT_ID
+        workloadReportId: REPORT_ID,
+        workloadBatch: new Batch(WORKLOAD_ID, BATCH_SIZE)
       }}
 
     calculateWorkloadPoints = proxyquire('../../../../app/services/workers/calculate-workload-points', {

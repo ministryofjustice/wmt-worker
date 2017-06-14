@@ -12,11 +12,11 @@ module.exports = function (workload) {
     .insert(workloadDbObj)
     .returning('id')
     .then(function (workloadId) {
-        var promises = []
-        promises.push(insertTiers(workload.communityTiers, workloadId, Locations.COMMUNITY))
-        promises.push(insertTiers(workload.custodyTiers, workloadId, Locations.CUSTODY))
-        promises.push(insertTiers(workload.licenseTiers, workloadId, Locations.LICENSE))
-        return Promise.all(promises).then(function() { return workloadId[0] })
+      var promises = []
+      promises.push(insertTiers(workload.communityTiers, workloadId, Locations.COMMUNITY))
+      promises.push(insertTiers(workload.custodyTiers, workloadId, Locations.CUSTODY))
+      promises.push(insertTiers(workload.licenseTiers, workloadId, Locations.LICENSE))
+      return Promise.all(promises).then(function () { return workloadId[0] })
     })
 }
 
@@ -39,13 +39,13 @@ var insertTiers = function (tiers, workloadId, location) {
   for (var i = 0; i < tiersInNumberOrder.length; i++) {
     var currentTier = tiersInNumberOrder[i]
     var tierToInsert = {
-        workload_id: workloadId,
-        tier_number: i,
-        overdue_terminations_total: currentTier.overdueTermination,
-        warrants_total: currentTier.warrants,
-        unpaid_work_total: currentTier.unpaidWork,
-        total_cases: currentTier.total,
-        location: location
+      workload_id: workloadId,
+      tier_number: i,
+      overdue_terminations_total: currentTier.overdueTermination,
+      warrants_total: currentTier.warrants,
+      unpaid_work_total: currentTier.unpaidWork,
+      total_cases: currentTier.total,
+      location: location
     }
     tiersToInsert.push(tierToInsert)
   }
