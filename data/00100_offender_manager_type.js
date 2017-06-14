@@ -5,7 +5,8 @@ exports.seed = function (knex, Promise) {
     .then(function () {
       // Inserts seed entries
       return knex(tableName).insert([
-        { description: 'Probation Officer' }
+        { description: 'Probation Officer', grade_code: 'C' },
+        { description: 'Probation Officer', grade_code: 'Z' }
       ])
     })
 }

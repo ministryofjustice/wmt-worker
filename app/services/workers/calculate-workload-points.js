@@ -15,8 +15,8 @@ module.exports.execute = function (task) {
   var reductions = 0
   var contractedHours = 40
 
-  var id = task.additionalData.workloadId
-  var batchSize = task.additionalData.batchSize
+  var id = task.additionalData.workloadBatch.startingId
+  var batchSize = task.additionalData.workloadBatch.batchSize
   var reportId = task.additionalData.reportId
 
   logger.info('Calculating Workload Points for Workloads ' + id + ' - ' + (id + batchSize))

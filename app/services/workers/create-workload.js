@@ -6,6 +6,7 @@ const insertWorkloadOwner = require('../data/insert-workload-owner')
 const insertTeam = require('../data/insert-team')
 const insertLdu = require('../data/insert-ldu')
 const insertRegion = require('../data/insert-region')
+const insertWorkload = require('../data/insert-app-workload')
 
 const OffenderManager = require('wmt-probation-rules').OffenderManager
 const Team = require('wmt-probation-rules').Team
@@ -15,6 +16,7 @@ const mapWorkload = require('wmt-probation-rules').mapWorkload
 const Ldu = require('wmt-probation-rules').Ldu
 const Region = require('wmt-probation-rules').Region
 const Task = require('../domain/task')
+const Batch = require('../domain/batch')
 const taskType = require('../../constants/task-type')
 const taskStatus = require('../../constants/task-status')
 const submittingAgent = require('../../constants/task-submitting-agent')
@@ -24,9 +26,9 @@ const createNewTasks = require('../data/create-tasks')
 module.exports.execute = function (task) {
   var nextId = task.additionalData.startingId
   var lastId = nextId + (task.additionalData.batchSize - 1)
-  var workloads = []
 
   return getStagingWorkload([nextId, lastId]).then(function (stagingWorkloads) {
+    var insertedWorkloadIds = []
     return Promise.each(stagingWorkloads, function (stagingWorkload) {
       var caseSummary = stagingWorkload.casesSummary
       return insertOffenderManagerTypeId(caseSummary.omGradeCode)
@@ -67,31 +69,36 @@ module.exports.execute = function (task) {
                           undefined,
                           parseInt(offenderManagerId),
                           undefined,
-                          teamId
+                          parseInt(teamId)
                           ))
           })
           .then(function (workloadOwnerId) {
-            workloads.push(mapWorkload(stagingWorkload, parseInt(workloadOwnerId)))
+            return insertWorkload(mapWorkload(stagingWorkload, parseInt(workloadOwnerId)))
+                .then(function (workloadId) {
+                    insertedWorkloadIds.push(workloadId)
+                })
           })
       })
-
     })
-    /* Waiting for insert worklaods, into app schema to be written
     .then(function () {
-      var createWorkloadTask = new Task(
+        var taskDetails = {
+            workloadBatch: new Batch(insertedWorkloadIds[0], insertedWorkloadIds.length),
+            workloadReportId: 1
+        }
+      var calculateWorkloadPointsTask = new Task(
                 undefined,
                 submittingAgent.WORKER,
-                taskType.,
-                task.additionalData,
+                taskType.CALCULATE_WORKLOAD_POINTS,
+                taskDetails,
                 undefined,
                 undefined,
                 taskStatus.PENDING
                 )
 
-      return createNewTasks([createWorkloadTask])
+      return createNewTasks([calculateWorkloadPointsTask])
             .then(function () {
               logger.info('Tasks created')
             })
-    }) */
+    }) 
   })
 }

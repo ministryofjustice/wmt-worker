@@ -16,7 +16,7 @@ module.exports = function (workload) {
         promises.push(insertTiers(workload.communityTiers, workloadId, Locations.COMMUNITY))
         promises.push(insertTiers(workload.custodyTiers, workloadId, Locations.CUSTODY))
         promises.push(insertTiers(workload.licenseTiers, workloadId, Locations.LICENSE))
-        return Promise.all(promises).then(function() { return workloadId })
+        return Promise.all(promises).then(function() { return workloadId[0] })
     })
 }
 
