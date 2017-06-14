@@ -1,7 +1,8 @@
 const config = require('../../../config')
-const knexConfig = require('../../../knexfile').development
+const knexConfig = require('../../../knexfile').staging
 const knex = require('knex')(knexConfig)
 const stagingHelper = require('wmt-probation-rules').stagingTestHelper
+const Promise = require('bluebird').Promise
 
 const aliases = {
   caseRefNo: 'case_ref_no',
@@ -13,49 +14,59 @@ const aliases = {
   tierCode: 'tier_code'
 }
 
-const warrantsTableName = `${config.DB_STG_SCHEMA}.flag_warr_4_n`
-const overdueTerminationsTableName = `${config.DB_STG_SCHEMA}.flag_o_due`
-const unpaidWorkTableName = `${config.DB_STG_SCHEMA}.flag_upw`
-const priorityTableName = `${config.DB_STG_SCHEMA}.flag_priority`
+const warrantsTableName = `flag_warr_4_n`
+const overdueTerminationsTableName = `flag_o_due`
+const unpaidWorkTableName = `flag_upw`
+const priorityTableName = `flag_priority`
 
 // Create a test CaseDetails object, mapping properties to column names
 const testCaseDetails = mapForInsert(getTestCaseDetails(getGeneratedCaseRefNo(), '12345', 'community'))
 
-module.exports.insertWarrant = function () {
+module.exports.insertWarrant = function (inserts) {
   return knex(warrantsTableName)
     .insert(testCaseDetails)
     .returning('id')
+    .then(function(id) {
+      inserts.push({table: warrantsTableName, id: id})
+      return inserts
+    })
 }
 
-module.exports.insertUnpaidWork = function () {
+module.exports.insertUnpaidWork = function (inserts) {
   return knex(unpaidWorkTableName)
     .insert(testCaseDetails)
     .returning('id')
+    .then(function(id) {
+      inserts.push({table: unpaidWorkTableName, id: id})
+      return inserts
+    })
 }
 
-module.exports.insertOverdueTermination = function () {
+module.exports.insertOverdueTermination = function (inserts) {
   return knex(overdueTerminationsTableName)
     .insert(testCaseDetails)
     .returning('id')
+    .then(function(id) {
+      inserts.push({table: overdueTerminationsTableName, id: id})
+      return inserts
+    })
 }
 
-module.exports.insertPriority = function () {
+module.exports.insertPriority = function (inserts) {
   return knex(priorityTableName)
     .insert(testCaseDetails)
     .returning('id')
+    .then(function(id) {
+      inserts.push({table: priorityTableName, id: id})
+      return inserts
+    })
 }
 
-module.exports.deleteAll = function () {
-  return knex(warrantsTableName).del()
-    .then(function () {
-      return knex(unpaidWorkTableName).del()
-        .then(function () {
-          return knex(overdueTerminationsTableName).del()
-            .then(function () {
-              return knex(priorityTableName).del()
-            })
-        })
-    })
+module.exports.deleteAll = function (inserts) {
+  inserts = inserts.reverse()
+  return Promise.each(inserts, function (insert) {
+    return knex(insert.table).where('id', insert.id).del()
+  })
 }
 
 function getTestCaseDetails (caseRefNo, omKey, location) {

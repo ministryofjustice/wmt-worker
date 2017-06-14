@@ -4,46 +4,53 @@ const workloadHelper = require('../../../helpers/data/staging-workload-helper')
 const caseDetailsHelper = require('../../../helpers/data/staging-case-details-helper')
 
 describe('services/data/get-staging-workload', function () {
-  var caseSummaryReport, courtReport, institutionReport
+  const testOmKey = (Math.random() * 1000).toString()
+  const caseSummaryReport = workloadHelper.getTestCaseSummary(testOmKey)
+  const courtReport = workloadHelper.getTestCourtReport(testOmKey)
+  const institutionReport = workloadHelper.getTestInstitutionalReport(testOmKey)
+  var insertedRecords = []
 
   before(function () {
-    return workloadHelper.insertCaseSummaryReport()
-    .then(function (result) {
-      caseSummaryReport = result
-      return workloadHelper.insertCourtReport()
+    return workloadHelper.insertCaseSummaryReport(caseSummaryReport, insertedRecords)
+    .then(function (inserts) {
+      return workloadHelper.insertCourtReport(courtReport, inserts)
     })
-    .then(function (result) {
-      courtReport = result
-      return workloadHelper.insertInstitutionalReport()
+    .then(function (inserts) {
+      return workloadHelper.insertInstitutionalReport(institutionReport, inserts)
     })
-    .then(function (result) {
-      institutionReport = result
-      return caseDetailsHelper.insertOverdueTermination()
+    .then(function (inserts) {
+      return caseDetailsHelper.insertOverdueTermination(inserts)
     })
-    .then(function () {
-      return caseDetailsHelper.insertPriority()
+    .then(function (inserts) {
+      return caseDetailsHelper.insertPriority(inserts)
     })
-    .then(function () {
-      return caseDetailsHelper.insertUnpaidWork()
+    .then(function (inserts) {
+      return caseDetailsHelper.insertUnpaidWork(inserts)
     })
-    .then(function () {
-      return caseDetailsHelper.insertWarrant()
+    .then(function (inserts) {
+      return caseDetailsHelper.insertWarrant(inserts)
+    })
+    .then(function (inserts) {
+      insertedRecords = inserts
     })
   })
 
   it('should return the union of all staged case details', function (done) {
-    getStagingWorkload([0, 999])
-      .then(function (omWorkload) {
-        expect(omWorkload.length).to.be.equal(1)
-        expect(omWorkload[0].casesSummary).to.deep.eq(caseSummaryReport)
-        expect(omWorkload[0].courtReports).to.deep.eq(courtReport)
-        expect(omWorkload[0].instReports).to.deep.eq(institutionReport)
-        done()
-      })
+    var workloads = insertedRecords.filter((item) => item.table === 'wmt_extract')
+    var firstId = workloads[0].id
+    var lastId = firstId + workloads.length
+    getStagingWorkload([firstId, lastId])
+    .then(function (omWorkload) {
+      expect(omWorkload.length).to.be.equal(1)
+      expect(omWorkload[0].casesSummary).to.deep.eq(caseSummaryReport)
+      expect(omWorkload[0].courtReports).to.deep.eq(courtReport)
+      expect(omWorkload[0].instReports).to.deep.eq(institutionReport)
+      done()
+    })
   })
 
-  after(function () {
-    workloadHelper.deleteAll()
-    return caseDetailsHelper.deleteAll()
+  after(function (done) {
+    caseDetailsHelper.deleteAll(insertedRecords)
+        .then(() => done())
   })
 })

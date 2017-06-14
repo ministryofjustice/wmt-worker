@@ -72,31 +72,33 @@ module.exports.getTestInstitutionalReport = function (omKey = testOmKey) {
   return stagingHelper.getTestInstitutionalReport(omKey)
 }
 
-const caseSummary = module.exports.getTestCaseSummary(testOmKey)
-const courtReport = module.exports.getTestCourtReport(testOmKey)
-const institutionalReport = module.exports.getTestInstitutionalReport(testOmKey)
-
-module.exports.insertCaseSummaryReport = function () {
+module.exports.insertCaseSummaryReport = function (caseSummary, inserts) {
   return knex(wmtExtractTable)
     .insert(mapForInsert(caseSummary))
-    .then(function () {
-      return caseSummary
+    .returning('id')
+    .then(function (id) {
+      inserts.push({table: wmtExtractTable, id: id})
+      return inserts
     })
 }
 
-module.exports.insertCourtReport = function () {
+module.exports.insertCourtReport = function (courtReport, inserts) {
   return knex(courtReportsTable)
     .insert(mapForInsert(courtReport))
-    .then(function () {
-      return courtReport
+    .returning('id')
+    .then(function (id) {
+      inserts.push({table: courtReportsTable, id: id})
+      return inserts
     })
 }
 
-module.exports.insertInstitutionalReport = function () {
+module.exports.insertInstitutionalReport = function (institutionalReport, inserts) {
   return knex(institutionalReportsTable)
     .insert(mapForInsert(institutionalReport))
-    .then(function () {
-      return institutionalReport
+    .returning('id')
+    .then(function (id) {
+      inserts.push({table: institutionalReportsTable, id: id})
+      return inserts
     })
 }
 
