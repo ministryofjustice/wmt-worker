@@ -12,7 +12,7 @@ module.exports = {
         encrypt: true
       }
     },
-    debug: true
+    debug: false
   },
   staging: {
     client: 'mssql',
@@ -28,7 +28,7 @@ module.exports = {
     migrations: {
       directory: 'migrations/staging'
     },
-    debug: true
+    debug: false
   },
   app: {
     client: 'mssql',
@@ -47,6 +47,6 @@ module.exports = {
     seeds: {
       directory: 'data'
     },
-    debug: true
+    debug: false
   }
 }
