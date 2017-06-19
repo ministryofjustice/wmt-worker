@@ -9,9 +9,7 @@ const getWorkerForTask = require('./services/get-worker-for-task')
 module.exports = function () {
   var batchSize = parseInt(config.ASYNC_WORKER_BATCH_SIZE, 10)
 
-  return processTasks(batchSize).then(function () {
-    return processTasks(batchSize)
-  })
+  return processTasks(batchSize)
 }
 
 function processTasks (batchSize) {
