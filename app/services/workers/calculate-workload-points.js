@@ -47,5 +47,6 @@ module.exports.execute = function (task) {
   }).catch(function (error) {
     logger.error('Unable to retrieve workloads with IDs ' + id + ' - ' + (id + batchSize))
     logger.error(error)
+    throw (error)
   })
 }
