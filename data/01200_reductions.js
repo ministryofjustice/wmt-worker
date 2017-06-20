@@ -13,7 +13,7 @@ exports.seed = function (knex, Promise) {
       effectiveToDate.setDate(effectiveToDate.getDate() - 363)
 
       return knex(tableName).insert([
-        { workload_owner_id: workloadOwnerId.id, effective_from: effectiveFromDate, effective_to: effectiveToDate, hours: Math.floor(Math.random() * 25) + 30 }
+        { workload_owner_id: workloadOwnerId.id, effective_from: effectiveFromDate, effective_to: effectiveToDate, hours: Math.floor(Math.random() * 6) + 1 }
       ])
     })
 }
