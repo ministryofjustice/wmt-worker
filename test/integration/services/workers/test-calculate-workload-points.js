@@ -9,7 +9,7 @@ const Batch = require('../../../../app/services/domain/batch')
 
 var inserts = []
 
-describe('services/data/calculate-workload-points', function () {
+describe('services/workers/calculate-workload-points', function () {
   before(function (done) {
     helper.insertDependencies(inserts)
       .then(function (builtInserts) {
