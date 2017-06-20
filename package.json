@@ -16,7 +16,7 @@
     "rollback-app": "knex migrate:rollback --env app",
     "migrate-stg": "knex migrate:latest --env staging",
     "rollback-stg": "knex migrate:rollback --env staging",
-    "seed-data": "knex seed:run --env development"
+    "reset-db": "yarn migrate-app && yarn seed-app"
   },
   "standard": {
     "globals": [
