@@ -28,12 +28,12 @@ module.exports.execute = function (task) {
       insertWorkloadReport().then(function (workloadReportId) {
         for (var i = 0; i < tasksRequired; i++) {
           var additionalData = new Batch(nextId, batchSize)
-          additionalData.workloadReportId = workloadReportId
           var taskToWrite = new Task(
             undefined,
             submittingAgent.WORKER,
             taskType.CREATE_WORKLOAD,
             additionalData,
+            workloadReportId,
             undefined,
             taskStatus.PENDING
           )

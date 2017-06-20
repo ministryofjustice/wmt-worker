@@ -20,6 +20,7 @@ module.exports = function (batchSize) {
             result.submitting_agent,
             result.type,
             JSON.parse(result.additional_data),
+            result.workload_report_id,
             result.date_created,
             result.date_processed,
             taskStatus.INPROGRESS))

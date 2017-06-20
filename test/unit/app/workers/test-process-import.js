@@ -63,7 +63,7 @@ describe(relativeFilePath, function () {
     processImport.execute({}).then(function () {
       var tasksCreated = createNewTasksStub.getCall(0).args[0]
       tasksCreated.forEach(function (task) {
-        expect(task).to.have.deep.property('additionalData.workloadReportId', workloadReportId)
+        expect(task.workloadReportId).to.equal(workloadReportId)
       })
       done()
     })

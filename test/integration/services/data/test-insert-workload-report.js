@@ -12,7 +12,7 @@ describe('app/services/data/insert-workload-report', function () {
   it('should insert return an id', function (done) {
     insertWorkloadReport().then(function (id) {
       insertedIds.push(id)
-      expect(id).to.be.an.instanceof(Number)
+      expect(id).to.be.a('number')
       done()
     })
   })

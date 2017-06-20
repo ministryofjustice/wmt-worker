@@ -25,7 +25,7 @@ const createNewTasks = require('../data/create-tasks')
 module.exports.execute = function (task) {
   var nextId = task.additionalData.startingId
   var lastId = nextId + (task.additionalData.batchSize - 1)
-  var workloadReportId = task.additionalData.workloadReportId
+  var workloadReportId = task.workloadReportId
 
   return getStagingWorkload([nextId, lastId]).then(function (stagingWorkloads) {
     var insertedWorkloadIds = []
@@ -82,14 +82,14 @@ module.exports.execute = function (task) {
     })
     .then(function () {
       var taskDetails = {
-        workloadBatch: new Batch(insertedWorkloadIds[0], insertedWorkloadIds.length),
-        workloadReportId: workloadReportId
+        workloadBatch: new Batch(insertedWorkloadIds[0], insertedWorkloadIds.length)
       }
       var calculateWorkloadPointsTask = new Task(
                 undefined,
                 submittingAgent.WORKER,
                 taskType.CALCULATE_WORKLOAD_POINTS,
                 taskDetails,
+                workloadReportId,
                 undefined,
                 undefined,
                 taskStatus.PENDING

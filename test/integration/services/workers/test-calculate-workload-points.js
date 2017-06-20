@@ -24,7 +24,7 @@ describe('services/workers/calculate-workload-points', function () {
     var initialWorkloadId = insertedWorkloads[0].id
     var batchSize = insertedWorkloads.length
 
-    var task = { additionalData: { workloadBatch: new Batch(initialWorkloadId, batchSize), workloadReportId: workloadReportId } }
+    var task = { additionalData: { workloadBatch: new Batch(initialWorkloadId, batchSize) }, workloadReportId: workloadReportId }
 
     calcuatePointsWorker.execute(task).then(() => {
       knex('workload_points_calculations')
