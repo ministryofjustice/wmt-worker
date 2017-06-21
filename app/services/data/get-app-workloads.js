@@ -1,14 +1,14 @@
-const knexConfig = require('../../../knexfile').development
-const knex = require('knex')(knexConfig)
-const TierCounts = require('wmt-probation-rules').TierCounts
-const Tiers = require('wmt-probation-rules').AppTiers
-const Workload = require('wmt-probation-rules').Workload
-const Locations = require('wmt-probation-rules').Locations
+  const knexConfig = require('../../../knexfile').development
+  const knex = require('knex')(knexConfig)
+  const TierCounts = require('wmt-probation-rules').TierCounts
+  const Tiers = require('wmt-probation-rules').AppTiers
+  const Workload = require('wmt-probation-rules').Workload
+  const Locations = require('wmt-probation-rules').Locations
 
-module.exports = function (initialId, batchSize) {
-  var maxId = initialId + batchSize - 1
+  module.exports = function (initialId, batchSize) {
+    var maxId = initialId + batchSize - 1
 
-  return knex('workload').withSchema('app')
+    return knex('workload').withSchema('app')
         .leftJoin('tiers', 'workload.id', 'workload_id')
         .leftJoin('workload_owner', 'workload.workload_owner_id', 'workload_owner.id')
         .leftJoin('offender_manager', 'workload_owner.offender_manager_id', 'offender_manager.id')
@@ -83,4 +83,4 @@ module.exports = function (initialId, batchSize) {
           })
           return workloads
         })
-}
+  }
