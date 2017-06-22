@@ -4,8 +4,10 @@ const Task = require('../domain/task')
 const Batch = require('../domain/batch')
 
 const logger = require('../log')
+
 const getExtractIdRange = require('../data/get-wmt-extract-id-range')
 const createNewTasks = require('../data/create-tasks')
+const insertWorkloadReport = require('../data/insert-workload-report')
 
 const taskStatus = require('../../constants/task-status')
 const taskType = require('../../constants/task-type')
@@ -23,21 +25,23 @@ module.exports.execute = function (task) {
 
     if (tasksRequired > 0) {
       var nextId = idRange.firstId
-
-      for (var i = 0; i < tasksRequired; i++) {
-        var additionalData = new Batch(nextId, batchSize)
-        var taskToWrite = new Task(
+      insertWorkloadReport().then(function (workloadReportId) {
+        for (var i = 0; i < tasksRequired; i++) {
+          var additionalData = new Batch(nextId, batchSize)
+          var taskToWrite = new Task(
             undefined,
             submittingAgent.WORKER,
             taskType.CREATE_WORKLOAD,
             additionalData,
+            workloadReportId,
             undefined,
             taskStatus.PENDING
-         )
-        tasks.push(taskToWrite)
-        nextId += batchSize
-      }
-      return createNewTasks(tasks)
+          )
+          tasks.push(taskToWrite)
+          nextId += batchSize
+        }
+        return createNewTasks(tasks)
+      })
     }
 
     logger.info('Tasks created')

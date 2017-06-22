@@ -8,16 +8,18 @@ describe('services/domain/task', function () {
     var agent = 'wmt-web'
     var type = taskType.CALCULATE_WORKLOAD_POINTS
     var additionalData = 'additional data'
+    var workloadReportId = 25
     var dateCreated = new Date(1980, 1, 2)
     var dateProcessed = new Date(1980, 1, 3)
     var status = 'PENDING'
 
-    var task = new Task(id, agent, type, additionalData, dateCreated, dateProcessed, status)
+    var task = new Task(id, agent, type, additionalData, workloadReportId, dateCreated, dateProcessed, status)
 
     expect(task.id).to.equal(id)
     expect(task.submittingAgent).to.equal(agent)
     expect(task.type).to.equal(type)
     expect(task.additionalData).to.equal(additionalData)
+    expect(task.workloadReportId).to.equal(workloadReportId)
     expect(task.dateCreated).to.equal(dateCreated)
     expect(task.dateProcessed).to.equal(dateProcessed)
     expect(task.status).to.equal(status)
