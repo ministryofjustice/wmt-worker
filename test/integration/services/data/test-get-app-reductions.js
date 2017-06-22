@@ -1,39 +1,34 @@
 const expect = require('chai').expect
 
-const helper = require('../../../helpers/data/app-workload-owner-helper')
-const getOffenderManagerTypeId = require('../../../../app/services/data/get-offender-manager-type-id')
+const appWorkloadOwnerHelper = require('../../../helpers/data/app-workload-owner-helper')
+const appReductionsHelper = require('../../../helpers/data/app-reductions-helper')
+
+const getAppReductions = require('../../../../app/services/data/get-app-reductions')
 
 var inserts = []
 
 describe('services/data/get-app-reductions', function () {
   before(function (done) {
-    helper.insertDependencies(inserts)
+    appWorkloadOwnerHelper.insertDependencies(inserts)
       .then(function (builtInserts) {
-        inserts = builtInserts
-        done()
+        return appReductionsHelper.insertDependencies(inserts)
+        .then(function (builtInserts) {
+          inserts = builtInserts
+          done()
+        })
       })
   })
 
   it('should retrieve the total of reductions for a given workload owner', function (done) {
     var workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
-    getOffenderManagerTypeId(workloadOwnerId).then(function (actualTypeId) {
-      var expectedTypeId = inserts.filter((item) => item.table === 'offender_manager_type')[0].id
-      expect(actualTypeId).to.equal(expectedTypeId)
-      done()
-    })
-  })
-
-  it('should retrieve the offender manager type id for the given workload owner id', function (done) {
-    var workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
-    getOffenderManagerTypeId(workloadOwnerId).then(function (actualTypeId) {
-      var expectedTypeId = inserts.filter((item) => item.table === 'offender_manager_type')[0].id
-      expect(actualTypeId).to.equal(expectedTypeId)
+    getAppReductions(workloadOwnerId).then(function (hours) {
+      expect(hours).to.equal(32)
       done()
     })
   })
 
   after(function (done) {
-    helper.removeDependencies(inserts)
+    appReductionsHelper.removeDependencies(inserts)
       .then(() => done())
   })
 })
