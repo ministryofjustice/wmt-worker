@@ -2,7 +2,7 @@ const config = require('../../../config')
 const knexConfig = require('../../../knexfile').development
 const knex = require('knex')(knexConfig)
 
-module.exports = function (workloadReportId, workloadPointsId, workloadId, totalPoints, sdrPoints, sdrPointsConversion, paromsPoints, nominalTarget, availablePoints) {
+module.exports = function (workloadReportId, workloadPointsId, workloadId, totalPoints, sdrPoints, sdrPointsConversion, paromsPoints, nominalTarget, availablePoints, reductionHours) {
   return knex(`${config.DB_APP_SCHEMA}.workload_points_calculations`).insert(
     {
       workload_report_id: workloadReportId,
@@ -14,6 +14,7 @@ module.exports = function (workloadReportId, workloadPointsId, workloadId, total
       paroms_points: paromsPoints,
       nominal_target: nominalTarget,
       available_points: availablePoints,
+      reduction_hours: reductionHours,
       effective_from: new Date()
     }).returning('id')
 }

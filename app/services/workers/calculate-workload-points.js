@@ -42,7 +42,7 @@ module.exports.execute = function (task) {
             var availablePoints = calculateAvailablePoints(nominalTarget, offenderManagerTypeId, contractedHours, reductions, caseTypeWeightings.pointsConfiguration.defaultContractedHours)
 
             return insertWorkloadPointsCalculations(reportId, pointsConfiguration.id, workloadId, totalWorkloadPoints,
-                  sdrPoints, sdrConversionPoints, paromsPoints, nominalTarget, availablePoints)
+                  sdrPoints, sdrConversionPoints, paromsPoints, nominalTarget, availablePoints, reductions)
           })
         })
       })

@@ -27,7 +27,8 @@ describe('services/data/insert-workload-points-calculation', function () {
     var paromsPoints = 4
     var nominalTarget = 5
     var availablePoints = 6
-    insertWorkloadPointsCalculations(workloadReportId, workloadPointsId, workloadId, totalPoints, sdrPoints, sdrConversionPoints, paromsPoints, nominalTarget, availablePoints)
+    var reductionHours = 32
+    insertWorkloadPointsCalculations(workloadReportId, workloadPointsId, workloadId, totalPoints, sdrPoints, sdrConversionPoints, paromsPoints, nominalTarget, availablePoints, reductionHours)
     .then(function (ids) {
       var insertedId = ids[0]
       inserts.push({table: 'workload_points_calculations', id: insertedId})
@@ -41,6 +42,7 @@ describe('services/data/insert-workload-points-calculation', function () {
             expect(insertedObject.sdr_conversion_points).to.eql(sdrConversionPoints)
             expect(insertedObject.paroms_points).to.eql(paromsPoints)
             expect(insertedObject.available_points).to.eql(availablePoints)
+            expect(insertedObject.reduction_hours).to.eql(reductionHours)
             done()
           })
     })
