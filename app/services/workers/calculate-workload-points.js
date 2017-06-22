@@ -9,10 +9,10 @@ const getAppWorkloads = require('../../services/data/get-app-workloads')
 const insertWorkloadPointsCalculations = require('../../services/data/insert-workload-points-calculation')
 const getWorkloadPointsConfiguration = require('../../services/data/get-workload-points-configuration')
 const getOffenderManagerTypeId = require('../../services/data/get-offender-manager-type-id')
-
+const getAppReductions = require('../../services/data/get-app-reductions')
 module.exports.execute = function (task) {
   // TODO hardcoded until we play the reductions story
-  var reductions = 0
+  var reductions
   var contractedHours = 40
 
   var id = task.additionalData.workloadBatch.startingId
@@ -27,6 +27,7 @@ module.exports.execute = function (task) {
       var workload = workloadResult.values
       var workloadId = workloadResult.id
       var getOffenderManagerTypePromise = getOffenderManagerTypeId(workload.workloadOwnerId)
+      var getAppReductionsPromise = getAppReductions(workload.workloadOwnerId)
       return pointsConfgiurationPromise.then(function (pointsConfiguration) {
         var caseTypeWeightings = pointsConfiguration.values
 
@@ -34,13 +35,15 @@ module.exports.execute = function (task) {
         var sdrPoints = calculateSdrConversionPoints(workload.monthlySdrs, caseTypeWeightings.pointsConfiguration.sdr)
         var totalWorkloadPoints = calculateTotalWorkloadPoints(workload, caseTypeWeightings)
         var paromsPoints = calculateParomPoints(workload.paromsCompletedLast30Days, caseTypeWeightings.pointsConfiguration.parom, caseTypeWeightings.pointsConfiguration.paromsEnabled)
+        return getAppReductionsPromise.then(function (hours) {
+          reductions = hours
+          return getOffenderManagerTypePromise.then(function (offenderManagerTypeId) {
+            var nominalTarget = calculateNominalTarget(offenderManagerTypeId, caseTypeWeightings.pointsConfiguration.defaultNominalTargets)
+            var availablePoints = calculateAvailablePoints(nominalTarget, offenderManagerTypeId, contractedHours, reductions, caseTypeWeightings.pointsConfiguration.defaultContractedHours)
 
-        return getOffenderManagerTypePromise.then(function (offenderManagerTypeId) {
-          var nominalTarget = calculateNominalTarget(offenderManagerTypeId, caseTypeWeightings.pointsConfiguration.defaultNominalTargets)
-          var availablePoints = calculateAvailablePoints(nominalTarget, offenderManagerTypeId, contractedHours, reductions, caseTypeWeightings.pointsConfiguration.defaultContractedHours)
-
-          return insertWorkloadPointsCalculations(reportId, pointsConfiguration.id, workloadId, totalWorkloadPoints,
-                sdrPoints, sdrConversionPoints, paromsPoints, nominalTarget, availablePoints)
+            return insertWorkloadPointsCalculations(reportId, pointsConfiguration.id, workloadId, totalWorkloadPoints,
+                  sdrPoints, sdrConversionPoints, paromsPoints, nominalTarget, availablePoints, reductions)
+          })
         })
       })
     })
