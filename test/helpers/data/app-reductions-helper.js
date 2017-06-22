@@ -1,7 +1,7 @@
 const knexConfig = require('../../../knexfile').app
 const knex = require('knex')(knexConfig)
 var Promise = require('bluebird').Promise
-const helper = require('../../../helpers/data/app-workload-owner-helper')
+const helper = require('./app-workload-owner-helper')
 
 module.exports.insertDependencies = function (workloadOwnerId, inserts = []) {
   var promise = helper.insertDependencies(inserts)
@@ -30,10 +30,13 @@ module.exports.removeDependencies = function (inserts) {
 }
 
 function getReductionObjects (workloadOwnerId) {
+  var effectiveFrom = new Date(new Date().setDate(new Date().getDate() - 20))
+  var effectiveTo = new Date(new Date().setDate(new Date().getDate() + 20))
+
   return [
-    {workload_owner_id: workloadOwnerId, hours: 7},
-    {workload_owner_id: workloadOwnerId, hours: 12},
-    {workload_owner_id: workloadOwnerId, hours: 9},
-    {workload_owner_id: workloadOwnerId, hours: 4}
+    {workload_owner_id: workloadOwnerId, hours: 7, effective_from: effectiveFrom, effective_to: effectiveTo},
+    {workload_owner_id: workloadOwnerId, hours: 12, effective_from: effectiveFrom, effective_to: effectiveTo},
+    {workload_owner_id: workloadOwnerId, hours: 9, effective_from: effectiveFrom, effective_to: effectiveTo},
+    {workload_owner_id: workloadOwnerId, hours: 4, effective_from: effectiveFrom, effective_to: effectiveTo}
   ]
 }
