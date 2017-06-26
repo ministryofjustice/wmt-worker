@@ -8,6 +8,10 @@ module.exports = function (workloadOwnerId) {
     .where('effective_from', '<=', knex.fn.now())
     .andWhere('effective_to', '>=', knex.fn.now())
     .then(function (result) {
-      return result[0].hours
+      if (result === null || result[0].hours === null) {
+        return 0
+      } else {
+        return result[0].hours
+      }
     })
 }
