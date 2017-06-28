@@ -3,7 +3,8 @@ const knex = require('knex')(knexConfig)
 
 const expect = require('chai').expect
 
-const helper = require('../../../helpers/data/app-workload-points-calculation-helper')
+const appWorkloadPointsCalculationHelper = require('../../../helpers/data/app-workload-points-calculation-helper')
+const appReductionsHelper = require('../../../helpers/data/app-reductions-helper')
 const calcuatePointsWorker = require('../../../../app/services/workers/calculate-workload-points')
 const Batch = require('../../../../app/services/domain/batch')
 
@@ -11,10 +12,16 @@ var inserts = []
 
 describe('services/workers/calculate-workload-points', function () {
   before(function (done) {
-    helper.insertDependencies(inserts)
+    appWorkloadPointsCalculationHelper.insertDependencies(inserts)
       .then(function (builtInserts) {
         inserts = builtInserts
-        done()
+      }).then(function () {
+        var workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')
+        appReductionsHelper.insertDependencies(workloadOwnerId, inserts)
+          .then(function (builtInserts) {
+            inserts = builtInserts
+            done()
+          })
       })
   })
 
@@ -31,6 +38,7 @@ describe('services/workers/calculate-workload-points', function () {
       .whereBetween('workload_id', [initialWorkloadId, (initialWorkloadId + batchSize)])
       .then((workloadPointsCalculations) => {
         expect(workloadPointsCalculations.length).to.equal(batchSize)
+        expect(workloadPointsCalculations[0].reduction_hours).to.equal(32)
         workloadPointsCalculations.forEach((insertedCalculation) =>
                     inserts.push({table: 'workload_points_calculations', id: insertedCalculation.id}))
         done()
@@ -39,7 +47,7 @@ describe('services/workers/calculate-workload-points', function () {
   })
 
   after(function (done) {
-    helper.removeDependencies(inserts)
+    appReductionsHelper.removeDependencies(inserts)
       .then(() => done())
   })
 })
