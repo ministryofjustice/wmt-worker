@@ -16,11 +16,13 @@ var probationRulesStub
 var getPointsConfigurationStub
 var getOffenderManagerTypeIdStub
 var insertWorkloadPointsCalculationsStub
+var getAppReductions
 var task
 
 describe('services/workers/calculate-workload-points', function () {
   beforeEach(function () {
     getWorkloadsStub = sinon.stub()
+    getAppReductions = sinon.stub()
     getPointsConfigurationStub = sinon.stub()
     getOffenderManagerTypeIdStub = sinon.stub()
     insertWorkloadPointsCalculationsStub = sinon.stub()
@@ -44,13 +46,17 @@ describe('services/workers/calculate-workload-points', function () {
       '../../services/data/get-app-workloads': getWorkloadsStub,
       '../../services/data/get-workload-points-configuration': getPointsConfigurationStub,
       '../../services/data/get-offender-manager-type-id': getOffenderManagerTypeIdStub,
-      '../../services/data/insert-workload-points-calculation': getOffenderManagerTypeIdStub,
+      '../../services/data/get-app-reductions': getAppReductions,
+      '../../services/data/insert-workload-points-calculation': insertWorkloadPointsCalculationsStub,
       'wmt-probation-rules': probationRulesStub
     })
   })
 
   it('calls the get workloads promise correctly', function (done) {
-    getWorkloadsStub.resolves()
+    getAppReductions.resolves(7)
+    getWorkloadsStub.resolves([{values: sinon.stub(), id: WORKLOAD_ID}])
+    getOffenderManagerTypeIdStub.resolves(WORKLOAD_ID)
+    getPointsConfigurationStub.resolves({values: pointsHelper.getCaseTypeWeightings(), id: WORKLOAD_ID})
     calculateWorkloadPoints.execute(task).then(function () {
       expect(getWorkloadsStub.calledWith(WORKLOAD_ID, BATCH_SIZE)).to.equal(true)
       done()
@@ -58,7 +64,10 @@ describe('services/workers/calculate-workload-points', function () {
   })
 
   it('retrieves the points configuration', function (done) {
-    getWorkloadsStub.resolves()
+    getAppReductions.resolves(7)
+    getWorkloadsStub.resolves([{values: sinon.stub(), id: WORKLOAD_ID}])
+    getOffenderManagerTypeIdStub.resolves(WORKLOAD_ID)
+    getPointsConfigurationStub.resolves({values: pointsHelper.getCaseTypeWeightings(), id: WORKLOAD_ID})
     calculateWorkloadPoints.execute(task).then(function () {
       expect(getPointsConfigurationStub.called).to.equal(true)
       done()
@@ -66,6 +75,7 @@ describe('services/workers/calculate-workload-points', function () {
   })
 
   it('calls calculateSdrConversionPoints', function (done) {
+    getAppReductions.resolves(7)
     insertWorkloadPointsCalculationsStub.resolves()
     getOffenderManagerTypeIdStub.resolves(WORKLOAD_ID)
     getPointsConfigurationStub.resolves({values: pointsHelper.getCaseTypeWeightings(), id: WORKLOAD_ID})
