@@ -7,12 +7,15 @@ exports.seed = function (knex, Promise) {
     .return(knex('team').select('id').first())
     .then(function (id) {
       teamId = id
-      return knex('offender_manager').select('id').first()
+      return knex('offender_manager').select('id')
+        .limit(5)
     })
-    .then(function (omId) {
+    .then(function (omIds) {
       // Inserts seed entries
-      return knex(tableName).insert([
-        { offender_manager_id: omId.id, team_id: teamId.id }
-      ])
+      return Promise.each(omIds, (omId) => {
+        return knex(tableName).insert([
+          { offender_manager_id: omId.id, team_id: teamId.id }
+        ])
+      })
     })
 }
