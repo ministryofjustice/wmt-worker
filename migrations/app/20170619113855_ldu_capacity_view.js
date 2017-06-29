@@ -1,4 +1,4 @@
-exports.up = function(knex, Promise) {
+exports.up = function (knex, Promise) {
   var sql = `CREATE VIEW app.ldu_capacity_view 
       WITH SCHEMABINDING 
       AS 
@@ -20,9 +20,9 @@ exports.up = function(knex, Promise) {
   return knex.schema
            .raw('SET ARITHABORT ON')
            .raw(sql)
-};
+}
 
-exports.down = function(knex, Promise) {
+exports.down = function (knex, Promise) {
   return knex.schema
       .raw('DROP VIEW app.ldu_capacity_view;')
-};
+}
