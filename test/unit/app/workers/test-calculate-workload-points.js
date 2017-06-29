@@ -9,6 +9,7 @@ const Batch = require('../../../../app/services/domain/batch')
 const WORKLOAD_ID = 10
 const BATCH_SIZE = 20
 const REPORT_ID = 30
+const REDUCTION_HOURS = 7
 
 var calculateWorkloadPoints
 var getWorkloadsStub
@@ -53,7 +54,7 @@ describe('services/workers/calculate-workload-points', function () {
   })
 
   it('calls the get workloads promise correctly', function (done) {
-    getAppReductions.resolves(7)
+    getAppReductions.resolves(REDUCTION_HOURS)
     getWorkloadsStub.resolves([{values: sinon.stub(), id: WORKLOAD_ID}])
     getOffenderManagerTypeIdStub.resolves(WORKLOAD_ID)
     getPointsConfigurationStub.resolves({values: pointsHelper.getCaseTypeWeightings(), id: WORKLOAD_ID})
@@ -64,7 +65,7 @@ describe('services/workers/calculate-workload-points', function () {
   })
 
   it('retrieves the points configuration', function (done) {
-    getAppReductions.resolves(7)
+    getAppReductions.resolves(REDUCTION_HOURS)
     getWorkloadsStub.resolves([{values: sinon.stub(), id: WORKLOAD_ID}])
     getOffenderManagerTypeIdStub.resolves(WORKLOAD_ID)
     getPointsConfigurationStub.resolves({values: pointsHelper.getCaseTypeWeightings(), id: WORKLOAD_ID})
@@ -75,7 +76,7 @@ describe('services/workers/calculate-workload-points', function () {
   })
 
   it('calls calculateSdrConversionPoints', function (done) {
-    getAppReductions.resolves(7)
+    getAppReductions.resolves(REDUCTION_HOURS)
     insertWorkloadPointsCalculationsStub.resolves()
     getOffenderManagerTypeIdStub.resolves(WORKLOAD_ID)
     getPointsConfigurationStub.resolves({values: pointsHelper.getCaseTypeWeightings(), id: WORKLOAD_ID})
