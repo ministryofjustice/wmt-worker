@@ -30,6 +30,8 @@ const aliases = {
   paromsDueNext30Days: 'paroms_due_next_30_days',
   totalCommunityCases: 'total_community_cases',
   totalCustodyCases: 'total_custody_cases',
+  licenseCasesLast16Weeks: 'license_last_16_weeks',
+  communityCasesLast16Weeks: 'community_last_16_weeks',
   totalLicenseCases: 'total_license_cases'
 }
 

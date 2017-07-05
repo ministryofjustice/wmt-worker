@@ -27,7 +27,9 @@ describe('app/services/data/insert-app-workload', function () {
         7,
         buildTier(Locations.COMMUNITY),
         buildTier(Locations.LICENSE),
-        buildTier(Locations.CUSTODY)
+        buildTier(Locations.CUSTODY),
+        9,
+        10
     )
     insertAppWorkload(workload).then(function (id) {
       workloadId = id
@@ -43,6 +45,8 @@ describe('app/services/data/insert-app-workload', function () {
           expect(result.sdr_conversions_last_30_days).to.equal(5)
           expect(result.paroms_completed_last_30_days).to.equal(6)
           expect(result.paroms_due_next_30_days).to.equal(7)
+          expect(result.license_last_16_weeks).to.equal(9)
+          expect(result.community_last_16_weeks).to.equal(10)
           done()
         })
     })

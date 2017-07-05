@@ -12,6 +12,8 @@ exports.up = function (knex, Promise) {
     table.integer('sdr_conversions_last_30_days').unsigned().notNullable()
     table.integer('paroms_completed_last_30_days').unsigned().notNullable()
     table.integer('paroms_due_next_30_days').unsigned().notNullable()
+    table.integer('license_last_16_weeks').unsigned().notNullable()
+    table.integer('community_last_16_weeks').unsigned().notNullable()
   }).catch(function (error) {
     console.log(error)
     throw error
