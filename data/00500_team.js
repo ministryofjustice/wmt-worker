@@ -7,7 +7,7 @@ exports.seed = function (knex, Promise) {
     .then(function (lduId) {
       // Inserts seed entries
       return knex(tableName).insert([
-        { description: 'test team', ldu_id: lduId.id }
+        { description: 'test team multiple managers', ldu_id: lduId.id }
       ])
     })
 }
