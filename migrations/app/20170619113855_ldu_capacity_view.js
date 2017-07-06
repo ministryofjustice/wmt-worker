@@ -7,6 +7,7 @@ exports.up = function (knex, Promise) {
         , SUM(sdr_conversion_points) AS sdr_conversion_points
         , SUM(paroms_points) AS paroms_points
         , SUM(available_points) AS available_points
+        , SUM(reduction_hours) AS reduction_hours
         , wr.effective_from AS effective_from
         , ldu.id AS id
       FROM app.workload_points_calculations AS wpc
