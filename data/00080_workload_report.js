@@ -4,8 +4,14 @@ exports.seed = function (knex, Promise) {
   return knex(tableName).del()
     .then(function () {
       // Inserts seed entries
-      return knex(tableName).insert([
-        { }
-      ])
+      let entries = []
+    
+      for(let i = 1; i <= 13; i++) {
+        entries.push({})
+      }
+    
+      Promise.each(entries, function(entry) {
+          return knex(tableName).insert(entry)
+      })
     })
 }
