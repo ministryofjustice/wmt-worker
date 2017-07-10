@@ -3,15 +3,16 @@ exports.seed = function (knex, Promise) {
   // Deletes ALL existing entries
   return knex(tableName).del()
     .then(function () {
+      var effectiveFromDate = new Date()
+      effectiveFromDate.setDate(effectiveFromDate.getDate() - 365)
+
       // Inserts seed entries
       let entries = []
     
       for(let i = 1; i <= 13; i++) {
-        entries.push({})
+        entries.push({effective_from: effectiveFromDate})
+        effectiveFromDate.setDate(effectiveFromDate.getDate() + 30)        
       }
-    
-      Promise.each(entries, function(entry) {
-          return knex(tableName).insert(entry)
-      })
+      return knex(tableName).insert(entries)
     })
 }
