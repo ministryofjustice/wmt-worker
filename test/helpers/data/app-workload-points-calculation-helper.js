@@ -44,7 +44,9 @@ module.exports.insertDependencies = function (inserts) {
         sdr_due_next_30_days: 5,
         sdr_conversions_last_30_days: 6,
         paroms_completed_last_30_days: 7,
-        paroms_due_next_30_days: 8
+        paroms_due_next_30_days: 8,
+        license_last_16_weeks: 9,
+        community_last_16_weeks: 10
       }
 
       var workloads = [
