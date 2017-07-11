@@ -10,8 +10,8 @@ exports.seed = function (knex, Promise) {
       let entries = []
     
       for(let i = 1; i <= 13; i++) {
-        entries.push({effective_from: effectiveFromDate})
-        effectiveFromDate.setDate(effectiveFromDate.getDate() + 30)        
+        entries.push({effective_from: new Date(effectiveFromDate.getTime())})
+        effectiveFromDate.setDate(effectiveFromDate.getDate() + 30)
       }
       return knex(tableName).insert(entries)
     })
