@@ -8,10 +8,10 @@
   "license": "MIT",
   "scripts": {
     "start": "node start.js",
-    "test": "standard && mocha --recursive -u exports test/unit/",
-    "test-unit": "mocha --recursive -u exports test/unit/",
-    "test-integration": "mocha --recursive -u exports test/integration/ --timeout 10000",
+    "unit-test": "standard && mocha --recursive -u exports test/unit/",
+    "integration-test": "mocha --recursive -u exports test/integration/ --timeout 10000",
     "test-all": "yarn test && yarn test-integration",
+    "test": "yarn unit-test && yarn integration-test",
     "migrate-app": "knex migrate:latest --env app",
     "seed-app": "node ./cleanup.js && knex seed:run --env app",
     "rollback-app": "knex migrate:rollback --env app",
