@@ -3,22 +3,16 @@ exports.up = function (knex, Promise) {
   WITH SCHEMABINDING
   AS
   SELECT 
-      MAX(w.community_last_16_weeks) AS community_last_16_weeks
-    , MAX(w.license_last_16_weeks) AS license_last_16_weeks
-    , MAX(w.total_cases) AS total_cases
-    , SUM(tr.warrants_total) AS warrants_total
-    , SUM(tr.overdue_terminations_total) AS overdue_terminations_total
-    , SUM(tr.unpaid_work_total) AS unpaid_work_total
+      i.community_last_16_weeks AS community_last_16_weeks
+    , i.license_last_16_weeks AS license_last_16_weeks
+    , i.total_cases AS total_cases
+    , i.warrants_total AS warrants_total
+    , i.overdue_terminations_total AS overdue_terminations_total
+    , i.unpaid_work_total AS unpaid_work_total
     , t.id AS id
-  FROM app.workload w
-    LEFT JOIN app.workload_points_calculations wpc ON wpc.workload_id = w.id
-    LEFT JOIN app.workload_report wr ON wr.id = wpc.workload_report_id
-    LEFT JOIN app.tiers tr ON tr.workload_id = w.id
-    JOIN app.workload_owner wo ON w.workload_owner_id = wo.id
-    JOIN app.team t ON wo.team_id = t.id
-  WHERE wr.effective_from IS NOT NULL
-  AND wr.effective_to IS NULL
-  GROUP BY wo.id, t.id;`
+  FROM app.individual_case_progress_view i
+    JOIN app.workload_owner wo ON i.id = wo.id
+    JOIN app.team t ON wo.team_id = t.id;`
 
   return knex.schema
     .raw('SET ARITHABORT ON')
