@@ -11,7 +11,7 @@ exports.up = function (knex, Promise) {
     , SUM(lv.unpaid_work_total) AS unpaid_work_total
     , MAX(r.id) AS id
   FROM app.ldu_case_progress_view lv
-    JOIN ldu l ON ldu.id = lv.id
+    JOIN app.ldu l ON l.id = lv.id
     JOIN app.region r ON r.id = l.region_id
   GROUP BY l.id;`
 
