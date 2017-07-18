@@ -2,11 +2,11 @@ var tableName = 'workload_owner'
 
 exports.seed = function (knex, Promise) {
   // Deletes ALL existing entries
-  var teamId
+  var teamIds
   return knex(tableName).del()
-    .return(knex('team').select('id').first())
-    .then(function (id) {
-      teamId = id
+    .return(knex('team').select('id'))
+    .then(function (results) {
+      teamIds = results
       return knex('offender_manager').select('id')
         .limit(5)
     })
@@ -14,7 +14,9 @@ exports.seed = function (knex, Promise) {
       // Inserts seed entries
       return Promise.each(omIds, (omId) => {
         return knex(tableName).insert([
-          { offender_manager_id: omId.id, team_id: teamId.id }
+          { offender_manager_id: omId.id, team_id: teamIds[1].id },
+          { offender_manager_id: omId.id, team_id: teamIds[2].id },
+          { offender_manager_id: omId.id, team_id: teamIds[3].id }
         ])
       })
     })
