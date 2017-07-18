@@ -3,7 +3,8 @@ exports.up = function (knex, Promise) {
   WITH SCHEMABINDING
   AS
   SELECT 
-      SUM(lv.community_last_16_weeks) AS community_last_16_weeks
+      MAX(l.description) AS name
+    , SUM(lv.community_last_16_weeks) AS community_last_16_weeks
     , SUM(lv.license_last_16_weeks) AS license_last_16_weeks
     , SUM(lv.total_cases) AS total_cases
     , SUM(lv.warrants_total) AS warrants_total

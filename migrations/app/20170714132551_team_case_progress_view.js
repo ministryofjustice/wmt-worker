@@ -2,8 +2,9 @@ exports.up = function (knex, Promise) {
   var sql = `CREATE VIEW app.team_case_progress_view
   WITH SCHEMABINDING
   AS
-  SELECT 
-      i.community_last_16_weeks AS community_last_16_weeks
+  SELECT
+      i.name AS name 
+    , i.community_last_16_weeks AS community_last_16_weeks
     , i.license_last_16_weeks AS license_last_16_weeks
     , i.total_cases AS total_cases
     , i.warrants_total AS warrants_total
