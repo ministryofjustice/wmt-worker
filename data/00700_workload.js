@@ -9,6 +9,7 @@ exports.seed = function (knex, Promise) {
       return knex('workload_owner').select('id')
     })
     .then(function (workloadOwners) {
+      console.log(workloadOwners)
       var workloadsToInsert = []
       for (workloadOwner in workloadOwners) {
         for (var i = 0; i < 10; i++) {
