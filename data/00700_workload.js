@@ -13,13 +13,13 @@ exports.seed = function (knex, Promise) {
       return knex('workload_owner').select('id')
     })
     .then(function (workloadOwners) {
-      console.log(workloadOwners)
       var workloadsToInsert = []
       for (workloadOwner in workloadOwners) {
         for (var i = 0; i < 10; i++) {
           workloadsToInsert.push(Object.assign({}, workloadRow, {workload_owner_id: workloadOwners[workloadOwner].id}))
         }
       }
+      // Need to split the array into 4 as one query caused an error with too many parameters in one request (2100)
       var oneQuarterValue = workloadsToInsert.length / 4
       var twoQuarterValue = oneQuarterValue * 2
       var threeQuarterValue = oneQuarterValue * 3

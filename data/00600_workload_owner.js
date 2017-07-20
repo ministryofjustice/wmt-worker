@@ -6,14 +6,12 @@ exports.seed = function (knex, Promise) {
   return knex(tableName).del()
     .return(knex('team').select('id').limit(4))
     .then(function (results) {
-      console.log('TEAM 2 ' + results)
       teamIds = results
       return knex('offender_manager').select('id')
         .limit(5)
     })
     .then(function (omIds) {
       // Inserts seed entries
-      console.log('OMids ' + omIds)
       return Promise.each(omIds, (omId) => {
         return knex(tableName).insert([
           { offender_manager_id: omId.id, team_id: teamIds[0].id },

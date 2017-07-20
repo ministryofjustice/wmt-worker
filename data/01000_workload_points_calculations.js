@@ -31,7 +31,7 @@ exports.seed = function (knex, Promise) {
         effectiveFromDate.setDate(effectiveFromDate.getDate() + 30)        
       }
       partOneWorkloadPointsCalculations = workloadPointsCalculationsToInsert.slice(0, workloadPointsCalculationsToInsert.length / 2)
-      partTwoWorkloadPointsCalculations = workloadPointsCalculationsToInsert.slice(0, workloadPointsCalculationsToInsert.length / 2)
+      partTwoWorkloadPointsCalculations = workloadPointsCalculationsToInsert.slice(workloadPointsCalculationsToInsert.length / 2, workloadPointsCalculationsToInsert.length - 1)
 
       return knex(tableName).insert(partOneWorkloadPointsCalculations)
         .then(function (results) {

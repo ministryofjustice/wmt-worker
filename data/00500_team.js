@@ -6,7 +6,6 @@ exports.seed = function (knex, Promise) {
   return knex(tableName).del()
     .return(knex('ldu').select('id').limit(3))
     .then(function (results) {
-      console.log('TEAM ' + results)
       var lduIds = results
       // Inserts seed entries
       return knex(tableName).insert([
