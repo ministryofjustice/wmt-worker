@@ -6,7 +6,9 @@ exports.seed = function (knex, Promise) {
     .then(function () {
       // Inserts seed entries
       return knex(tableName).insert([
-        { description: 'test region' }
+        { description: 'test region 1' },
+        { description: 'test region 2' },
+        { description: 'test region 3' }
       ])
     })
 }

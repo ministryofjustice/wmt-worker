@@ -3,6 +3,8 @@ var tableName = 'workload_points_calculations'
 exports.seed = function (knex, Promise) {
   var existingReportIds
   var currentPointsId
+  var partOneWorkloadPointsCalculations = []
+  var partTwoWorkloadPointsCalculations = []
     // Deletes ALL existing entries
   return knex(tableName).del()
     .then(function () {
@@ -28,6 +30,12 @@ exports.seed = function (knex, Promise) {
         workloadPointsCalculationsToInsert.push({ workload_id: workloadId.id, workload_report_id: reportId.id, workload_points_id: currentPointsId.id, effective_from: effectiveFromDate, effective_to: effectiveFromDate.getDate() + 30, total_points: Math.floor(Math.random() * 25) + 30, available_points: 190, paroms_points: 50, sdr_conversion_points: 50, sdr_points: 50, nominal_target: 0, reduction_hours: Math.floor(Math.random() * 6) + 1 })
         effectiveFromDate.setDate(effectiveFromDate.getDate() + 30)        
       }
-      return knex(tableName).insert(workloadPointsCalculationsToInsert)
+      partOneWorkloadPointsCalculations = workloadPointsCalculationsToInsert.slice(0, workloadPointsCalculationsToInsert.length / 2)
+      partTwoWorkloadPointsCalculations = workloadPointsCalculationsToInsert.slice(workloadPointsCalculationsToInsert.length / 2, workloadPointsCalculationsToInsert.length - 1)
+
+      return knex(tableName).insert(partOneWorkloadPointsCalculations)
+        .then(function (results) {
+          return knex(tableName).insert(partTwoWorkloadPointsCalculations)
+        })
     })
 }
