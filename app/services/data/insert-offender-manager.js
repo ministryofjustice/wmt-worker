@@ -1,5 +1,5 @@
 const config = require('../../../config')
-const knexConfig = require('../../../knexfile').development
+const knexConfig = require('../../../knexfile').app
 const knex = require('knex')(knexConfig)
 const offenderManagerTable = `${config.DB_APP_SCHEMA}.offender_manager`
 

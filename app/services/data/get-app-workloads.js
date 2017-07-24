@@ -1,4 +1,4 @@
-  const knexConfig = require('../../../knexfile').development
+  const knexConfig = require('../../../knexfile').app
   const knex = require('knex')(knexConfig)
   const TierCounts = require('wmt-probation-rules').TierCounts
   const Tiers = require('wmt-probation-rules').AppTiers

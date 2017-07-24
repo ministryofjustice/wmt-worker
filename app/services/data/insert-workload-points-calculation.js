@@ -1,5 +1,5 @@
 const config = require('../../../config')
-const knexConfig = require('../../../knexfile').development
+const knexConfig = require('../../../knexfile').app
 const knex = require('knex')(knexConfig)
 
 module.exports = function (workloadReportId, workloadPointsId, workloadId, totalPoints, sdrPoints, sdrPointsConversion, paromsPoints, nominalTarget, availablePoints, reductionHours) {

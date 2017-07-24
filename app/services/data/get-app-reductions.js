@@ -1,4 +1,4 @@
-const knexConfig = require('../../../knexfile').development
+const knexConfig = require('../../../knexfile').app
 const knex = require('knex')(knexConfig)
 
 module.exports = function (workloadOwnerId) {
