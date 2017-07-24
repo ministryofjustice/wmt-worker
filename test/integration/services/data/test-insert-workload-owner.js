@@ -30,7 +30,7 @@ describe('app/services/data/insert-workload-owner', function () {
         .then(function (result) {
           expect(result['id']).to.not.be.null // eslint-disable-line
           expect(result['offender_manager_id']).to.eq(offenderManagerId) // eslint-disable-line
-          expect(result['working_hours_id']).to.be.null // eslint-disable-line
+          expect(result['contracted_hours']).to.be.null // eslint-disable-line
           expect(result['team_id']).to.eq(teamId) // eslint-disable-line
           inserts.push({table: 'workload_owner', id: workloadOwnerId})
           done()
