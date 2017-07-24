@@ -29,7 +29,6 @@ module.exports.execute = function (task) {
       var workloadId = workloadResult.id
       var getOffenderManagerTypePromise = getOffenderManagerTypeId(workload.workloadOwnerId)
       var getAppReductionsPromise = getAppReductions(workload.workloadOwnerId)
-
       var getContractedHoursPromise = getContractedHours(workload.workloadOwnerId)
 
       return pointsConfigurationPromise.then(function (pointsConfiguration) {
