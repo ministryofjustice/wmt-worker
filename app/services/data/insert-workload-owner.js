@@ -1,5 +1,5 @@
 const config = require('../../../config')
-const knexConfig = require('../../../knexfile').development
+const knexConfig = require('../../../knexfile').app
 const knex = require('knex')(knexConfig)
 const workloadOwnerTable = `${config.DB_APP_SCHEMA}.workload_owner`
 

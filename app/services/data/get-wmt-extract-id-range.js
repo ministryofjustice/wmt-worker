@@ -1,4 +1,4 @@
-const config = require('../../../knexfile').development
+const config = require('../../../knexfile').app
 const knex = require('knex')(config)
 const IdRange = require('../domain/id-range')
 
