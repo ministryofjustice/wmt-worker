@@ -3,9 +3,6 @@ exports.up = function (knex, Promise) {
       WITH SCHEMABINDING 
       AS 
       SELECT SUM(total_points) AS total_points
-        , SUM(sdr_points) AS sdr_points
-        , SUM(sdr_conversion_points) AS sdr_conversion_points
-        , SUM(paroms_points) AS paroms_points
         , SUM(available_points) AS available_points
         , SUM(reduction_hours) AS reduction_hours
         , wr.effective_from AS effective_from
