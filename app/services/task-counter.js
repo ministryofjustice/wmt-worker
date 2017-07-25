@@ -1,6 +1,7 @@
 const getAllTasks = require('./data/get-all-tasks')
 const taskStatus = require('../constants/task-status')
 const markCurrentWorkloadAsComplete = require('./data/update-current-workload-report-with-status')
+const callWebRefreshEndpoint = require('./refresh-web-org-hiearchy')
 
 module.exports = function (currentTask) {
   console.log(currentTask)
@@ -12,6 +13,9 @@ module.exports = function (currentTask) {
       var numInProgress = taskList.filter(statusFilter('I')).length
       if (numInProgress === 0) {
         markCurrentWorkloadAsComplete(currentTask.id, taskStatus.COMPLETE)
+          .then((result) => {
+            callWebRefreshEndpoint()
+          })
       }
     }
   }
