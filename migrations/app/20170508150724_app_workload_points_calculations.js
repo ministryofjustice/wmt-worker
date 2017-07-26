@@ -12,7 +12,7 @@ exports.up = function (knex, Promise) {
     table.integer('nominal_target').unsigned().notNullable()
     table.integer('available_points').unsigned().notNullable()
     table.float('reduction_hours').defaultTo(0).notNullable()
-    table.float('contracted_hours')
+    table.float('contracted_hours').notNullable()
     table.timestamp('effective_from')
     table.timestamp('effective_to')
   }).catch(function (error) {

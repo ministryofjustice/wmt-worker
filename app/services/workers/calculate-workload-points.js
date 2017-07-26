@@ -13,9 +13,6 @@ const getAppReductions = require('../data/get-app-reductions')
 const getContractedHours = require('../data/get-contracted-hours')
 
 module.exports.execute = function (task) {
-  var reductions
-  var contractedHours
-
   var id = task.additionalData.workloadBatch.startingId
   var batchSize = task.additionalData.workloadBatch.batchSize
   var reportId = task.workloadReportId
@@ -37,10 +34,8 @@ module.exports.execute = function (task) {
         var sdrPoints = calculateSdrConversionPoints(workload.monthlySdrs, caseTypeWeightings.pointsConfiguration.sdr)
         var workloadPoints = calculateWorkloadPoints(workload, caseTypeWeightings)
         var paromsPoints = calculateParomPoints(workload.paromsCompletedLast30Days, caseTypeWeightings.pointsConfiguration.parom, caseTypeWeightings.pointsConfiguration.paromsEnabled)
-        return getAppReductionsPromise.then(function (hours) {
-          reductions = hours
-          return getContractedHoursPromise.then(function (cHours) {
-            contractedHours = cHours
+        return getAppReductionsPromise.then(function (reductions) {
+          return getContractedHoursPromise.then(function (contractedHours) {
             return getOffenderManagerTypePromise.then(function (offenderManagerTypeId) {
               var nominalTarget = calculateNominalTarget(offenderManagerTypeId, caseTypeWeightings.pointsConfiguration.defaultNominalTargets)
               var availablePoints = calculateAvailablePoints(nominalTarget, offenderManagerTypeId, contractedHours,
