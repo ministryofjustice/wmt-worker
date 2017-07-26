@@ -3,9 +3,9 @@ const knex = require('knex')(config)
 const glob = require('glob')
 const Promise = require('bluebird').Promise
 
-var seedFileNames = glob.sync('./seed/data/[0...9]*.js')
+var seedDataFileNames = glob.sync('./seed/data/[0...9]*.js')
 
-var databaseTableNames = seedFileNames.sort().reverse()
+var databaseTableNames = seedDataFileNames.sort().reverse()
     .map((fileName) => fileName.substring(fileName.lastIndexOf('/') + 7, fileName.lastIndexOf('.')))
 
 Promise.each(databaseTableNames, (tableName) =>
