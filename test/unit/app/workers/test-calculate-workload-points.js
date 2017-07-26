@@ -30,7 +30,7 @@ describe('services/workers/calculate-workload-points', function () {
 
     probationRulesStub = {}
     probationRulesStub.calculateWorkloadPoints = sinon.stub()
-    probationRulesStub.calculateTotalWorkloadPoints = sinon.stub()
+    probationRulesStub.calculateWorkloadPoints = sinon.stub()
     probationRulesStub.calculateNominalTarget = sinon.stub()
     probationRulesStub.calculateParomPoints = sinon.stub()
     probationRulesStub.calculateSdrConversionPoints = sinon.stub()
