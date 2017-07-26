@@ -1,4 +1,4 @@
-exports.up = function (knex, Promise) {
+exports.seed = function (knex, Promise) {
   var sql = `CREATE VIEW app.individual_case_progress_view
   WITH SCHEMABINDING
   AS
@@ -22,11 +22,7 @@ exports.up = function (knex, Promise) {
   GROUP BY w.workload_owner_id;`
 
   return knex.schema
+    .raw('DROP VIEW IF EXISTS app.individual_case_progress_view;')
     .raw('SET ARITHABORT ON')
     .raw(sql)
-}
-
-exports.down = function (knex, Promise) {
-  return knex.schema
-      .raw('DROP VIEW app.individual_case_progress_view;')
 }

@@ -19,7 +19,7 @@ module.exports = {
     client: 'mssql',
     connection: Object.assign({}, defaultConnection, {
       user: config.MIGRATION_STG_DATABASE_USERNAME,
-      password: config.MIGRATION_STG_DATABASE_PASSWORD,
+      password: config.MIGRATION_STG_DATABASE_PASSWORD
     }),
     migrations: {
       directory: 'migrations/staging'
@@ -30,16 +30,24 @@ module.exports = {
     client: 'mssql',
     connection: Object.assign({}, defaultConnection, {
       user: config.MIGRATION_APP_DATABASE_USERNAME,
-      password: config.MIGRATION_APP_DATABASE_PASSWORD,
-      options: {
-        encrypt: true
-      })
-    },
+      password: config.MIGRATION_APP_DATABASE_PASSWORD
+    }),
     migrations: {
       directory: 'migrations/app'
     },
     seeds: {
       directory: 'seed/data'
+    },
+    debug: false
+  },
+  views: {
+    client: 'mssql',
+    connection: Object.assign({}, defaultConnection, {
+      user: config.MIGRATION_APP_DATABASE_USERNAME,
+      password: config.MIGRATION_APP_DATABASE_PASSWORD
+    }),
+    seeds: {
+      directory: 'seed/views'
     },
     debug: false
   }

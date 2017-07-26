@@ -24,11 +24,11 @@ exports.seed = function (knex, Promise) {
         // Inserts seed entries
 
       var workloadPointsCalculationsToInsert = []
-      for( var i = 0; i < workloadIds.length; i++ ) {
+      for (var i = 0; i < workloadIds.length; i++) {
         var reportId = existingReportIds[i % existingReportIds.length]
         var workloadId = workloadIds[i]
         workloadPointsCalculationsToInsert.push({ workload_id: workloadId.id, workload_report_id: reportId.id, workload_points_id: currentPointsId.id, effective_from: effectiveFromDate, effective_to: effectiveFromDate.getDate() + 30, total_points: Math.floor(Math.random() * 25) + 30, available_points: 190, paroms_points: 50, sdr_conversion_points: 50, sdr_points: 50, nominal_target: 0, reduction_hours: Math.floor(Math.random() * 6) + 1 })
-        effectiveFromDate.setDate(effectiveFromDate.getDate() + 30)        
+        effectiveFromDate.setDate(effectiveFromDate.getDate() + 30)
       }
       partOneWorkloadPointsCalculations = workloadPointsCalculationsToInsert.slice(0, workloadPointsCalculationsToInsert.length / 2)
       partTwoWorkloadPointsCalculations = workloadPointsCalculationsToInsert.slice(workloadPointsCalculationsToInsert.length / 2, workloadPointsCalculationsToInsert.length - 1)
