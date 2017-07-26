@@ -1,30 +1,26 @@
 const config = require('./config')
+const defaultConnection = {
+  host: config.DATABASE_SERVER,
+  user: config.DATABASE_USERNAME,
+  password: config.DATABASE_PASSWORD,
+  database: config.DATABASE,
+  options: {
+    encrypt: true
+  }
+}
 
 module.exports = {
   development: {
     client: 'mssql',
-    connection: {
-      host: config.DATABASE_SERVER,
-      user: config.DATABASE_USERNAME,
-      password: config.DATABASE_PASSWORD,
-      database: config.DATABASE,
-      options: {
-        encrypt: true
-      }
-    },
+    connection: defaultConnection,
     debug: false
   },
   staging: {
     client: 'mssql',
-    connection: {
-      host: config.DATABASE_SERVER,
+    connection: Object.assign({}, defaultConnection, {
       user: config.MIGRATION_STG_DATABASE_USERNAME,
       password: config.MIGRATION_STG_DATABASE_PASSWORD,
-      database: config.DATABASE,
-      options: {
-        encrypt: true
-      }
-    },
+    }),
     migrations: {
       directory: 'migrations/staging'
     },
@@ -32,20 +28,18 @@ module.exports = {
   },
   app: {
     client: 'mssql',
-    connection: {
-      host: config.DATABASE_SERVER,
+    connection: Object.assign({}, defaultConnection, {
       user: config.MIGRATION_APP_DATABASE_USERNAME,
       password: config.MIGRATION_APP_DATABASE_PASSWORD,
-      database: config.DATABASE,
       options: {
         encrypt: true
-      }
+      })
     },
     migrations: {
       directory: 'migrations/app'
     },
     seeds: {
-      directory: 'data'
+      directory: 'seed/data'
     },
     debug: false
   }
