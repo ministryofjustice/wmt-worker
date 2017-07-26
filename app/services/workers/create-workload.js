@@ -21,6 +21,7 @@ const taskStatus = require('../../constants/task-status')
 const submittingAgent = require('../../constants/task-submitting-agent')
 const getStagingWorkload = require('../data/get-staging-workload')
 const createNewTasks = require('../data/create-tasks')
+const filterOmGradeCode = require('wmt-probation-rules').filterOmGradeCode
 
 module.exports.execute = function (task) {
   var nextId = task.additionalData.startingId
@@ -39,7 +40,7 @@ module.exports.execute = function (task) {
                           caseSummary.omForename,
                           caseSummary.omSurname,
                           typeId,
-                          caseSummary.omGradeCode
+                          filterOmGradeCode(caseSummary.omGradeCode)
                           ))
           })
       .then(function (offenderManagerId) {
