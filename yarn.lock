@@ -2281,9 +2281,9 @@ which@^1.2.12, which@^1.2.9:
   dependencies:
     isexe "^2.0.0"
 
-wmt-probation-rules@ministryofjustice/wmt-probation-rules.git#feature/WMT-417/create-workload:
-  version "0.1.4"
-  resolved "https://codeload.github.com/ministryofjustice/wmt-probation-rules/tar.gz/5e3fdf247553d63fa2f329c96905eed6b03c944a"
+wmt-probation-rules@ministryofjustice/wmt-probation-rules.git:
+  version "0.1.5"
+  resolved "https://codeload.github.com/ministryofjustice/wmt-probation-rules/tar.gz/449ff4c2ee17d9729c6a33502e7d0a773da2f1da"
   dependencies:
     chai "3.5.x"
     gulp "3.9.x"
