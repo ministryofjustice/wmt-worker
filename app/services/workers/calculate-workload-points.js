@@ -32,15 +32,16 @@ module.exports.execute = function (task) {
         var caseTypeWeightings = pointsConfiguration.values
         var sdrConversionPoints = calculateSdrConversionPoints(workload.sdrConversionsLast30Days, caseTypeWeightings.pointsConfiguration.sdrConversion)
         var sdrPoints = calculateSdrConversionPoints(workload.monthlySdrs, caseTypeWeightings.pointsConfiguration.sdr)
-        var workloadPoints = calculateWorkloadPoints(workload, caseTypeWeightings)
         var paromsPoints = calculateParomPoints(workload.paromsCompletedLast30Days, caseTypeWeightings.pointsConfiguration.parom, caseTypeWeightings.pointsConfiguration.paromsEnabled)
+        var workloadPoints = calculateWorkloadPoints(workload, caseTypeWeightings)
+        var totalPoints = (workloadPoints + sdrConversionPoints + sdrPoints + paromsPoints)
         return getAppReductionsPromise.then(function (reductions) {
           return getContractedHoursPromise.then(function (contractedHours) {
             return getOffenderManagerTypePromise.then(function (offenderManagerTypeId) {
               var nominalTarget = calculateNominalTarget(offenderManagerTypeId, caseTypeWeightings.pointsConfiguration.defaultNominalTargets)
               var availablePoints = calculateAvailablePoints(nominalTarget, offenderManagerTypeId, contractedHours,
                   reductions, caseTypeWeightings.pointsConfiguration.defaultContractedHours)
-              return insertWorkloadPointsCalculations(reportId, pointsConfiguration.id, workloadId, workloadPoints,
+              return insertWorkloadPointsCalculations(reportId, pointsConfiguration.id, workloadId, totalPoints,
                   sdrPoints, sdrConversionPoints, paromsPoints, nominalTarget, availablePoints, reductions, contractedHours)
             })
           })
