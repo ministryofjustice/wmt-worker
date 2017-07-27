@@ -8,8 +8,8 @@ exports.seed = function (knex, Promise) {
 
       // Inserts seed entries
       let entries = []
-    
-      for(let i = 1; i <= 13; i++) {
+
+      for (let i = 1; i <= 13; i++) {
         entries.push({effective_from: new Date(effectiveFromDate.getTime())})
         effectiveFromDate.setDate(effectiveFromDate.getDate() + 30)
       }
