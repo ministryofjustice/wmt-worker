@@ -8,7 +8,7 @@ module.exports = function (workloadOwner) {
 
   var workloadOwnerDatabaseObject = {}
   workloadOwnerDatabaseObject.offender_manager_id = workloadOwner.offenderManagerId
-  workloadOwnerDatabaseObject.working_hours_id = workloadOwner.workingHoursId
+  workloadOwnerDatabaseObject.contracted_hours = workloadOwner.contractedHours
   workloadOwnerDatabaseObject.team_id = workloadOwner.teamId
 
   return knex(workloadOwnerTable)

@@ -10,6 +10,7 @@ const WORKLOAD_ID = 10
 const BATCH_SIZE = 20
 const REPORT_ID = 30
 const REDUCTION_HOURS = 7
+const CONTRACTED_HOURS = 37.5
 
 var calculateWorkloadPoints
 var getWorkloadsStub
@@ -18,12 +19,14 @@ var getPointsConfigurationStub
 var getOffenderManagerTypeIdStub
 var insertWorkloadPointsCalculationsStub
 var getAppReductions
+var getContractedHours
 var task
 
 describe('services/workers/calculate-workload-points', function () {
   beforeEach(function () {
     getWorkloadsStub = sinon.stub()
     getAppReductions = sinon.stub()
+    getContractedHours = sinon.stub()
     getPointsConfigurationStub = sinon.stub()
     getOffenderManagerTypeIdStub = sinon.stub()
     insertWorkloadPointsCalculationsStub = sinon.stub()
@@ -44,13 +47,15 @@ describe('services/workers/calculate-workload-points', function () {
 
     calculateWorkloadPoints = proxyquire('../../../../app/services/workers/calculate-workload-points', {
       '../log': { info: function (message) {}, error: function (message) {} },
-      '../../services/data/get-app-workloads': getWorkloadsStub,
-      '../../services/data/get-workload-points-configuration': getPointsConfigurationStub,
-      '../../services/data/get-offender-manager-type-id': getOffenderManagerTypeIdStub,
-      '../../services/data/get-app-reductions': getAppReductions,
-      '../../services/data/insert-workload-points-calculation': insertWorkloadPointsCalculationsStub,
+      '../data/get-app-workloads': getWorkloadsStub,
+      '../data/get-workload-points-configuration': getPointsConfigurationStub,
+      '../data/get-offender-manager-type-id': getOffenderManagerTypeIdStub,
+      '../data/get-app-reductions': getAppReductions,
+      '../data/get-contracted-hours': getContractedHours,
+      '../data/insert-workload-points-calculation': insertWorkloadPointsCalculationsStub,
       'wmt-probation-rules': probationRulesStub
     })
+    getContractedHours.resolves(CONTRACTED_HOURS)
   })
 
   it('calls the get workloads promise correctly', function (done) {

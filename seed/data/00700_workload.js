@@ -14,7 +14,7 @@ exports.seed = function (knex, Promise) {
     })
     .then(function (workloadOwners) {
       var workloadsToInsert = []
-      for (workloadOwner in workloadOwners) {
+      for (var workloadOwner in workloadOwners) {
         for (var i = 0; i < 10; i++) {
           workloadsToInsert.push(Object.assign({}, workloadRow, {workload_owner_id: workloadOwners[workloadOwner].id}))
         }
