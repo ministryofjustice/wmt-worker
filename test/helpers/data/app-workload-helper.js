@@ -23,10 +23,6 @@ module.exports.insertDependencies = function (inserts) {
     })
     .then(function (ids) {
       inserts.push({table: 'team', id: ids[0]})
-      return knex('working_hours').returning('id').insert({})
-    })
-    .then(function (ids) {
-      inserts.push({table: 'working_hours', id: ids[0]})
       return knex('workload_owner').returning('id')
         .insert({team_id: inserts.filter((item) => item.table === 'team')[0].id,
           offender_manager_id: inserts.filter((item) => item.table === 'offender_manager')[0].id})

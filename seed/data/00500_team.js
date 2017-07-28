@@ -2,7 +2,6 @@ var tableName = 'team'
 
 exports.seed = function (knex, Promise) {
   // Deletes ALL existing entries
-  var lduIds
   return knex(tableName).del()
     .return(knex('ldu').select('id').limit(3))
     .then(function (results) {
