@@ -31,9 +31,7 @@ module.exports = function (currentTask) {
       callWebRefreshEndpoint()
     })
   }
-
 }
-
 
   // var numPending = taskList.filter(element.status.equals(taskStatus.PENDING)).length
 
