@@ -27,7 +27,7 @@ describe('process-tasks', function () {
       '../config': { ASYNC_WORKER_BATCH_SIZE: batchSize },
       './services/log': { info: function (message) {}, error: function (message) {} },
       './services/data/get-pending-tasks-and-mark-in-progress': getPendingTasksAndMarkInProgress,
-      './services/data/update-current-workload-report-with-status': updateWorkload,
+      './services/data/update-workload-report-with-status': updateWorkload,
       './services/task-counter': taskCounter,
       './services/data/complete-task-with-status': completeTaskWithStatus,
       './services/get-worker-for-task': getWorkerForTask

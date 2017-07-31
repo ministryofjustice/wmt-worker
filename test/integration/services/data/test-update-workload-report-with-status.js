@@ -2,13 +2,13 @@ const expect = require('chai').expect
 const knexConfig = require('../../../../knexfile').app
 const knex = require('knex')(knexConfig)
 const workloadReportStatus = require('../../../../app/constants/workload-report-status')
-const updateWorkloadReport = require('../../../../app/services/data/update-current-workload-report-with-status')
+const updateWorkloadReport = require('../../../../app/services/data/update-workload-report-with-status')
 const helper = require('../../../helpers/data/app-workload-report-helper')
 const moment = require('moment')
 
 var inserts = []
 
-describe('app/services/data/update-current-workload-report-with-status', function () {
+describe('app/services/data/update-workload-report-with-status', function () {
   before(function (done) {
     helper.insertDependencies(inserts)
       .then(function (builtInserts) {

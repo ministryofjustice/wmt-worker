@@ -8,7 +8,4 @@ module.exports = function (workloadReportId, type) {
             'status')
     .where('workload_report_id', workloadReportId)
     .where('type', type)
-    .then(function (results) {
-      return results
-    })
 }
