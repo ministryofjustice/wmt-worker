@@ -4,7 +4,7 @@ const knex = require('knex')(knexConfig)
 const insertTeam = require('../../../../app/services/data/insert-team')
 const Team = require('wmt-probation-rules').Team
 const moment = require('moment')
-const teamHelper = require('../../../helpers/data/team-helper')
+const teamHelper = require('../../../helpers/data/app-team-helper')
 
 var inserts = []
 

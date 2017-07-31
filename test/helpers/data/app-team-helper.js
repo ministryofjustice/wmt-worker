@@ -1,6 +1,6 @@
 const knexConfig = require('../../../knexfile').app
 const knex = require('knex')(knexConfig)
-const lduHelper = require('./ldu-helper')
+const lduHelper = require('./app-ldu-helper')
 var Promise = require('bluebird').Promise
 
 module.exports.addDependenciesForTeam = function () {

@@ -1,6 +1,6 @@
 const knexConfig = require('../../../knexfile').app
 const knex = require('knex')(knexConfig)
-const teamHelper = require('./team-helper')
+const teamHelper = require('./app-team-helper')
 var Promise = require('bluebird').Promise
 
 module.exports.addDepenedenciesForWorkloadOwner = function () {

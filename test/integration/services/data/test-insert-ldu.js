@@ -4,7 +4,7 @@ const knex = require('knex')(knexConfig)
 const insertLdu = require('../../../../app/services/data/insert-ldu')
 const Ldu = require('wmt-probation-rules').Ldu
 const moment = require('moment')
-const lduHelper = require('../../../helpers/data/ldu-helper')
+const lduHelper = require('../../../helpers/data/app-ldu-helper')
 
 var inserts = []
 
