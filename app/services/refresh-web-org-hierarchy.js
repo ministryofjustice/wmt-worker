@@ -1,4 +1,4 @@
-const ipAdresses = require('../config').ipAdresses
+const ipAdresses = require('../../config').ipAdresses
 const rp = require('request-promise')
 const log = require('./log')
 
