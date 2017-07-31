@@ -14,6 +14,6 @@ module.exports = function () {
 
 function getDefaultWorkloadReport () {
   return {
-    status: workloadReportStatus.PENDING
+    status: workloadReportStatus.INPROGRESS
   }
 }

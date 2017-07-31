@@ -1,7 +1,7 @@
 const Promise = require('bluebird')
 const config = require('../config')
 const log = require('./services/log')
-const statusEnum = require('./constants/task-status')
+const taskStatus = require('./constants/task-status')
 const taskType = require('./constants/task-type')
 const getPendingTasksAndMarkInProgress = require('./services/data/get-pending-tasks-and-mark-in-progress')
 const updateWorkloadReportStatus = require('./services/data/update-current-workload-report-with-status')
@@ -42,7 +42,8 @@ function executeWorkerForTaskType (worker, task) {
 
   return worker.execute(task)
     .then(function () {
-      return completeTaskWithStatus(task.id, statusEnum.COMPLETE).then(function () {
+      return completeTaskWithStatus(task.id, taskStatus.COMPLETE)
+      .then(function () {
         if (task.type === taskType.CALCULATE_WORKLOAD_POINTS) {
           markWorkloadReportAsComplete(task)
         }
@@ -52,8 +53,8 @@ function executeWorkerForTaskType (worker, task) {
       log.error(`error running task: ${task.id}-${task.type}, error: ${error}`)
       log.error({error: error})
       if (task.type === taskType.CALCULATE_WORKLOAD_POINTS) {
-        updateWorkloadReportStatus(task.workloadReportId, statusEnum.FAILED)
+        updateWorkloadReportStatus(task.workloadReportId, taskStatus.FAILED)
       }
-      return completeTaskWithStatus(task.id, statusEnum.FAILED)
+      return completeTaskWithStatus(task.id, taskStatus.FAILED)
     })
 }
