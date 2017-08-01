@@ -2,16 +2,17 @@ const Promise = require('bluebird')
 const config = require('../config')
 const log = require('./services/log')
 const taskStatus = require('./constants/task-status')
+const workloadReportStatus = require('./constants/workload-report-status')
 const taskType = require('./constants/task-type')
 const getPendingTasksAndMarkInProgress = require('./services/data/get-pending-tasks-and-mark-in-progress')
 const updateWorkloadReportStatus = require('./services/data/update-workload-report-with-status')
-const markWorkloadReportAsComplete = require('./services/task-counter')
+const countTaskStatuses = require('./services/task-status-counter')
 const completeTaskWithStatus = require('./services/data/complete-task-with-status')
 const getWorkerForTask = require('./services/get-worker-for-task')
+const callWebRefreshEndpoint = require('./services/refresh-web-org-hierarchy')
 
 module.exports = function () {
   var batchSize = parseInt(config.ASYNC_WORKER_BATCH_SIZE, 10)
-
   return processTasks(batchSize)
 }
 
@@ -45,7 +46,14 @@ function executeWorkerForTaskType (worker, task) {
       return completeTaskWithStatus(task.id, taskStatus.COMPLETE)
       .then(function () {
         if (task.type === taskType.CALCULATE_WORKLOAD_POINTS) {
-          markWorkloadReportAsComplete(task)
+          countTaskStatuses(task).then(function (totals) {
+            if (totals.numPending === 0 && totals.numInProgress === 0 && totals.numFailed === 0) {
+              updateWorkloadReportStatus(task.id, workloadReportStatus.COMPLETE)
+              .then((result) => {
+                callWebRefreshEndpoint()
+              })
+            }
+          })
         }
         log.info(`completed task: ${task.id}-${task.type}`)
       })
@@ -53,7 +61,7 @@ function executeWorkerForTaskType (worker, task) {
       log.error(`error running task: ${task.id}-${task.type}, error: ${error}`)
       log.error({error: error})
       if (task.type === taskType.CALCULATE_WORKLOAD_POINTS) {
-        updateWorkloadReportStatus(task.workloadReportId, taskStatus.FAILED)
+        updateWorkloadReportStatus(task.workloadReportId, workloadReportStatus.FAILED)
       }
       return completeTaskWithStatus(task.id, taskStatus.FAILED)
     })

@@ -8,7 +8,7 @@ const taskType = require('../../../../app/constants/task-type')
 var getTasks
 var updateWorkloadReportStatus
 var callWebRefreshEndpoint
-var taskCounter
+var taskStatusCounter
 
 var defaultTask = { id: 1, workload_report_id: 1, status: taskStatus.COMPLETE }
 
@@ -33,7 +33,7 @@ describe('services/task-counter', function () {
     updateWorkloadReportStatus = sinon.stub()
     callWebRefreshEndpoint = sinon.stub()
 
-    taskCounter = proxyquire('../../../../app/services/task-counter', {
+    taskStatusCounter = proxyquire('../../../../app/services/task-status-counter', {
       './data/get-tasks': getTasks,
       './data/update-workload-report-with-status': updateWorkloadReportStatus,
       './refresh-web-org-hierarchy': callWebRefreshEndpoint
@@ -43,28 +43,28 @@ describe('services/task-counter', function () {
 
   it('should call get-tasks', function (done) {
     getTasks.resolves(taskList)
-    taskCounter(currentTask).then(function () {
+    taskStatusCounter(currentTask).then(function () {
       expect(getTasks.called).to.be.true //eslint-disable-line
       done()
     })
   })
 
-  it('should do nothing when there are pending, in progress or failed tests', function (done) {
+  it('should return the correct totals for the task statuses', function (done) {
     getTasks.resolves(taskList)
-    updateWorkloadReportStatus.resolves({})
-    taskCounter(currentTask).then(function () {
-      expect(updateWorkloadReportStatus.called).to.be.false //eslint-disable-line
-      expect(callWebRefreshEndpoint.called).to.be.false //eslint-disable-line
+    taskStatusCounter(currentTask).then(function (totals) {
+      expect(totals.numPending).to.eql(0)
+      expect(totals.numInProgress).to.eql(1)
+      expect(totals.numFailed).to.eql(1)
       done()
     })
   })
 
-  it('should call update-workload-report-with-status and refresh-web-org-hierarchy when there are no pending, in progress or failing tasks', function (done) {
+  it('should return the all zeros when all tasks are completed', function (done) {
     getTasks.resolves(completedTaskList)
-    updateWorkloadReportStatus.resolves({})
-    taskCounter(currentTask).then(function () {
-      expect(updateWorkloadReportStatus.calledWith(1, taskStatus.COMPLETE)).to.be.true //eslint-disable-line
-      expect(callWebRefreshEndpoint.called).to.be.true //eslint-disable-line
+    taskStatusCounter(currentTask).then(function (totals) {
+      expect(totals.numPending).to.eql(0)
+      expect(totals.numInProgress).to.eql(0)
+      expect(totals.numFailed).to.eql(0)
       done()
     })
   })

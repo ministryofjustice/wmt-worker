@@ -1,7 +1,5 @@
 const getTasks = require('./data/get-tasks')
 const taskStatus = require('../constants/task-status')
-const updateWorkloadReportStatus = require('./data/update-workload-report-with-status')
-const callWebRefreshEndpoint = require('./refresh-web-org-hierarchy')
 
 module.exports = function (currentTask) {
   return getTasks(currentTask.workloadReportId, currentTask.type)
@@ -24,11 +22,10 @@ module.exports = function (currentTask) {
       }
     }
 
-    if (numPending === 0 && numInProgress === 0 && numFailed === 0) {
-      updateWorkloadReportStatus(currentTask.id, taskStatus.COMPLETE)
-      .then((result) => {
-        callWebRefreshEndpoint()
-      })
+    return {
+      numPending: numPending,
+      numInProgress: numInProgress,
+      numFailed: numFailed
     }
   })
 }
