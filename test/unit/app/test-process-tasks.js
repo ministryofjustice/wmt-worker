@@ -61,7 +61,7 @@ describe('process-tasks', function () {
   it('should update workload report as complete and refresh web hierarchy when there are no pending, inprogress or failed tasks', function () {
     getPendingTasksAndMarkInProgress.resolves([
       {id: 1, workloadReportId: 1, type: 'task1'},
-      {id: 2, workloadReportId: 2, type: 'CALCULATE-WORKLOAD-POINTS'}
+      {id: 2, workloadReportId: 3, type: 'CALCULATE-WORKLOAD-POINTS'}
     ])
     getWorkerForTask.returns({
       execute: function () {
@@ -84,7 +84,7 @@ describe('process-tasks', function () {
       expect(completeTaskWithStatus.calledWith(1, taskStatus.COMPLETE)).to.be.true
       expect(completeTaskWithStatus.calledWith(2, taskStatus.COMPLETE)).to.be.true
       expect(updateWorkload.calledWith(1, workloadReportStatus.COMPLETE)).to.be.false
-      expect(updateWorkload.calledWith(2, workloadReportStatus.COMPLETE)).to.be.true
+      expect(updateWorkload.calledWith(3, workloadReportStatus.COMPLETE)).to.be.true
       expect(callWebRefreshEndpoint.called).to.be.true
     })
   })

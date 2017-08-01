@@ -48,7 +48,7 @@ function executeWorkerForTaskType (worker, task) {
         if (task.type === taskType.CALCULATE_WORKLOAD_POINTS) {
           countTaskStatuses(task).then(function (totals) {
             if (totals.numPending === 0 && totals.numInProgress === 0 && totals.numFailed === 0) {
-              updateWorkloadReportStatus(task.id, workloadReportStatus.COMPLETE)
+              updateWorkloadReportStatus(task.workloadReportId, workloadReportStatus.COMPLETE)
               .then((result) => {
                 callWebRefreshEndpoint()
               })

@@ -7,7 +7,5 @@ module.exports = function (workloadReportId, status) {
       effective_to: new Date(),
       status: status,
       status_description: status
-    }).then((result) => {
-      return result
     })
 }
