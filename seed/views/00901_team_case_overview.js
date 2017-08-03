@@ -10,7 +10,8 @@ exports.seed = function (knex, promise) {
     , MAX(wpc.total_points) AS total_points
     , MAX(wpc.contracted_hours) AS contracted_hours
     , MAX(wpc.reduction_hours) AS reduction_hours
-    , MAX(t.id) AS id
+    , MAX(t.id) AS team_id
+    , MAX(wo.id) AS person_id
   FROM app.workload w
     JOIN app.workload_owner wo ON wo.id = w.workload_owner_id
     JOIN app.offender_manager om ON om.id = wo.offender_manager_id
