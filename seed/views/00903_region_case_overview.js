@@ -9,7 +9,8 @@ exports.seed = function (knex, promise) {
     , SUM(lv.total_points) AS total_points
     , SUM(lv.contracted_hours) AS contracted_hours
     , SUM(lv.reduction_hours) AS reduction_hours
-    , MAX(l.id) AS id
+    , MAX(r.id) AS id
+    , MAX(l.id) AS link_id
   FROM app.ldu_case_overview lv
     JOIN app.ldu l ON l.id = lv.id
     JOIN app.region r ON r.id = l.region_id
