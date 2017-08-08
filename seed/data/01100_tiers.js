@@ -29,7 +29,7 @@ exports.seed = function (knex, Promise) {
         { workload_id: workload.id, tier_number: 4, overdue_terminations_total: 2, unpaid_work_total: 0, warrants_total: 0, total_cases: 2, location: 'LICENSE' },
         { workload_id: workload.id, tier_number: 5, overdue_terminations_total: 2, unpaid_work_total: 2, warrants_total: 0, total_cases: 4, location: 'LICENSE' },
         { workload_id: workload.id, tier_number: 6, overdue_terminations_total: 2, unpaid_work_total: 2, warrants_total: 2, total_cases: 6, location: 'LICENSE' },
-        { workload_id: workload.id, tier_number: 7, overdue_terminations_total: 2, unpaid_work_total: 1, warrants_total: 0, total_cases: 3, location: 'LICENSE' },
+        { workload_id: workload.id, tier_number: 7, overdue_terminations_total: 2, unpaid_work_total: 1, warrants_total: 0, total_cases: 3, location: 'LICENSE' }
       ])
     })
 }
