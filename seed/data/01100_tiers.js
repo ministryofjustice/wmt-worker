@@ -6,9 +6,30 @@ exports.seed = function (knex, Promise) {
     .return(knex('workload').select('id').first())
     .then(function (workload) {
       return knex(tableName).insert([
-        { workload_id: workload.id, tier_number: 1, overdue_terminations_total: 10, unpaid_work_total: 10, warrants_total: 10, total_cases: 10, location: 'COMMUNITY' },
-        { workload_id: workload.id, tier_number: 2, overdue_terminations_total: 20, unpaid_work_total: 20, warrants_total: 20, total_cases: 20, location: 'CUSTODY' },
-        { workload_id: workload.id, tier_number: 3, overdue_terminations_total: 30, unpaid_work_total: 30, warrants_total: 30, total_cases: 30, location: 'COMMUNITY' }
+        { workload_id: workload.id, tier_number: 0, overdue_terminations_total: 0, unpaid_work_total: 0, warrants_total: 0, total_cases: 0, location: 'COMMUNITY' },
+        { workload_id: workload.id, tier_number: 1, overdue_terminations_total: 1, unpaid_work_total: 0, warrants_total: 0, total_cases: 1, location: 'COMMUNITY' },
+        { workload_id: workload.id, tier_number: 2, overdue_terminations_total: 1, unpaid_work_total: 1, warrants_total: 0, total_cases: 2, location: 'COMMUNITY' },
+        { workload_id: workload.id, tier_number: 3, overdue_terminations_total: 1, unpaid_work_total: 1, warrants_total: 1, total_cases: 3, location: 'COMMUNITY' },
+        { workload_id: workload.id, tier_number: 4, overdue_terminations_total: 2, unpaid_work_total: 0, warrants_total: 0, total_cases: 2, location: 'COMMUNITY' },
+        { workload_id: workload.id, tier_number: 5, overdue_terminations_total: 2, unpaid_work_total: 2, warrants_total: 0, total_cases: 4, location: 'COMMUNITY' },
+        { workload_id: workload.id, tier_number: 6, overdue_terminations_total: 2, unpaid_work_total: 2, warrants_total: 2, total_cases: 6, location: 'COMMUNITY' },
+        { workload_id: workload.id, tier_number: 7, overdue_terminations_total: 2, unpaid_work_total: 1, warrants_total: 0, total_cases: 3, location: 'COMMUNITY' },
+        { workload_id: workload.id, tier_number: 0, overdue_terminations_total: 0, unpaid_work_total: 0, warrants_total: 0, total_cases: 0, location: 'CUSTODY' },
+        { workload_id: workload.id, tier_number: 1, overdue_terminations_total: 1, unpaid_work_total: 0, warrants_total: 0, total_cases: 1, location: 'CUSTODY' },
+        { workload_id: workload.id, tier_number: 2, overdue_terminations_total: 1, unpaid_work_total: 1, warrants_total: 0, total_cases: 2, location: 'CUSTODY' },
+        { workload_id: workload.id, tier_number: 3, overdue_terminations_total: 1, unpaid_work_total: 1, warrants_total: 1, total_cases: 3, location: 'CUSTODY' },
+        { workload_id: workload.id, tier_number: 4, overdue_terminations_total: 2, unpaid_work_total: 0, warrants_total: 0, total_cases: 2, location: 'CUSTODY' },
+        { workload_id: workload.id, tier_number: 5, overdue_terminations_total: 2, unpaid_work_total: 2, warrants_total: 0, total_cases: 4, location: 'CUSTODY' },
+        { workload_id: workload.id, tier_number: 6, overdue_terminations_total: 2, unpaid_work_total: 2, warrants_total: 2, total_cases: 5, location: 'CUSTODY' },
+        { workload_id: workload.id, tier_number: 7, overdue_terminations_total: 2, unpaid_work_total: 1, warrants_total: 0, total_cases: 3, location: 'CUSTODY' },
+        { workload_id: workload.id, tier_number: 0, overdue_terminations_total: 0, unpaid_work_total: 0, warrants_total: 0, total_cases: 0, location: 'LICENSE' },
+        { workload_id: workload.id, tier_number: 1, overdue_terminations_total: 1, unpaid_work_total: 0, warrants_total: 0, total_cases: 1, location: 'LICENSE' },
+        { workload_id: workload.id, tier_number: 2, overdue_terminations_total: 1, unpaid_work_total: 1, warrants_total: 0, total_cases: 2, location: 'LICENSE' },
+        { workload_id: workload.id, tier_number: 3, overdue_terminations_total: 1, unpaid_work_total: 1, warrants_total: 1, total_cases: 3, location: 'LICENSE' },
+        { workload_id: workload.id, tier_number: 4, overdue_terminations_total: 2, unpaid_work_total: 0, warrants_total: 0, total_cases: 2, location: 'LICENSE' },
+        { workload_id: workload.id, tier_number: 5, overdue_terminations_total: 2, unpaid_work_total: 2, warrants_total: 0, total_cases: 4, location: 'LICENSE' },
+        { workload_id: workload.id, tier_number: 6, overdue_terminations_total: 2, unpaid_work_total: 2, warrants_total: 2, total_cases: 6, location: 'LICENSE' },
+        { workload_id: workload.id, tier_number: 7, overdue_terminations_total: 2, unpaid_work_total: 1, warrants_total: 0, total_cases: 3, location: 'LICENSE' },
       ])
     })
 }
