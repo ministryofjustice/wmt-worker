@@ -19,10 +19,10 @@ exports.seed = function (knex, Promise) {
       omIds.forEach(function (omId) {
         var hours = contractedHours[counter++]
         insertData.push(
-          { offender_manager_id: omId.id, team_id: teamIds[0].id, contractedHours: hours },
-          { offender_manager_id: omId.id, team_id: teamIds[1].id, contractedHours: hours },
-          { offender_manager_id: omId.id, team_id: teamIds[2].id, contractedHours: hours },
-          { offender_manager_id: omId.id, team_id: teamIds[3].id, contractedHours: hours }
+          { offender_manager_id: omId.id, team_id: teamIds[0].id, contracted_hours: hours },
+          { offender_manager_id: omId.id, team_id: teamIds[1].id, contracted_hours: hours },
+          { offender_manager_id: omId.id, team_id: teamIds[2].id, contracted_hours: hours },
+          { offender_manager_id: omId.id, team_id: teamIds[3].id, contracted_hours: hours }
         )
       })
       return knex(tableName).insert(insertData)
