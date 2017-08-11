@@ -6,7 +6,7 @@ exports.seed = function (knex, Promise) {
     id
     , link_id
     , name
-    , gradeCode
+    , grade_code
     , [0] AS untiered
     , [1] AS d2
     , [2] AS d1
@@ -15,16 +15,16 @@ exports.seed = function (knex, Promise) {
     , [5] AS b2
     , [6] AS b1
     , [7] AS a
-    , totalCases
+    , total_cases
   FROM (
       SELECT
         MAX(wo.team_id) as id
       , MAX(om.id) as link_id
       , MAX(CONCAT(om.forename, ' ', om.surname)) AS name
-      , MAX(om.grade_code) AS gradeCode
+      , MAX(om.grade_code) AS grade_code
       , tr.workload_id as workload_id
       , MAX(tr.tier_number) as tier_number
-      , MAX(w.total_cases) as totalCases
+      , MAX(w.total_cases) as total_cases
       , SUM(tr.total_cases) as tier_number_totals
     FROM app.tiers tr
       LEFT JOIN app.workload w ON tr.workload_id = w.id
