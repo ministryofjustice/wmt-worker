@@ -15,17 +15,19 @@ exports.seed = function (knex, Promise) {
     , [5] AS b2
     , [6] AS b1
     , [7] AS a
+    , case_type
     , total_cases
   FROM (
       SELECT
-        MAX(wo.team_id) as id
-      , MAX(wo.id) as link_id
+        MAX(wo.team_id) AS id
+      , MAX(wo.id) AS link_id
       , MAX(CONCAT(om.forename, ' ', om.surname)) AS name
       , MAX(om.grade_code) AS grade_code
-      , tr.workload_id as workload_id
-      , MAX(tr.tier_number) as tier_number
-      , MAX(w.total_cases) as total_cases
-      , SUM(tr.total_cases) as tier_number_totals
+      , tr.workload_id AS workload_id
+      , tr.location AS case_type
+      , MAX(tr.tier_number) AS tier_number
+      , SUM(tr.total_cases) AS tier_number_totals
+      , MAX(w.total_cases) AS total_cases
     FROM app.tiers tr
       LEFT JOIN app.workload w ON tr.workload_id = w.id
       LEFT JOIN app.workload_points_calculations wpc ON wpc.workload_id = w.id
@@ -34,7 +36,7 @@ exports.seed = function (knex, Promise) {
       JOIN app.offender_manager om ON om.id = wo.offender_manager_id
     WHERE wr.effective_from IS NOT NULL
     AND wr.effective_to IS NULL
-    GROUP BY tr.tier_number, tr.workload_id
+    GROUP BY tr.tier_number, tr.location, tr.workload_id
   ) AS total_per_workload
   PIVOT (
     SUM(tier_number_totals)
