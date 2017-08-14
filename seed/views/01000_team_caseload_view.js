@@ -44,6 +44,7 @@ exports.seed = function (knex, Promise) {
 
   return knex.schema
     .raw('DROP VIEW IF EXISTS app.team_caseload_view;')
+    .raw('DROP VIEW IF EXISTS app.team_caseload_overview;') // Old view name
     .raw('SET ARITHABORT ON')
     .raw(sql)
 }
