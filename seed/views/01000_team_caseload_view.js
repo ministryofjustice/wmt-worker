@@ -25,7 +25,7 @@ exports.seed = function (knex, Promise) {
       , MAX(om.grade_code) AS grade_code
       , tr.workload_id AS workload_id
       , tr.location AS case_type
-      , MAX(tr.tier_number) AS tier_number
+      , tr.tier_number AS tier_number
       , SUM(tr.total_cases) AS tier_number_totals
       , MAX(w.total_cases) AS total_cases
     FROM app.tiers tr
