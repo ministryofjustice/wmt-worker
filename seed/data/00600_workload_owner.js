@@ -12,13 +12,19 @@ exports.seed = function (knex, Promise) {
     })
     .then(function (omIds) {
       // Inserts seed entries
-      return Promise.each(omIds, (omId) => {
-        return knex(tableName).insert([
-          { offender_manager_id: omId.id, team_id: teamIds[0].id },
-          { offender_manager_id: omId.id, team_id: teamIds[1].id },
-          { offender_manager_id: omId.id, team_id: teamIds[2].id },
-          { offender_manager_id: omId.id, team_id: teamIds[3].id }
-        ])
+      var contractedHours = [37.5, 36.5, 35.5, 33.5, 32.5]
+      var insertData = []
+
+      var counter = 0
+      omIds.forEach(function (omId) {
+        var hours = contractedHours[counter++]
+        insertData.push(
+          { offender_manager_id: omId.id, team_id: teamIds[0].id, contracted_hours: hours },
+          { offender_manager_id: omId.id, team_id: teamIds[1].id, contracted_hours: hours },
+          { offender_manager_id: omId.id, team_id: teamIds[2].id, contracted_hours: hours },
+          { offender_manager_id: omId.id, team_id: teamIds[3].id, contracted_hours: hours }
+        )
       })
+      return knex(tableName).insert(insertData)
     })
 }
