@@ -19,7 +19,7 @@ exports.seed = function (knex, Promise) {
   FROM (
       SELECT
         MAX(wo.team_id) as id
-      , MAX(om.id) as link_id
+      , MAX(wo.id) as link_id
       , MAX(CONCAT(om.forename, ' ', om.surname)) AS name
       , MAX(om.grade_code) AS grade_code
       , tr.workload_id as workload_id
