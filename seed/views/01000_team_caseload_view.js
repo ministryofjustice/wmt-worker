@@ -1,5 +1,5 @@
 exports.seed = function (knex, Promise) {
-  var sql = `CREATE VIEW app.team_caseload_overview
+  var sql = `CREATE VIEW app.team_caseload_view
   WITH SCHEMABINDING
   AS
   SELECT
@@ -43,7 +43,7 @@ exports.seed = function (knex, Promise) {
   ) AS pivoted;`
 
   return knex.schema
-    .raw('DROP VIEW IF EXISTS app.team_caseload_overview;')
+    .raw('DROP VIEW IF EXISTS app.team_caseload_view;')
     .raw('SET ARITHABORT ON')
     .raw(sql)
 }
