@@ -5,7 +5,7 @@ exports.seed = function (knex, Promise) {
       SELECT     
         MAX(l.id) AS id
         , t.id AS link_id
-        , MAX(t.description) AS team_name
+        , MAX(t.description) AS name
         , grade_code
         , SUM(untiered) AS untiered
         , SUM(d2) AS d2
