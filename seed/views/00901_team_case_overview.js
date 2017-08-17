@@ -9,6 +9,8 @@ exports.seed = function (knex, promise) {
     , MAX(wpc.available_points) AS available_points
     , MAX(wpc.total_points) AS total_points
     , MAX(wo.contracted_hours) AS contracted_hours
+    , MAX(wp.default_contracted_hours_po) AS default_contracted_hours_po
+    , MAX(wp.default_contracted_hours_pso) AS default_contracted_hours_pso
     , MAX(wpc.reduction_hours) AS reduction_hours
     , MAX(t.id) AS id
     , MAX(wo.id) AS link_id
@@ -17,6 +19,7 @@ exports.seed = function (knex, promise) {
     JOIN app.offender_manager om ON om.id = wo.offender_manager_id
     JOIN app.team t ON wo.team_id = t.id
     LEFT JOIN app.workload_points_calculations wpc ON wpc.workload_id = w.id
+    JOIN app.workload_points wp ON wpc.workload_points_id = wp.id 
     GROUP BY wo.id;`
 
   return knex.schema
