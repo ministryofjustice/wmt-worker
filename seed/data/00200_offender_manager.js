@@ -9,11 +9,11 @@ exports.seed = function (knex, Promise) {
     .then(function (probationOfficerTypeId) {
       // Inserts seed entries
       return knex(tableName).insert([
-        { type_id: probationOfficerTypeId.id, key: 'JS01', forename: 'John', surname: 'Smith', grade_code: 'C' },
-        { type_id: probationOfficerTypeId.id, key: 'JS02', forename: 'Tony', surname: 'Test', grade_code: 'C' },
-        { type_id: probationOfficerTypeId.id, key: 'JS03', forename: 'Jane', surname: 'Doe', grade_code: 'C' },
-        { type_id: probationOfficerTypeId.id, key: 'JS04', forename: 'Marcin', surname: 'Martin', grade_code: 'C' },
-        { type_id: probationOfficerTypeId.id, key: 'JS05', forename: 'Courtney', surname: 'Larry', grade_code: 'C' }
+        { type_id: probationOfficerTypeId.id, key: 'JS01', forename: 'John', surname: 'Smith', grade_code: 'PO' },
+        { type_id: probationOfficerTypeId.id, key: 'JS02', forename: 'Tony', surname: 'Test', grade_code: 'PO' },
+        { type_id: probationOfficerTypeId.id, key: 'JS03', forename: 'Jane', surname: 'Doe', grade_code: 'PO' },
+        { type_id: probationOfficerTypeId.id, key: 'JS04', forename: 'Marcin', surname: 'Martin', grade_code: 'PSO' },
+        { type_id: probationOfficerTypeId.id, key: 'JS05', forename: 'Courtney', surname: 'Larry', grade_code: 'PSO' }
       ])
     })
 }
