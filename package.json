@@ -14,7 +14,7 @@
     "test": "yarn unit-test && yarn integration-test",
     "create-views": "knex seed:run --env views",
     "migrate-app": "knex migrate:latest --env app && node ./delete-views && yarn create-views",
-    "seed-app": "node ./delete-data.js && knex seed:run --env app",
+    "seed-app": "node ./delete-data.js && knex seed:run --env app && knex seed:run --env dev",
     "rollback-app": "knex migrate:rollback --env app",
     "migrate-stg": "knex migrate:latest --env staging",
     "rollback-stg": "knex migrate:rollback --env staging",
