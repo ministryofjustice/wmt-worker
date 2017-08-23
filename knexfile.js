@@ -36,18 +36,7 @@ module.exports = {
       directory: 'migrations/app'
     },
     seeds: {
-      directory: 'seed/data/ref'
-    },
-    debug: false
-  },
-  dev: {
-    client: 'mssql',
-    connection: Object.assign({}, defaultConnection, {
-      user: config.MIGRATION_APP_DATABASE_USERNAME,
-      password: config.MIGRATION_APP_DATABASE_PASSWORD
-    }),
-    seeds: {
-      directory: 'seed/data/dev'
+      directory: 'seed/data'
     },
     debug: false
   },
