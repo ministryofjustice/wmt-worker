@@ -21,7 +21,7 @@
     "rollback-app": "knex migrate:rollback --env app",
     "migrate-stg": "knex migrate:latest --env staging",
     "rollback-stg": "knex migrate:rollback --env staging",
-    "reset-db": "yarn migrate-stg && yarn migrate-app && yarn delete-dev-data && yarn delete-ref-data && yarn seed-ref && yarn seed-dev"
+    "reset-db": "yarn migrate-stg && yarn migrate-app && yarn delete-dev-data && yarn delete-ref-data && yarn seed-ref"
   },
   "standard": {
     "globals": [
