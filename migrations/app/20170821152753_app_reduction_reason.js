@@ -1,5 +1,7 @@
 var tableName = 'reduction_reason'
 var insertStatement = 'INSERT INTO app.' + tableName + ' (id, reason, reason_short_name, category_id, allowance_percentage, max_allowance_percentage, months_to_expiry) VALUES '
+var categoryId
+var sql
 
 exports.up = function (knex, Promise) {
   return knex.schema.createTable('reduction_reason', function (table) {
@@ -58,7 +60,7 @@ exports.up = function (knex, Promise) {
     return knex.schema
       .raw(sql)
   })
-  
+
   .catch(function (error) {
     console.log(error)
     throw error
