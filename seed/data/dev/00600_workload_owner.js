@@ -12,7 +12,7 @@ exports.seed = function (knex, Promise) {
     })
     .then(function (omIds) {
       // Inserts seed entries
-      var contractedHours = [37.5, 36.5, 35.5, 33.5, 32.5]
+      var contractedHours = [37, 36, 35, 33, 32]
       var insertData = []
 
       var counter = 0
