@@ -8,6 +8,7 @@ const Batch = require('../../../../app/services/domain/batch')
 
 const WORKLOAD_ID = 10
 const BATCH_SIZE = 20
+const MAX_ID = WORKLOAD_ID + BATCH_SIZE - 1
 const REPORT_ID = 30
 const REDUCTION_HOURS = 7
 const CONTRACTED_HOURS = 37.5
@@ -64,7 +65,7 @@ describe('services/workers/calculate-workload-points', function () {
     getOffenderManagerTypeIdStub.resolves(WORKLOAD_ID)
     getPointsConfigurationStub.resolves({values: pointsHelper.getCaseTypeWeightings(), id: WORKLOAD_ID})
     calculateWorkloadPoints.execute(task).then(function () {
-      expect(getWorkloadsStub.calledWith(WORKLOAD_ID, BATCH_SIZE)).to.equal(true)
+      expect(getWorkloadsStub.calledWith(WORKLOAD_ID, MAX_ID, BATCH_SIZE)).to.equal(true)
       done()
     })
   })
