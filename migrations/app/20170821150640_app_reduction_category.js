@@ -2,7 +2,7 @@ var tableName = 'reduction_category'
 var insertStatement = 'INSERT INTO app.' + tableName + ' (id, category) VALUES '
 
 exports.up = function (knex, Promise) {
-  return knex.schema.createTableIfNotExists(tableName, function (table) {
+  return knex.schema.createTable(tableName, function (table) {
     table.increments('id')
     table.string('category')
   }).then(function () {
