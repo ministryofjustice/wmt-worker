@@ -16,11 +16,18 @@ module.exports.execute = function (task) {
   var id = task.additionalData.workloadBatch.startingId
   var batchSize = task.additionalData.workloadBatch.batchSize
   var reportId = task.workloadReportId
+  var maxId = id + batchSize - 1
 
-  logger.info('Calculating Workload Points for Workloads ' + id + ' - ' + (id + batchSize))
+  if (batchSize === 1) {
+    maxId = id
+    logger.info('Calculating Workload Points for Workload ' + id)
+  } else {
+    logger.info('Calculating Workload Points for Workloads ' + id + ' - ' + (id + batchSize))
+  }
+
   var pointsConfigurationPromise = getWorkloadPointsConfiguration()
 
-  return getAppWorkloads(id, batchSize).then(function (workloads) {
+  return getAppWorkloads(id, maxId, batchSize).then(function (workloads) {
     return Promise.each(workloads, function (workloadResult) {
       var workload = workloadResult.values
       var workloadId = workloadResult.id
