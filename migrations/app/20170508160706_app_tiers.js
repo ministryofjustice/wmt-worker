@@ -3,9 +3,9 @@ exports.up = function (knex, Promise) {
     table.increments('id')
     table.integer('workload_id').unsigned().notNullable().references('workload.id')
     table.string('location').notNullable()
-  }).then( function () {
+  }).then(function () {
     return Promise.all([
-      // Knex doesn't have a built in function for tinyint 
+      // Knex doesn't have a built in function for tinyint
       knex.raw('ALTER TABLE tiers ADD tier_number TINYINT NOT NULL'),
       knex.raw('ALTER TABLE tiers ADD overdue_terminations_total TINYINT NOT NULL'),
       knex.raw('ALTER TABLE tiers ADD warrants_total TINYINT NOT NULL'),
