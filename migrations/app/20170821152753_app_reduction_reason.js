@@ -7,7 +7,8 @@ exports.up = function (knex, Promise) {
     table.integer('allowance_percentage')
     table.integer('max_allowance_percentage')
     table.integer('months_to_expiry')
-  }).catch(function (error) {
+  })
+  .catch(function (error) {
     console.log(error)
     throw error
   })

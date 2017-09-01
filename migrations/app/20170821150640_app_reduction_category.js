@@ -2,7 +2,8 @@ exports.up = function (knex, Promise) {
   return knex.schema.createTable('reduction_category', function (table) {
     table.increments('id')
     table.string('category')
-  }).catch(function (error) {
+  })
+  .catch(function (error) {
     console.log(error)
     throw error
   })
