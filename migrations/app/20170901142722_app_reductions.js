@@ -6,6 +6,7 @@ exports.up = function (knex, Promise) {
     table.decimal('hours').unsigned().notNullable()
     table.timestamp('effective_from').notNullable()
     table.timestamp('effective_to')
+    table.string('status')
     table.string('notes')
   }).catch(function (error) {
     console.log(error)
