@@ -1,19 +1,9 @@
-var tableName = 'reduction_category'
-var insertStatement = 'INSERT INTO app.' + tableName + ' (id, category) VALUES '
-
 exports.up = function (knex, Promise) {
-  return knex.schema.createTable(tableName, function (table) {
+  return knex.schema.createTable('reduction_category', function (table) {
     table.increments('id')
     table.string('category')
-  }).then(function () {
-    // Insert the ref data
-    var sql = 'SET IDENTITY_INSERT app.' + tableName + ' ON;' +
-        insertStatement + '(1, \'Personal Circumstances\')' +
-        insertStatement + '(2, \'Community Justice Learning\')' +
-        insertStatement + '(3, \'Work Circumstances\')'
-    return knex.schema
-      .raw(sql)
-  }).catch(function (error) {
+  })
+  .catch(function (error) {
     console.log(error)
     throw error
   })
