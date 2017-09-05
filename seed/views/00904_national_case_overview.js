@@ -9,6 +9,8 @@ exports.seed = function (knex, promise) {
     , SUM(rv.total_points) AS total_points
     , SUM(rv.contracted_hours) AS contracted_hours
     , SUM(rv.reduction_hours) AS reduction_hours
+    , MAX(rv.default_contracted_hours_po) AS default_contracted_hours_po
+    , MAX(rv.default_contracted_hours_pso) AS default_contracted_hours_pso
     , MAX(r.id) AS link_id
   FROM app.region_case_overview rv
     JOIN app.region r ON r.id = rv.id
