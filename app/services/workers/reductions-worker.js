@@ -1,5 +1,5 @@
 const getAllOpenReductions = require('../data/get-all-open-reductions')
-const updateReductionStatusByIds = require('../data/update-reduction-by-ids')
+const updateReductionStatusByIds = require('../data/update-reduction-status-by-ids')
 const reductionStatus = require('../../constants/reduction-status')
 
 module.exports.execute = function (task) {
@@ -16,10 +16,10 @@ module.exports.execute = function (task) {
         ids = idsMap.get(status)
         ids.push(reduction.id)
         idsMap.set(status, ids)
-      }, this)
+      })
 
       var updateReductionsPromises = []
-      for (var [status, ids] in idsMap) {
+      for (var [status, ids] of idsMap) {
         updateReductionsPromises.push(updateReductionStatusByIds(ids, status))
       }
       return Promise.all(updateReductionsPromises)
@@ -29,7 +29,7 @@ module.exports.execute = function (task) {
 var getReducitonStatus = function (reduction) {
   var status = reductionStatus.DELETED
 
-  var currentTime = new Date().getTime
+  var currentTime = new Date().getTime()
   var reductionStartTime = reduction.reductionStartDate.getTime()
   var reductionEndTime = reduction.reductionEndDate.getTime()
 

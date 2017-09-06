@@ -3,11 +3,11 @@ const expect = require('chai').expect
 const appWorkloadOwnerHelper = require('../../../helpers/data/app-workload-owner-helper')
 const appReductionsHelper = require('../../../helpers/data/app-reductions-helper')
 
-const getAppReductions = require('../../../../app/services/data/get-app-reductions')
+const getAllOpenReductions = require('../../../../app/services/data/get-all-open-reductions')
 
 var inserts = []
 
-describe('services/data/get-app-reductions', function () {
+describe('services/data/get-all-open-reductions', function () {
   before(function (done) {
     appWorkloadOwnerHelper.insertDependencies(inserts)
       .then(function (builtInserts) {
@@ -19,16 +19,17 @@ describe('services/data/get-app-reductions', function () {
       })
   })
 
-  it('should retrieve the total of reductions for a given workload owner', function (done) {
-    var workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
-    getAppReductions(workloadOwnerId).then(function (hours) {
-      expect(hours).to.equal(37)
+  it('should retrieve the open reductions in system', function (done) {
+    getAllOpenReductions().then(function (results) {
+      results.forEach(function (result) {
+        expect(['ACTIVE', 'SCHEDULED', null]).to.include(result.status)
+      })
       done()
     })
   })
 
   after(function (done) {
     appReductionsHelper.removeDependencies(inserts)
-      .then(() => done())
+    .then(() => done())
   })
 })
