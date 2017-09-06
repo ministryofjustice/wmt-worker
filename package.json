@@ -14,11 +14,15 @@
     "test": "yarn unit-test && yarn integration-test",
     "create-views": "knex seed:run --env views",
     "migrate-app": "knex migrate:latest --env app && node ./delete-views && yarn create-views",
-    "seed-app": "node ./delete-data.js && knex seed:run --env app",
+    "seed-dev": "knex seed:run --env dev",
+    "seed-ref": "knex seed:run --env app",
+    "delete-dev-data": "node ./delete-data.js dev",
+    "delete-ref-data": "node ./delete-data.js ref",
     "rollback-app": "knex migrate:rollback --env app",
     "migrate-stg": "knex migrate:latest --env staging",
     "rollback-stg": "knex migrate:rollback --env staging",
-    "reset-db": "yarn migrate-stg && yarn migrate-app && yarn seed-app"
+    "reset-dev-db": "yarn migrate-stg && yarn migrate-app && yarn delete-dev-data && yarn delete-ref-data && yarn seed-ref && yarn seed-dev",
+    "reset-test-db": "yarn migrate-stg && yarn migrate-app"
   },
   "standard": {
     "globals": [

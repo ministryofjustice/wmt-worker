@@ -10,6 +10,8 @@ exports.seed = function (knex, promise) {
     , SUM(tv.total_points) AS total_points
     , SUM(tv.contracted_hours) AS contracted_hours
     , SUM(tv.reduction_hours) AS reduction_hours
+    , MAX(tv.default_contracted_hours_po) AS default_contracted_hours_po
+    , MAX(tv.default_contracted_hours_pso) AS default_contracted_hours_pso
     , MAX(l.id) AS id
     , MAX(t.id) AS link_id
   FROM app.team_case_overview tv
