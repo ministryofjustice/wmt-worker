@@ -32,15 +32,15 @@ var activeReduction = {
 
 var scheduledReduction = {
   id: 2,
-  reductionStartDate: tomorrow,
-  reductionEndDate: dayAfterTomorrow,
+  effectiveFrom: tomorrow,
+  effectiveTo: dayAfterTomorrow,
   status: null
 }
 
 var archivedReduction = {
   id: 3,
-  reductionStartDate: dayBeforeYesterday,
-  reductionEndDate: yesterday,
+  effectiveFrom: dayBeforeYesterday,
+  effectiveTo: yesterday,
   status: null
 }
 

@@ -85,7 +85,7 @@ module.exports.execute = function (task) {
       var taskDetails = {
         workloadBatch: new Batch(insertedWorkloadIds[0], insertedWorkloadIds.length)
       }
-      var calculateWorkloadPointsTask = new Task(
+      var reductionsWorkerTask = new Task(
                 undefined,
                 submittingAgent.WORKER,
                 taskType.PROCESS_REDUCTIONS,
@@ -96,7 +96,7 @@ module.exports.execute = function (task) {
                 taskStatus.PENDING
                 )
 
-      return createNewTasks([calculateWorkloadPointsTask])
+      return createNewTasks([reductionsWorkerTask])
             .then(function () {
               logger.info('Tasks created')
             })
