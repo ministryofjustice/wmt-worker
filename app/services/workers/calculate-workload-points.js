@@ -30,7 +30,7 @@ module.exports.execute = function (task) {
     message = 'Calculating Workload Points for Workload ' + id
   }
 
-  logger.log(message)
+  logger.info(message)
 
   var pointsConfigurationPromise = getWorkloadPointsConfiguration()
 
