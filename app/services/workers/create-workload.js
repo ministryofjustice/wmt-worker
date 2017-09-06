@@ -88,7 +88,7 @@ module.exports.execute = function (task) {
       var calculateWorkloadPointsTask = new Task(
                 undefined,
                 submittingAgent.WORKER,
-                taskType.CALCULATE_WORKLOAD_POINTS,
+                taskType.PROCESS_REDUCTIONS,
                 taskDetails,
                 workloadReportId,
                 undefined,

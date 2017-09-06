@@ -6,6 +6,7 @@ const expect = require('chai').expect
 var reductionsWorker
 var getAllOpenReductions
 var updateReductionStatusByIds
+var createNewTasks
 var relativeFilePath = 'services/workers/reductions-worker'
 
 var today = new Date()
@@ -49,20 +50,26 @@ describe(relativeFilePath, function () {
   beforeEach(function () {
     getAllOpenReductions = sinon.stub()
     updateReductionStatusByIds = sinon.stub()
+    createNewTasks = sinon.stub()
     reductionsWorker = proxyquire('../../../../app/' + relativeFilePath, {
+      '../log': { info: function (message) { } },
       '../data/get-all-open-reductions': getAllOpenReductions,
-      '../data/update-reduction-status-by-ids': updateReductionStatusByIds
+      '../data/update-reduction-status-by-ids': updateReductionStatusByIds,
+      '../data/create-tasks': createNewTasks
     })
   })
 
   it('should call the database to get the reductions assign statuses and call to update databse', function () {
     getAllOpenReductions.resolves(reductions)
     updateReductionStatusByIds.resolves(1)
+    createNewTasks.resolves()
     reductionsWorker.execute({}).then(function () {
       expect(getAllOpenReductions.called).to.be.equal(true)
       expect(updateReductionStatusByIds.calledWith([activeReduction.id], 'ACTIVE')).to.be.equal(true)
       expect(updateReductionStatusByIds.calledWith([scheduledReduction.id], 'SCHEDULED')).to.be.equal(true)
       expect(updateReductionStatusByIds.calledWith([archivedReduction.id], 'ARCHIVED')).to.be.equal(true)
+
+      expect(createNewTasks.called).to.be.equal(true)
     })
   })
 })
