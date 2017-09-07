@@ -17,14 +17,16 @@ exports.seed = function (knex, Promise) {
       // Create active reduction record
       var activeFromDate = new Date()
       var activeToDate = new Date()
+      var activeStatus = 'ACTIVE'
       activeFromDate.setDate(effectiveFromDate - 365)
-      activeToDate.setDate(effectiveToDate + 365)
+      activeToDate.setDate(effectiveToDate + 365*10)
 
       // Create scheduled reduction record
       var scheduledFromDate = new Date()
       var scheduleToDate = new Date()
+      var scheduledStatus = 'SCHEDULED'
       scheduledFromDate.setDate(effectiveFromDate + 90)
-      scheduleToDate.setDate(effectiveToDate + 365)
+      scheduleToDate.setDate(effectiveToDate + 365*10)
 
       // Create archived reduction record
       var archivedFromDate = new Date()
@@ -33,19 +35,28 @@ exports.seed = function (knex, Promise) {
       archivedFromDate.setDate(effectiveFromDate - 360)
       archivedToDate.setDate(effectiveToDate - 365)
 
+      // Create deleted reduction record
+      var deletedFromDate = new Date()
+      var deletedToDate = new Date()
+      var deletedStatus = 'DELETED'
+      deletedFromDate.setDate(effectiveFromDate - 365)
+      deletedToDate.setDate(effectiveToDate + 365*10)
+
       // Insert all records into the reduction table
       return knex(tableName).insert([
         { workload_owner_id: workloadOwnerId,
           reduction_reason_id: reductionReasonId[0].id,
           effective_from: activeFromDate,
           effective_to: activeToDate,
-          hours: Math.floor(Math.random() * 6) + 1
+          hours: Math.floor(Math.random() * 6) + 1,
+          status: activeStatus
         },
         { workload_owner_id: workloadOwnerId,
           reduction_reason_id: reductionReasonId[1].id,
           effective_from: scheduledFromDate,
           effective_to: scheduleToDate,
-          hours: Math.floor(Math.random() * 6) + 1
+          hours: Math.floor(Math.random() * 6) + 1,
+          status: scheduledStatus
         },
         { workload_owner_id: workloadOwnerId,
           reduction_reason_id: reductionReasonId[2].id,
@@ -53,6 +64,13 @@ exports.seed = function (knex, Promise) {
           effective_to: archivedToDate,
           hours: Math.floor(Math.random() * 6) + 1,
           status: archivedStatus
+        },
+        { workload_owner_id: workloadOwnerId,
+          reduction_reason_id: reductionReasonId[2].id,
+          effective_from: deletedFromDate,
+          effective_to: deletedToDate,
+          hours: Math.floor(Math.random() * 6) + 1,
+          status: deletedStatus
         }
       ])
     })
