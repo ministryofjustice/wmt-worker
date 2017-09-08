@@ -32,7 +32,6 @@ describe('app/services/data/insert-offender-manager', function () {
           expect(result['forename']).to.be.null // eslint-disable-line
           expect(result['surname']).to.be.null // eslint-disable-line
           expect(result['type_id']).to.eq(typeId) // eslint-disable-line
-          expect(result['grade_code']).to.be.null // eslint-disable-line
           expect(moment().diff(result['effective_from'], 'seconds')).to.be.lt(10) // eslint-disable-line
           expect(result['effective_to']).to.be.null // eslint-disable-line
           done()
