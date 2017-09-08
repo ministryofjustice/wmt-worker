@@ -22,7 +22,7 @@ exports.seed = function (knex, Promise) {
         MAX(wo.team_id) AS id
       , MAX(wo.id) AS link_id
       , MAX(CONCAT(om.forename, ' ', om.surname)) AS name
-      , MAX(om.grade_code) AS grade_code
+      , MAX(omType.grade_code) AS grade_code
       , tr.workload_id AS workload_id
       , tr.location AS case_type
       , tr.tier_number AS tier_number
@@ -34,6 +34,7 @@ exports.seed = function (knex, Promise) {
       LEFT JOIN app.workload_report wr ON wr.id = wpc.workload_report_id
       JOIN app.workload_owner wo ON wo.id = w.workload_owner_id
       JOIN app.offender_manager om ON om.id = wo.offender_manager_id
+      JOIN app.offender_manager_type omType ON omType.id = om.type_id
     WHERE wr.effective_from IS NOT NULL
     AND wr.effective_to IS NULL
     GROUP BY tr.tier_number, tr.location, tr.workload_id

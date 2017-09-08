@@ -4,7 +4,7 @@ exports.seed = function (knex, promise) {
   AS
   SELECT
       MAX(CONCAT(om.forename, ' ', om.surname)) AS name
-    , MAX(om.grade_code) AS grade_code
+    , MAX(omType.grade_code) AS grade_code
     , MAX(w.total_cases) AS total_cases
     , MAX(wpc.available_points) AS available_points
     , MAX(wpc.total_points) AS total_points
@@ -17,6 +17,7 @@ exports.seed = function (knex, promise) {
   FROM app.workload w
     JOIN app.workload_owner wo ON wo.id = w.workload_owner_id
     JOIN app.offender_manager om ON om.id = wo.offender_manager_id
+    JOIN app.offender_manager_type omType ON omType.id = om.type_id
     JOIN app.team t ON wo.team_id = t.id
     JOIN app.workload_points_calculations wpc ON wpc.workload_id = w.id
     JOIN app.workload_points wp ON wpc.workload_points_id = wp.id 
