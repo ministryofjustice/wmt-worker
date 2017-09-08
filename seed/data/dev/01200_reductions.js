@@ -19,14 +19,14 @@ exports.seed = function (knex, Promise) {
       var activeToDate = new Date()
       var activeStatus = 'ACTIVE'
       activeFromDate.setDate(effectiveFromDate - 365)
-      activeToDate.setDate(effectiveToDate + 365*10)
+      activeToDate.setDate(effectiveToDate + 365 * 10)
 
       // Create scheduled reduction record
       var scheduledFromDate = new Date()
       var scheduleToDate = new Date()
       var scheduledStatus = 'SCHEDULED'
       scheduledFromDate.setDate(effectiveFromDate + 90)
-      scheduleToDate.setDate(effectiveToDate + 365*10)
+      scheduleToDate.setDate(effectiveToDate + 365 * 10)
 
       // Create archived reduction record
       var archivedFromDate = new Date()
@@ -40,7 +40,7 @@ exports.seed = function (knex, Promise) {
       var deletedToDate = new Date()
       var deletedStatus = 'DELETED'
       deletedFromDate.setDate(effectiveFromDate - 365)
-      deletedToDate.setDate(effectiveToDate + 365*10)
+      deletedToDate.setDate(effectiveToDate + 365 * 10)
 
       // Insert all records into the reduction table
       return knex(tableName).insert([
