@@ -25,8 +25,8 @@ dayAfterTomorrow.setDate(today.getDate() + 2)
 
 var activeReduction = {
   id: 1,
-  reductionStartDate: yesterday,
-  reductionEndDate: tomorrow,
+  effectiveFrom: yesterday,
+  effectiveTo: tomorrow,
   status: null
 }
 
@@ -63,7 +63,7 @@ describe(relativeFilePath, function () {
     getAllOpenReductions.resolves(reductions)
     updateReductionStatusByIds.resolves(1)
     createNewTasks.resolves()
-    reductionsWorker.execute({}).then(function () {
+    return reductionsWorker.execute({}).then(function () {
       expect(getAllOpenReductions.called).to.be.equal(true)
       expect(updateReductionStatusByIds.calledWith([activeReduction.id], 'ACTIVE')).to.be.equal(true)
       expect(updateReductionStatusByIds.calledWith([scheduledReduction.id], 'SCHEDULED')).to.be.equal(true)
