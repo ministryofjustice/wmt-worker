@@ -8,7 +8,7 @@ const getAllOpenReductions = require('../../../../app/services/data/get-all-open
 
 var inserts = []
 
-describe('services/data/get-all-open-reductions', function () {
+describe('services/data/update-reduction-status-by-ids', function () {
   before(function (done) {
     appWorkloadOwnerHelper.insertDependencies(inserts)
       .then(function (builtInserts) {
@@ -20,7 +20,7 @@ describe('services/data/get-all-open-reductions', function () {
       })
   })
 
-  it('should retrieve the open reductions in system', function () {
+  it('should update the status for a set of ids', function () {
     var ids = []
     inserts.filter((item) => item.table === 'reductions').forEach(function (reduction) {
       ids.push(reduction.id)

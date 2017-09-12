@@ -19,10 +19,12 @@ module.exports.execute = function (task) {
   return getAllOpenReductions()
     .then(function (reductions) {
       reductions.forEach(function (reduction) {
-        status = getReducitonStatus(reduction)
-        ids = idsMap.get(status)
-        ids.push(reduction.id)
-        idsMap.set(status, ids)
+        status = getReductionStatus(reduction)
+        if (status !== reduction.status) {
+          ids = idsMap.get(status)
+          ids.push(reduction.id)
+          idsMap.set(status, ids)
+        }
       })
 
       var updateReductionsPromises = []
@@ -47,13 +49,13 @@ module.exports.execute = function (task) {
 
         return createNewTasks([calculateWorkloadPointsTask])
         .then(function () {
-          logger.info('CalculateWorkloadTask created')
+          logger.info('CalculateWorkload Task created')
         })
       })
     })
 }
 
-var getReducitonStatus = function (reduction) {
+var getReductionStatus = function (reduction) {
   var status = reductionStatus.DELETED
 
   var currentTime = new Date().getTime()

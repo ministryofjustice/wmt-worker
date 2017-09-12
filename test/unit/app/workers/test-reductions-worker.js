@@ -44,7 +44,14 @@ var archivedReduction = {
   status: null
 }
 
-var reductions = [activeReduction, scheduledReduction, archivedReduction]
+var existingActiveReduction = {
+  id: 1,
+  effectiveFrom: yesterday,
+  effectiveTo: tomorrow,
+  status: 'ACTIVE'
+}
+
+var reductions = [activeReduction, scheduledReduction, archivedReduction, existingActiveReduction]
 
 describe(relativeFilePath, function () {
   beforeEach(function () {

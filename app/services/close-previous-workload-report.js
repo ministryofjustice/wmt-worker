@@ -1,8 +1,8 @@
-const getCurrentWorkloadReport = require('./data/get-current-workload-report')
+const getOpenWorkloadReport = require('./data/get-open-workload-report')
 const updateWorkloadReportEffectiveEndDate = require('./data/update-workload-report-effective-to')
 
 module.exports = function (newWorkloadReportId) {
-  return getCurrentWorkloadReport()
+  return getOpenWorkloadReport()
     .then(function (results) {
       var currentWorkload = results.filter((item) => item.id !== newWorkloadReportId)
       var newWorkload = results.filter((item) => item.id === newWorkloadReportId)

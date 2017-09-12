@@ -98,7 +98,7 @@ module.exports.execute = function (task) {
 
       return createNewTasks([reductionsWorkerTask])
             .then(function () {
-              logger.info('Tasks created')
+              logger.info('Reduction Worker Task created')
             })
     })
   })
