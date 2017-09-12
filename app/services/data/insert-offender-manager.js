@@ -11,7 +11,6 @@ module.exports = function (offenderManager) {
   offenderManagerDbObject.forename = offenderManager.forename
   offenderManagerDbObject.surname = offenderManager.surname
   offenderManagerDbObject.type_id = offenderManager.typeId
-  offenderManagerDbObject.grade_code = offenderManager.gradeCode
 
   return knex(offenderManagerTable)
     .where({'key': offenderManagerDbObject.key})
