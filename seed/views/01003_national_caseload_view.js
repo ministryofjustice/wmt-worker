@@ -1,5 +1,5 @@
 exports.seed = function (knex, Promise) {
-    var sql = `CREATE VIEW app.national_caseload_view
+  var sql = `CREATE VIEW app.national_caseload_view
         WITH SCHEMABINDING
         AS
         SELECT     
@@ -19,10 +19,9 @@ exports.seed = function (knex, Promise) {
         FROM app.region_caseload_view rv  
           JOIN app.region r ON rv.id = r.id
         GROUP BY r.id, grade_code;`
-  
-    return knex.schema
+
+  return knex.schema
       .raw('DROP VIEW IF EXISTS app.national_caseload_view;')
       .raw('SET ARITHABORT ON')
       .raw(sql)
-  }
-  
+}
