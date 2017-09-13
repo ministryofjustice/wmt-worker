@@ -22,7 +22,7 @@ describe('services/data/get-app-reductions', function () {
   it('should retrieve the total of reductions for a given workload owner', function (done) {
     var workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
     getAppReductions(workloadOwnerId).then(function (hours) {
-      expect(hours).to.equal(32)
+      expect(hours).to.equal(37)
       done()
     })
   })

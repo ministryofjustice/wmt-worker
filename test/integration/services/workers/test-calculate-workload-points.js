@@ -38,7 +38,7 @@ describe('services/workers/calculate-workload-points', function () {
       .whereBetween('workload_id', [initialWorkloadId, (initialWorkloadId + batchSize)])
       .then((workloadPointsCalculations) => {
         expect(workloadPointsCalculations.length).to.equal(batchSize)
-        expect(workloadPointsCalculations[0].reduction_hours).to.equal(32)
+        expect(workloadPointsCalculations[0].reduction_hours).to.equal(37)
         workloadPointsCalculations.forEach((insertedCalculation) =>
                     inserts.push({table: 'workload_points_calculations', id: insertedCalculation.id}))
         done()

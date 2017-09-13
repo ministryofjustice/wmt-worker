@@ -14,6 +14,8 @@ var taskStatusCounter
 var completeTaskWithStatus
 var getWorkerForTask
 var callWebRefreshEndpoint
+var closePreviousWorkloadReport
+var updateWorkloadReportEffectiveTo
 const batchSize = 3
 
 describe('process-tasks', function () {
@@ -24,6 +26,8 @@ describe('process-tasks', function () {
     updateWorkload = sinon.stub()
     taskStatusCounter = sinon.stub()
     callWebRefreshEndpoint = sinon.stub()
+    closePreviousWorkloadReport = sinon.stub()
+    updateWorkloadReportEffectiveTo = sinon.stub()
 
     processTasks = proxyquire('../../../app/process-tasks', {
       '../config': { ASYNC_WORKER_BATCH_SIZE: batchSize },
@@ -33,7 +37,9 @@ describe('process-tasks', function () {
       './services/task-status-counter': taskStatusCounter,
       './services/data/complete-task-with-status': completeTaskWithStatus,
       './services/get-worker-for-task': getWorkerForTask,
-      './services/refresh-web-org-hierarchy': callWebRefreshEndpoint
+      './services/refresh-web-org-hierarchy': callWebRefreshEndpoint,
+      './services/close-previous-workload-report': closePreviousWorkloadReport,
+      './services/data/update-workload-report-effective-to': updateWorkloadReportEffectiveTo
     })
     done()
   })
@@ -41,6 +47,7 @@ describe('process-tasks', function () {
   it('should get pending tasks and call worker to execute', function () {
     getPendingTasksAndMarkInProgress.resolves([{id: 1, type: 'task1'}, {id: 2, type: 'task2'}])
     updateWorkload.resolves({})
+    closePreviousWorkloadReport.resolves()
     getWorkerForTask.returns({
       execute: function () {
         return new Promise(function (resolve) {
@@ -76,6 +83,7 @@ describe('process-tasks', function () {
       numFailed: 0
     })
     updateWorkload.resolves({})
+    closePreviousWorkloadReport.resolves()
 
     return processTasks().then(function () {
       expect(getPendingTasksAndMarkInProgress.calledWith(batchSize)).to.be.true
@@ -83,6 +91,8 @@ describe('process-tasks', function () {
       expect(getWorkerForTask.calledWith('CALCULATE-WORKLOAD-POINTS')).to.be.true
       expect(completeTaskWithStatus.calledWith(1, taskStatus.COMPLETE)).to.be.true
       expect(completeTaskWithStatus.calledWith(2, taskStatus.COMPLETE)).to.be.true
+      expect(closePreviousWorkloadReport.calledWith(1)).to.be.false
+      expect(closePreviousWorkloadReport.calledWith(3)).to.be.true
       expect(updateWorkload.calledWith(1, workloadReportStatus.COMPLETE)).to.be.false
       expect(updateWorkload.calledWith(3, workloadReportStatus.COMPLETE)).to.be.true
       expect(callWebRefreshEndpoint.called).to.be.true
@@ -106,10 +116,12 @@ describe('process-tasks', function () {
       numFailed: 3
     })
     updateWorkload.resolves({})
+    closePreviousWorkloadReport.resolves()
 
     return processTasks().then(function () {
       expect(getWorkerForTask.calledWith('CALCULATE-WORKLOAD-POINTS')).to.be.true
       expect(completeTaskWithStatus.calledWith(2, taskStatus.COMPLETE)).to.be.true
+      expect(closePreviousWorkloadReport.called).to.be.false
       expect(updateWorkload.calledWith(2, workloadReportStatus.COMPLETE)).to.be.false
       expect(callWebRefreshEndpoint.called).to.be.false
     })
@@ -145,6 +157,7 @@ describe('process-tasks', function () {
           reject(Error('Fail'))
         })
       }})
+    updateWorkloadReportEffectiveTo.resolves()
     completeTaskWithStatus.resolves({})
 
     return processTasks().then(function () {
@@ -155,6 +168,7 @@ describe('process-tasks', function () {
       expect(updateWorkload.calledWith(1, workloadReportStatus.FAILED)).to.be.false
       expect(completeTaskWithStatus.calledWith(2, taskStatus.FAILED)).to.be.true
       expect(updateWorkload.calledWith(2, workloadReportStatus.FAILED)).to.be.true
+      expect(updateWorkloadReportEffectiveTo.called).to.be.true
     })
   })
 })
