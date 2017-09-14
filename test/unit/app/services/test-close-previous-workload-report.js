@@ -23,7 +23,7 @@ const currentWorkloads = [
   }
 ]
 
-describe('services/task-counter', function () {
+describe('services/close-previous-workload-report', function () {
   before(function (done) {
     getOpenWorkloadReports = sinon.stub()
     updateWorkloadEffectiveTo = sinon.stub()

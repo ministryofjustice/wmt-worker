@@ -8,51 +8,34 @@ const Task = require('../domain/task')
 const submittingAgent = require('../../constants/task-submitting-agent')
 const logger = require('../log')
 
+const mapStagingCmsReductions = require('../map-staging-cms-reductions')
+const getAppCmsReductions = require('../data/get-app-cms-reductions')
+const updateReductionEffectiveTo = require('../data/update-reduction-effective-to')
+const insertReduction = require('../data/insert-reduction')
+
 module.exports.execute = function (task) {
-  var idsMap = new Map()
-  idsMap.set(reductionStatus.ACTIVE, [])
-  idsMap.set(reductionStatus.SCHEDULED, [])
-  idsMap.set(reductionStatus.DELETED, [])
-  idsMap.set(reductionStatus.ARCHIVED, [])
+  return processCmsReductions()
+  .then(function () {
+    return updateReductionsStatus()
+    .then(function () {
+      logger.info('Reduction statuses updated')
+      var calculateWorkloadPointsTask = new Task(
+        undefined,
+        submittingAgent.WORKER,
+        taskType.CALCULATE_WORKLOAD_POINTS,
+        task.additionalData,
+        task.workloadReportId,
+        undefined,
+        undefined,
+        taskStatus.PENDING
+      )
 
-  logger.info('Retrieving open reductions')
-  return getAllOpenReductions()
-    .then(function (reductions) {
-      reductions.forEach(function (reduction) {
-        status = getReductionStatus(reduction)
-        if (status !== reduction.status) {
-          ids = idsMap.get(status)
-          ids.push(reduction.id)
-          idsMap.set(status, ids)
-        }
-      })
-
-      var updateReductionsPromises = []
-      for (var [status, ids] of idsMap) {
-        logger.info('Updating status to ' + status + ' for reductions with id in ' + ids + '.')
-        updateReductionsPromises.push(updateReductionStatusByIds(ids, status))
-      }
-
-      return Promise.all(updateReductionsPromises)
+      return createNewTasks([calculateWorkloadPointsTask])
       .then(function () {
-        logger.info('Reduction statuses updated')
-        var calculateWorkloadPointsTask = new Task(
-          undefined,
-          submittingAgent.WORKER,
-          taskType.CALCULATE_WORKLOAD_POINTS,
-          task.additionalData,
-          task.workloadReportId,
-          undefined,
-          undefined,
-          taskStatus.PENDING
-          )
-
-        return createNewTasks([calculateWorkloadPointsTask])
-        .then(function () {
-          logger.info('CalculateWorkload Task created')
-        })
+        logger.info('CalculateWorkload Task created')
       })
     })
+  })
 }
 
 var getReductionStatus = function (reduction) {
@@ -71,4 +54,73 @@ var getReductionStatus = function (reduction) {
   }
 
   return status
+}
+
+var processCmsReductions = function () {
+  return mapStagingCmsReductions()
+  .then(function (stgReductions) {
+    var stgReductionContactIds = []
+    stgReductions.forEach(function (stgReduction) {
+      stgReductionContactIds.push(stgReduction.contactId)
+    })
+
+    return getAppCmsReductions()
+    .then(function (appReductions) {
+      var appReductionContactIds = []
+      appReductions.forEach(function (appReduction) {
+        appReductionContactIds.push(appReduction.contactId)
+      })
+
+      var updateReductionsEffectiveTo = []
+      appReductions.forEach(function (appReduction) {
+        if (!stgReductionContactIds.includes(appReduction.contactId)) {
+          // set date of this reduction to today at 00.00 in order to set as archived in next stage of worker
+          updateReductionsEffectiveTo.push(updateReductionEffectiveTo(appReduction.id, new Date().setHours(0, 0, 0, 0)))
+        }
+      })
+
+      return Promise.all(updateReductionsEffectiveTo)
+      .then(function () {
+        var insertReductions = []
+        stgReductions.forEach(function (stgReduction) {
+          if (!appReductionContactIds.includes(stgReduction.contactId)) {
+            insertReductions.push(insertReduction(stgReduction))
+          }
+        })
+
+        return Promise.all(insertReductions)
+      })
+    })
+  })
+}
+
+var updateReductionsStatus = function () {
+  var idsMap = new Map()
+  idsMap.set(reductionStatus.ACTIVE, [])
+  idsMap.set(reductionStatus.SCHEDULED, [])
+  idsMap.set(reductionStatus.DELETED, [])
+  idsMap.set(reductionStatus.ARCHIVED, [])
+
+  logger.info('Retrieving open reductions')
+  return getAllOpenReductions()
+  .then(function (reductions) {
+    reductions.forEach(function (reduction) {
+      status = getReductionStatus(reduction)
+      if (status !== reduction.status) {
+        ids = idsMap.get(status)
+        ids.push(reduction.id)
+        idsMap.set(status, ids)
+      }
+    })
+
+    var updateReductionsPromises = []
+    for (var [status, ids] of idsMap) {
+      if (ids.length > 0) {
+        logger.info('Updating status to ' + status + ' for reductions with id in ' + ids + '.')
+        updateReductionsPromises.push(updateReductionStatusByIds(ids, status))
+      }
+    }
+
+    return Promise.all(updateReductionsPromises)
+  })
 }
