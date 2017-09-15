@@ -72,16 +72,30 @@ var processCmsReductions = function () {
       })
 
       var updateReductionsEffectiveTo = []
+      var insertReductions = []
+
       appReductions.forEach(function (appReduction) {
         if (!stgReductionContactIds.includes(appReduction.contactId)) {
           // set date of this reduction to today at 00.00 in order to set as archived in next stage of worker
           updateReductionsEffectiveTo.push(updateReductionEffectiveTo(appReduction.id, new Date().setHours(0, 0, 0, 0)))
+        } else {
+          // Check if the woid has changed in the om reduction
+          if (appReduction.hours < 0) {
+            stgReductions.forEach(function (stgReduction) {
+              if (hasOmReductionMoved(appReduction, stgReduction)) {
+                // close old one and create new reduction for new om
+                updateReductionsEffectiveTo.push(
+                  updateReductionEffectiveTo(appReduction.id, new Date().setHours(0, 0, 0, 0))
+                )
+                insertReductions.push(insertReduction(stgReduction))
+              }
+            })
+          }
         }
       })
 
       return Promise.all(updateReductionsEffectiveTo)
       .then(function () {
-        var insertReductions = []
         stgReductions.forEach(function (stgReduction) {
           if (!appReductionContactIds.includes(stgReduction.contactId)) {
             insertReductions.push(insertReduction(stgReduction))
@@ -92,6 +106,12 @@ var processCmsReductions = function () {
       })
     })
   })
+}
+
+var hasOmReductionMoved = function (appReduction, stgReduction) {
+  return (stgReduction.contactId === appReduction.contactId &&
+  stgReduction.hours < 0 &&
+  stgReduction.workloadOwnerId !== appReduction.workloadOwnerId)
 }
 
 var updateReductionsStatus = function () {

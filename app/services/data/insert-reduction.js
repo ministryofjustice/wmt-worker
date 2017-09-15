@@ -14,4 +14,7 @@ module.exports = function (reduction) {
     notes: reduction.notes
   })
   .returning('id')
+  .then(function (result) {
+    return result[0]
+  })
 }

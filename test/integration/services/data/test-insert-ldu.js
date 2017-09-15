@@ -29,7 +29,7 @@ describe('app/services/data/insert-ldu', function () {
           expect(result['id']).to.not.be.null // eslint-disable-line
           expect(result['code']).to.eq(code) // eslint-disable-line
           expect(result['description']).to.be.null // eslint-disable-line
-          expect(moment().diff(result['effective_from'], 'seconds')).to.be.lt(10) // eslint-disable-line
+          expect(moment().diff(result['effective_from'], 'seconds')).to.be.lt(20) // eslint-disable-line
           inserts.push({table: 'ldu', id: lduId})
           done()
         })

@@ -33,7 +33,7 @@ describe('app/services/data/create-tasks', function () {
           expect(result.workload_report_id).to.eq(workloadReportId)
           expect(JSON.parse(result.additional_data)).to.eq(additionalData)
           expect(result.status).to.equal(TASK_STATUS.PENDING)
-          expect(moment().diff(result.date_created, 'seconds')).to.be.lt(10)
+          expect(moment().diff(result.date_created, 'seconds')).to.be.lt(20)
           expect(result.effective_to).to.be.undefined // eslint-disable-line
           inserts.push({table: 'tasks', id: ids[0]})
           done()

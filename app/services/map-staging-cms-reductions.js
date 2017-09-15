@@ -25,7 +25,7 @@ module.exports = function () {
                 var contactReduction = {
                   contactId: cmsReduction.contactId,
                   workloadOwnerId: contactWorkloadOwnerId,
-                  fixedAllowanceHours: reductionReason.fixedAllowanceHours,
+                  hours: reductionReason.fixedAllowanceHours,
                   reductionReasonId: reductionReason.id,
                   effectiveFrom: startDate,
                   effetiveTo: endDate,
@@ -36,7 +36,7 @@ module.exports = function () {
                 var omReduction = {
                   contactId: cmsReduction.contactId,
                   workloadOwnerId: omWorkloadOwnerId,
-                  fixedAllowanceHours: reductionReason.fixedAllowanceHours * -1,
+                  hours: reductionReason.fixedAllowanceHours * -1,
                   reductionReasonId: reductionReason.id,
                   effectiveFrom: startDate,
                   effetiveTo: endDate,

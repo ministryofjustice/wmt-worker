@@ -5,4 +5,8 @@ module.exports = function (id, effectiveTo) {
   return knex('reductions')
   .where('id', id)
   .update('effective_to', effectiveTo)
+  .returning('id')
+  .then(function (results) {
+    return results[0]
+  })
 }

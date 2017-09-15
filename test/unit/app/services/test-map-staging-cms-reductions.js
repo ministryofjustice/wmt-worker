@@ -43,7 +43,7 @@ const expectedReductions = [
   {
     contactId: cmsReductionRows[0].contactId,
     workloadOwnerId: 1,
-    fixedAllowanceHours: reductionReason.fixedAllowanceHours,
+    hours: reductionReason.fixedAllowanceHours,
     reductionReasonId: reductionReason.id,
     effectiveFrom: now,
     effetiveTo: thirtyDays,
@@ -53,7 +53,7 @@ const expectedReductions = [
   {
     contactId: cmsReductionRows[0].contactId,
     workloadOwnerId: 1,
-    fixedAllowanceHours: reductionReason.fixedAllowanceHours * -1,
+    hours: reductionReason.fixedAllowanceHours * -1,
     reductionReasonId: reductionReason.id,
     effectiveFrom: now,
     effetiveTo: thirtyDays,
@@ -63,7 +63,7 @@ const expectedReductions = [
   {
     contactId: cmsReductionRows[1].contactId,
     workloadOwnerId: 1,
-    fixedAllowanceHours: reductionReason.fixedAllowanceHours,
+    hours: reductionReason.fixedAllowanceHours,
     reductionReasonId: reductionReason.id,
     effectiveFrom: now,
     effetiveTo: thirtyDays,
@@ -73,7 +73,7 @@ const expectedReductions = [
   {
     contactId: cmsReductionRows[1].contactId,
     workloadOwnerId: 1,
-    fixedAllowanceHours: reductionReason.fixedAllowanceHours * -1,
+    hours: reductionReason.fixedAllowanceHours * -1,
     reductionReasonId: reductionReason.id,
     effectiveFrom: now,
     effetiveTo: thirtyDays,

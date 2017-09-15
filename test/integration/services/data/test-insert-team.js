@@ -17,11 +17,11 @@ describe('app/services/data/insert-team', function () {
       })
   })
 
-  it('should insert a new team record', function (done) {
+  it('should insert a new team record', function () {
     var code = 'U'
     var lduId = inserts.filter((item) => item.table === 'ldu')[0].id
     var team = new Team(undefined, lduId, code)
-    insertTeam(team).then(function (teamId) {
+    return insertTeam(team).then(function (teamId) {
       return knex.table('team')
         .where({'id': teamId})
         .first()
@@ -30,10 +30,9 @@ describe('app/services/data/insert-team', function () {
           expect(result['ldu_id']).to.eq(lduId) // eslint-disable-line
           expect(result['code']).to.eq(code) // eslint-disable-line
           expect(result['description']).to.be.null // eslint-disable-line
-          expect(moment().diff(result['effective_from'], 'seconds')).to.be.lt(10)
+          expect(moment().diff(result['effective_from'], 'seconds')).to.be.lt(20)
           expect(result['effective_to']).to.be.null // eslint-disable-line
           inserts.push({table: 'team', id: teamId})
-          done()
         })
     })
   })

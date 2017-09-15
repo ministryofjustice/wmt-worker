@@ -6,6 +6,6 @@ module.exports = function (reductionReasonDescription) {
     .where('reason', reductionReasonDescription)
     .first('id', 'fixed_allowance_hours AS fixedAllowanceHours')
     .then(function (result) {
-      return result[0]
+      return result
     })
 }

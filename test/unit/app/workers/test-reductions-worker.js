@@ -60,12 +60,13 @@ var reductions = [activeReduction, scheduledReduction, archivedReduction, existi
 var existingContactId = 12
 var existingContactOmId = 31
 var existingOmId = 43
+var changedOmId = 55
 
 var cmsReductions = [
   {
     contactId: existingContactId,
     workloadOwnerId: existingContactOmId,
-    fixedAllowanceHours: 12,
+    hours: 12,
     reductionReasonId: 1,
     effectiveFrom: 'testfrom',
     effetiveTo: 'testto',
@@ -75,7 +76,7 @@ var cmsReductions = [
   {
     contactId: existingContactId,
     workloadOwnerId: existingOmId,
-    fixedAllowanceHours: -12,
+    hours: -12,
     reduction_reason_id: 1,
     effective_from: 'testfrom',
     effetive_to: 'testto',
@@ -130,11 +131,15 @@ describe(relativeFilePath, function () {
   it('should return cms reductions that exist already in wmt and not update anything', function () {
     var appReductions = [{
       id: 1,
-      contactId: existingContactId
+      contactId: existingContactId,
+      hours: 1,
+      workloadOwnerId: existingContactOmId
     },
     {
       id: 12,
-      contactId: existingContactId
+      contactId: existingContactId,
+      hours: -1,
+      workloadOwnerId: existingOmId
     }
     ]
 
@@ -183,11 +188,15 @@ describe(relativeFilePath, function () {
   it('should return cms reductions that exist but are not in the extract and update reductions', function () {
     var appReductions = [{
       id: 1,
-      contactId: existingContactId
+      contactId: existingContactId,
+      hours: 1,
+      workloadOwnerId: existingContactOmId
     },
     {
       id: 12,
-      contactId: existingContactId
+      contactId: existingContactId,
+      hours: -1,
+      workloadOwnerId: existingOmId
     }]
 
     mapStagingCmsReductions.resolves([])
@@ -208,6 +217,40 @@ describe(relativeFilePath, function () {
       expect(updateReductionEffectiveTo.calledWith(appReductions[0].id, new Date().setHours(0, 0, 0, 0))).to.be.equal(true)
       expect(updateReductionEffectiveTo.calledWith(appReductions[1].id, new Date().setHours(0, 0, 0, 0))).to.be.equal(true)
       expect(insertReduction.called).to.be.equal(false)
+    })
+  })
+
+  it('should return cms reductions that exist but OM key has changed and update old om record and insert new one', function () {
+    var appReductions = [{
+      id: 1,
+      contactId: existingContactId,
+      workloadOwnerId: existingContactOmId,
+      hours: 1
+    },
+    {
+      id: 12,
+      contactId: existingContactId,
+      workloadOwnerId: changedOmId,
+      hours: -1
+    }]
+
+    mapStagingCmsReductions.resolves(cmsReductions)
+    getAppCmsReductions.resolves(appReductions)
+    updateReductionEffectiveTo.resolves()
+    insertReduction.resolves()
+    getAllOpenReductions.resolves([])
+    updateReductionStatusByIds.resolves(1)
+    createNewTasks.resolves()
+
+    return reductionsWorker.execute({}).then(function () {
+      expect(getAllOpenReductions.called).to.be.equal(true)
+      expect(updateReductionStatusByIds.called).to.be.equal(false)
+      expect(createNewTasks.called).to.be.equal(true)
+
+      expect(mapStagingCmsReductions.called).to.be.equal(true)
+      expect(getAppCmsReductions.called).to.be.equal(true)
+      expect(updateReductionEffectiveTo.calledWith(appReductions[1].id, new Date().setHours(0, 0, 0, 0))).to.be.equal(true)
+      expect(insertReduction.calledWith(cmsReductions[1])).to.be.equal(true)
     })
   })
 })
