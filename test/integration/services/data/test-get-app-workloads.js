@@ -20,9 +20,10 @@ describe('services/data/get-app-workloads', function () {
     var insertedWorkloads = inserts.filter((item) => item.table === 'workload')
     var initialWorkloadId = insertedWorkloads[0].id
     var batchSize = insertedWorkloads.length
+    var maxId = initialWorkloadId + batchSize - 1
     var workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
 
-    getAppWorkloads(initialWorkloadId, batchSize)
+    getAppWorkloads(initialWorkloadId, maxId, batchSize)
       .then(function (queryResults) {
         expect(queryResults.length).to.equal(batchSize)
         var firstWorkload = queryResults[0].values
