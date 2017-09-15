@@ -70,6 +70,24 @@ describe('services/workers/calculate-workload-points', function () {
     })
   })
 
+  it('calls the get workloads promise correctly with a batchSize of 1', function (done) {
+    task = {id: 1,
+      additionalData: {
+        workloadReportId: REPORT_ID,
+        workloadBatch: new Batch(WORKLOAD_ID, 1)
+      }}
+    getAppReductions.resolves(REDUCTION_HOURS)
+    getWorkloadsStub.resolves([{values: sinon.stub(), id: WORKLOAD_ID}])
+    getOffenderManagerTypeIdStub.resolves(WORKLOAD_ID)
+    getPointsConfigurationStub.resolves({values: pointsHelper.getCaseTypeWeightings(), id: WORKLOAD_ID})
+    var maxId = 10
+    var batchSize = 1
+    calculateWorkloadPoints.execute(task).then(function () {
+      expect(getWorkloadsStub.calledWith(WORKLOAD_ID, maxId, batchSize)).to.equal(true)
+      done()
+    })
+  })
+
   it('retrieves the points configuration', function (done) {
     getAppReductions.resolves(REDUCTION_HOURS)
     getWorkloadsStub.resolves([{values: sinon.stub(), id: WORKLOAD_ID}])
