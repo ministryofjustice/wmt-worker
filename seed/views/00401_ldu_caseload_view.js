@@ -3,7 +3,7 @@ exports.seed = function (knex, Promise) {
       WITH SCHEMABINDING
       AS
       SELECT     
-        MAX(l.id) AS id
+        MAX(t.ldu_id) AS id
         , t.id AS link_id
         , MAX(t.description) AS name
         , grade_code
@@ -18,7 +18,6 @@ exports.seed = function (knex, Promise) {
         , SUM(total_cases) AS total_cases
       FROM app.team_caseload_view tv   
         JOIN app.team t ON t.id = tv.id
-        JOIN app.ldu l ON t.ldu_id = l.id
       GROUP BY t.id, grade_code;`
 
   return knex.schema
