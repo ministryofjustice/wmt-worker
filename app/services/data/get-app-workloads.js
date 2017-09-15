@@ -5,9 +5,7 @@
   const Workload = require('wmt-probation-rules').Workload
   const Locations = require('wmt-probation-rules').Locations
 
-  module.exports = function (initialId, batchSize) {
-    var maxId = initialId + batchSize - 1
-
+  module.exports = function (initialId, maxId, batchSize) {
     return knex('workload').withSchema('app')
         .leftJoin('tiers', 'workload.id', 'workload_id')
         .leftJoin('workload_owner', 'workload.workload_owner_id', 'workload_owner.id')

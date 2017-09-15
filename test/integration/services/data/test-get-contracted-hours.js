@@ -22,10 +22,10 @@ describe('services/data/get-contracted-hours', function () {
     })
   })
 
-  it('should retrieve undefined for a workload owner with no defined contracted hours (default)', function (done) {
-    var workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
+  it('should retrieve default for a workload owner with no defined contracted hours', function (done) {
+    var workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[1].id
     getContractedHours(workloadOwnerId).then(function (hours) {
-      expect(hours).to.equal(40)
+      expect(hours).to.equal(37)
       done()
     })
   })
