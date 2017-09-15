@@ -1,6 +1,6 @@
 const getStagingCmsReductions = require('./data/get-staging-cms-reductions')
 const getWorkloadOwnerId = require('./data/get-app-workload-owner-id')
-const getReductionReasonFromName = require('./data/get-reduction-reason-from-name')
+const getReductionReasonFromCode = require('./data/get-reduction-reason-from-code')
 const reductionStatus = require('../constants/reduction-status')
 
 module.exports = function () {
@@ -12,7 +12,7 @@ module.exports = function () {
     if (cmsReductions) {
       cmsReductions.forEach(function (cmsReduction) {
         promises.push(
-          getReductionReasonFromName(cmsReduction.contactTypeDesc)
+          getReductionReasonFromCode(cmsReduction.contactCode)
           .then(function (reductionReason) {
             return getWorkloadOwnerId(cmsReduction.contactStaffKey, cmsReduction.contactTeamKey)
             .then(function (contactWorkloadOwnerId) {
