@@ -1,12 +1,14 @@
 const knexConfig = require('../../../knexfile').app
 const knex = require('knex')(knexConfig)
 
-module.exports = function (offenderManagerId, teamId) {
+module.exports = function (offenderManagerKey, teamCode) {
   return knex('workload_owner')
-    .where('offender_manager_id', offenderManagerId)
-    .andWhere('team_id', teamId)
-    .first('id')
+    .join('offender_manager', 'offender_manager.id', 'workload_owner.offender_manager_id')
+    .join('team', 'team.id', 'workload_owner.team_id')
+    .where('offender_manager.key', offenderManagerKey)
+    .andWhere('team.code', teamCode)
+    .first('workload_owner.id')
     .then(function (results) {
-      return results
+      return results.id
     })
 }

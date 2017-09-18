@@ -28,7 +28,7 @@ module.exports = function () {
                   hours: reductionReason.fixedAllowanceHours,
                   reductionReasonId: reductionReason.id,
                   effectiveFrom: startDate,
-                  effetiveTo: endDate,
+                  effectiveTo: endDate,
                   status: reductionStatus.ACTIVE,
                   note: null
                 }
@@ -39,7 +39,7 @@ module.exports = function () {
                   hours: reductionReason.fixedAllowanceHours * -1,
                   reductionReasonId: reductionReason.id,
                   effectiveFrom: startDate,
-                  effetiveTo: endDate,
+                  effectiveTo: endDate,
                   status: reductionStatus.ACTIVE,
                   note: null
                 }

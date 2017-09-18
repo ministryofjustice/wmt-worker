@@ -8,7 +8,7 @@ const reductionStatus = require('../../../../app/constants/reduction-status')
 var mapStagingCmsReductions
 var getStagingCmsReductions
 var getWorkloadOwnerId
-var getReductionReasonFromName
+var getReductionReasonFromCode
 
 const reductionReason = {
   id: 1,
@@ -46,7 +46,7 @@ const expectedReductions = [
     hours: reductionReason.fixedAllowanceHours,
     reductionReasonId: reductionReason.id,
     effectiveFrom: now,
-    effetiveTo: thirtyDays,
+    effectiveTo: thirtyDays,
     status: reductionStatus.ACTIVE,
     note: null
   },
@@ -56,7 +56,7 @@ const expectedReductions = [
     hours: reductionReason.fixedAllowanceHours * -1,
     reductionReasonId: reductionReason.id,
     effectiveFrom: now,
-    effetiveTo: thirtyDays,
+    effectiveTo: thirtyDays,
     status: reductionStatus.ACTIVE,
     note: null
   },
@@ -66,7 +66,7 @@ const expectedReductions = [
     hours: reductionReason.fixedAllowanceHours,
     reductionReasonId: reductionReason.id,
     effectiveFrom: now,
-    effetiveTo: thirtyDays,
+    effectiveTo: thirtyDays,
     status: reductionStatus.ACTIVE,
     note: null
   },
@@ -76,7 +76,7 @@ const expectedReductions = [
     hours: reductionReason.fixedAllowanceHours * -1,
     reductionReasonId: reductionReason.id,
     effectiveFrom: now,
-    effetiveTo: thirtyDays,
+    effectiveTo: thirtyDays,
     status: reductionStatus.ACTIVE,
     note: null
   }
@@ -85,12 +85,12 @@ describe('services/map-stagin-cms-reduction', function () {
   beforeEach(function (done) {
     getStagingCmsReductions = sinon.stub()
     getWorkloadOwnerId = sinon.stub()
-    getReductionReasonFromName = sinon.stub()
+    getReductionReasonFromCode = sinon.stub()
 
     mapStagingCmsReductions = proxyquire('../../../../app/services/map-staging-cms-reductions', {
       './data/get-staging-cms-reductions': getStagingCmsReductions,
       './data/get-app-workload-owner-id': getWorkloadOwnerId,
-      './data/get-reduction-reason-from-name': getReductionReasonFromName
+      './data/get-reduction-reason-from-code': getReductionReasonFromCode
     })
     done()
   })
@@ -98,21 +98,21 @@ describe('services/map-stagin-cms-reduction', function () {
   it('should call getStagingCmsReductions and when no records return do nothing', function () {
     getStagingCmsReductions.resolves(undefined)
     getWorkloadOwnerId.resolves(1)
-    getReductionReasonFromName.resolves(reductionReason)
+    getReductionReasonFromCode.resolves(reductionReason)
 
     return mapStagingCmsReductions()
     .then(function (result) {
       expect(result).to.be.eql([])
       expect(getStagingCmsReductions.called).to.be.equal(true)
       expect(getWorkloadOwnerId.called).to.be.equal(false)
-      expect(getReductionReasonFromName.called).to.be.equal(false)
+      expect(getReductionReasonFromCode.called).to.be.equal(false)
     })
   })
 
   it('should return 2 reductions for each row in the cms staging table', function () {
     getStagingCmsReductions.resolves(cmsReductionRows)
     getWorkloadOwnerId.resolves(1)
-    getReductionReasonFromName.resolves(reductionReason)
+    getReductionReasonFromCode.resolves(reductionReason)
 
     return mapStagingCmsReductions()
     .then(function (result) {
@@ -123,7 +123,7 @@ describe('services/map-stagin-cms-reduction', function () {
       expect(getWorkloadOwnerId.calledWith(cmsReductionRows[0].omKey, cmsReductionRows[0].omTeamKey)).to.be.equal(true)
       expect(getWorkloadOwnerId.calledWith(cmsReductionRows[1].contactStaffKey, cmsReductionRows[1].contactTeamKey)).to.be.equal(true)
       expect(getWorkloadOwnerId.calledWith(cmsReductionRows[1].omKey, cmsReductionRows[1].omTeamKey)).to.be.equal(true)
-      expect(getReductionReasonFromName.called).to.be.equal(true)
+      expect(getReductionReasonFromCode.called).to.be.equal(true)
     })
   })
 })
