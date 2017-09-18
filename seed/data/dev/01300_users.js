@@ -7,8 +7,8 @@ exports.seed = function (knex, Promise) {
       // Inserts seed entries
       return knex(tableName).insert([
         { username: 'johnsmith' },
-        { username: 'janedoe'},
-        { username: 'courtneylarry'}
+        { username: 'janedoe' },
+        { username: 'courtneylarry' }
       ])
     })
 }
