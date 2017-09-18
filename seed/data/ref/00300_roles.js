@@ -6,10 +6,9 @@ exports.seed = function (knex, Promise) {
   return knex(tableName).del()
     .then(function () {
       var sql = 'SET IDENTITY_INSERT app.' + tableName + ' ON;' +
-      insertStatement + '(1, \'Staff\')' +
-      insertStatement + '(2, \'Manager\')' +
-      insertStatement + '(3, \'System Admin\')' +
-      insertStatement + '(4, \'Data Admin\')'
+      insertStatement + '(1, \'Manager\')' +
+      insertStatement + '(2, \'System Admin\')' +
+      insertStatement + '(3, \'Data Admin\')'
       return knex.schema
         .raw(sql)
     })
