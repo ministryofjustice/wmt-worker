@@ -7,15 +7,18 @@ const calculateParomPoints = require('wmt-probation-rules').calculateParomPoints
 const calculateAvailablePoints = require('wmt-probation-rules').calculateAvailablePoints
 const getAppWorkloads = require('../data/get-app-workloads')
 const insertWorkloadPointsCalculations = require('../data/insert-workload-points-calculation')
+const updateWorkloadPointsCalculations = require('../data/update-workload-points-calculation')
 const getWorkloadPointsConfiguration = require('../data/get-workload-points-configuration')
 const getOffenderManagerTypeId = require('../data/get-offender-manager-type-id')
 const getAppReductions = require('../data/get-app-reductions')
 const getContractedHours = require('../data/get-contracted-hours')
+const wpcOperationType = require('../../constants/calculate-workload-points-operation')
 
 module.exports.execute = function (task) {
   var id = task.additionalData.workloadBatch.startingId
   var batchSize = task.additionalData.workloadBatch.batchSize
   var reportId = task.workloadReportId
+  var operationType = task.additionalData.operationType
   var maxId = id
   var message
 
@@ -28,7 +31,6 @@ module.exports.execute = function (task) {
   } else {
     message = 'Calculating Workload Points for Workload ' + id
   }
-
   logger.info(message)
 
   var pointsConfigurationPromise = getWorkloadPointsConfiguration()
@@ -54,8 +56,16 @@ module.exports.execute = function (task) {
               var nominalTarget = calculateNominalTarget(offenderManagerTypeId, caseTypeWeightings.pointsConfiguration.defaultNominalTargets)
               var availablePoints = calculateAvailablePoints(nominalTarget, offenderManagerTypeId, contractedHours,
                   reductions, caseTypeWeightings.pointsConfiguration.defaultContractedHours)
-              return insertWorkloadPointsCalculations(reportId, pointsConfiguration.id, workloadId, totalPoints,
-                  sdrPoints, sdrConversionPoints, paromsPoints, nominalTarget, availablePoints, reductions, contractedHours)
+              switch (operationType) {
+                case wpcOperationType.INSERT:
+                  return insertWorkloadPointsCalculations(reportId, pointsConfiguration.id, workloadId, totalPoints,
+                    sdrPoints, sdrConversionPoints, paromsPoints, nominalTarget, availablePoints, reductions, contractedHours)
+                case wpcOperationType.UPDATE:
+                  return updateWorkloadPointsCalculations(reportId, pointsConfiguration.id, workloadId, totalPoints,
+                    sdrPoints, sdrConversionPoints, paromsPoints, nominalTarget, availablePoints, reductions, contractedHours)
+                default:
+                  throw new Error('Operation type of ' + operationType + ' is not valid. Should be ' + wpcOperationType.INSERT + ' or ' + wpcOperationType.UPDATE)
+              }
             })
           })
         })

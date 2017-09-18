@@ -82,9 +82,7 @@ module.exports.execute = function (task) {
       })
     })
     .then(function () {
-      var taskDetails = {
-        workloadBatch: new Batch(insertedWorkloadIds[0], insertedWorkloadIds.length)
-      }
+      var taskDetails = new Batch(insertedWorkloadIds[0], insertedWorkloadIds.length)
       var reductionsWorkerTask = new Task(
                 undefined,
                 submittingAgent.WORKER,
