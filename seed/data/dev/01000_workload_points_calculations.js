@@ -42,7 +42,7 @@ exports.seed = function (knex, Promise) {
           nominal_target: 0,
           contracted_hours: 37.5,
           reduction_hours: Math.floor(Math.random() * 6) + 1,
-          cms_reduction_hours: 0.5 * (Math.floor(Math.random() + 1) - 1)
+          cms_reduction_hours: 0.5
         })
 
         effectiveFromDate.setDate(effectiveFromDate.getDate() + 30)
