@@ -1,17 +1,17 @@
 var tableName = 'workload'
 
-const workloadRow = { 
-  workload_owner_id: 1, 
-  total_cases: 63, 
-  monthly_sdrs: 10, 
-  sdr_due_next_30_days: 10, 
-  sdr_conversions_last_30_days: 10, 
+const workloadRow = {
+  workload_owner_id: 1,
+  total_cases: 63,
+  monthly_sdrs: 10,
+  sdr_due_next_30_days: 10,
+  sdr_conversions_last_30_days: 10,
   total_community_cases: 21,
   total_custody_cases: 21,
   total_license_cases: 21,
-  paroms_completed_last_30_days: 5, 
-  paroms_due_next_30_days: 5, 
-  license_last_16_weeks: 9, 
+  paroms_completed_last_30_days: 5,
+  paroms_due_next_30_days: 5,
+  license_last_16_weeks: 9,
   community_last_16_weeks: 10 }
 
 exports.seed = function (knex, Promise) {
