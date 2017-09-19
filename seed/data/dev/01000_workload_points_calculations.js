@@ -14,7 +14,10 @@ exports.seed = function (knex, Promise) {
     })
     .then(function (workloadPointsId) {
       currentPointsId = workloadPointsId
-      return knex('workload').select('id')
+      return knex('workload_owner')
+        .join('workload', 'workload_owner.id', 'workload.workload_owner_id')
+        .max('workload.id AS id')
+        .groupBy('workload_owner.id')
     })
     .then(function (workloadIds) {
       var effectiveFromDate = new Date()
@@ -25,7 +28,7 @@ exports.seed = function (knex, Promise) {
 
       for (var wr = existingReportIds.length - 2; wr < existingReportIds.length; wr++) {
         for (var w = 0; w < workloadIds.length; w++) {
-          var reportId = existingReportIds[wr % existingReportIds.length]
+          var reportId = existingReportIds[wr]
           var workloadId = workloadIds[w]
 
           workloadPointsCalculationsToInsert.push({
@@ -48,24 +51,6 @@ exports.seed = function (knex, Promise) {
         }
       }
 
-      console.log(workloadPointsCalculationsToInsert.length)
-
-      var splitSize = workloadPointsCalculationsToInsert.length / 3
-
-      var partOneWpc = workloadPointsCalculationsToInsert.slice(0, splitSize)
-      var partTwoWpc = workloadPointsCalculationsToInsert.slice(splitSize, splitSize * 2)
-      var partThreeWpc = workloadPointsCalculationsToInsert.slice(splitSize * 2, splitSize * 3)
-      var partFourWpc = workloadPointsCalculationsToInsert.slice(splitSize * 3, workloadPointsCalculationsToInsert.length - 1)
-
-      return knex(tableName).insert(partOneWpc)
-        .then(function (results) {
-          return knex(tableName).insert(partTwoWpc)
-          .then(function (results) {
-            return knex(tableName).insert(partThreeWpc)
-            .then(function (results) {
-              return knex(tableName).insert(partFourWpc)
-            })
-          })
-        })
+      return knex(tableName).insert(workloadPointsCalculationsToInsert)
     })
 }
