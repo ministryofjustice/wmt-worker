@@ -22,7 +22,7 @@ exports.seed = function (knex, Promise) {
         })
       })
 
-      // Need to split the array into 10 as one query caused an error with too many parameters in one request (2100)
+      // Need to split the array into 16 as one query caused an error with too many parameters in one request (2100)
       var splitSize = insertData.length / 16
 
       var partOne = insertData.slice(0, splitSize)
