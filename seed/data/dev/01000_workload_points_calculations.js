@@ -35,8 +35,6 @@ exports.seed = function (knex, Promise) {
             workload_id: workloadId.id,
             workload_report_id: reportId.id,
             workload_points_id: currentPointsId.id,
-            effective_from: effectiveFromDate,
-            effective_to: effectiveFromDate.getDate() + 30,
             total_points: Math.floor(Math.random() * 25) + 180,
             available_points: 190,
             paroms_points: 50,
@@ -46,8 +44,6 @@ exports.seed = function (knex, Promise) {
             contracted_hours: 37.5,
             reduction_hours: Math.floor(Math.random() * 6) + 1
           })
-
-          effectiveFromDate.setDate(effectiveFromDate.getDate() + 30)
         }
       }
 

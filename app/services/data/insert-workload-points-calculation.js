@@ -14,7 +14,6 @@ module.exports = function (workloadReportId, workloadPointsId, workloadId, total
       nominal_target: nominalTarget,
       available_points: availablePoints,
       reduction_hours: reductionHours,
-      contracted_hours: contractedHours,
-      effective_from: new Date()
+      contracted_hours: contractedHours
     }).returning('id')
 }
