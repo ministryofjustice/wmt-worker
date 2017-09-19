@@ -20,18 +20,18 @@ describe('services/data/get-workload-owner-id', function () {
   it('should retrieve the workload owner id workload owner', function () {
     var workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
     var omId = inserts.filter((item) => item.table === 'offender_manager')[0].id
-    
+
     return knex('offender_manager').where('id', omId).first('key')
-    .then(function (offenderManagerKey){
+    .then(function (offenderManagerKey) {
       var teamId = inserts.filter((item) => item.table === 'team')[0].id
       return knex('team').where('id', teamId).first('code')
-      .then(function (teamCode){
+      .then(function (teamCode) {
         return getWorkloadOwnerId(offenderManagerKey.key, teamCode.code)
         .then(function (result) {
           expect(result).to.be.equal(workloadOwnerId)
         })
       })
-    })   
+    })
   })
 
   after(function () {
