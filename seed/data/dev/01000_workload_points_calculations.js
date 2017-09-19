@@ -22,12 +22,12 @@ exports.seed = function (knex, Promise) {
         // Inserts seed entries
 
       var workloadPointsCalculationsToInsert = []
-      
-      for (var wr = existingReportIds.length - 2; wr < existingReportIds.length; wr ++) {
+
+      for (var wr = existingReportIds.length - 2; wr < existingReportIds.length; wr++) {
         for (var w = 0; w < workloadIds.length; w++) {
           var reportId = existingReportIds[wr % existingReportIds.length]
           var workloadId = workloadIds[w]
-  
+
           workloadPointsCalculationsToInsert.push({
             workload_id: workloadId.id,
             workload_report_id: reportId.id,
@@ -43,7 +43,7 @@ exports.seed = function (knex, Promise) {
             contracted_hours: 37.5,
             reduction_hours: Math.floor(Math.random() * 6) + 1
           })
-  
+
           effectiveFromDate.setDate(effectiveFromDate.getDate() + 30)
         }
       }
@@ -51,7 +51,7 @@ exports.seed = function (knex, Promise) {
       console.log(workloadPointsCalculationsToInsert.length)
 
       var splitSize = workloadPointsCalculationsToInsert.length / 3
-      
+
       var partOneWpc = workloadPointsCalculationsToInsert.slice(0, splitSize)
       var partTwoWpc = workloadPointsCalculationsToInsert.slice(splitSize, splitSize * 2)
       var partThreeWpc = workloadPointsCalculationsToInsert.slice(splitSize * 2, splitSize * 3)
