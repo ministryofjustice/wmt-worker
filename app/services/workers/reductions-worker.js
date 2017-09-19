@@ -61,7 +61,7 @@ var processCmsReductions = function () {
   .then(function (stgReductions) {
     var stgReductionContactIds = []
     stgReductions.forEach(function (stgReduction) {
-      stgReductionContactIds.push(stgReduction.contactId)
+      stgReductionContactIds.push(Number(stgReduction.contactId))
     })
 
     return getAppCmsReductions()
@@ -74,10 +74,13 @@ var processCmsReductions = function () {
       var updateReductionsEffectiveTo = []
       var insertReductions = []
 
+      var updateTime = new Date()
+      updateTime.setHours(0,0,0,0)
+      updateTime.getTime()
       appReductions.forEach(function (appReduction) {
         if (!stgReductionContactIds.includes(appReduction.contactId)) {
           // set date of this reduction to today at 00.00 in order to set as archived in next stage of worker
-          updateReductionsEffectiveTo.push(updateReductionEffectiveTo(appReduction.id, new Date().setHours(0, 0, 0, 0)))
+          updateReductionsEffectiveTo.push(updateReductionEffectiveTo(appReduction.id, updateTime))
         } else {
           // Check if the woid has changed in the om reduction
           if (appReduction.hours < 0) {
@@ -85,7 +88,7 @@ var processCmsReductions = function () {
               if (hasOmReductionMoved(appReduction, stgReduction)) {
                 // close old one and create new reduction for new om
                 updateReductionsEffectiveTo.push(
-                  updateReductionEffectiveTo(appReduction.id, new Date().setHours(0, 0, 0, 0))
+                  updateReductionEffectiveTo(appReduction.id, updateTime)
                 )
                 insertReductions.push(insertReduction(stgReduction))
               }
@@ -97,7 +100,7 @@ var processCmsReductions = function () {
       return Promise.all(updateReductionsEffectiveTo)
       .then(function () {
         stgReductions.forEach(function (stgReduction) {
-          if (!appReductionContactIds.includes(stgReduction.contactId)) {
+          if (!appReductionContactIds.includes(Number(stgReduction.contactId))) {
             insertReductions.push(insertReduction(stgReduction))
           }
         })
