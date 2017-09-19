@@ -85,6 +85,9 @@ var cmsReductions = [
   }
 ]
 
+var updateTime = new Date()
+updateTime.setHours(0, 0, 0, 0)
+
 describe(relativeFilePath, function () {
   beforeEach(function () {
     getAllOpenReductions = sinon.stub()
@@ -214,8 +217,8 @@ describe(relativeFilePath, function () {
 
       expect(mapStagingCmsReductions.called).to.be.equal(true)
       expect(getAppCmsReductions.called).to.be.equal(true)
-      expect(updateReductionEffectiveTo.calledWith(appReductions[0].id, new Date().setHours(0, 0, 0, 0))).to.be.equal(true)
-      expect(updateReductionEffectiveTo.calledWith(appReductions[1].id, new Date().setHours(0, 0, 0, 0))).to.be.equal(true)
+      expect(updateReductionEffectiveTo.calledWith(Number(appReductions[0].id), updateTime)).to.be.equal(true)
+      expect(updateReductionEffectiveTo.calledWith(appReductions[1].id, updateTime)).to.be.equal(true)
       expect(insertReduction.called).to.be.equal(false)
     })
   })
@@ -249,7 +252,7 @@ describe(relativeFilePath, function () {
 
       expect(mapStagingCmsReductions.called).to.be.equal(true)
       expect(getAppCmsReductions.called).to.be.equal(true)
-      expect(updateReductionEffectiveTo.calledWith(appReductions[1].id, new Date().setHours(0, 0, 0, 0))).to.be.equal(true)
+      expect(updateReductionEffectiveTo.calledWith(appReductions[1].id, updateTime)).to.be.equal(true)
       expect(insertReduction.calledWith(cmsReductions[1])).to.be.equal(true)
     })
   })

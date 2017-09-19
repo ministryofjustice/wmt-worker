@@ -75,8 +75,8 @@ var processCmsReductions = function () {
       var insertReductions = []
 
       var updateTime = new Date()
-      updateTime.setHours(0,0,0,0)
-      updateTime.getTime()
+      updateTime.setHours(0, 0, 0, 0)
+
       appReductions.forEach(function (appReduction) {
         if (!stgReductionContactIds.includes(appReduction.contactId)) {
           // set date of this reduction to today at 00.00 in order to set as archived in next stage of worker
