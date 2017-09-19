@@ -5,9 +5,7 @@
   const Workload = require('wmt-probation-rules').Workload
   const Locations = require('wmt-probation-rules').Locations
 
-  module.exports = function (initialId, batchSize) {
-    var maxId = initialId + batchSize - 1
-
+  module.exports = function (initialId, maxId, batchSize) {
     return knex('workload').withSchema('app')
         .leftJoin('tiers', 'workload.id', 'workload_id')
         .leftJoin('workload_owner', 'workload.workload_owner_id', 'workload_owner.id')
@@ -37,12 +35,17 @@
           var tempWorkloads = new Array(batchSize)
 
           workloadResults.forEach(function (row) {
-            var index = row.id - initialId
+            var index
+            if (batchSize > 1) {
+              index = row.id - initialId
+            } else {
+              index = 0
+            }
             if (tempWorkloads[index] === undefined) {
               tempWorkloads[index] = {
-                community: new Array(8),
-                license: new Array(8),
-                custody: new Array(8)
+                COMMUNITY: new Array(8),
+                LICENSE: new Array(8),
+                CUSTODY: new Array(8)
               }
               tempWorkloads[index].id = row.id
               tempWorkloads[index].workloadOwnerId = row.workload_owner_id
