@@ -27,7 +27,7 @@ module.exports.execute = function (task) {
     throw (new Error('Batchsize must be greater than 0'))
   } else if (batchSize > 1) {
     maxId = id + batchSize - 1
-    message = 'Calculating Workload Points for Workloads ' + id + ' - ' + (id + batchSize)
+    message = 'Calculating Workload Points for Workloads ' + id + ' - ' + (id + batchSize - 1)
   } else {
     message = 'Calculating Workload Points for Workload ' + id
   }
@@ -72,7 +72,7 @@ module.exports.execute = function (task) {
       })
     })
   }).catch(function (error) {
-    logger.error('Unable to retrieve workloads with IDs ' + id + ' - ' + (id + batchSize))
+    logger.error('Unable to retrieve workloads with IDs ' + id + ' - ' + (id + batchSize - 1))
     logger.error(error)
     throw (error)
   })

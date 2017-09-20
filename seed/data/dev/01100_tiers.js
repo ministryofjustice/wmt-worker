@@ -40,7 +40,7 @@ exports.seed = function (knex, Promise) {
       var partThirteen = insertData.slice(splitSize * 12, splitSize * 13)
       var partFourteen = insertData.slice(splitSize * 13, splitSize * 14)
       var partFifteen = insertData.slice(splitSize * 14, splitSize * 15)
-      var partSixteen = insertData.slice(splitSize * 15, insertData.length - 1)
+      var partSixteen = insertData.slice(splitSize * 15, insertData.length)
 
       return knex(tableName).insert(partOne)
         .then(function (results) {
