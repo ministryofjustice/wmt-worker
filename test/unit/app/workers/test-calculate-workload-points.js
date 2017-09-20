@@ -5,6 +5,7 @@ require('sinon-bluebird')
 const pointsHelper = require('wmt-probation-rules').pointsHelper
 
 const Batch = require('../../../../app/services/domain/batch')
+const wpcOperation = require('../../../../app/constants/calculate-workload-points-operation')
 
 const WORKLOAD_ID = 10
 const BATCH_SIZE = 20
@@ -43,7 +44,8 @@ describe('services/workers/calculate-workload-points', function () {
     task = {id: 1,
       additionalData: {
         workloadReportId: REPORT_ID,
-        workloadBatch: new Batch(WORKLOAD_ID, BATCH_SIZE)
+        workloadBatch: new Batch(WORKLOAD_ID, BATCH_SIZE),
+        operationType: wpcOperation.INSERT
       }}
 
     calculateWorkloadPoints = proxyquire('../../../../app/services/workers/calculate-workload-points', {
@@ -74,7 +76,8 @@ describe('services/workers/calculate-workload-points', function () {
     task = {id: 1,
       additionalData: {
         workloadReportId: REPORT_ID,
-        workloadBatch: new Batch(WORKLOAD_ID, 1)
+        workloadBatch: new Batch(WORKLOAD_ID, 1),
+        operationType: wpcOperation.INSERT
       }}
     getAppReductions.resolves(REDUCTION_HOURS)
     getWorkloadsStub.resolves([{values: sinon.stub(), id: WORKLOAD_ID}])

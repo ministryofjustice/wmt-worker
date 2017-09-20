@@ -6,6 +6,7 @@ const sinon = require('sinon')
 require('sinon-bluebird')
 const taskStatus = require('../../../app/constants/task-status')
 const workloadReportStatus = require('../../../app/constants/workload-report-status')
+const wpcOperation = require('../../../app/constants/calculate-workload-points-operation')
 
 var processTasks
 var getPendingTasksAndMarkInProgress
@@ -68,7 +69,7 @@ describe('process-tasks', function () {
   it('should update workload report as complete and refresh web hierarchy when there are no pending, inprogress or failed tasks', function () {
     getPendingTasksAndMarkInProgress.resolves([
       {id: 1, workloadReportId: 1, type: 'task1'},
-      {id: 2, workloadReportId: 3, type: 'CALCULATE-WORKLOAD-POINTS'}
+      {id: 2, workloadReportId: 3, type: 'CALCULATE-WORKLOAD-POINTS', additionalData: { operationType: wpcOperation.INSERT }}
     ])
     getWorkerForTask.returns({
       execute: function () {
@@ -101,7 +102,7 @@ describe('process-tasks', function () {
 
   it('should not update workload report as complete and refresh web hierarchy when there are pending, inprogress or failed tasks', function () {
     getPendingTasksAndMarkInProgress.resolves([
-      {id: 2, workloadReportId: 2, type: 'CALCULATE-WORKLOAD-POINTS'}
+      { id: 2, workloadReportId: 2, type: 'CALCULATE-WORKLOAD-POINTS', additionalData: { operationType: wpcOperation.INSERT } }
     ])
     getWorkerForTask.returns({
       execute: function () {
@@ -148,8 +149,8 @@ describe('process-tasks', function () {
 
   it('should mark tasks as failed and update WR when worker execution fails for calculate workload points tasks', function () {
     getPendingTasksAndMarkInProgress.resolves([
-      {id: 1, workloadReportId: 1, type: 'task1'},
-      {id: 2, workloadReportId: 2, type: 'CALCULATE-WORKLOAD-POINTS'}
+      { id: 1, workloadReportId: 1, type: 'task1' },
+      { id: 2, workloadReportId: 2, type: 'CALCULATE-WORKLOAD-POINTS', additionalData: { operationType: wpcOperation.INSERT } }
     ])
     getWorkerForTask.returns({
       execute: function () {
@@ -169,6 +170,27 @@ describe('process-tasks', function () {
       expect(completeTaskWithStatus.calledWith(2, taskStatus.FAILED)).to.be.true
       expect(updateWorkload.calledWith(2, workloadReportStatus.FAILED)).to.be.true
       expect(updateWorkloadReportEffectiveTo.called).to.be.true
+    })
+  })
+
+  it('should not update the workload report but should refresh the hierarchy for UPDATE CALCULATE-WORKLOAD-POINTS tasks', function () {
+    getPendingTasksAndMarkInProgress.resolves([
+      { id: 2, workloadReportId: 2, type: 'CALCULATE-WORKLOAD-POINTS', additionalData: { operationType: wpcOperation.UPDATE } }
+    ])
+    getWorkerForTask.returns({
+      execute: function () {
+        return new Promise(function (resolve) {
+          resolve('Done!')
+        })
+      }})
+    completeTaskWithStatus.resolves({})
+
+    return processTasks().then(function () {
+      expect(callWebRefreshEndpoint.called).to.be.true
+      expect(completeTaskWithStatus.called).to.be.true
+      expect(taskStatusCounter.called).to.be.false
+      expect(closePreviousWorkloadReport.called).to.be.false
+      expect(updateWorkload.called).to.be.false
     })
   })
 })

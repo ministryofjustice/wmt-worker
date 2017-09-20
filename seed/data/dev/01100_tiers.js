@@ -22,7 +22,7 @@ exports.seed = function (knex, Promise) {
         })
       })
 
-      // Need to split the array into 10 as one query caused an error with too many parameters in one request (2100)
+      // Need to split the array into 16 as one query caused an error with too many parameters in one request (2100)
       var splitSize = insertData.length / 16
 
       var partOne = insertData.slice(0, splitSize)
@@ -40,7 +40,7 @@ exports.seed = function (knex, Promise) {
       var partThirteen = insertData.slice(splitSize * 12, splitSize * 13)
       var partFourteen = insertData.slice(splitSize * 13, splitSize * 14)
       var partFifteen = insertData.slice(splitSize * 14, splitSize * 15)
-      var partSixteen = insertData.slice(splitSize * 15, insertData.length - 1)
+      var partSixteen = insertData.slice(splitSize * 15, insertData.length)
 
       return knex(tableName).insert(partOne)
         .then(function (results) {

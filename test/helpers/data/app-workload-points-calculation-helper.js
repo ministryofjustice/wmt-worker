@@ -3,6 +3,27 @@ const knex = require('knex')(knexConfig)
 const Locations = require('wmt-probation-rules').Locations
 var Promise = require('bluebird').Promise
 
+module.exports.defaultWorkloadPointsCalculation = {
+  total_points: 99,
+  sdr_points: 98,
+  sdr_conversion_points: 97,
+  paroms_points: 96,
+  nominal_target: 95,
+  available_points: 94,
+  reduction_hours: 93,
+  contracted_hours: 92
+}
+
+module.exports.insertDependenciesForUpdate = function (inserts) {
+  return module.exports.insertDependencies(inserts)
+  .then(function (inserts) {
+    return module.exports.addWorkloadPointsCalculation(inserts)
+    .then(function (inserts) {
+      return inserts
+    })
+  })
+}
+
 module.exports.insertDependencies = function (inserts) {
   var promise = knex('offender_manager_type').returning('id').insert({description: 'test'})
     .then(function (ids) {
@@ -126,6 +147,21 @@ module.exports.insertDependencies = function (inserts) {
     })
 
   return promise
+}
+
+module.exports.addWorkloadPointsCalculation = function (inserts) {
+  var workloadPointsCalculation = Object.assign({}, module.exports.defaultWorkloadPointsCalculation,
+    {
+      workload_report_id: inserts.filter((item) => item.table === 'workload_report')[0].id,
+      workload_points_id: inserts.filter((item) => item.table === 'workload_points')[0].id,
+      workload_id: inserts.filter((item) => item.table === 'workload')[0].id
+    }
+  )
+  return knex('workload_points_calculations').returning('id').insert(workloadPointsCalculation)
+  .then(function (ids) {
+    inserts.push({table: 'workload_points_calculations', id: ids[0]})
+    return inserts
+  })
 }
 
 module.exports.removeDependencies = function (inserts) {
