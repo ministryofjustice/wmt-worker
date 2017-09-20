@@ -7,7 +7,7 @@ const CaseTypeWeightings = require('wmt-probation-rules').CaseTypeWeightings
 
 var inserts = []
 
-describe('services/data/get-workload-report', function () {
+describe('services/data/get-workload-points', function () {
   before(function (done) {
     helper.insertDependencies(inserts)
       .then(function (builtInserts) {
