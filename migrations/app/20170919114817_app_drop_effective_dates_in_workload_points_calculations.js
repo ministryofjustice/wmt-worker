@@ -7,8 +7,8 @@ exports.up = function (knex, Promise) {
 }
 
 exports.down = function (knex, Promise) {
-  var sql = 'ALTER TABLE app.workload_points_calculations ADD effective_from timestamp;' +
-    'ALTER TABLE app.workload_points_calculations ADD effective_to timestamp;'
+  var sql = 'ALTER TABLE app.workload_points_calculations ADD effective_from datetime;' +
+    'ALTER TABLE app.workload_points_calculations ADD effective_to datetime;'
   return knex.schema
     .raw('SET ARITHABORT ON')
     .raw(sql)
