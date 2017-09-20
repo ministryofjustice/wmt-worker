@@ -3,7 +3,6 @@ const knex = require('knex')(knexConfig)
 
 module.exports = function (workloadReportId, workloadPointsId, workloadId, totalPoints, sdrPoints,
   sdrPointsConversion, paromsPoints, nominalTarget, availablePoints, reductionHours, contractedHours) {
-    // Update the Workload Points Calculation which exists for this workload - active workload report combination
   return knex(`workload_points_calculations`)
     .where('workload_report_id', workloadReportId)
     .where('workload_id', workloadId)
