@@ -6,6 +6,7 @@ const taskType = require('../../constants/task-type')
 const taskStatus = require('../../constants/task-status')
 const Task = require('../domain/task')
 const submittingAgent = require('../../constants/task-submitting-agent')
+const wpcOperationType = require('../../constants/calculate-workload-points-operation')
 const logger = require('../log')
 
 const mapStagingCmsReductions = require('../map-staging-cms-reductions')
@@ -18,12 +19,16 @@ module.exports.execute = function (task) {
   .then(function () {
     return updateReductionsStatus()
     .then(function () {
-      logger.info('Reduction statuses updated')
+      var calculateWpAdditionalData = {
+        workloadBatch: task.additionalData,
+        operationType: wpcOperationType.INSERT
+      }
+
       var calculateWorkloadPointsTask = new Task(
         undefined,
         submittingAgent.WORKER,
         taskType.CALCULATE_WORKLOAD_POINTS,
-        task.additionalData,
+        calculateWpAdditionalData,
         task.workloadReportId,
         undefined,
         undefined,

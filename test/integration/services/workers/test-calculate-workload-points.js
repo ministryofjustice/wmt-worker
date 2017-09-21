@@ -5,7 +5,8 @@ const expect = require('chai').expect
 
 const appWorkloadPointsCalculationHelper = require('../../../helpers/data/app-workload-points-calculation-helper')
 const appReductionsHelper = require('../../../helpers/data/app-reductions-helper')
-const calcuatePointsWorker = require('../../../../app/services/workers/calculate-workload-points')
+const calculatePointsWorker = require('../../../../app/services/workers/calculate-workload-points')
+const wpcOperation = require('../../../../app/constants/calculate-workload-points-operation')
 const Batch = require('../../../../app/services/domain/batch')
 
 var inserts = []
@@ -31,16 +32,21 @@ describe('services/workers/calculate-workload-points', function () {
     var initialWorkloadId = insertedWorkloads[0].id
     var batchSize = insertedWorkloads.length
 
-    var task = { additionalData: { workloadBatch: new Batch(initialWorkloadId, batchSize) }, workloadReportId: workloadReportId }
+    var task = {
+      additionalData: {
+        workloadBatch: new Batch(initialWorkloadId, batchSize),
+        operationType: wpcOperation.INSERT
+      },
+      workloadReportId: workloadReportId }
 
-    calcuatePointsWorker.execute(task).then(() => {
+    calculatePointsWorker.execute(task).then(() => {
       knex('workload_points_calculations')
-      .whereBetween('workload_id', [initialWorkloadId, (initialWorkloadId + batchSize)])
+      .whereBetween('workload_id', [initialWorkloadId, (initialWorkloadId + batchSize - 1)])
       .then((workloadPointsCalculations) => {
         expect(workloadPointsCalculations.length).to.equal(batchSize)
         expect(workloadPointsCalculations[0].reduction_hours).to.equal(37)
         workloadPointsCalculations.forEach((insertedCalculation) =>
-                    inserts.push({table: 'workload_points_calculations', id: insertedCalculation.id}))
+          inserts.push({table: 'workload_points_calculations', id: insertedCalculation.id}))
         done()
       })
     })

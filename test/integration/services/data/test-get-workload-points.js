@@ -7,7 +7,7 @@ const CaseTypeWeightings = require('wmt-probation-rules').CaseTypeWeightings
 
 var inserts = []
 
-describe('services/data/get-offender-manager-type-id', function () {
+describe('services/data/get-workload-points', function () {
   before(function (done) {
     helper.insertDependencies(inserts)
       .then(function (builtInserts) {
@@ -55,9 +55,9 @@ describe('services/data/get-offender-manager-type-id', function () {
       expect(points.pointsConfiguration.defaultContractedHours.po).to.equal(26)
       expect(points.pointsConfiguration.defaultContractedHours.pso).to.equal(27)
 
-      expect(points.overdueTermination).to.equal(28)
-      expect(points.warrants).to.equal(29)
-      expect(points.unpaidWork).to.equal(30)
+      expect(points.overdueTermination).to.equal(0.72)
+      expect(points.warrants).to.equal(0.71)
+      expect(points.unpaidWork).to.equal(0.7)
 
       expect(points.pointsConfiguration.paromsEnabled).to.equal(true)
       expect(points.pointsConfiguration.parom).to.equal(31)
