@@ -24,7 +24,6 @@ describe('services/data/get-staging-cms-reductions', function () {
   var insertedRecords = []
 
   before(function () {
-    // insert a row in the cmsReductions tatble
     return cmsHelper.insertDependencies(cmsRecords)
     .then(function (inserts) {
       insertedRecords = inserts
@@ -48,7 +47,7 @@ describe('services/data/get-staging-cms-reductions', function () {
           expect(reduction.omTeamKey).to.be.equal(cmsRecords[0].om_team_key)
         }
       })
-      expect(ids.includes(insertedRecords[0].id[0])).to.be.equal(true)
+      expect(ids.includes(insertedRecords[0].id)).to.be.equal(true)
     })
   })
 

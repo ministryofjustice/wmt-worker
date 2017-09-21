@@ -1,13 +1,10 @@
 const expect = require('chai').expect
-const knexConfig = require('../../../../knexfile').app
-const knex = require('knex')(knexConfig)
 
 const helper = require('../../../helpers/data/app-workload-helper')
 const insertReduction = require('../../../../app/services/data/insert-reduction')
 const getAppCmsReductions = require('../../../../app/services/data/get-app-cms-reductions')
 
 var inserts = []
-var insertedIds = []
 
 const reductionToInsert = {
   reductionReasonId: 1,
@@ -34,7 +31,7 @@ describe('app/services/data/insert-reduction', function () {
     reductionToInsert.workloadOwnerId = workloadOwnerId
     return insertReduction(reductionToInsert)
     .then(function (resultId) {
-      insertedIds.push(resultId)
+      inserts.push({table: 'reductions', id: resultId})
       expect(resultId).to.be.a('number')
       return getAppCmsReductions()
       .then(function (reductions) {
@@ -48,9 +45,6 @@ describe('app/services/data/insert-reduction', function () {
   })
 
   after(function () {
-    return knex('reductions').whereIn('id', insertedIds).del()
-    .then(function () {
-      return helper.removeDependencies(inserts)
-    })
+    return helper.removeDependencies(inserts)
   })
 })

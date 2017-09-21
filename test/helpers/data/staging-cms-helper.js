@@ -9,7 +9,7 @@ module.exports.insertDependencies = function (cmsRecords) {
     .insert(cmsRecords)
     .returning('id')
     .then(function (id) {
-      inserts.push({table: 'cms', id: id})
+      inserts.push({table: 'cms', id: id[0]})
       return inserts
     })
 }
