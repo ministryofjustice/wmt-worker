@@ -48,13 +48,11 @@ exports.seed = function (knex, Promise) {
       }
 
       var splitValue = workloadPointsCalculationsToInsert.length / 2
-      partOneWpcs = workloadPointsCalculationsToInsert.slice(0, splitValue)
-      partTwoWpcs = workloadPointsCalculationsToInsert.slice(splitValue, workloadPointsCalculationsToInsert.length)
+      var partOneWpcs = workloadPointsCalculationsToInsert.slice(0, splitValue)
+      var partTwoWpcs = workloadPointsCalculationsToInsert.slice(splitValue, workloadPointsCalculationsToInsert.length)
       return knex('workload_points_calculations').insert(partOneWpcs)
         .then(function (results) {
           return knex('workload_points_calculations').insert(partTwoWpcs)
         })
-
-      return knex(tableName).insert(workloadPointsCalculationsToInsert)
     })
 }
