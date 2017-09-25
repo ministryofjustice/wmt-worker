@@ -5,6 +5,7 @@ require('sinon-bluebird')
 const pointsHelper = require('wmt-probation-rules').pointsHelper
 
 const Batch = require('../../../../app/services/domain/batch')
+const wpcOperation = require('../../../../app/constants/calculate-workload-points-operation')
 
 const WORKLOAD_ID = 10
 const BATCH_SIZE = 20
@@ -20,6 +21,7 @@ var getPointsConfigurationStub
 var getOffenderManagerTypeIdStub
 var insertWorkloadPointsCalculationsStub
 var getAppReductions
+var getAppCmsReductionHours
 var getContractedHours
 var task
 
@@ -27,6 +29,8 @@ describe('services/workers/calculate-workload-points', function () {
   beforeEach(function () {
     getWorkloadsStub = sinon.stub()
     getAppReductions = sinon.stub()
+    getAppCmsReductionHours = sinon.stub()
+
     getContractedHours = sinon.stub()
     getPointsConfigurationStub = sinon.stub()
     getOffenderManagerTypeIdStub = sinon.stub()
@@ -43,7 +47,8 @@ describe('services/workers/calculate-workload-points', function () {
     task = {id: 1,
       additionalData: {
         workloadReportId: REPORT_ID,
-        workloadBatch: new Batch(WORKLOAD_ID, BATCH_SIZE)
+        workloadBatch: new Batch(WORKLOAD_ID, BATCH_SIZE),
+        operationType: wpcOperation.INSERT
       }}
 
     calculateWorkloadPoints = proxyquire('../../../../app/services/workers/calculate-workload-points', {
@@ -54,13 +59,15 @@ describe('services/workers/calculate-workload-points', function () {
       '../data/get-app-reductions': getAppReductions,
       '../data/get-contracted-hours': getContractedHours,
       '../data/insert-workload-points-calculation': insertWorkloadPointsCalculationsStub,
-      'wmt-probation-rules': probationRulesStub
+      'wmt-probation-rules': probationRulesStub,
+      '../data/get-app-cms-reduction-hours': getAppCmsReductionHours
     })
     getContractedHours.resolves(CONTRACTED_HOURS)
   })
 
   it('calls the get workloads promise correctly', function (done) {
     getAppReductions.resolves(REDUCTION_HOURS)
+    getAppCmsReductionHours.resolves(0)
     getWorkloadsStub.resolves([{values: sinon.stub(), id: WORKLOAD_ID}])
     getOffenderManagerTypeIdStub.resolves(WORKLOAD_ID)
     getPointsConfigurationStub.resolves({values: pointsHelper.getCaseTypeWeightings(), id: WORKLOAD_ID})
@@ -74,9 +81,11 @@ describe('services/workers/calculate-workload-points', function () {
     task = {id: 1,
       additionalData: {
         workloadReportId: REPORT_ID,
-        workloadBatch: new Batch(WORKLOAD_ID, 1)
+        workloadBatch: new Batch(WORKLOAD_ID, 1),
+        operationType: wpcOperation.INSERT
       }}
     getAppReductions.resolves(REDUCTION_HOURS)
+    getAppCmsReductionHours.resolves(0)
     getWorkloadsStub.resolves([{values: sinon.stub(), id: WORKLOAD_ID}])
     getOffenderManagerTypeIdStub.resolves(WORKLOAD_ID)
     getPointsConfigurationStub.resolves({values: pointsHelper.getCaseTypeWeightings(), id: WORKLOAD_ID})
@@ -90,6 +99,7 @@ describe('services/workers/calculate-workload-points', function () {
 
   it('retrieves the points configuration', function (done) {
     getAppReductions.resolves(REDUCTION_HOURS)
+    getAppCmsReductionHours.resolves(0)
     getWorkloadsStub.resolves([{values: sinon.stub(), id: WORKLOAD_ID}])
     getOffenderManagerTypeIdStub.resolves(WORKLOAD_ID)
     getPointsConfigurationStub.resolves({values: pointsHelper.getCaseTypeWeightings(), id: WORKLOAD_ID})
@@ -101,6 +111,7 @@ describe('services/workers/calculate-workload-points', function () {
 
   it('calls calculateSdrConversionPoints', function (done) {
     getAppReductions.resolves(REDUCTION_HOURS)
+    getAppCmsReductionHours.resolves(0)
     insertWorkloadPointsCalculationsStub.resolves()
     getOffenderManagerTypeIdStub.resolves(WORKLOAD_ID)
     getPointsConfigurationStub.resolves({values: pointsHelper.getCaseTypeWeightings(), id: WORKLOAD_ID})
