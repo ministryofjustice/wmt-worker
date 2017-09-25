@@ -23,5 +23,5 @@ exports.up = function (knex, Promise) {
 }
 
 exports.down = function (knex, Promise) {
-  knex.schema.withSchema('staging').dropTable('cms')
+  return knex.schema.withSchema('staging').dropTable('cms')
 }
