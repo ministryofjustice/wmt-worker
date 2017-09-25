@@ -6,6 +6,7 @@ const workloadReportHelper = require('../../../helpers/data/app-workload-report-
 const moment = require('moment')
 const Task = require('../../../../app/services/domain/task')
 const TASK_STATUS = require('../../../../app/constants/task-status')
+const timeThreshold = require('../../../constants/time-threshold')
 
 var inserts = []
 
@@ -33,7 +34,7 @@ describe('app/services/data/create-tasks', function () {
           expect(result.workload_report_id).to.eq(workloadReportId)
           expect(JSON.parse(result.additional_data)).to.eq(additionalData)
           expect(result.status).to.equal(TASK_STATUS.PENDING)
-          expect(moment().diff(result.date_created, 'seconds')).to.be.lt(10)
+          expect(moment().diff(result.date_created, 'seconds')).to.be.lt(timeThreshold.INSERT)
           expect(result.effective_to).to.be.undefined // eslint-disable-line
           inserts.push({table: 'tasks', id: ids[0]})
           done()
