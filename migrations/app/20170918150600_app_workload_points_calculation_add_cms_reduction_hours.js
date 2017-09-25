@@ -6,7 +6,8 @@ exports.up = function (knex, promise) {
 }
 
 exports.down = function (knex, Promise) {
-  var sql = 'ALTER TABLE app.workload_points_calculations DROP CONSTRAINT wpc_cms_reduction_hours_default DROP COLUMN cms_reduction_hours'
+  var sql = 'ALTER TABLE app.workload_points_calculations DROP CONSTRAINT wpc_cms_reduction_hours_default;' +
+   'ALTER TABLE app.workload_points_calculations DROP COLUMN cms_reduction_hours;'
   return knex.schema
         .raw('SET ARITHABORT ON')
         .raw(sql)

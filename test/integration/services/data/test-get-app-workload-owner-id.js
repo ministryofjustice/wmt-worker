@@ -17,7 +17,7 @@ describe('services/data/get-workload-owner-id', function () {
     })
   })
 
-  it('should retrieve the workload owner id workload owner', function () {
+  it('should retrieve the workload owners id given their om key and team code', function () {
     var workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
     var omId = inserts.filter((item) => item.table === 'offender_manager')[0].id
 

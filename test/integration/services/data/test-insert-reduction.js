@@ -35,11 +35,13 @@ describe('app/services/data/insert-reduction', function () {
       expect(resultId).to.be.a('number')
       return getAppCmsReductions()
       .then(function (reductions) {
-        var ids = []
-        reductions.forEach(function (reduction) {
-          ids.push(reduction.id)
-        })
-        expect(ids.includes(resultId)).to.be.equal(true)
+        var expectedReduction = {
+          id: resultId,
+          workloadOwnerId: reductionToInsert.workloadOwnerId,
+          contactId: reductionToInsert.contactId,
+          hours: reductionToInsert.hours
+        }
+        expect(reductions).to.contain(expectedReduction)
       })
     })
   })

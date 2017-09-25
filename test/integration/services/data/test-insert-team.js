@@ -5,6 +5,7 @@ const insertTeam = require('../../../../app/services/data/insert-team')
 const Team = require('wmt-probation-rules').Team
 const moment = require('moment')
 const teamHelper = require('../../../helpers/data/app-team-helper')
+const timeThreshold = require('../../../constants/time-threshold')
 
 var inserts = []
 
@@ -30,7 +31,7 @@ describe('app/services/data/insert-team', function () {
           expect(result['ldu_id']).to.eq(lduId) // eslint-disable-line
           expect(result['code']).to.eq(code) // eslint-disable-line
           expect(result['description']).to.be.null // eslint-disable-line
-          expect(moment().diff(result['effective_from'], 'seconds')).to.be.lt(20)
+          expect(moment().diff(result['effective_from'], 'seconds')).to.be.lt(timeThreshold.INSERT)
           expect(result['effective_to']).to.be.null // eslint-disable-line
           inserts.push({table: 'team', id: teamId})
         })

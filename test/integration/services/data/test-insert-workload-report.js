@@ -5,6 +5,7 @@ const workloadReportStatus = require('../../../../app/constants/workload-report-
 const insertWorkloadReport = require('../../../../app/services/data/insert-workload-report')
 const tableName = 'workload_report'
 const moment = require('moment')
+const timeThreshold = require('../../../constants/time-threshold')
 
 var insertedIds = []
 
@@ -28,7 +29,7 @@ describe('app/services/data/insert-workload-report', function () {
           expect(result.status).to.be.equal(workloadReportStatus.INPROGRESS)
           expect(result['status_description']).to.be.null // eslint-disable-line
           expect(result['date_created']).not.to.be.null // eslint-disable-line
-          expect(moment().diff(result['effective_from'], 'seconds')).to.be.lt(20) // eslint-disable-line
+          expect(moment().diff(result['effective_from'], 'seconds')).to.be.lt(timeThreshold.INSERT) // eslint-disable-line
           expect(result['records_total']).to.eq(0)
           done()
         })
