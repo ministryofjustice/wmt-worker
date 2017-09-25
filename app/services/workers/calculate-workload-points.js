@@ -12,6 +12,7 @@ const getWorkloadPointsConfiguration = require('../data/get-workload-points-conf
 const getOffenderManagerTypeId = require('../data/get-offender-manager-type-id')
 const getAppReductions = require('../data/get-app-reductions')
 const getContractedHours = require('../data/get-contracted-hours')
+const getAppCmsReductionHours = require('../data/get-app-cms-reduction-hours')
 const wpcOperationType = require('../../constants/calculate-workload-points-operation')
 
 module.exports.execute = function (task) {
@@ -41,6 +42,7 @@ module.exports.execute = function (task) {
       var workloadId = workloadResult.id
       var getOffenderManagerTypePromise = getOffenderManagerTypeId(workload.workloadOwnerId)
       var getAppReductionsPromise = getAppReductions(workload.workloadOwnerId)
+      var getAppCmsReductionHoursPromise = getAppCmsReductionHours(workload.workloadOwnerId)
       var getContractedHoursPromise = getContractedHours(workload.workloadOwnerId)
 
       return pointsConfigurationPromise.then(function (pointsConfiguration) {
@@ -51,21 +53,23 @@ module.exports.execute = function (task) {
         var workloadPoints = calculateWorkloadPoints(workload, caseTypeWeightings)
         var totalPoints = (workloadPoints + sdrConversionPoints + sdrPoints + paromsPoints)
         return getAppReductionsPromise.then(function (reductions) {
-          return getContractedHoursPromise.then(function (contractedHours) {
-            return getOffenderManagerTypePromise.then(function (offenderManagerTypeId) {
-              var nominalTarget = calculateNominalTarget(offenderManagerTypeId, caseTypeWeightings.pointsConfiguration.defaultNominalTargets)
-              var availablePoints = calculateAvailablePoints(nominalTarget, offenderManagerTypeId, contractedHours,
-                  reductions, caseTypeWeightings.pointsConfiguration.defaultContractedHours)
-              switch (operationType) {
-                case wpcOperationType.INSERT:
-                  return insertWorkloadPointsCalculations(reportId, pointsConfiguration.id, workloadId, totalPoints,
-                    sdrPoints, sdrConversionPoints, paromsPoints, nominalTarget, availablePoints, reductions, contractedHours)
-                case wpcOperationType.UPDATE:
-                  return updateWorkloadPointsCalculations(reportId, pointsConfiguration.id, workloadId, totalPoints,
-                    sdrPoints, sdrConversionPoints, paromsPoints, nominalTarget, availablePoints, reductions, contractedHours)
-                default:
-                  throw new Error('Operation type of ' + operationType + ' is not valid. Should be ' + wpcOperationType.INSERT + ' or ' + wpcOperationType.UPDATE)
-              }
+          return getAppCmsReductionHoursPromise.then(function (cmsReductions) {
+            return getContractedHoursPromise.then(function (contractedHours) {
+              return getOffenderManagerTypePromise.then(function (offenderManagerTypeId) {
+                var nominalTarget = calculateNominalTarget(offenderManagerTypeId, caseTypeWeightings.pointsConfiguration.defaultNominalTargets)
+                var availablePoints = calculateAvailablePoints(nominalTarget, offenderManagerTypeId, contractedHours,
+                    reductions, caseTypeWeightings.pointsConfiguration.defaultContractedHours)
+                switch (operationType) {
+                  case wpcOperationType.INSERT:
+                    return insertWorkloadPointsCalculations(reportId, pointsConfiguration.id, workloadId, totalPoints,
+                          sdrPoints, sdrConversionPoints, paromsPoints, nominalTarget, availablePoints, reductions, contractedHours, cmsReductions)
+                  case wpcOperationType.UPDATE:
+                    return updateWorkloadPointsCalculations(reportId, pointsConfiguration.id, workloadId, totalPoints,
+                          sdrPoints, sdrConversionPoints, paromsPoints, nominalTarget, availablePoints, reductions, contractedHours, cmsReductions)
+                  default:
+                    throw new Error('Operation type of ' + operationType + ' is not valid. Should be ' + wpcOperationType.INSERT + ' or ' + wpcOperationType.UPDATE)
+                }
+              })
             })
           })
         })

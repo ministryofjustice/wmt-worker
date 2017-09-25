@@ -6,7 +6,7 @@ module.exports.insertDependencies = function (inserts) {
   var promise = knex('offender_manager_type').returning('id').insert({description: 'test'})
     .then(function (ids) {
       inserts.push({ table: 'offender_manager_type', id: ids[0] })
-      return knex('offender_manager').returning('id').insert({type_id: ids[0]})
+      return knex('offender_manager').returning('id').insert({type_id: ids[0], key: ids[0] + 'abc'})
     })
     .then(function (ids) {
       inserts.push({ table: 'offender_manager', id: ids[0] })
@@ -18,7 +18,7 @@ module.exports.insertDependencies = function (inserts) {
     })
     .then(function (ids) {
       inserts.push({ table: 'ldu', id: ids[0] })
-      return knex('team').returning('id').insert({ldu_id: ids[0]})
+      return knex('team').returning('id').insert({ldu_id: ids[0], code: ids[0] + '123'})
     })
     .then(function (ids) {
       inserts.push({table: 'team', id: ids[0]})
