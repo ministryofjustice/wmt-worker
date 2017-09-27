@@ -6,6 +6,7 @@ exports.seed = function (knex, Promise) {
           MAX(l.region_id) AS id
           , l.id AS link_id
           , MAX(l.description) AS name
+          , grade_code
           , case_type
           , SUM(untiered) AS untiered
           , SUM(d2) AS d2
@@ -18,7 +19,7 @@ exports.seed = function (knex, Promise) {
           , SUM(total_cases) AS total_cases
         FROM app.ldu_caseload_view lv  
           JOIN app.ldu l ON lv.id = l.id
-        GROUP BY l.id, lv.case_type;`
+        GROUP BY l.id, lv.case_type, lv.grade_code;`
 
   return knex.schema
       .raw('DROP VIEW IF EXISTS app.region_caseload_view;')
