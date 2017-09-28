@@ -27,7 +27,6 @@ var task
 describe('services/workers/calculate-workload-points', function () {
   beforeEach(function () {
     getWorkloadsStub = sinon.stub()
-    getAppReductions = sinon.stub()
     getAppReductionHours = sinon.stub()
 
     getContractedHours = sinon.stub()
