@@ -41,7 +41,9 @@ function getReductionObjects (workloadOwnerId) {
     { workload_owner_id: workloadOwnerId, hours: 1, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: reductionStatus.ACTIVE, contact_id: 123, contact_type: reductionContactType.CMS },
     { workload_owner_id: workloadOwnerId, hours: 12, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: reductionStatus.DELETED, contact_id: null, contact_type: null },
     { workload_owner_id: workloadOwnerId, hours: 9, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: reductionStatus.ACTIVE, contact_id: 321, contact_type: reductionContactType.CMS },
-    { workload_owner_id: workloadOwnerId, hours: 4, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: reductionStatus.SCHEDULED, contact_id: null, contact_type: null },
+    { workload_owner_id: workloadOwnerId, hours: 2, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: reductionStatus.SCHEDULED, contact_id: null, contact_type: null },
+    { workload_owner_id: workloadOwnerId, hours: 1, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: reductionStatus.ACTIVE, contact_id: null, contact_type: null },
+    { workload_owner_id: workloadOwnerId, hours: 1, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: reductionStatus.ACTIVE, contact_id: null, contact_type: null },
     { workload_owner_id: workloadOwnerId, hours: 5, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: reductionStatus.ACTIVE, contact_id: 312, contact_type: reductionContactType.GS }
   ]
 }

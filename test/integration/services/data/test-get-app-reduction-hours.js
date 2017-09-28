@@ -31,7 +31,13 @@ describe('services/data/get-app-reduction-hours', function () {
     })
   })
 
-  // TODO possibly also include regular reductions? - waiting to hear back from Tom
+  it('should retrieve the total of active standard reductions (i.e. non-CMS and non-GS reductions) for a given workload owner', function (done) {
+    var workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
+    getAppReductions(workloadOwnerId).then(function (hours) {
+      expect(hours).to.equal(2)
+      done()
+    })
+  })
 
   after(function (done) {
     appReductionsHelper.removeDependencies(inserts)

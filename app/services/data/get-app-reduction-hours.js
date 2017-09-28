@@ -3,10 +3,19 @@ const knex = require('knex')(knexConfig)
 const reductionStatus = require('../../constants/reduction-status')
 
 module.exports = function (workloadOwnerId, reductionType) {
+  var whereObject = {
+    workload_owner_id: workloadOwnerId
+  }
+
+  if (reductionType === undefined) {
+    whereObject.contact_type = null
+  } else {
+    whereObject.contact_type = reductionType
+  }
+
   return knex('reductions')
     .sum('hours AS hours')
-    .where('workload_owner_id', workloadOwnerId)
-    .where('contact_type', reductionType)
+    .where(whereObject)
     .andWhere('status', reductionStatus.ACTIVE)
     .then(function (result) {
       if (result === null || result[0].hours === null) {
