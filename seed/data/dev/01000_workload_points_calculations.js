@@ -43,7 +43,8 @@ exports.seed = function (knex, Promise) {
             nominal_target: 0,
             contracted_hours: 37.5,
             reduction_hours: Math.floor(Math.random() * 6) + 1,
-            cms_reduction_hours: 0.5
+            cms_reduction_hours: 0.5,
+            gs_reduction_hours: -2
           })
         }
       }
