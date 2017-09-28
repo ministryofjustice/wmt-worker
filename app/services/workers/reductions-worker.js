@@ -9,8 +9,8 @@ const submittingAgent = require('../../constants/task-submitting-agent')
 const wpcOperationType = require('../../constants/calculate-workload-points-operation')
 const logger = require('../log')
 
-const mapStagingCmsReductions = require('../map-staging-cms-reductions')
-const getAppCmsReductions = require('../data/get-app-cms-reductions')
+const reductionsMapper = require('../staging-reductions-mapper')
+const getAppCmsAndGsReductions = require('../data/get-app-cms-and-gs-reductions')
 const updateReductionEffectiveTo = require('../data/update-reduction-effective-to')
 const insertReduction = require('../data/insert-reduction')
 
@@ -62,55 +62,61 @@ var getReductionStatus = function (reduction) {
 }
 
 var processCmsReductions = function () {
-  return mapStagingCmsReductions()
-  .then(function (extractedStgReductions) {
-    var extractedStgReductionContactIds = []
-    extractedStgReductions.forEach(function (extractedStgReduction) {
-      extractedStgReductionContactIds.push(Number(extractedStgReduction.contactId))
-    })
+  return reductionsMapper.mapCmsReductions()
+  .then(function (extractedCmsStgReductions) {
+    return reductionsMapper.mapGsReductions()
+    .then(function (extractedGsStgReductions) {
+      var extractedStgReductions = []
+      extractedStgReductions = extractedCmsStgReductions.concat(extractedGsStgReductions)
 
-    return getAppCmsReductions()
-    .then(function (appReductions) {
-      var appReductionContactIds = []
-      appReductions.forEach(function (appReduction) {
-        appReductionContactIds.push(appReduction.contactId)
+      var extractedStgReductionContactIds = []
+      extractedStgReductions.forEach(function (extractedStgReduction) {
+        extractedStgReductionContactIds.push(Number(extractedStgReduction.contactId))
       })
 
-      var updateReductionsEffectiveTo = []
-      var insertReductions = []
+      return getAppCmsAndGsReductions()
+      .then(function (appReductions) {
+        var appReductionContactIds = []
+        appReductions.forEach(function (appReduction) {
+          appReductionContactIds.push(appReduction.contactId)
+        })
 
-      var updateTime = new Date()
-      updateTime.setHours(0, 0, 0, 0)
+        var updateReductionsEffectiveTo = []
+        var insertReductions = []
 
-      appReductions.forEach(function (appReduction) {
-        if (!extractedStgReductionContactIds.includes(appReduction.contactId)) {
-          // set date of this reduction to today at 00.00 in order to set as archived in next stage of worker
-          updateReductionsEffectiveTo.push(updateReductionEffectiveTo(appReduction.id, updateTime))
-        } else {
-          // Check if the workload ower id has changed in the om reduction (om reduction is the negative reduction)
-          if (appReduction.hours < 0) {
-            extractedStgReductions.forEach(function (extractedStgReduction) {
-              if (hasOmReductionMoved(appReduction, extractedStgReduction)) {
-                // close old one and create new reduction for new om
-                updateReductionsEffectiveTo.push(
-                  updateReductionEffectiveTo(appReduction.id, updateTime)
-                )
-                insertReductions.push(insertReduction(extractedStgReduction))
-              }
-            })
-          }
-        }
-      })
+        var updateTime = new Date()
+        updateTime.setHours(0, 0, 0, 0)
 
-      return Promise.all(updateReductionsEffectiveTo)
-      .then(function () {
-        extractedStgReductions.forEach(function (extractedStgReduction) {
-          if (!appReductionContactIds.includes(Number(extractedStgReduction.contactId))) {
-            insertReductions.push(insertReduction(extractedStgReduction))
+        appReductions.forEach(function (appReduction) {
+          if (!extractedStgReductionContactIds.includes(appReduction.contactId)) {
+            // Set date of this reduction to today at 00:00 in order to set as archived in next stage of worker
+            updateReductionsEffectiveTo.push(updateReductionEffectiveTo(appReduction.id, updateTime))
+          } else {
+            // Check if the workload owner id has changed in the OM reduction for CMS reductions (OM reduction is the negative reduction)
+            if (appReduction.hours < 0) {
+              extractedCmsStgReductions.forEach(function (extractedCmsStgReduction) {
+                if (hasOmReductionMoved(appReduction, extractedCmsStgReduction)) {
+                  // Close old one and create new reduction for new OM
+                  updateReductionsEffectiveTo.push(
+                    updateReductionEffectiveTo(appReduction.id, updateTime)
+                  )
+                  insertReductions.push(insertReduction(extractedCmsStgReduction))
+                }
+              })
+            }
           }
         })
 
-        return Promise.all(insertReductions)
+        return Promise.all(updateReductionsEffectiveTo)
+        .then(function () {
+          extractedStgReductions.forEach(function (extractedStgReduction) {
+            if (!appReductionContactIds.includes(Number(extractedStgReduction.contactId))) {
+              insertReductions.push(insertReduction(extractedStgReduction))
+            }
+          })
+
+          return Promise.all(insertReductions)
+        })
       })
     })
   })

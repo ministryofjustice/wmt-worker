@@ -29,7 +29,9 @@ describe('services/data/insert-workload-points-calculation', function () {
     var availablePoints = 6
     var contractedHours = 38.5
     var reductionHours = 32
-    insertWorkloadPointsCalculations(workloadReportId, workloadPointsId, workloadId, totalPoints, sdrPoints, sdrConversionPoints, paromsPoints, nominalTarget, availablePoints, reductionHours, contractedHours)
+    var cmsReductionHours = 2
+    var gsReductionHours = -1
+    insertWorkloadPointsCalculations(workloadReportId, workloadPointsId, workloadId, totalPoints, sdrPoints, sdrConversionPoints, paromsPoints, nominalTarget, availablePoints, contractedHours, reductionHours, cmsReductionHours, gsReductionHours)
     .then(function (ids) {
       var insertedId = ids[0]
       inserts.push({table: 'workload_points_calculations', id: insertedId})
@@ -45,6 +47,8 @@ describe('services/data/insert-workload-points-calculation', function () {
             expect(insertedObject.available_points).to.eql(availablePoints)
             expect(insertedObject.contracted_hours).to.eql(contractedHours)
             expect(insertedObject.reduction_hours).to.eql(reductionHours)
+            expect(insertedObject.cms_reduction_hours).to.eql(cmsReductionHours)
+            expect(insertedObject.gs_reduction_hours).to.eql(gsReductionHours)
             done()
           })
     })

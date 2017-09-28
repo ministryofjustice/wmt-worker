@@ -1,5 +1,5 @@
 var tableName = 'reduction_reason'
-var insertStatement = 'INSERT INTO app.' + tableName + ' (id, reason, reason_short_name, category_id, allowance_percentage, max_allowance_percentage, months_to_expiry, fixed_allowance_hours, is_cms) VALUES '
+var insertStatement = 'INSERT INTO app.' + tableName + ' (id, reason, reason_short_name, category_id, allowance_percentage, max_allowance_percentage, months_to_expiry, fixed_allowance_hours, is_cms_or_gs) VALUES '
 var categoryId
 var sql
 
@@ -52,7 +52,8 @@ exports.seed = function (knex, Promise) {
       insertStatement + '(19, \'Co-Worked Cases (not CMS)\', \'Co-Worked Cases (not CMS)\', ' + categoryId + ', null, null, null, null, 0)' +
       insertStatement + '(20, \'CMS1\', \'CMS - Test reason one\', ' + categoryId + ', null, null, null, 0.5, 1)' +
       insertStatement + '(21, \'CMS2\', \'CMS - Test reason two\', ' + categoryId + ', null, null, null, 0.75, 1)' +
-      insertStatement + '(22, \'CMS3\', \'CMS - Test reason three\', ' + categoryId + ', null, null, null, 0.25, 1)'
+      insertStatement + '(22, \'CMS3\', \'CMS - Test reason three\', ' + categoryId + ', null, null, null, 0.25, 1)' +
+      insertStatement + '(23, \'GS1\', \'GS - Test reason\', ' + categoryId + ', null, null, null, 2, 1)'
       return knex.schema
         .raw(sql)
     })

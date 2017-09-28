@@ -20,12 +20,12 @@ describe('services/data/get-staging-gs-reductions', function () {
       reductions.forEach(function (reduction) {
         ids.push(reduction.id)
         if (reduction.id === insertedRecords[0].id[0]) {
-          expect(Number(reduction.contactId)).to.be.equal(cmsRecords[0].contact_id)
-          expect(reduction.contactCode).to.be.equal(cmsRecords[0].contact_type_code)
-          expect(reduction.contactTypeDesc).to.be.equal(cmsRecords[0].contact_type_desc)
-          expect(new Date(reduction.contactDate)).to.be.eql(new Date(cmsRecords[0].contact_date))
-          expect(reduction.omKey).to.be.equal(cmsRecords[0].om_key)
-          expect(reduction.omTeamKey).to.be.equal(cmsRecords[0].om_team_key)
+          expect(Number(reduction.contactId)).to.be.equal(gsHelper.gsRecords[0].contact_id)
+          expect(reduction.contactCode).to.be.equal(gsHelper.gsRecords[0].contact_type_code)
+          expect(reduction.contactTypeDesc).to.be.equal(gsHelper.gsRecords[0].contact_type_desc)
+          expect(new Date(reduction.contactDate)).to.be.eql(new Date(gsHelper.gsRecords[0].contact_date))
+          expect(reduction.omKey).to.be.equal(gsHelper.gsRecords[0].om_key)
+          expect(reduction.omTeamKey).to.be.equal(gsHelper.gsRecords[0].om_team_key)
         }
       })
       expect(ids.includes(insertedRecords[0].id)).to.be.equal(true)

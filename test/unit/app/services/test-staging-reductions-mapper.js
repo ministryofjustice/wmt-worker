@@ -7,9 +7,9 @@ const dataHelper = require('../../../helpers/data/staging-reductions-helper')
 
 var stagingReductionsMapper
 var getStagingCmsReductions
+var getStagingGsReductions
 var getWorkloadOwnerId
 var getReductionReasonFromCode
-
 
 var reductionRows = dataHelper.reductionRows
 var reductionReason = dataHelper.reductionReason
