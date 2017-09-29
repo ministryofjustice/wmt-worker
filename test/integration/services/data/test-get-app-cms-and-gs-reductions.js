@@ -3,11 +3,11 @@ const expect = require('chai').expect
 const appWorkloadOwnerHelper = require('../../../helpers/data/app-workload-owner-helper')
 const appReductionsHelper = require('../../../helpers/data/app-reductions-helper')
 
-const getAppCmsReductions = require('../../../../app/services/data/get-app-cms-reductions')
+const getAppCmsReductions = require('../../../../app/services/data/get-app-cms-and-gs-reductions')
 
 var inserts = []
 
-describe('services/data/get-app-cms-reductions', function () {
+describe('services/data/get-app-cms-and-gs-reductions', function () {
   before(function () {
     return appWorkloadOwnerHelper.insertDependencies(inserts)
       .then(function (builtInserts) {
@@ -18,7 +18,7 @@ describe('services/data/get-app-cms-reductions', function () {
       })
   })
 
-  it('should retrieve the cms reductions in db', function () {
+  it('should retrieve only the CMS and GS reductions in app.reductions table (i.e. those with contact ids)', function () {
     return getAppCmsReductions()
     .then(function (reductions) {
       var reductionsIds = []

@@ -2,7 +2,8 @@ const expect = require('chai').expect
 
 const helper = require('../../../helpers/data/app-workload-helper')
 const insertReduction = require('../../../../app/services/data/insert-reduction')
-const getAppCmsReductions = require('../../../../app/services/data/get-app-cms-reductions')
+const getAppCmsAndGsReductions = require('../../../../app/services/data/get-app-cms-and-gs-reductions')
+const reductionContactType = require('../../../../app/constants/reduction-contact-type')
 
 var inserts = []
 
@@ -14,7 +15,8 @@ const reductionToInsert = {
   effectiveTo: new Date(),
   status: 'ACTIVE',
   contactId: 4,
-  notes: null
+  notes: null,
+  contactType: reductionContactType.CMS
 }
 
 describe('app/services/data/insert-reduction', function () {
@@ -33,7 +35,7 @@ describe('app/services/data/insert-reduction', function () {
     .then(function (resultId) {
       inserts.push({table: 'reductions', id: resultId})
       expect(resultId).to.be.a('number')
-      return getAppCmsReductions()
+      return getAppCmsAndGsReductions()
       .then(function (reductions) {
         var expectedReduction = {
           id: resultId,

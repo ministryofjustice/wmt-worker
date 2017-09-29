@@ -8,10 +8,10 @@ exports.seed = function (knex, Promise) {
     })
     .then(function (firstWorkloadOwnerId) {
       workloadOwnerId = firstWorkloadOwnerId.id
-      return knex('reduction_reason').select('id').where('is_cms', false)
+      return knex('reduction_reason').select('id').where('is_cms_or_gs', false)
     })
     .then(function (reductionReasonId) {
-      return knex('reduction_reason').select('id').where('is_cms', true)
+      return knex('reduction_reason').select('id').where('is_cms_or_gs', true)
       .then(function (cmsReductionReasonId) {
         var effectiveFromDate = (new Date()).getDate()
         var effectiveToDate = (new Date()).getDate()
@@ -44,14 +44,14 @@ exports.seed = function (knex, Promise) {
         deletedFromDate.setDate(effectiveFromDate - 365)
         deletedToDate.setDate(effectiveToDate + 365 * 10)
 
-      // Create cms reduction record
+        // Create cms reduction record
         var cmsFromDate = new Date()
         var cmsToDate = new Date()
         var cmsStatus = 'ACTIVE'
         cmsFromDate.setDate(effectiveFromDate - 365)
         cmsToDate.setDate(effectiveToDate + 365 * 10)
 
-      // Insert all records into the reduction table
+        // Insert all records into the reduction table
         return knex(tableName).insert([
           { workload_owner_id: workloadOwnerId,
             reduction_reason_id: reductionReasonId[0].id,

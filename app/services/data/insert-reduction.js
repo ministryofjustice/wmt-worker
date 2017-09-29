@@ -11,7 +11,8 @@ module.exports = function (reduction) {
     effective_to: reduction.effectiveTo,
     status: reduction.status,
     contact_id: reduction.contactId,
-    notes: reduction.notes
+    notes: reduction.notes,
+    contact_type: reduction.contactType
   })
   .returning('id')
   .then(function (result) {
