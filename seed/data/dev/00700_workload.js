@@ -2,13 +2,13 @@ var tableName = 'workload'
 
 const workloadRow = {
   workload_owner_id: 1,
-  total_cases: 63,
+  total_cases: 69,
   monthly_sdrs: 1,
   sdr_due_next_30_days: 2,
   sdr_conversions_last_30_days: 1,
   total_community_cases: 21,
-  total_custody_cases: 21,
-  total_license_cases: 21,
+  total_custody_cases: 23,
+  total_license_cases: 25,
   paroms_completed_last_30_days: 1,
   paroms_due_next_30_days: 0,
   license_last_16_weeks: 7,
