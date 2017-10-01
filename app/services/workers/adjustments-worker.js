@@ -9,8 +9,8 @@ const submittingAgent = require('../../constants/task-submitting-agent')
 const wpcOperationType = require('../../constants/calculate-workload-points-operation')
 const logger = require('../log')
 
-const mapStagingCmsReductions = require('../map-staging-cms-reductions')
-const getAppCmsReductions = require('../data/get-app-cms-reductions')
+const mapStagingCmsAdjustments = require('../map-staging-cms-adjustments')
+const getCmsAdjustments = require('../data/get-adjustments')
 const updateReductionEffectiveTo = require('../data/update-reduction-effective-to')
 const insertReduction = require('../data/insert-reduction')
 
@@ -62,14 +62,14 @@ var getReductionStatus = function (reduction) {
 }
 
 var processCmsReductions = function () {
-  return mapStagingCmsReductions()
+  return mapStagingCmsAdjustments()
   .then(function (extractedStgReductions) {
     var extractedStgReductionContactIds = []
     extractedStgReductions.forEach(function (extractedStgReduction) {
       extractedStgReductionContactIds.push(Number(extractedStgReduction.contactId))
     })
 
-    return getAppCmsReductions()
+    return getCmsAdjustments()
     .then(function (appReductions) {
       var appReductionContactIds = []
       appReductions.forEach(function (appReduction) {

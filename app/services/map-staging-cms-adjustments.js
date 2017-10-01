@@ -1,10 +1,10 @@
-const getStagingCmsReductions = require('./data/get-staging-cms-reductions')
+const getStagingCms = require('./data/get-staging-cms')
 const getWorkloadOwnerId = require('./data/get-app-workload-owner-id')
 const getReductionReasonFromCode = require('./data/get-reduction-reason-from-code')
 const reductionStatus = require('../constants/reduction-status')
 
 module.exports = function () {
-  return getStagingCmsReductions()
+  return getStagingCms()
   .then(function (cmsReductions) {
     var stgReductions = []
     var promises = []

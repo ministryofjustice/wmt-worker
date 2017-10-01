@@ -12,7 +12,7 @@ const getWorkloadPointsConfiguration = require('../data/get-workload-points-conf
 const getOffenderManagerTypeId = require('../data/get-offender-manager-type-id')
 const getAppReductions = require('../data/get-app-reductions')
 const getContractedHours = require('../data/get-contracted-hours')
-const getAppCmsReductionHours = require('../data/get-app-cms-reduction-hours')
+const getCmsPoints = require('../data/get-adjustment-points')
 const wpcOperationType = require('../../constants/calculate-workload-points-operation')
 
 module.exports.execute = function (task) {
@@ -42,7 +42,7 @@ module.exports.execute = function (task) {
       var workloadId = workloadResult.id
       var getOffenderManagerTypePromise = getOffenderManagerTypeId(workload.workloadOwnerId)
       var getAppReductionsPromise = getAppReductions(workload.workloadOwnerId)
-      var getAppCmsReductionHoursPromise = getAppCmsReductionHours(workload.workloadOwnerId)
+      var getAppCmsReductionHoursPromise = getCmsPoints(workload.workloadOwnerId)
       var getContractedHoursPromise = getContractedHours(workload.workloadOwnerId)
 
       return pointsConfigurationPromise.then(function (pointsConfiguration) {
