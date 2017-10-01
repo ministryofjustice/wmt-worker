@@ -1,51 +1,49 @@
 const getStagingCms = require('./data/get-staging-cms')
 const getWorkloadOwnerId = require('./data/get-app-workload-owner-id')
-const getReductionReasonFromCode = require('./data/get-reduction-reason-from-code')
-const reductionStatus = require('../constants/reduction-status')
+const getAdjustmentReasonFromCode = require('./data/get-adjustment-reason-from-code')
+const adjustmentStatus = require('../constants/adjustment-status')
 
 module.exports = function () {
   return getStagingCms()
-  .then(function (cmsReductions) {
-    var stgReductions = []
+  .then(function (cmsRecords) {
+    var stgAdjustments = []
     var promises = []
 
-    if (cmsReductions) {
-      cmsReductions.forEach(function (cmsReduction) {
+    if (cmsRecords) {
+      cmsRecords.forEach(function (cmsRecord) {
         promises.push(
-          getReductionReasonFromCode(cmsReduction.contactCode)
-          .then(function (reductionReason) {
-            return getWorkloadOwnerId(cmsReduction.contactStaffKey, cmsReduction.contactTeamKey)
+          getAdjustmentReasonFromCode(cmsRecord.contactCode)
+          .then(function (adjustmentReason) {
+            return getWorkloadOwnerId(cmsRecord.contactStaffKey, cmsRecord.contactTeamKey)
             .then(function (contactWorkloadOwnerId) {
-              return getWorkloadOwnerId(cmsReduction.omKey, cmsReduction.omTeamKey)
+              return getWorkloadOwnerId(cmsRecord.omKey, cmsRecord.omTeamKey)
               .then(function (omWorkloadOwnerId) {
-                var startDate = new Date(cmsReduction.contactDate)
+                var startDate = new Date(cmsRecord.contactDate)
                 var endDate = new Date(startDate)
                 endDate.setDate(endDate.getDate() + 30)
 
-                var contactReduction = {
-                  contactId: cmsReduction.contactId,
+                var contactAdjustment = {
+                  contactId: cmsRecord.contactId,
                   workloadOwnerId: contactWorkloadOwnerId,
-                  hours: reductionReason.fixedAllowanceHours,
-                  reductionReasonId: reductionReason.id,
+                  points: adjustmentReason.points,
+                  reductionReasonId: adjustmentReason.id,
                   effectiveFrom: startDate,
                   effectiveTo: endDate,
-                  status: reductionStatus.ACTIVE,
-                  note: null
+                  status: adjustmentStatus.ACTIVE
                 }
 
-                var omReduction = {
-                  contactId: cmsReduction.contactId,
+                var omAdjustment = {
+                  contactId: cmsRecord.contactId,
                   workloadOwnerId: omWorkloadOwnerId,
-                  hours: reductionReason.fixedAllowanceHours * -1,
-                  reductionReasonId: reductionReason.id,
+                  points: adjustmentReason.points * -1,
+                  reductionReasonId: adjustmentReason.id,
                   effectiveFrom: startDate,
                   effectiveTo: endDate,
-                  status: reductionStatus.ACTIVE,
-                  note: null
+                  status: adjustmentStatus.ACTIVE
                 }
 
-                stgReductions.push(contactReduction)
-                stgReductions.push(omReduction)
+                stgAdjustments.push(contactAdjustment)
+                stgAdjustments.push(omAdjustment)
               })
             })
           })
@@ -55,7 +53,7 @@ module.exports = function () {
 
     return Promise.all(promises)
     .then(function () {
-      return stgReductions
+      return stgAdjustments
     })
   })
 }
