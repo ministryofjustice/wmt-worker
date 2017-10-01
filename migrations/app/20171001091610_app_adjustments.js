@@ -4,6 +4,7 @@ exports.up = function (knex, Promise) {
     table.integer('adjustment_reason_id').unsigned().defaultTo(11).notNullable().references('adjustment_reason.id')
     table.integer('workload_owner_id').unsigned().notNullable().references('workload_owner.id')
     table.integer('points').unsigned().notNullable()
+    table.integer('contact_id')
     table.timestamp('effective_from').notNullable()
     table.timestamp('effective_to')
     table.string('status')
