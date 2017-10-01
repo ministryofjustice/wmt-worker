@@ -3,7 +3,7 @@ const knex = require('knex')(knexConfig)
 
 module.exports = function (adjustmentReasonCode) {
   return knex('adjustment_reason')
-    .where('reason', adjustmentReasonCode)
+    .where('contact_code', adjustmentReasonCode)
     .first('id',
           'points AS points')
 }

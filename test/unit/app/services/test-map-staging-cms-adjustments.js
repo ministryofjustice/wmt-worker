@@ -8,7 +8,7 @@ const adjustmentStatus = require('../../../../app/constants/adjustment-status')
 var mapStagingCmsAdjustments
 var getStagingCmsRecords
 var getWorkloadOwnerId
-var getReductionReasonFromCode
+var getAdjustmentReasonFromCode
 
 const reductionReason = {
   id: 1,
@@ -81,12 +81,12 @@ describe('services/map-staging-cms-adjustments', function () {
   beforeEach(function (done) {
     getStagingCmsRecords = sinon.stub()
     getWorkloadOwnerId = sinon.stub()
-    getReductionReasonFromCode = sinon.stub()
+    getAdjustmentReasonFromCode = sinon.stub()
 
     mapStagingCmsAdjustments = proxyquire('../../../../app/services/map-staging-cms-adjustments', {
       './data/get-staging-cms': getStagingCmsRecords,
       './data/get-app-workload-owner-id': getWorkloadOwnerId,
-      './data/get-reduction-reason-from-code': getReductionReasonFromCode
+      './data/get-adjustment-reason-from-code': getAdjustmentReasonFromCode
     })
     done()
   })
@@ -94,21 +94,21 @@ describe('services/map-staging-cms-adjustments', function () {
   it('should call getStagingCmsAdjustments and when no records return do nothing', function () {
     getStagingCmsRecords.resolves(undefined)
     getWorkloadOwnerId.resolves(1)
-    getReductionReasonFromCode.resolves(reductionReason)
+    getAdjustmentReasonFromCode.resolves(reductionReason)
 
     return mapStagingCmsAdjustments()
     .then(function (result) {
       expect(result).to.be.eql([])
       expect(getStagingCmsRecords.called).to.be.equal(true)
       expect(getWorkloadOwnerId.called).to.be.equal(false)
-      expect(getReductionReasonFromCode.called).to.be.equal(false)
+      expect(getAdjustmentReasonFromCode.called).to.be.equal(false)
     })
   })
 
-  it('should return 2 reductions for each row in the cms staging table', function () {
+  it('should return 2 adjustments for each row in the CMS staging table', function () {
     getStagingCmsRecords.resolves(cmsStagingRows)
     getWorkloadOwnerId.resolves(1)
-    getReductionReasonFromCode.resolves(reductionReason)
+    getAdjustmentReasonFromCode.resolves(reductionReason)
 
     return mapStagingCmsAdjustments()
     .then(function (result) {
@@ -119,7 +119,7 @@ describe('services/map-staging-cms-adjustments', function () {
       expect(getWorkloadOwnerId.calledWith(cmsStagingRows[0].omKey, cmsStagingRows[0].omTeamKey)).to.be.equal(true)
       expect(getWorkloadOwnerId.calledWith(cmsStagingRows[1].contactStaffKey, cmsStagingRows[1].contactTeamKey)).to.be.equal(true)
       expect(getWorkloadOwnerId.calledWith(cmsStagingRows[1].omKey, cmsStagingRows[1].omTeamKey)).to.be.equal(true)
-      expect(getReductionReasonFromCode.called).to.be.equal(true)
+      expect(getAdjustmentReasonFromCode.called).to.be.equal(true)
     })
   })
 })

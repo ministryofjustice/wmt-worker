@@ -5,7 +5,7 @@ const reductionStatus = require('../../constants/reduction-status')
 module.exports = function (workloadOwnerId, category) {
   return knex('adjustments')
     .join('adjustment_reason', 'adjustment_reason.id', 'adjustments.adjustment_reason_id')
-    .sum('points AS points')
+    .sum('adjustments.points AS points')
     .where('workload_owner_id', workloadOwnerId)
     .whereNotNull('contact_id')
     .andWhere('status', reductionStatus.ACTIVE)
