@@ -8,7 +8,7 @@ exports.seed = function (knex, Promise) {
     })
     .then(function (firstWorkloadOwnerId) {
       workloadOwnerId = firstWorkloadOwnerId.id
-      return knex('reduction_reason').select('id').where('is_cms', false)
+      return knex('reduction_reason').select('id')
     })
     .then(function (reductionReasonId) {
       var effectiveFromDate = (new Date()).getDate()

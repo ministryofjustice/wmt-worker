@@ -18,7 +18,7 @@ exports.seed = function (knex, Promise) {
       insertStatement + '(3, \'CMS3\', \'CMS - Sentence Plan Intervention Delivery - High\', ' + categoryId + ', 15)' +
       insertStatement + '(4, \'CMS4\', \'CMS - Completing & Assisting with Referrals - Low\', ' + categoryId + ', 15)' +
       insertStatement + '(5, \'CMS5\', \'CMS - Completing & Assisting with Referrals - Medium\', ' + categoryId + ', 15)' +
-      insertStatement + '(6, \'CMS6\', \'CMS - Completing & Assisting with Referrals - High \', ' + categoryId + ', 15)' +
+      insertStatement + '(6, \'CMS6\', \'CMS - Completing & Assisting with Referrals - High\', ' + categoryId + ', 15)' +
       insertStatement + '(7, \'CMS7\', \'CMS - Attending Partnership Meetings - Low\', ' + categoryId + ', 15)' +
       insertStatement + '(8, \'CMS8\', \'CMS - Attending Partnership Meetings - Medium\', ' + categoryId + ', 15)' +
       insertStatement + '(9, \'CMS9\', \'CMS - Attending Partnership Meetings - High\', ' + categoryId + ', 15)' +
@@ -58,16 +58,16 @@ exports.seed = function (knex, Promise) {
     .then(function (categoryIdResult) {
       categoryId = categoryIdResult.id
       sql = 'SET IDENTITY_INSERT app.' + tableName + ' ON;' +
-      insertStatement + '(37, \'NGS004\', \'GS Being Social session (NS)\', ' + categoryId + ', 11)' +
-      insertStatement + '(38, \'NGS002\', \'GS Community session (NS)\', ' + categoryId + ', 12)' +
-      insertStatement + '(39, \'NGS009\', \'GS Dear Me session (NS)\', ' + categoryId + ', 13)' +
-      insertStatement + '(40, \'NGS005\', \'GS Disclosure session (NS)\', ' + categoryId + ', 14)' +
-      insertStatement + '(41, \'NGS006\', \'GS Employment session (NS)\', ' + categoryId + ', 15)' +
-      insertStatement + '(42, \'NGS008\', \'GS Finances session (NS)\', ' + categoryId + ', 16)' +
-      insertStatement + '(43, \'NGS003\', \'GS Identity session (NS)\', ' + categoryId + ', 17' +
-      insertStatement + '(44, \'NGS007\', \'GS Keeping Accommodation session (NS)\', ' + categoryId + ', 18)' +
-      insertStatement + '(45, \'NGS010\', \'GS Moving On session (NS)\', ' + categoryId + ', 19)' +
-      insertStatement + '(46, \'NGS001\', \'GS Rights and Responsibilities session (NS)\', ' + categoryId + ', 20)'
+      insertStatement + '(37, \'NGS004\', \'GS Being Social session NS\', ' + categoryId + ', 11)' +
+      insertStatement + '(38, \'NGS002\', \'GS Community session NS\', ' + categoryId + ', 12)' +
+      insertStatement + '(39, \'NGS009\', \'GS Dear Me session NS\', ' + categoryId + ', 13)' +
+      insertStatement + '(40, \'NGS005\', \'GS Disclosure session NS\', ' + categoryId + ', 14)' +
+      insertStatement + '(41, \'NGS006\', \'GS Employment session NS\', ' + categoryId + ', 15)' +
+      insertStatement + '(42, \'NGS008\', \'GS Finances session NS\', ' + categoryId + ', 16)' +
+      insertStatement + '(43, \'NGS003\', \'GS Identity session NS\', ' + categoryId + ', 17)' +
+      insertStatement + '(44, \'NGS007\', \'GS Keeping Accommodation session NS\', ' + categoryId + ', 18)' +
+      insertStatement + '(45, \'NGS010\', \'GS Moving On session NS\', ' + categoryId + ', 19)' +
+      insertStatement + '(46, \'NGS001\', \'GS Rights and Responsibilities session NS\', ' + categoryId + ', 20)'
       return knex.schema
         .raw(sql)
     })
