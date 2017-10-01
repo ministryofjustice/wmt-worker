@@ -53,7 +53,7 @@ exports.seed = function (knex, Promise) {
         .raw(sql)
     })
     .then(function () {
-      return knex('reduction_category').select('id').where({category: 'Group Supervision'}).first()
+      return knex('adjustment_category').select('id').where({category: 'Group Supervision'}).first()
     })
     .then(function (categoryIdResult) {
       categoryId = categoryIdResult.id

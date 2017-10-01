@@ -1,4 +1,4 @@
-var tableName = 'adjustmnt_category'
+var tableName = 'adjustment_category'
 var insertStatement = 'INSERT INTO app.' + tableName + ' (id, category) VALUES '
 
 exports.seed = function (knex, Promise) {
