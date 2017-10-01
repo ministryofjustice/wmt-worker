@@ -1,6 +1,7 @@
-const getAllOpenReductions = require('../data/get-all-open-reductions')
-const updateReductionStatusByIds = require('../data/update-reduction-status-by-ids')
-const reductionStatus = require('../../constants/reduction-status')
+const getAllOpenAdjustments = require('../data/get-all-open-adjustments')
+const updateAdjustmentStatusByIds = require('../data/update-adjustment-status-by-ids')
+const adjustmentStatus = require('../../constants/adjustment-status')
+const adjustmentCategory = require('../../constants/adjustment-category')
 const createNewTasks = require('../data/create-tasks')
 const taskType = require('../../constants/task-type')
 const taskStatus = require('../../constants/task-status')
@@ -10,14 +11,14 @@ const wpcOperationType = require('../../constants/calculate-workload-points-oper
 const logger = require('../log')
 
 const mapStagingCmsAdjustments = require('../map-staging-cms-adjustments')
-const getCmsAdjustments = require('../data/get-adjustments')
-const updateReductionEffectiveTo = require('../data/update-reduction-effective-to')
-const insertReduction = require('../data/insert-reduction')
+const getAdjustments = require('../data/get-adjustments')
+const updateAdjustmentEffectiveTo = require('../data/update-adjustment-effective-to')
+const insertAdjustment = require('../data/insert-adjustment')
 
 module.exports.execute = function (task) {
-  return processCmsReductions()
+  return processAdjustments()
   .then(function () {
-    return updateReductionsStatus()
+    return updateAdjustmentsStatus()
     .then(function () {
       var calculateWpAdditionalData = {
         workloadBatch: task.additionalData,
@@ -37,118 +38,115 @@ module.exports.execute = function (task) {
 
       return createNewTasks([calculateWorkloadPointsTask])
       .then(function () {
-        logger.info('CalculateWorkload Task created')
+        logger.info('Calculate Workload Task created')
       })
     })
   })
 }
 
-var getReductionStatus = function (reduction) {
-  var status = reductionStatus.DELETED
+var getAdjustmentStatus = function (adjustment) {
+  var status = adjustmentStatus.ARCHIVED
 
   var currentTime = new Date().getTime()
-  var reductionStartTime = reduction.effectiveFrom.getTime()
-  var reductionEndTime = reduction.effectiveTo.getTime()
+  var adjustmentStartTime = adjustment.effectiveFrom.getTime()
+  var adjustmentEndTime = adjustment.effectiveTo.getTime()
 
-  if (reductionStartTime < currentTime && reductionEndTime < currentTime) {
-    status = reductionStatus.ARCHIVED
-  } else if (reductionStartTime < currentTime && reductionEndTime > currentTime) {
-    status = reductionStatus.ACTIVE
-  } else if (reductionStartTime > currentTime && reductionEndTime > currentTime) {
-    status = reductionStatus.SCHEDULED
+  if (adjustmentStartTime < currentTime && adjustmentEndTime > currentTime) {
+    status = adjustmentStatus.ACTIVE
+  } else if (adjustmentStartTime > currentTime && adjustmentEndTime > currentTime) {
+    status = adjustmentStatus.SCHEDULED
   }
 
   return status
 }
 
-var processCmsReductions = function () {
+var processAdjustments = function () {
   return mapStagingCmsAdjustments()
-  .then(function (extractedStgReductions) {
-    var extractedStgReductionContactIds = []
-    extractedStgReductions.forEach(function (extractedStgReduction) {
-      extractedStgReductionContactIds.push(Number(extractedStgReduction.contactId))
+  .then(function (extractedStgAdjustments) {
+    var extractedStgAdjustmentContactIds = []
+    extractedStgAdjustments.forEach(function (extractedStgAdjustment) {
+      extractedStgAdjustmentContactIds.push(Number(extractedStgAdjustment.contactId))
     })
 
-    return getCmsAdjustments()
-    .then(function (appReductions) {
-      var appReductionContactIds = []
-      appReductions.forEach(function (appReduction) {
-        appReductionContactIds.push(appReduction.contactId)
+    return getAdjustments(adjustmentCategory.CMS)
+    .then(function (cmsAdjustments) {
+      var cmsAdjustmentContactIds = []
+      cmsAdjustments.forEach(function (cmsAdjustment) {
+        cmsAdjustmentContactIds.push(cmsAdjustment.contactId)
       })
 
-      var updateReductionsEffectiveTo = []
-      var insertReductions = []
+      var updateAdjustmentsEffectiveTo = []
+      var insertAdjustments = []
 
       var updateTime = new Date()
       updateTime.setHours(0, 0, 0, 0)
 
-      appReductions.forEach(function (appReduction) {
-        if (!extractedStgReductionContactIds.includes(appReduction.contactId)) {
-          // set date of this reduction to today at 00.00 in order to set as archived in next stage of worker
-          updateReductionsEffectiveTo.push(updateReductionEffectiveTo(appReduction.id, updateTime))
+      cmsAdjustments.forEach(function (cmsAdjustment) {
+        if (!extractedStgAdjustmentContactIds.includes(cmsAdjustment.contactId)) {
+          // set date of this adjustment to today at 00.00 in order to set as archived in next stage of worker
+          updateAdjustmentsEffectiveTo.push(updateAdjustmentEffectiveTo(cmsAdjustment.id, updateTime))
         } else {
-          // Check if the workload ower id has changed in the om reduction (om reduction is the negative reduction)
-          if (appReduction.hours < 0) {
-            extractedStgReductions.forEach(function (extractedStgReduction) {
-              if (hasOmReductionMoved(appReduction, extractedStgReduction)) {
-                // close old one and create new reduction for new om
-                updateReductionsEffectiveTo.push(
-                  updateReductionEffectiveTo(appReduction.id, updateTime)
+          // Check if the workload ower id has changed in the om adjustment (om adjustment is the negative adjustment)
+          if (cmsAdjustment.points < 0) {
+            extractedStgAdjustments.forEach(function (extractedStgAdjustment) {
+              if (hasOmAdjustmentMoved(cmsAdjustment, extractedStgAdjustment)) {
+                // close old one and create new adjustment for new om
+                updateAdjustmentsEffectiveTo.push(
+                  updateAdjustmentEffectiveTo(cmsAdjustment.id, updateTime)
                 )
-                insertReductions.push(insertReduction(extractedStgReduction))
+                insertAdjustments.push(insertAdjustment(extractedStgAdjustment))
               }
             })
           }
         }
       })
 
-      return Promise.all(updateReductionsEffectiveTo)
+      return Promise.all(updateAdjustmentsEffectiveTo)
       .then(function () {
-        extractedStgReductions.forEach(function (extractedStgReduction) {
-          if (!appReductionContactIds.includes(Number(extractedStgReduction.contactId))) {
-            insertReductions.push(insertReduction(extractedStgReduction))
+        extractedStgAdjustments.forEach(function (extractedStgAdjustment) {
+          if (!cmsAdjustmentContactIds.includes(Number(extractedStgAdjustment.contactId))) {
+            insertAdjustments.push(insertAdjustment(extractedStgAdjustment))
           }
         })
 
-        return Promise.all(insertReductions)
+        return Promise.all(insertAdjustments)
       })
     })
   })
 }
 
-var hasOmReductionMoved = function (appReduction, extractedStgReduction) {
-  return (extractedStgReduction.contactId === appReduction.contactId &&
-    extractedStgReduction.hours < 0 &&
-    extractedStgReduction.workloadOwnerId !== appReduction.workloadOwnerId)
+var hasOmAdjustmentMoved = function (appAdjustment, extractedStgAdjustment) {
+  return (extractedStgAdjustment.contactId === appAdjustment.contactId &&
+    extractedStgAdjustment.points < 0 &&
+    extractedStgAdjustment.workloadOwnerId !== appAdjustment.workloadOwnerId)
 }
 
-var updateReductionsStatus = function () {
+var updateAdjustmentsStatus = function () {
   var idsMap = new Map()
-  idsMap.set(reductionStatus.ACTIVE, [])
-  idsMap.set(reductionStatus.SCHEDULED, [])
-  idsMap.set(reductionStatus.DELETED, [])
-  idsMap.set(reductionStatus.ARCHIVED, [])
+  idsMap.set(adjustmentStatus.ACTIVE, [])
+  idsMap.set(adjustmentStatus.SCHEDULED, [])
+  idsMap.set(adjustmentStatus.ARCHIVED, [])
 
-  logger.info('Retrieving open reductions')
-  return getAllOpenReductions()
-  .then(function (reductions) {
-    reductions.forEach(function (reduction) {
-      status = getReductionStatus(reduction)
-      if (status !== reduction.status) {
+  logger.info('Retrieving open adjustments')
+  return getAllOpenAdjustments()
+  .then(function (adjustments) {
+    adjustments.forEach(function (adjustment) {
+      status = getAdjustmentStatus(adjustment)
+      if (status !== adjustment.status) {
         ids = idsMap.get(status)
-        ids.push(reduction.id)
+        ids.push(adjustment.id)
         idsMap.set(status, ids)
       }
     })
 
-    var updateReductionsPromises = []
+    var updateAdjustmentsPromises = []
     for (var [status, ids] of idsMap) {
       if (ids.length > 0) {
-        logger.info('Updating status to ' + status + ' for reductions with id in ' + ids + '.')
-        updateReductionsPromises.push(updateReductionStatusByIds(ids, status))
+        logger.info('Updating status to ' + status + ' for adjustments with id in ' + ids + '.')
+        updateAdjustmentsPromises.push(updateAdjustmentStatusByIds(ids, status))
       }
     }
 
-    return Promise.all(updateReductionsPromises)
+    return Promise.all(updateAdjustmentsPromises)
   })
 }
