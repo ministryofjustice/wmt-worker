@@ -50,7 +50,9 @@ describe('app/services/data/insert-adjustment', function () {
           id: resultId,
           workloadOwnerId: cmsAdjustmentToInsert.workloadOwnerId,
           contactId: cmsAdjustmentToInsert.contactId,
-          points: cmsAdjustmentToInsert.points
+          points: cmsAdjustmentToInsert.points,
+          adjustmentReasonId: cmsAdjustmentToInsert.adjustmentReasonId,
+          status: cmsAdjustmentToInsert.status
         }
         expect(reductions).to.contain(expected)
       })
@@ -70,7 +72,9 @@ describe('app/services/data/insert-adjustment', function () {
           id: resultId,
           workloadOwnerId: gsAdjustmentToInsert.workloadOwnerId,
           contactId: gsAdjustmentToInsert.contactId,
-          points: gsAdjustmentToInsert.points
+          points: gsAdjustmentToInsert.points,
+          adjustmentReasonId: gsAdjustmentToInsert.adjustmentReasonId,
+          status: gsAdjustmentToInsert.status
         }
         expect(reductions).to.contain(expected)
       })

@@ -26,7 +26,7 @@ describe('services/data/get-adjustments', function () {
       adjustments.forEach(function (adjustment) {
         adjustmentIds.push(adjustment.id)
         expect(adjustment.contactId).to.be.not.null // eslint-disable-line
-        expect(adjustment.adjustmentReasonid).to.be.equal(1)
+        expect(adjustment.adjustmentReasonId).to.be.equal(1)
         expect(adjustment.status).to.be.equal(adjustmentStatus.ACTIVE)
       })
     })
@@ -39,7 +39,7 @@ describe('services/data/get-adjustments', function () {
       adjustments.forEach(function (adjustment) {
         adjustmentIds.push(adjustment.id)
         expect(adjustment.contactId).to.be.not.null // eslint-disable-line
-        expect(adjustment.adjustmentReasonid).to.be.equal(40)
+        expect(adjustment.adjustmentReasonId).to.be.equal(40)
         expect(adjustment.status).to.be.equal(adjustmentStatus.ACTIVE)
       })
     })
