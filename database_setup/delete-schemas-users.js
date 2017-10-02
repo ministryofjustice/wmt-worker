@@ -19,6 +19,7 @@ knex.schema
   .raw('DROP USER IF EXISTS ??;', [config.WORKER_DATABASE_USERNAME])
 
   .raw('DROP ROLE IF EXISTS appreadwrite;')
+  .raw('DROP ROLE IF EXISTS appreadwritedelete;')
   .raw('DROP ROLE IF EXISTS stagingreadwrite;')
   .raw('DROP ROLE IF EXISTS stagingmigration;')
   .raw('DROP ROLE IF EXISTS stagingetl;')
