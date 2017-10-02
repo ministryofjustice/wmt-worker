@@ -9,6 +9,7 @@ var mapStagingCmsAdjustments
 var getStagingCmsRecords
 var getWorkloadOwnerId
 var getAdjustmentReasonFromCode
+var getWorkloadOwnersInWorkloadRange
 
 const reductionReason = {
   id: 1,
@@ -82,11 +83,13 @@ describe('services/map-staging-cms-adjustments', function () {
     getStagingCmsRecords = sinon.stub()
     getWorkloadOwnerId = sinon.stub()
     getAdjustmentReasonFromCode = sinon.stub()
+    getWorkloadOwnersInWorkloadRange = sinon.stub()
 
     mapStagingCmsAdjustments = proxyquire('../../../../app/services/map-staging-cms-adjustments', {
       './data/get-staging-cms': getStagingCmsRecords,
       './data/get-app-workload-owner-id': getWorkloadOwnerId,
-      './data/get-adjustment-reason-from-code': getAdjustmentReasonFromCode
+      './data/get-adjustment-reason-from-code': getAdjustmentReasonFromCode,
+      './data/get-workload-owners-in-workload-range': getWorkloadOwnersInWorkloadRange
     })
     done()
   })
@@ -95,6 +98,7 @@ describe('services/map-staging-cms-adjustments', function () {
     getStagingCmsRecords.resolves(undefined)
     getWorkloadOwnerId.resolves(1)
     getAdjustmentReasonFromCode.resolves(reductionReason)
+    getWorkloadOwnersInWorkloadRange.resolves([1])
 
     return mapStagingCmsAdjustments()
     .then(function (result) {
@@ -109,17 +113,35 @@ describe('services/map-staging-cms-adjustments', function () {
     getStagingCmsRecords.resolves(cmsStagingRows)
     getWorkloadOwnerId.resolves(1)
     getAdjustmentReasonFromCode.resolves(reductionReason)
+    getWorkloadOwnersInWorkloadRange.resolves([1])
 
     return mapStagingCmsAdjustments()
     .then(function (result) {
       expect(result.length).to.be.eql(4)
       expect(result).to.be.eql(expectedAdjustments)
       expect(getStagingCmsRecords.called).to.be.equal(true)
+      expect(getWorkloadOwnersInWorkloadRange.called).to.be.equal(true)
       expect(getWorkloadOwnerId.calledWith(cmsStagingRows[0].contactStaffKey, cmsStagingRows[0].contactTeamKey)).to.be.equal(true)
       expect(getWorkloadOwnerId.calledWith(cmsStagingRows[0].omKey, cmsStagingRows[0].omTeamKey)).to.be.equal(true)
       expect(getWorkloadOwnerId.calledWith(cmsStagingRows[1].contactStaffKey, cmsStagingRows[1].contactTeamKey)).to.be.equal(true)
       expect(getWorkloadOwnerId.calledWith(cmsStagingRows[1].omKey, cmsStagingRows[1].omTeamKey)).to.be.equal(true)
       expect(getAdjustmentReasonFromCode.called).to.be.equal(true)
+    })
+  })
+
+  it('should return 0 adjustments if workload_owner is not in batch', function () {
+    getStagingCmsRecords.resolves(undefined)
+    getWorkloadOwnerId.resolves(1)
+    getAdjustmentReasonFromCode.resolves(reductionReason)
+    getWorkloadOwnersInWorkloadRange.resolves([2])
+
+    return mapStagingCmsAdjustments()
+    .then(function (result) {
+      expect(result).to.be.eql([])
+      expect(getWorkloadOwnersInWorkloadRange.called).to.be.equal(true)
+      expect(getStagingCmsRecords.called).to.be.equal(true)
+      expect(getWorkloadOwnerId.called).to.be.equal(false)
+      expect(getAdjustmentReasonFromCode.called).to.be.equal(false)
     })
   })
 })
