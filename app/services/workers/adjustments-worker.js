@@ -1,4 +1,3 @@
-const getAllOpenAdjustments = require('../data/get-all-open-adjustments')
 const updateAdjustmentStatusByIds = require('../data/update-adjustment-status-by-ids')
 const adjustmentStatus = require('../../constants/adjustment-status')
 const adjustmentCategory = require('../../constants/adjustment-category')
@@ -11,14 +10,14 @@ const wpcOperationType = require('../../constants/calculate-workload-points-oper
 const logger = require('../log')
 
 const mapStagingCmsAdjustments = require('../map-staging-cms-adjustments')
-const getAdjustments = require('../data/get-adjustments')
+const getAppAdjustmentsForBatch = require('../data/get-app-adjustments-for-batch')
 const updateAdjustmentEffectiveTo = require('../data/update-adjustment-effective-to')
 const insertAdjustment = require('../data/insert-adjustment')
 
 module.exports.execute = function (task) {
-  return processAdjustments()
+  return processAdjustments(task)
   .then(function () {
-    return updateAdjustmentsStatus()
+    return updateAdjustmentsStatus(task)
     .then(function () {
       var calculateWpAdditionalData = {
         workloadBatch: task.additionalData,
@@ -60,75 +59,64 @@ var getAdjustmentStatus = function (adjustment) {
   return status
 }
 
-var processAdjustments = function () {
-  return mapStagingCmsAdjustments()
-  .then(function (extractedStgAdjustments) {
-    var extractedStgAdjustmentContactIds = []
-    extractedStgAdjustments.forEach(function (extractedStgAdjustment) {
-      extractedStgAdjustmentContactIds.push(Number(extractedStgAdjustment.contactId))
-    })
+var processAdjustments = function (task) {
+  var workloadIdStart = task.additionalData.workloadBatch.startingId
+  var workloadIdEnd = workloadIdStart + task.additionalData.workloadBatch.batchSize - 1
 
-    return getAdjustments(adjustmentCategory.CMS)
-    .then(function (cmsAdjustments) {
-      var cmsAdjustmentContactIds = []
-      cmsAdjustments.forEach(function (cmsAdjustment) {
-        cmsAdjustmentContactIds.push(cmsAdjustment.contactId)
-      })
-
+  return mapStagingCmsAdjustments(workloadIdStart, workloadIdEnd)
+  .then(function (stgAdjustments) {
+    return getAppAdjustmentsForBatch(adjustmentCategory.CMS, workloadIdStart, workloadIdEnd)
+    .then(function (appAdjustments) {
       var updateAdjustmentsEffectiveTo = []
       var insertAdjustments = []
+
+      var stgAdjustmentIds = []
+      stgAdjustments.forEach(function (stgAdjustment) {
+        stgAdjustmentIds.push(String(stgAdjustment.contactId) + String(stgAdjustment.workloadOwnerId))
+      })
+
+      var appAdjustmentIds = []
+      appAdjustments.forEach(function (cmsAdjustment) {
+        appAdjustmentIds.push(String(cmsAdjustment.contactId) + String(cmsAdjustment.workloadOwnerId))
+      })
 
       var updateTime = new Date()
       updateTime.setHours(0, 0, 0, 0)
 
-      cmsAdjustments.forEach(function (cmsAdjustment) {
-        if (!extractedStgAdjustmentContactIds.includes(cmsAdjustment.contactId)) {
+      appAdjustments.forEach(function (cmsAdjustment) {
+        var appAdjustmentId = String(cmsAdjustment.contactId) + String(cmsAdjustment.workloadOwnerId)
+        if (!stgAdjustmentIds.includes(appAdjustmentId)) {
           // set date of this adjustment to today at 00.00 in order to set as archived in next stage of worker
           updateAdjustmentsEffectiveTo.push(updateAdjustmentEffectiveTo(cmsAdjustment.id, updateTime))
-        } else {
-          // Check if the workload ower id has changed in the om adjustment (om adjustment is the negative adjustment)
-          if (cmsAdjustment.points < 0) {
-            extractedStgAdjustments.forEach(function (extractedStgAdjustment) {
-              if (hasOmAdjustmentMoved(cmsAdjustment, extractedStgAdjustment)) {
-                // close old one and create new adjustment for new om
-                updateAdjustmentsEffectiveTo.push(
-                  updateAdjustmentEffectiveTo(cmsAdjustment.id, updateTime)
-                )
-                insertAdjustments.push(insertAdjustment(extractedStgAdjustment))
-              }
-            })
-          }
+        }
+      })
+
+      stgAdjustments.forEach(function (stgAdjustment) {
+        var stgAdjustmentId = String(stgAdjustment.contactId) + String(stgAdjustment.workloadOwnerId)
+        if (!appAdjustmentIds.includes(stgAdjustmentId)) {
+          insertAdjustments.push(insertAdjustment(stgAdjustment))
         }
       })
 
       return Promise.all(updateAdjustmentsEffectiveTo)
       .then(function () {
-        extractedStgAdjustments.forEach(function (extractedStgAdjustment) {
-          if (!cmsAdjustmentContactIds.includes(Number(extractedStgAdjustment.contactId))) {
-            insertAdjustments.push(insertAdjustment(extractedStgAdjustment))
-          }
-        })
-
         return Promise.all(insertAdjustments)
       })
     })
   })
 }
 
-var hasOmAdjustmentMoved = function (appAdjustment, extractedStgAdjustment) {
-  return (extractedStgAdjustment.contactId === appAdjustment.contactId &&
-    extractedStgAdjustment.points < 0 &&
-    extractedStgAdjustment.workloadOwnerId !== appAdjustment.workloadOwnerId)
-}
-
-var updateAdjustmentsStatus = function () {
+var updateAdjustmentsStatus = function (task) {
   var idsMap = new Map()
   idsMap.set(adjustmentStatus.ACTIVE, [])
   idsMap.set(adjustmentStatus.SCHEDULED, [])
   idsMap.set(adjustmentStatus.ARCHIVED, [])
 
+  var workloadIdStart = task.additionalData.workloadBatch.startingId
+  var workloadIdEnd = workloadIdStart + task.additionalData.workloadBatch.batchSize - 1
+
   logger.info('Retrieving open adjustments')
-  return getAllOpenAdjustments()
+  return getAppAdjustmentsForBatch(workloadIdStart, workloadIdEnd)
   .then(function (adjustments) {
     adjustments.forEach(function (adjustment) {
       status = getAdjustmentStatus(adjustment)

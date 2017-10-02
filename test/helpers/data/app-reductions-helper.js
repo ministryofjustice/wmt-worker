@@ -1,7 +1,7 @@
 const knexConfig = require('../../../knexfile').app
 const knex = require('knex')(knexConfig)
 var Promise = require('bluebird').Promise
-const helper = require('./app-workload-owner-helper')
+const helper = require('./app-workload-helper')
 
 module.exports.insertDependencies = function (workloadOwnerId, inserts = []) {
   var promise = helper.insertDependencies(inserts)

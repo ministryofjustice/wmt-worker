@@ -1,4 +1,4 @@
-const getAllOpenReductions = require('../data/get-all-open-reductions')
+const getOpenReductions = require('../data/get-all-open-reductions')
 const updateReductionStatusByIds = require('../data/update-reduction-status-by-ids')
 const reductionStatus = require('../../constants/reduction-status')
 const createNewTasks = require('../data/create-tasks')
@@ -6,7 +6,6 @@ const taskType = require('../../constants/task-type')
 const taskStatus = require('../../constants/task-status')
 const Task = require('../domain/task')
 const submittingAgent = require('../../constants/task-submitting-agent')
-const wpcOperationType = require('../../constants/calculate-workload-points-operation')
 const logger = require('../log')
 
 module.exports.execute = function (task) {
@@ -16,8 +15,11 @@ module.exports.execute = function (task) {
   idsMap.set(reductionStatus.DELETED, [])
   idsMap.set(reductionStatus.ARCHIVED, [])
 
+  var workloadIdStart = task.additionalData.workloadBatch.startingId
+  var workloadIdEnd = workloadIdStart + task.additionalData.workloadBatch.batchSize - 1
+
   logger.info('Retrieving open reductions')
-  return getAllOpenReductions()
+  return getOpenReductions(workloadIdStart, workloadIdEnd)
     .then(function (reductions) {
       reductions.forEach(function (reduction) {
         status = getReductionStatus(reduction)
@@ -37,25 +39,20 @@ module.exports.execute = function (task) {
       .then(function () {
         logger.info('Reduction statuses updated')
 
-        var calculateWpAdditionalData = {
-          workloadBatch: task.additionalData,
-          operationType: wpcOperationType.INSERT
-        }
-
-        var calculateWorkloadPointsTask = new Task(
+        var processAdjustments = new Task(
           undefined,
           submittingAgent.WORKER,
-          taskType.CALCULATE_WORKLOAD_POINTS,
-          calculateWpAdditionalData,
+          taskType.PROCESS_ADJUSTMENTS,
+          task.additionalData,
           task.workloadReportId,
           undefined,
           undefined,
           taskStatus.PENDING
           )
 
-        return createNewTasks([calculateWorkloadPointsTask])
+        return createNewTasks([processAdjustments])
         .then(function () {
-          logger.info('CalculateWorkload Task created')
+          logger.info('Procee adjustments task created')
         })
       })
     })
