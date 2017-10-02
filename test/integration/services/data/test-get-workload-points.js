@@ -59,6 +59,9 @@ describe('services/data/get-workload-points', function () {
       expect(points.warrants).to.equal(0.71)
       expect(points.unpaidWork).to.equal(0.7)
 
+      expect(points.armsLicense).to.equal(0.68)
+      expect(points.armsCommunity).to.equal(0.67)
+
       expect(points.pointsConfiguration.paromsEnabled).to.equal(true)
       expect(points.pointsConfiguration.parom).to.equal(31)
 
