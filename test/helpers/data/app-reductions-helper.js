@@ -2,8 +2,7 @@ const knexConfig = require('../../../knexfile').app
 const knex = require('knex')(knexConfig)
 var Promise = require('bluebird').Promise
 
-const helper = require('./app-workload-owner-helper')
-const reductionContactType = require('../../../app/constants/reduction-contact-type')
+const helper = require('./app-workload-helper')
 const reductionStatus = require('../../../app/constants/reduction-status')
 
 module.exports.insertDependencies = function (workloadOwnerId, inserts = []) {
@@ -37,13 +36,13 @@ function getReductionObjects (workloadOwnerId) {
   var effectiveTo = new Date(new Date().setDate(new Date().getDate() + 20))
 
   return [
-    { workload_owner_id: workloadOwnerId, hours: 7, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: null, contact_id: 123, contact_type: reductionContactType.CMS },
-    { workload_owner_id: workloadOwnerId, hours: 1, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: reductionStatus.ACTIVE, contact_id: 123, contact_type: reductionContactType.CMS },
-    { workload_owner_id: workloadOwnerId, hours: 12, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: reductionStatus.DELETED, contact_id: null, contact_type: null },
-    { workload_owner_id: workloadOwnerId, hours: 9, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: reductionStatus.ACTIVE, contact_id: 321, contact_type: reductionContactType.CMS },
-    { workload_owner_id: workloadOwnerId, hours: 2, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: reductionStatus.SCHEDULED, contact_id: null, contact_type: null },
-    { workload_owner_id: workloadOwnerId, hours: 1, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: reductionStatus.ACTIVE, contact_id: null, contact_type: null },
-    { workload_owner_id: workloadOwnerId, hours: 1, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: reductionStatus.ACTIVE, contact_id: null, contact_type: null },
-    { workload_owner_id: workloadOwnerId, hours: 5, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: reductionStatus.ACTIVE, contact_id: 312, contact_type: reductionContactType.GS }
+    { workload_owner_id: workloadOwnerId, hours: 7, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: null},
+    { workload_owner_id: workloadOwnerId, hours: 1, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: reductionStatus.ACTIVE },
+    { workload_owner_id: workloadOwnerId, hours: 12, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: reductionStatus.DELETED },
+    { workload_owner_id: workloadOwnerId, hours: 9, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: reductionStatus.ACTIVE },
+    { workload_owner_id: workloadOwnerId, hours: 2, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: reductionStatus.SCHEDULED },
+    { workload_owner_id: workloadOwnerId, hours: 1, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: reductionStatus.ACTIVE },
+    { workload_owner_id: workloadOwnerId, hours: 1, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: reductionStatus.ACTIVE },
+    { workload_owner_id: workloadOwnerId, hours: 5, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: reductionStatus.ACTIVE }
   ]
 }

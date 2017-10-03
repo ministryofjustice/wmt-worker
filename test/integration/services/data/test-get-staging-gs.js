@@ -1,9 +1,9 @@
 const expect = require('chai').expect
 
-const getStagingGsReductions = require('../../../../app/services/data/get-staging-gs-reductions')
+const getStagingGs = require('../../../../app/services/data/get-staging-gs')
 const gsHelper = require('../../../helpers/data/staging-gs-helper')
 
-describe('services/data/get-staging-gs-reductions', function () {
+describe('services/data/get-staging-gs', function () {
   var insertedRecords = []
 
   before(function () {
@@ -13,8 +13,8 @@ describe('services/data/get-staging-gs-reductions', function () {
     })
   })
 
-  it('should return the staging gs reductions', function () {
-    return getStagingGsReductions()
+  it('should return the staging GS records', function () {
+    return getStagingGs()
     .then(function (reductions) {
       var ids = []
       reductions.forEach(function (reduction) {
