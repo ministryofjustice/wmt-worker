@@ -52,10 +52,9 @@ module.exports.execute = function (task) {
         var sdrPoints = calculateSdrConversionPoints(workload.monthlySdrs, caseTypeWeightings.pointsConfiguration.sdr)
         var paromsPoints = calculateParomPoints(workload.paromsCompletedLast30Days, caseTypeWeightings.pointsConfiguration.parom, caseTypeWeightings.pointsConfiguration.paromsEnabled)
         var workloadPoints = calculateWorkloadPoints(workload, caseTypeWeightings)
-        // TODO: Add CMS
-        var totalPoints = (workloadPoints + sdrConversionPoints + sdrPoints + paromsPoints)
         return getAppReductionsPromise.then(function (reductions) {
           return getCmsAdjustmentPointsPromise.then(function (cmsAdjustments) {
+            var totalPoints = (workloadPoints + sdrConversionPoints + sdrPoints + paromsPoints + cmsAdjustments)
             return getContractedHoursPromise.then(function (contractedHours) {
               return getOffenderManagerTypePromise.then(function (offenderManagerTypeId) {
                 var nominalTarget = calculateNominalTarget(offenderManagerTypeId, caseTypeWeightings.pointsConfiguration.defaultNominalTargets)

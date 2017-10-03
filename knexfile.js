@@ -13,7 +13,7 @@ module.exports = {
   development: {
     client: 'mssql',
     connection: defaultConnection,
-    debug: true
+    debug: false
   },
   staging: {
     client: 'mssql',

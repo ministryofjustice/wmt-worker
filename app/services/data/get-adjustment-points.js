@@ -7,7 +7,6 @@ module.exports = function (workloadOwnerId, category) {
     .join('adjustment_reason', 'adjustment_reason.id', 'adjustments.adjustment_reason_id')
     .sum('adjustments.points AS points')
     .where('workload_owner_id', workloadOwnerId)
-    .whereNotNull('contact_id')
     .andWhere('status', reductionStatus.ACTIVE)
     .andWhere('adjustment_reason.category_id', category)
     .then(function (result) {
