@@ -3,9 +3,9 @@ const sinon = require('sinon')
 require('sinon-bluebird')
 const expect = require('chai').expect
 const adjustmentStatus = require('../../../../app/constants/adjustment-status')
+const Task = require('../../../../app/services/domain/task')
 
 var adjustmentsWorker
-var getAllOpenAdjustments
 var updateAdjustmentStatusByIds
 var createNewTasks
 var mapStagingCmsAdjustments
@@ -87,9 +87,21 @@ var cmsAdjustments = [
 var updateTime = new Date()
 updateTime.setHours(0, 0, 0, 0)
 
+var task = new Task(
+  undefined,
+  'WORKER',
+  'PROCESS-ADJUSTMENTS',
+  {
+    workloadBatch: { startingId: 1, batchSize: 5 }
+  },
+  123,
+  undefined,
+  undefined,
+  'PENDING'
+)
+
 describe(relativeFilePath, function () {
   beforeEach(function () {
-    getAllOpenAdjustments = sinon.stub()
     updateAdjustmentStatusByIds = sinon.stub()
     createNewTasks = sinon.stub()
     mapStagingCmsAdjustments = sinon.stub()
@@ -98,26 +110,23 @@ describe(relativeFilePath, function () {
     insertAdjustment = sinon.stub()
     adjustmentsWorker = proxyquire('../../../../app/' + relativeFilePath, {
       '../log': { info: function (message) { } },
-      '../data/get-all-open-adjustments': getAllOpenAdjustments,
       '../data/update-adjustment-status-by-ids': updateAdjustmentStatusByIds,
       '../data/create-tasks': createNewTasks,
       '../map-staging-cms-adjustments': mapStagingCmsAdjustments,
-      '../data/get-adjustments': getAdjustments,
+      '../data/get-app-adjustments-for-batch': getAdjustments,
       '../data/update-adjustment-effective-to': updateAdjustmentEffectiveTo,
       '../data/insert-adjustment': insertAdjustment
     })
   })
 
   it('should call the database to get the adjustments assigned statuses and call to update database', function () {
-    mapStagingCmsAdjustments.resolves([])
-    getAdjustments.resolves([])
+    mapStagingCmsAdjustments.resolves([{id: 1}, {id: 2}, {id: 3}])
+    getAdjustments.resolves(adjustments)
     updateAdjustmentEffectiveTo.resolves()
     insertAdjustment.resolves()
-    getAllOpenAdjustments.resolves(adjustments)
     updateAdjustmentStatusByIds.resolves(1)
     createNewTasks.resolves()
-    return adjustmentsWorker.execute({}).then(function () {
-      expect(getAllOpenAdjustments.called).to.be.equal(true)
+    return adjustmentsWorker.execute(task).then(function () {
       expect(updateAdjustmentStatusByIds.calledWith([activeAdjustment.id], 'ACTIVE')).to.be.equal(true)
       expect(updateAdjustmentStatusByIds.calledWith([scheduledAdjustment.id], 'SCHEDULED')).to.be.equal(true)
       expect(updateAdjustmentStatusByIds.calledWith([archivedAdjustment.id], 'ARCHIVED')).to.be.equal(true)
@@ -135,13 +144,19 @@ describe(relativeFilePath, function () {
       id: 1,
       contactId: existingContactId,
       points: 1,
-      workloadOwnerId: existingContactOmId
+      workloadOwnerId: existingContactOmId,
+      effectiveFrom: yesterday,
+      effectiveTo: dayAfterTomorrow,
+      status: adjustmentStatus.ACTIVE
     },
     {
       id: 12,
       contactId: existingContactId,
       points: -1,
-      workloadOwnerId: existingOmId
+      workloadOwnerId: existingOmId,
+      effectiveFrom: yesterday,
+      effectiveTo: dayAfterTomorrow,
+      status: adjustmentStatus.ACTIVE
     }
     ]
 
@@ -149,12 +164,10 @@ describe(relativeFilePath, function () {
     getAdjustments.resolves(appAdjustments)
     updateAdjustmentEffectiveTo.resolves()
     insertAdjustment.resolves()
-    getAllOpenAdjustments.resolves([])
     updateAdjustmentStatusByIds.resolves(1)
     createNewTasks.resolves()
 
-    return adjustmentsWorker.execute({}).then(function () {
-      expect(getAllOpenAdjustments.called).to.be.equal(true)
+    return adjustmentsWorker.execute(task).then(function () {
       expect(updateAdjustmentStatusByIds.called).to.be.equal(false)
       expect(createNewTasks.called).to.be.equal(true)
 
@@ -170,12 +183,10 @@ describe(relativeFilePath, function () {
     getAdjustments.resolves([])
     updateAdjustmentEffectiveTo.resolves()
     insertAdjustment.resolves()
-    getAllOpenAdjustments.resolves([])
     updateAdjustmentStatusByIds.resolves(1)
     createNewTasks.resolves()
 
-    return adjustmentsWorker.execute({}).then(function () {
-      expect(getAllOpenAdjustments.called).to.be.equal(true)
+    return adjustmentsWorker.execute(task).then(function () {
       expect(updateAdjustmentStatusByIds.called).to.be.equal(false)
       expect(createNewTasks.called).to.be.equal(true)
 
@@ -192,25 +203,29 @@ describe(relativeFilePath, function () {
       id: 1,
       contactId: existingContactId,
       points: 1,
-      workloadOwnerId: existingContactOmId
+      workloadOwnerId: existingContactOmId,
+      effectiveFrom: yesterday,
+      effectiveTo: dayAfterTomorrow,
+      status: adjustmentStatus.ACTIVE
     },
     {
       id: 12,
       contactId: existingContactId,
       points: -1,
-      workloadOwnerId: existingOmId
+      workloadOwnerId: existingOmId,
+      effectiveFrom: yesterday,
+      effectiveTo: dayAfterTomorrow,
+      status: adjustmentStatus.ACTIVE
     }]
 
     mapStagingCmsAdjustments.resolves([])
     getAdjustments.resolves(appAdjustments)
     updateAdjustmentEffectiveTo.resolves()
     insertAdjustment.resolves()
-    getAllOpenAdjustments.resolves([])
     updateAdjustmentStatusByIds.resolves(1)
     createNewTasks.resolves()
 
-    return adjustmentsWorker.execute({}).then(function () {
-      expect(getAllOpenAdjustments.called).to.be.equal(true)
+    return adjustmentsWorker.execute(task).then(function () {
       expect(updateAdjustmentStatusByIds.called).to.be.equal(false)
       expect(createNewTasks.called).to.be.equal(true)
 
@@ -227,25 +242,29 @@ describe(relativeFilePath, function () {
       id: 1,
       contactId: existingContactId,
       workloadOwnerId: existingContactOmId,
-      points: 1
+      points: 1,
+      effectiveFrom: yesterday,
+      effectiveTo: dayAfterTomorrow,
+      status: adjustmentStatus.ACTIVE
     },
     {
       id: 12,
       contactId: existingContactId,
       workloadOwnerId: changedOmId,
-      points: -1
+      points: -1,
+      effectiveFrom: yesterday,
+      effectiveTo: dayAfterTomorrow,
+      status: adjustmentStatus.ACTIVE
     }]
 
     mapStagingCmsAdjustments.resolves(cmsAdjustments)
     getAdjustments.resolves(appAdjustments)
     updateAdjustmentEffectiveTo.resolves()
     insertAdjustment.resolves()
-    getAllOpenAdjustments.resolves([])
     updateAdjustmentStatusByIds.resolves(1)
     createNewTasks.resolves()
 
-    return adjustmentsWorker.execute({}).then(function () {
-      expect(getAllOpenAdjustments.called).to.be.equal(true)
+    return adjustmentsWorker.execute(task).then(function () {
       expect(updateAdjustmentStatusByIds.called).to.be.equal(false)
       expect(createNewTasks.called).to.be.equal(true)
 

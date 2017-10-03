@@ -1,10 +1,10 @@
 const expect = require('chai').expect
 const appReductionsHelper = require('../../../helpers/data/app-reductions-helper')
-const getAllOpenReductions = require('../../../../app/services/data/get-all-open-reductions')
+const getOpenReductions = require('../../../../app/services/data/get-open-reductions')
 
 var inserts = []
 
-describe('services/data/get-all-open-reductions', function () {
+describe('services/data/get-open-reductions', function () {
   before(function () {
     return appReductionsHelper.insertDependencies(inserts)
     .then(function (builtInserts) {
@@ -12,9 +12,9 @@ describe('services/data/get-all-open-reductions', function () {
     })
   })
 
-  it('should retrieve the open reductions in system', function () {
+  it('should retrieve the open reductions in system for a given range of workloads -> workload owners -> reductions', function () {
     var startId = inserts.filter((item) => item.table === 'workload')[0].id
-    return getAllOpenReductions(startId, startId)
+    return getOpenReductions(startId, startId)
     .then(function (results) {
       expect(results.length).to.be.eql(3)
       var openIds = []

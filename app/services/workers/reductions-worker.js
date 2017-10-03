@@ -1,4 +1,4 @@
-const getOpenReductions = require('../data/get-all-open-reductions')
+const getOpenReductions = require('../data/get-open-reductions')
 const updateReductionStatusByIds = require('../data/update-reduction-status-by-ids')
 const reductionStatus = require('../../constants/reduction-status')
 const createNewTasks = require('../data/create-tasks')

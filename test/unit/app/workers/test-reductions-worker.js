@@ -3,8 +3,10 @@ const sinon = require('sinon')
 require('sinon-bluebird')
 const expect = require('chai').expect
 
+const Task = require('../../../../app/services/domain/task')
+
 var reductionsWorker
-var getAllOpenReductions
+var getOpenReductions
 var updateReductionStatusByIds
 var createNewTasks
 var relativeFilePath = 'services/workers/reductions-worker'
@@ -53,25 +55,38 @@ var existingActiveReduction = {
 
 var reductions = [activeReduction, scheduledReduction, archivedReduction, existingActiveReduction]
 
+var task = new Task(
+  undefined,
+  'WORKER',
+  'PROCESS-REDUCTIONS',
+  {
+    workloadBatch: { startingId: 1, batchSize: 5 },
+    operationType: 'UPDATE'},
+  123,
+  undefined,
+  undefined,
+  'PENDING'
+)
+
 describe(relativeFilePath, function () {
   beforeEach(function () {
-    getAllOpenReductions = sinon.stub()
+    getOpenReductions = sinon.stub()
     updateReductionStatusByIds = sinon.stub()
     createNewTasks = sinon.stub()
     reductionsWorker = proxyquire('../../../../app/' + relativeFilePath, {
       '../log': { info: function (message) { } },
-      '../data/get-all-open-reductions': getAllOpenReductions,
+      '../data/get-open-reductions': getOpenReductions,
       '../data/update-reduction-status-by-ids': updateReductionStatusByIds,
       '../data/create-tasks': createNewTasks
     })
   })
 
   it('should call the database to get the reductions assign statuses and call to update database', function () {
-    getAllOpenReductions.resolves(reductions)
+    getOpenReductions.resolves(reductions)
     updateReductionStatusByIds.resolves(1)
     createNewTasks.resolves()
-    return reductionsWorker.execute({}).then(function () {
-      expect(getAllOpenReductions.called).to.be.equal(true)
+    return reductionsWorker.execute(task).then(function () {
+      expect(getOpenReductions.called).to.be.equal(true)
       expect(updateReductionStatusByIds.calledWith([activeReduction.id], 'ACTIVE')).to.be.equal(true)
       expect(updateReductionStatusByIds.calledWith([scheduledReduction.id], 'SCHEDULED')).to.be.equal(true)
       expect(updateReductionStatusByIds.calledWith([archivedReduction.id], 'ARCHIVED')).to.be.equal(true)

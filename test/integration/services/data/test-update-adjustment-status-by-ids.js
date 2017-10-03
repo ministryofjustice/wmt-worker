@@ -1,23 +1,17 @@
 const expect = require('chai').expect
 
-const appWorkloadOwnerHelper = require('../../../helpers/data/app-workload-owner-helper')
-const appAdjustmentssHelper = require('../../../helpers/data/app-adjustments-helper')
-
+const appAdjustmentsHelper = require('../../../helpers/data/app-adjustments-helper')
 const updateAdjustmentStatusByIds = require('../../../../app/services/data/update-adjustment-status-by-ids')
-const getAllOpenAdjustments = require('../../../../app/services/data/get-all-open-adjustments')
+const getOpenAdjustments = require('../../../../app/services/data/get-open-adjustments')
 
 var inserts = []
 
 describe('services/data/update-adjustment-status-by-ids', function () {
-  before(function (done) {
-    appWorkloadOwnerHelper.insertDependencies(inserts)
-      .then(function (builtInserts) {
-        return appAdjustmentssHelper.insertDependencies(inserts)
-        .then(function (builtInserts) {
-          inserts = builtInserts
-          done()
-        })
-      })
+  before(function () {
+    return appAdjustmentsHelper.insertDependencies(inserts)
+    .then(function (builtInserts) {
+      inserts = builtInserts
+    })
   })
 
   it('should update the status for a set of ids', function () {
@@ -26,9 +20,13 @@ describe('services/data/update-adjustment-status-by-ids', function () {
       ids.push(adjustment.id)
     })
 
+    var workloads = inserts.filter((item) => item.table === 'workload')
+    var minWorkloadId = workloads[0].id
+    var maxWorkloadId = workloads[workloads.length - 1].id
+
     return updateAdjustmentStatusByIds(ids, 'ACTIVE')
     .then(function () {
-      return getAllOpenAdjustments()
+      return getOpenAdjustments(minWorkloadId, maxWorkloadId)
       .then(function (results) {
         results.forEach(function (result) {
           if (ids.includes(result.id)) {
@@ -40,7 +38,7 @@ describe('services/data/update-adjustment-status-by-ids', function () {
   })
 
   after(function (done) {
-    appAdjustmentssHelper.removeDependencies(inserts)
+    appAdjustmentsHelper.removeDependencies(inserts)
     .then(() => done())
   })
 })
