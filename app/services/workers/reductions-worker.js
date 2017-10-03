@@ -52,7 +52,7 @@ module.exports.execute = function (task) {
 
         return createNewTasks([processAdjustments])
         .then(function () {
-          logger.info('Procee adjustments task created')
+          logger.info('Process adjustments task created')
         })
       })
     })

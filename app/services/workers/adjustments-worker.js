@@ -115,7 +115,7 @@ var updateAdjustmentsStatus = function (task) {
   var workloadIdStart = task.additionalData.workloadBatch.startingId
   var workloadIdEnd = workloadIdStart + task.additionalData.workloadBatch.batchSize - 1
 
-  logger.info('Retrieving open adjustments')
+  logger.info('Retrieving open adjustments for workload owners with workloads ' + workloadIdStart + ' - ' + workloadIdEnd)
   return getAppAdjustmentsForBatch(workloadIdStart, workloadIdEnd)
   .then(function (adjustments) {
     adjustments.forEach(function (adjustment) {
