@@ -27,7 +27,11 @@ exports.seed = function (knex, Promise) {
       , tr.location AS case_type
       , tr.tier_number AS tier_number
       , SUM(tr.total_cases) AS tier_number_totals
-      , MAX(w.total_cases) AS total_cases
+      , CASE tr.location
+          WHEN 'COMMUNITY' THEN MAX(w.total_community_cases)
+          WHEN 'CUSTODY' THEN MAX(w.total_custody_cases)
+          WHEN 'LICENSE' THEN MAX(w.total_license_cases)
+        END AS total_cases
     FROM app.tiers tr
       LEFT JOIN app.workload w ON tr.workload_id = w.id
       LEFT JOIN app.workload_points_calculations wpc ON wpc.workload_id = w.id
