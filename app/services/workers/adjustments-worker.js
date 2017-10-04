@@ -72,19 +72,19 @@ var processAdjustments = function (task) {
 
       var stgAdjustmentIds = []
       stgAdjustments.forEach(function (stgAdjustment) {
-        stgAdjustmentIds.push(String(stgAdjustment.contactId) + String(stgAdjustment.workloadOwnerId))
+        stgAdjustmentIds.push(String(stgAdjustment.contactId) + ':' + String(stgAdjustment.workloadOwnerId))
       })
 
       var appAdjustmentIds = []
       appAdjustments.forEach(function (cmsAdjustment) {
-        appAdjustmentIds.push(String(cmsAdjustment.contactId) + String(cmsAdjustment.workloadOwnerId))
+        appAdjustmentIds.push(String(cmsAdjustment.contactId) + ':' + String(cmsAdjustment.workloadOwnerId))
       })
 
       var updateTime = new Date()
       updateTime.setHours(0, 0, 0, 0)
 
       appAdjustments.forEach(function (cmsAdjustment) {
-        var appAdjustmentId = String(cmsAdjustment.contactId) + String(cmsAdjustment.workloadOwnerId)
+        var appAdjustmentId = String(cmsAdjustment.contactId) + ':' + String(cmsAdjustment.workloadOwnerId)
         if (!stgAdjustmentIds.includes(appAdjustmentId)) {
           // set date of this adjustment to today at 00.00 in order to set as archived in next stage of worker
           updateAdjustmentsEffectiveTo.push(updateAdjustmentEffectiveTo(cmsAdjustment.id, updateTime))
@@ -92,7 +92,7 @@ var processAdjustments = function (task) {
       })
 
       stgAdjustments.forEach(function (stgAdjustment) {
-        var stgAdjustmentId = String(stgAdjustment.contactId) + String(stgAdjustment.workloadOwnerId)
+        var stgAdjustmentId = String(stgAdjustment.contactId) + ':' + String(stgAdjustment.workloadOwnerId)
         if (!appAdjustmentIds.includes(stgAdjustmentId)) {
           insertAdjustments.push(insertAdjustment(stgAdjustment))
         }
