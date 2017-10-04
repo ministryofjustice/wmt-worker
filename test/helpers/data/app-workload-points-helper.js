@@ -35,6 +35,8 @@ module.exports.insertDependencies = function (inserts) {
     weighting_o: 0,
     weighting_w: 0,
     weighting_u: 0,
+    weighting_arms_lic: 0,
+    weighting_arms_comm: 0,
     paroms_enabled: 0,
     parom: 0
   })
@@ -73,7 +75,9 @@ module.exports.insertDependencies = function (inserts) {
       weighting_w: 29,
       weighting_u: 30,
       paroms_enabled: 1,
-      parom: 31
+      parom: 31,
+      weighting_arms_lic: 32,
+      weighting_arms_comm: 33
     })
   })
     .then(function (ids) {

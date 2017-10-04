@@ -37,6 +37,8 @@ exports.seed = function (knex, Promise) {
         weighting_o: 0,
         weighting_w: 0,
         weighting_u: 100,
+        weighting_arms_lic: 100,
+        weighting_arms_comm: 100,
         paroms_enabled: 1,
         parom: 123
       })
