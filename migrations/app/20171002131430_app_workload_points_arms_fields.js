@@ -11,7 +11,7 @@ exports.down = function (knex, Promise) {
   sql += 'ALTER TABLE app.workload_points DROP CONSTRAINT weighting_arms_comm_default;'
   sql += 'ALTER TABLE app.workload_points DROP COLUMN weighting_arms_lic;'
   sql += 'ALTER TABLE app.workload_points DROP COLUMN weighting_arms_comm;'
-  
+
   return knex.schema
         .raw('SET ARITHABORT ON')
         .raw(sql)
