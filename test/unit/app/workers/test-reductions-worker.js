@@ -3,12 +3,14 @@ const sinon = require('sinon')
 require('sinon-bluebird')
 const expect = require('chai').expect
 
-const Task = require('../../../../app/services/domain/task')
-
 var reductionsWorker
-var getOpenReductions
+var getAllOpenReductions
 var updateReductionStatusByIds
 var createNewTasks
+var mapStagingCmsReductions
+var getAppCmsReductions
+var updateReductionEffectiveTo
+var insertReduction
 var relativeFilePath = 'services/workers/reductions-worker'
 
 var today = new Date()
@@ -55,41 +57,203 @@ var existingActiveReduction = {
 
 var reductions = [activeReduction, scheduledReduction, archivedReduction, existingActiveReduction]
 
-var task = new Task(
-  undefined,
-  'WORKER',
-  'PROCESS-REDUCTIONS',
+var existingContactId = 12
+var existingContactOmId = 31
+var existingOmId = 43
+var changedOmId = 55
+
+var cmsReductions = [
   {
-    workloadBatch: { startingId: 1, batchSize: 5 },
-    operationType: 'UPDATE'},
-  123,
-  undefined,
-  undefined,
-  'PENDING'
-)
+    contactId: existingContactId,
+    workloadOwnerId: existingContactOmId,
+    hours: 12,
+    reductionReasonId: 1,
+    effectiveFrom: 'testfrom',
+    effetiveTo: 'testto',
+    status: 'ACTIVE',
+    note: null
+  },
+  {
+    contactId: existingContactId,
+    workloadOwnerId: existingOmId,
+    hours: -12,
+    reduction_reason_id: 1,
+    effective_from: 'testfrom',
+    effetive_to: 'testto',
+    status: 'ACTIVE',
+    note: null
+  }
+]
+
+var updateTime = new Date()
+updateTime.setHours(0, 0, 0, 0)
 
 describe(relativeFilePath, function () {
   beforeEach(function () {
-    getOpenReductions = sinon.stub()
+    getAllOpenReductions = sinon.stub()
     updateReductionStatusByIds = sinon.stub()
     createNewTasks = sinon.stub()
+    mapStagingCmsReductions = sinon.stub()
+    getAppCmsReductions = sinon.stub()
+    updateReductionEffectiveTo = sinon.stub()
+    insertReduction = sinon.stub()
     reductionsWorker = proxyquire('../../../../app/' + relativeFilePath, {
       '../log': { info: function (message) { } },
-      '../data/get-open-reductions': getOpenReductions,
+      '../data/get-all-open-reductions': getAllOpenReductions,
       '../data/update-reduction-status-by-ids': updateReductionStatusByIds,
-      '../data/create-tasks': createNewTasks
+      '../data/create-tasks': createNewTasks,
+      '../map-staging-cms-reductions': mapStagingCmsReductions,
+      '../data/get-app-cms-reductions': getAppCmsReductions,
+      '../data/update-reduction-effective-to': updateReductionEffectiveTo,
+      '../data/insert-reduction': insertReduction
     })
   })
 
   it('should call the database to get the reductions assign statuses and call to update database', function () {
-    getOpenReductions.resolves(reductions)
+    mapStagingCmsReductions.resolves([])
+    getAppCmsReductions.resolves([])
+    updateReductionEffectiveTo.resolves()
+    insertReduction.resolves()
+    getAllOpenReductions.resolves(reductions)
     updateReductionStatusByIds.resolves(1)
     createNewTasks.resolves()
-    return reductionsWorker.execute(task).then(function () {
-      expect(getOpenReductions.called).to.be.equal(true)
+    return reductionsWorker.execute({}).then(function () {
+      expect(getAllOpenReductions.called).to.be.equal(true)
       expect(updateReductionStatusByIds.calledWith([activeReduction.id], 'ACTIVE')).to.be.equal(true)
       expect(updateReductionStatusByIds.calledWith([scheduledReduction.id], 'SCHEDULED')).to.be.equal(true)
       expect(updateReductionStatusByIds.calledWith([archivedReduction.id], 'ARCHIVED')).to.be.equal(true)
+      expect(createNewTasks.called).to.be.equal(true)
+
+      expect(mapStagingCmsReductions.called).to.be.equal(true)
+      expect(getAppCmsReductions.called).to.be.equal(true)
+      expect(updateReductionEffectiveTo.called).to.be.equal(false)
+      expect(insertReduction.called).to.be.equal(false)
+    })
+  })
+
+  it('should return cms reductions that exist already in wmt and not update anything', function () {
+    var appReductions = [{
+      id: 1,
+      contactId: existingContactId,
+      hours: 1,
+      workloadOwnerId: existingContactOmId
+    },
+    {
+      id: 12,
+      contactId: existingContactId,
+      hours: -1,
+      workloadOwnerId: existingOmId
+    }
+    ]
+
+    mapStagingCmsReductions.resolves(cmsReductions)
+    getAppCmsReductions.resolves(appReductions)
+    updateReductionEffectiveTo.resolves()
+    insertReduction.resolves()
+    getAllOpenReductions.resolves([])
+    updateReductionStatusByIds.resolves(1)
+    createNewTasks.resolves()
+
+    return reductionsWorker.execute({}).then(function () {
+      expect(getAllOpenReductions.called).to.be.equal(true)
+      expect(updateReductionStatusByIds.called).to.be.equal(false)
+      expect(createNewTasks.called).to.be.equal(true)
+
+      expect(mapStagingCmsReductions.called).to.be.equal(true)
+      expect(getAppCmsReductions.called).to.be.equal(true)
+      expect(updateReductionEffectiveTo.called).to.be.equal(false)
+      expect(insertReduction.called).to.be.equal(false)
+    })
+  })
+
+  it('should return cms reductions that do not exist already in wmt and insert new reduction', function () {
+    mapStagingCmsReductions.resolves(cmsReductions)
+    getAppCmsReductions.resolves([])
+    updateReductionEffectiveTo.resolves()
+    insertReduction.resolves()
+    getAllOpenReductions.resolves([])
+    updateReductionStatusByIds.resolves(1)
+    createNewTasks.resolves()
+
+    return reductionsWorker.execute({}).then(function () {
+      expect(getAllOpenReductions.called).to.be.equal(true)
+      expect(updateReductionStatusByIds.called).to.be.equal(false)
+      expect(createNewTasks.called).to.be.equal(true)
+
+      expect(mapStagingCmsReductions.called).to.be.equal(true)
+      expect(getAppCmsReductions.called).to.be.equal(true)
+      expect(updateReductionEffectiveTo.called).to.be.equal(false)
+      expect(insertReduction.calledWith(cmsReductions[0])).to.be.equal(true)
+      expect(insertReduction.calledWith(cmsReductions[1])).to.be.equal(true)
+    })
+  })
+
+  it('should return cms reductions that exist but are not in the extract and update reductions', function () {
+    var appReductions = [{
+      id: 1,
+      contactId: existingContactId,
+      hours: 1,
+      workloadOwnerId: existingContactOmId
+    },
+    {
+      id: 12,
+      contactId: existingContactId,
+      hours: -1,
+      workloadOwnerId: existingOmId
+    }]
+
+    mapStagingCmsReductions.resolves([])
+    getAppCmsReductions.resolves(appReductions)
+    updateReductionEffectiveTo.resolves()
+    insertReduction.resolves()
+    getAllOpenReductions.resolves([])
+    updateReductionStatusByIds.resolves(1)
+    createNewTasks.resolves()
+
+    return reductionsWorker.execute({}).then(function () {
+      expect(getAllOpenReductions.called).to.be.equal(true)
+      expect(updateReductionStatusByIds.called).to.be.equal(false)
+      expect(createNewTasks.called).to.be.equal(true)
+
+      expect(mapStagingCmsReductions.called).to.be.equal(true)
+      expect(getAppCmsReductions.called).to.be.equal(true)
+      expect(updateReductionEffectiveTo.calledWith(Number(appReductions[0].id), updateTime)).to.be.equal(true)
+      expect(updateReductionEffectiveTo.calledWith(appReductions[1].id, updateTime)).to.be.equal(true)
+      expect(insertReduction.called).to.be.equal(false)
+    })
+  })
+
+  it('should return cms reductions that exist but OM key has changed and update old om record and insert new one', function () {
+    var appReductions = [{
+      id: 1,
+      contactId: existingContactId,
+      workloadOwnerId: existingContactOmId,
+      hours: 1
+    },
+    {
+      id: 12,
+      contactId: existingContactId,
+      workloadOwnerId: changedOmId,
+      hours: -1
+    }]
+
+    mapStagingCmsReductions.resolves(cmsReductions)
+    getAppCmsReductions.resolves(appReductions)
+    updateReductionEffectiveTo.resolves()
+    insertReduction.resolves()
+    getAllOpenReductions.resolves([])
+    updateReductionStatusByIds.resolves(1)
+    createNewTasks.resolves()
+
+    return reductionsWorker.execute({}).then(function () {
+      expect(getAllOpenReductions.called).to.be.equal(true)
+      expect(updateReductionStatusByIds.called).to.be.equal(false)
+      expect(createNewTasks.called).to.be.equal(true)
+
+      expect(mapStagingCmsReductions.called).to.be.equal(true)
+      expect(getAppCmsReductions.called).to.be.equal(true)
+      expect(updateReductionEffectiveTo.calledWith(appReductions[1].id, updateTime)).to.be.equal(true)
+      expect(insertReduction.calledWith(cmsReductions[1])).to.be.equal(true)
     })
   })
 })
