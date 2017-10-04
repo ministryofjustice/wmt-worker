@@ -127,13 +127,13 @@ describe('services/workers/calculate-workload-points', function () {
   })
 
   it('should call insertWorkloadPointsCalculations with the correct params when positive CMS adjustments are applied', function (done) {
-    getCmsAdjustmentPoints.resolves(CMS_POINTS_POSITIVE)    
+    getCmsAdjustmentPoints.resolves(CMS_POINTS_POSITIVE)
 
     var expectedTotalPoints = (WORKLOAD_POINTS + SDR_POINTS + SDR_POINTS + PAROM_POINTS + CMS_POINTS_POSITIVE)
 
     calculateWorkloadPoints.execute(task).then(function () {
       expect(
-        insertWorkloadPointsCalculationsStub.calledWith(REPORT_ID, WORKLOAD_ID, WORKLOAD_ID, expectedTotalPoints, SDR_POINTS, SDR_POINTS, 
+        insertWorkloadPointsCalculationsStub.calledWith(REPORT_ID, WORKLOAD_ID, WORKLOAD_ID, expectedTotalPoints, SDR_POINTS, SDR_POINTS,
           PAROM_POINTS, NOMINAL_TARGET, AVAILABLE_POINTS, REDUCTION_HOURS, CONTRACTED_HOURS, CMS_POINTS_POSITIVE)
       ).to.equal(true)
       done()
@@ -141,13 +141,13 @@ describe('services/workers/calculate-workload-points', function () {
   })
 
   it('should call insertWorkloadPointsCalculations with the correct params when negative CMS adjustments are applied', function (done) {
-    getCmsAdjustmentPoints.resolves(CMS_POINTS_NEGATIVE)    
+    getCmsAdjustmentPoints.resolves(CMS_POINTS_NEGATIVE)
 
     var expectedTotalPoints = (WORKLOAD_POINTS + SDR_POINTS + SDR_POINTS + PAROM_POINTS + CMS_POINTS_NEGATIVE)
 
     calculateWorkloadPoints.execute(task).then(function () {
       expect(
-        insertWorkloadPointsCalculationsStub.calledWith(REPORT_ID, WORKLOAD_ID, WORKLOAD_ID, expectedTotalPoints, SDR_POINTS, SDR_POINTS, 
+        insertWorkloadPointsCalculationsStub.calledWith(REPORT_ID, WORKLOAD_ID, WORKLOAD_ID, expectedTotalPoints, SDR_POINTS, SDR_POINTS,
           PAROM_POINTS, NOMINAL_TARGET, AVAILABLE_POINTS, REDUCTION_HOURS, CONTRACTED_HOURS, CMS_POINTS_NEGATIVE)
       ).to.equal(true)
       done()
