@@ -1,6 +1,6 @@
 const expect = require('chai').expect
 
-const getStagingCmsReductions = require('../../../../app/services/data/get-staging-cms-reductions')
+const getStagingCms = require('../../../../app/services/data/get-staging-cms')
 const cmsHelper = require('../../../helpers/data/staging-cms-helper')
 
 const cmsRecords = [{
@@ -20,7 +20,7 @@ const cmsRecords = [{
   om_provider_code: 'hij'
 }]
 
-describe('services/data/get-staging-cms-reductions', function () {
+describe('services/data/get-staging-cms', function () {
   var insertedRecords = []
 
   before(function () {
@@ -30,8 +30,8 @@ describe('services/data/get-staging-cms-reductions', function () {
     })
   })
 
-  it('should return the staging cms reductions', function () {
-    return getStagingCmsReductions()
+  it('should return the staging cms records', function () {
+    return getStagingCms()
     .then(function (reductions) {
       var ids = []
       reductions.forEach(function (reduction) {

@@ -13,8 +13,6 @@ exports.up = function (knex, Promise) {
     table.integer('available_points').unsigned().notNullable()
     table.decimal('reduction_hours').defaultTo(0).notNullable()
     table.decimal('contracted_hours').notNullable()
-    table.timestamp('effective_from')
-    table.timestamp('effective_to')
   }).catch(function (error) {
     console.log(error)
     throw error
