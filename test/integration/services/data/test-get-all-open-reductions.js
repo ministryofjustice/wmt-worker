@@ -3,12 +3,14 @@ const expect = require('chai').expect
 const appWorkloadOwnerHelper = require('../../../helpers/data/app-workload-owner-helper')
 const appReductionsHelper = require('../../../helpers/data/app-reductions-helper')
 
-const updateReductionStatusByIds = require('../../../../app/services/data/update-reduction-status-by-ids')
 const getAllOpenReductions = require('../../../../app/services/data/get-all-open-reductions')
+
+const config = require('../../../../knexfile').app
+const knex = require('knex')(config)
 
 var inserts = []
 
-describe('services/data/update-reduction-status-by-ids', function () {
+describe('services/data/get-all-open-reductions', function () {
   before(function (done) {
     appWorkloadOwnerHelper.insertDependencies(inserts)
       .then(function (builtInserts) {
@@ -20,19 +22,19 @@ describe('services/data/update-reduction-status-by-ids', function () {
       })
   })
 
-  it('should update the status for a set of ids', function () {
-    var ids = []
-    inserts.filter((item) => item.table === 'reductions').forEach(function (reduction) {
-      ids.push(reduction.id)
-    })
+  it('should retrieve the open reductions in system', function () {
+    getAllOpenReductions().then(function (results) {
+      var openIds = []
+      results.forEach(function (result) {
+        expect(['ACTIVE', 'SCHEDULED', null]).to.include(result.status)
+        openIds.push(result.id)
+      })
 
-    return updateReductionStatusByIds(ids, 'ACTIVE')
-    .then(function () {
-      return getAllOpenReductions()
-      .then(function (results) {
-        results.forEach(function (result) {
-          if (ids.includes(result.id)) {
-            expect(result.status).to.equal('ACTIVE')
+      return knex('reductions').select('id', 'status')
+      .then(function (allReductions) {
+        allReductions.forEach(function (reduction) {
+          if (!openIds.includes(reduction.id)) {
+            expect(['ARCHIVED', 'DELETED']).to.include(reduction.status)
           }
         })
       })

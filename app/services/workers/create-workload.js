@@ -99,23 +99,5 @@ module.exports.execute = function (task) {
               logger.info('Reduction Worker Task created')
             })
     })
-    .then(function () {
-      var taskDetails = new Batch(insertedWorkloadIds[0], insertedWorkloadIds.length)
-      var adjustmentsWorkerTask = new Task(
-        undefined,
-        submittingAgent.WORKER,
-        taskType.PROCESS_ADJUSTMENTS,
-        taskDetails,
-        workloadReportId,
-        undefined,
-        undefined,
-        taskStatus.PENDING
-      )
-
-      return createNewTasks([adjustmentsWorkerTask])
-      .then(function () {
-        logger.info('Adjustment Worker Task created')
-      })
-    })
   })
 }

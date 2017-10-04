@@ -1,5 +1,0 @@
-module.exports = {
-  ACTIVE: 'ACTIVE',
-  SCHEDULED: 'SCHEDULED',
-  ARCHIVED: 'ARCHIVED'
-}

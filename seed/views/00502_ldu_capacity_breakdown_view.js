@@ -11,14 +11,14 @@ exports.seed = function (knex, promise) {
     , team_totals.total_points
     , team_totals.available_points
     , team_totals.reduction_hours
-    , team_totals.cms_adjustment_points
+    , team_totals.cms_reduction_hours
     , team_totals.contracted_hours
     FROM (
       SELECT
         SUM(tcbv.total_points) AS total_points
       , SUM(tcbv.available_points) AS available_points
       , SUM(tcbv.reduction_hours) AS reduction_hours
-      , SUM(tcbv.cms_adjustment_points) AS cms_adjustment_points
+      , SUM(tcbv.cms_reduction_hours) AS cms_reduction_hours
       , SUM(tcbv.total_cases) AS total_cases
       , SUM(tcbv.contracted_hours) AS contracted_hours
       , t.id as id

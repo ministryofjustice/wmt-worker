@@ -2,19 +2,19 @@ const knexConfig = require('../../../knexfile').app
 const knex = require('knex')(knexConfig)
 var Promise = require('bluebird').Promise
 
-const testAdjustmentReason = {
-  contact_description: 'Test Reason',
-  contact_code: 'TST',
+const testReductionReason = {
+  reason: 'Test Reason',
+  reason_short_name: 'Test',
   category_id: 1
 }
 var inserts = []
 
 module.exports.insertDependencies = function (workloadOwnerId) {
-  return knex('adjustment_reason')
-  .insert(testAdjustmentReason)
+  return knex('reduction_reason')
+  .insert(testReductionReason)
   .returning('id')
   .then(function (id) {
-    inserts.push({ table: 'adjustment_reason', id: id[0] })
+    inserts.push({ table: 'reduction_reason', id: id[0] })
     return inserts
   })
 }
