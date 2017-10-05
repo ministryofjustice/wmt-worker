@@ -32,6 +32,8 @@ const aliases = {
   totalCustodyCases: 'total_custody_cases',
   licenseCasesLast16Weeks: 'license_last_16_weeks',
   communityCasesLast16Weeks: 'community_last_16_weeks',
+  armsCommunityCases: 'arms_community_cases',
+  armsLicenseCases: 'arms_license_cases',
   totalLicenseCases: 'total_license_cases'
 }
 

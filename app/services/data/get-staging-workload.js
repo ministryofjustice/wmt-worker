@@ -7,18 +7,19 @@ const InstitutionalReport = require('wmt-probation-rules').InstitutionalReport
 const Tiers = require('wmt-probation-rules').Tiers
 const locations = require('wmt-probation-rules').Locations
 const getStagingCaseDetails = require('../data/get-staging-case-details')
+const getArmsTotals = require('../data/get-arms-totals')
 const Promise = require('bluebird').Promise
 
 module.exports = function (range) {
   var omWorkloads = []
   return knex('wmt_extract').whereBetween('wmt_extract.id', range)
-    .leftJoin('court_reports', function() {
-        this.on('court_reports.om_key', 'wmt_extract.om_key')
-           .andOn('court_reports.team_key', 'wmt_extract.team_key')
+    .leftJoin('court_reports', function () {
+      this.on('court_reports.om_key', 'wmt_extract.om_key')
+           .andOn('court_reports.team_code', 'wmt_extract.team_code')
     })
-    .leftJoin('inst_reports', function() {
-        this.on('inst_reports.om_key', 'wmt_extract.om_key')
-           .andOn('inst_reports.team_key', 'wmt_extract.team_key')
+    .leftJoin('inst_reports', function () {
+      this.on('inst_reports.om_key', 'wmt_extract.om_key')
+           .andOn('inst_reports.team_code', 'wmt_extract.team_code')
     })
     .select('wmt_extract.trust', 'wmt_extract.region_desc', 'wmt_extract.region_code',
       'wmt_extract.ldu_desc', 'wmt_extract.ldu_code', 'wmt_extract.team_desc', 'wmt_extract.team_code',
@@ -37,7 +38,8 @@ module.exports = function (range) {
     .then(function (results) {
       if (results !== 'undefined' && results.length > 0) {
         return Promise.each(results, function (result) {
-          var communityTiers = new Tiers(
+          return getArmsTotals(result['om_key'], result['team_code']).then(function (armsCases) {
+            var communityTiers = new Tiers(
             locations.COMMUNITY,
             result['commtier0'],
             result['commtierd2'],
@@ -49,7 +51,7 @@ module.exports = function (range) {
             result['commtiera']
           )
 
-          var licenseTiers = new Tiers(
+            var licenseTiers = new Tiers(
             locations.LICENSE,
             result['licencetier0'],
             result['licencetierd2'],
@@ -61,7 +63,7 @@ module.exports = function (range) {
             result['licencetiera']
           )
 
-          var custodyTiers = new Tiers(
+            var custodyTiers = new Tiers(
             locations.CUSTODY,
             result['custtier0'],
             result['custtierd2'],
@@ -73,7 +75,7 @@ module.exports = function (range) {
             result['custtiera']
           )
 
-          var casesSummary = new CasesSummary(
+            var casesSummary = new CasesSummary(
             result['trust'],
             result['region_desc'],
             result['region_code'],
@@ -90,10 +92,11 @@ module.exports = function (range) {
             custodyTiers,
             result['comIn1st16Weeks'],
             result['licIn1st16Weeks'],
-            result['datestamp']
+            armsCases.community,
+            armsCases.license
           )
 
-          var courtReport = new CourtReport(
+            var courtReport = new CourtReport(
             result['om_key'],
             result['om_team_staff_grade'],
             result['sdr_last_30'],
@@ -101,16 +104,17 @@ module.exports = function (range) {
             result['sdr_conv_last_30']
           )
 
-          var institutionalReport = new InstitutionalReport(
+            var institutionalReport = new InstitutionalReport(
             result['om_key'],
             result['om_team_staff_grade'],
             result['parom_due_next_30'],
             result['parom_comp_last_30']
           )
-          return getStagingCaseDetails(result['om_key']).then(function (caseDetails) {
-            omWorkloads.push(new OmWorkload(
+            return getStagingCaseDetails(result['om_key'], result['team_code']).then(function (caseDetails) {
+              omWorkloads.push(new OmWorkload(
                 casesSummary, courtReport, institutionalReport, caseDetails
-            ))
+              ))
+            })
           })
         })
         .then(function () {

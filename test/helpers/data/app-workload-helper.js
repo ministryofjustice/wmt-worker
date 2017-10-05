@@ -44,7 +44,7 @@ module.exports.insertDependencies = function (inserts) {
         license_last_16_weeks: 9,
         community_last_16_weeks: 10,
         arms_community_cases: 11,
-        arms_license_cases: 12,
+        arms_license_cases: 12
       }
 
       var workloads = [
