@@ -4,7 +4,7 @@ const appWorkloadOwnerHelper = require('../../../helpers/data/app-workload-owner
 const appReductionsHelper = require('../../../helpers/data/app-reductions-helper')
 
 const updateReductionStatusByIds = require('../../../../app/services/data/update-reduction-status-by-ids')
-const getAllOpenReductions = require('../../../../app/services/data/get-all-open-reductions')
+const getOpenReductions = require('../../../../app/services/data/get-open-reductions')
 
 var inserts = []
 
@@ -28,7 +28,7 @@ describe('services/data/update-reduction-status-by-ids', function () {
 
     return updateReductionStatusByIds(ids, 'ACTIVE')
     .then(function () {
-      return getAllOpenReductions()
+      return getOpenReductions(ids[0], ids[ids.length - 1])
       .then(function (results) {
         results.forEach(function (result) {
           if (ids.includes(result.id)) {
