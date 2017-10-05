@@ -15,9 +15,12 @@ const updateAdjustmentEffectiveTo = require('../data/update-adjustment-effective
 const insertAdjustment = require('../data/insert-adjustment')
 
 module.exports.execute = function (task) {
-  return processAdjustments(task)
+  var workloadStagingIdStart = task.additionalData.startingId
+  var workloadStagingIdEnd = workloadStagingIdStart + task.additionalData.batchSize - 1
+
+  return processAdjustments(workloadStagingIdStart, workloadStagingIdEnd)
   .then(function () {
-    return updateAdjustmentsStatus(task)
+    return updateAdjustmentsStatus(workloadStagingIdStart, workloadStagingIdEnd)
     .then(function () {
       var calculateWpAdditionalData = {
         workloadBatch: task.additionalData,
@@ -59,11 +62,7 @@ var getAdjustmentStatus = function (adjustment) {
   return status
 }
 
-var processAdjustments = function (task) {
-  // TODO: Why is this being assigned twice?
-  var workloadStagingIdStart = task.additionalData.startingId
-  var workloadStagingIdEnd = workloadStagingIdStart + task.additionalData.batchSize - 1
-
+var processAdjustments = function (workloadStagingIdStart, workloadStagingIdEnd) {
   return mapStagingCmsAdjustments(workloadStagingIdStart, workloadStagingIdEnd)
   .then(function (stgAdjustments) {
     return getAppAdjustmentsForBatch(adjustmentCategory.CMS, workloadStagingIdStart, workloadStagingIdEnd)
@@ -107,14 +106,11 @@ var processAdjustments = function (task) {
   })
 }
 
-var updateAdjustmentsStatus = function (task) {
+var updateAdjustmentsStatus = function (workloadStagingIdStart, workloadStagingIdEnd) {
   var idsMap = new Map()
   idsMap.set(adjustmentStatus.ACTIVE, [])
   idsMap.set(adjustmentStatus.SCHEDULED, [])
   idsMap.set(adjustmentStatus.ARCHIVED, [])
-
-  var workloadStagingIdStart = task.additionalData.startingId
-  var workloadStagingIdEnd = workloadStagingIdStart + task.additionalData.batchSize - 1
 
   logger.info('Retrieving open adjustments for workload owners with workloads\' staging ids ' + workloadStagingIdStart + ' - ' + workloadStagingIdEnd)
   return getAppAdjustmentsForBatch(adjustmentCategory.CMS, workloadStagingIdStart, workloadStagingIdEnd)
