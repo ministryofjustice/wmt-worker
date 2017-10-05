@@ -24,6 +24,8 @@
                 'workload.paroms_completed_last_30_days',
                 'workload.license_last_16_weeks',
                 'workload.community_last_16_weeks',
+                'workload.arms_community_cases',
+                'workload.arms_license_cases',
                 'tiers.total_cases as tiers_total_cases',
                 'tiers.warrants_total',
                 'tiers.unpaid_work_total',
@@ -60,6 +62,8 @@
               tempWorkloads[index].sdrsDueNext30Days = row.sdr_due_next_30_days
               tempWorkloads[index].communityCasesLast16Weeks = row.community_last_16_weeks
               tempWorkloads[index].licenseCasesLast16Weeks = row.license_last_16_weeks
+              tempWorkloads[index].armsCommunityCases = row.arms_community_cases
+              tempWorkloads[index].armsLicenseCases = row.arms_license_cases
             }
 
             tempWorkloads[index][row.location][row.tier_number] = new TierCounts(
@@ -85,7 +89,9 @@
                 new Tiers(Locations.COMMUNITY, ...tempWorkload[Locations.COMMUNITY], tempWorkload.totalCommunityCases),
                 new Tiers(Locations.LICENSE, ...tempWorkload[Locations.LICENSE], tempWorkload.totalLicenseCases),
                 tempWorkload.licenseCasesLast16Weeks,
-                tempWorkload.communityCasesLast16Weeks
+                tempWorkload.communityCasesLast16Weeks,
+                tempWorkload.armsCommunityCases,
+                tempWorkload.armsLicenseCases
               )
               }
             )
