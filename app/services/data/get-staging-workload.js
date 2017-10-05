@@ -12,8 +12,14 @@ const Promise = require('bluebird').Promise
 module.exports = function (range) {
   var omWorkloads = []
   return knex('wmt_extract').whereBetween('wmt_extract.id', range)
-    .leftJoin('court_reports', 'wmt_extract.om_key', 'court_reports.om_key')
-    .leftJoin('inst_reports', 'wmt_extract.om_key', 'inst_reports.om_key')
+    .leftJoin('court_reports', function() {
+        this.on('court_reports.om_key', 'wmt_extract.om_key')
+           .andOn('court_reports.team_key', 'wmt_extract.team_key')
+    })
+    .leftJoin('inst_reports', function() {
+        this.on('inst_reports.om_key', 'wmt_extract.om_key')
+           .andOn('inst_reports.team_key', 'wmt_extract.team_key')
+    })
     .select('wmt_extract.trust', 'wmt_extract.region_desc', 'wmt_extract.region_code',
       'wmt_extract.ldu_desc', 'wmt_extract.ldu_code', 'wmt_extract.team_desc', 'wmt_extract.team_code',
       'wmt_extract.om_surname', 'wmt_extract.om_forename', 'wmt_extract.om_grade_code',
