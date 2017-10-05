@@ -2,37 +2,36 @@ const expect = require('chai').expect
 const knexConfig = require('../../../../knexfile').app
 const knex = require('knex')(knexConfig)
 const appWorkloadOwnerHelper = require('../../../helpers/data/app-workload-owner-helper')
-const appReductionsHelper = require('../../../helpers/data/app-reductions-helper')
-
-const updateReductionEffectiveTo = require('../../../../app/services/data/update-reduction-effective-to')
+const appAdjustmentsHelper = require('../../../helpers/data/app-adjustments-helper')
+const updateAdjustmentEffectiveTo = require('../../../../app/services/data/update-adjustment-effective-to')
 
 var inserts = []
 var newDate = new Date(2020, 11, 17)
 
-describe('services/data/update-reduction-effective-to', function () {
+describe('services/data/update-adjustment-effective-to', function () {
   before(function () {
     return appWorkloadOwnerHelper.insertDependencies(inserts)
     .then(function (builtInserts) {
-      return appReductionsHelper.insertDependencies(inserts)
+      return appAdjustmentsHelper.insertDependencies(inserts)
       .then(function (builtInserts) {
         inserts = builtInserts
       })
     })
   })
 
-  it('should update effectiveTo of reduction', function () {
-    var reductionId = inserts.filter((item) => item.table === 'reductions')[0].id
-    return updateReductionEffectiveTo(reductionId, newDate)
+  it('should update effectiveTo of adjustment', function () {
+    var adjustmentId = inserts.filter((item) => item.table === 'adjustments')[0].id
+    return updateAdjustmentEffectiveTo(adjustmentId, newDate)
     .then(function (updatedId) {
-      expect(updatedId).to.be.equal(reductionId)
-      return knex('reductions').select('effective_to').where('id', updatedId)
-      .then(function (reductions) {
-        expect(reductions[0].effective_to).to.be.eql(newDate)
+      expect(updatedId).to.be.equal(adjustmentId)
+      return knex('adjustments').select('effective_to').where('id', updatedId)
+      .then(function (adjustments) {
+        expect(adjustments[0].effective_to).to.be.eql(newDate)
       })
     })
   })
 
   after(function () {
-    return appReductionsHelper.removeDependencies(inserts)
+    return appAdjustmentsHelper.removeDependencies(inserts)
   })
 })
