@@ -48,6 +48,8 @@ module.exports = function () {
       var caseTypeWeightings = new CaseTypeWeightings(calculateWeighting(result.weighting_w),
                                                       calculateWeighting(result.weighting_u),
                                                       calculateWeighting(result.weighting_o),
+                                                      calculateWeighting(result.weighting_arms_comm),
+                                                      calculateWeighting(result.weighting_arms_lic),
                                                       pointsConfiguration)
 
       return { values: caseTypeWeightings, id: result.id }
