@@ -9,6 +9,8 @@ const workloadRow = {
   total_community_cases: 21,
   total_custody_cases: 23,
   total_license_cases: 25,
+  arms_community_cases: 3,
+  arms_license_cases: 4,
   paroms_completed_last_30_days: 1,
   paroms_due_next_30_days: 0,
   license_last_16_weeks: 7,
