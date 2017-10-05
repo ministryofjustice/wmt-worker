@@ -4,8 +4,8 @@ const getAdjustmentReasonFromCode = require('./data/get-adjustment-reason-from-c
 const getWorkloadOwnersInWorkloadRange = require('./data/get-workload-owners-in-workload-range')
 const adjustmentStatus = require('../constants/adjustment-status')
 
-module.exports = function (workloadStartId, workloadEndId) {
-  return getWorkloadOwnersInWorkloadRange(workloadStartId, workloadEndId)
+module.exports = function (workloadStagingIdStart, workloadStagingIdEnd) {
+  return getWorkloadOwnersInWorkloadRange(workloadStagingIdStart, workloadStagingIdEnd)
   .then(function (workloadOwnerIds) {
     return getStagingCms()
     .then(function (cmsRecords) {
@@ -29,7 +29,7 @@ module.exports = function (workloadStartId, workloadEndId) {
                     contactId: cmsRecord.contactId,
                     workloadOwnerId: contactWorkloadOwnerId,
                     points: adjustmentReason.points,
-                    reductionReasonId: adjustmentReason.id,
+                    adjustmentReasonId: adjustmentReason.id,
                     effectiveFrom: startDate,
                     effectiveTo: endDate,
                     status: adjustmentStatus.ACTIVE
@@ -39,7 +39,7 @@ module.exports = function (workloadStartId, workloadEndId) {
                     contactId: cmsRecord.contactId,
                     workloadOwnerId: omWorkloadOwnerId,
                     points: adjustmentReason.points * -1,
-                    reductionReasonId: adjustmentReason.id,
+                    adjustmentReasonId: adjustmentReason.id,
                     effectiveFrom: startDate,
                     effectiveTo: endDate,
                     status: adjustmentStatus.ACTIVE

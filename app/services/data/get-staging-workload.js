@@ -14,7 +14,7 @@ module.exports = function (range) {
   return knex('wmt_extract').whereBetween('wmt_extract.id', range)
     .leftJoin('court_reports', 'wmt_extract.om_key', 'court_reports.om_key')
     .leftJoin('inst_reports', 'wmt_extract.om_key', 'inst_reports.om_key')
-    .select('wmt_extract.trust', 'wmt_extract.region_desc', 'wmt_extract.region_code',
+    .select('wmt_extract.id AS staging_id', 'wmt_extract.trust', 'wmt_extract.region_desc', 'wmt_extract.region_code',
       'wmt_extract.ldu_desc', 'wmt_extract.ldu_code', 'wmt_extract.team_desc', 'wmt_extract.team_code',
       'wmt_extract.om_surname', 'wmt_extract.om_forename', 'wmt_extract.om_grade_code',
       'wmt_extract.om_key', 'wmt_extract.comIn1st16Weeks', 'wmt_extract.licIn1st16Weeks',
@@ -101,9 +101,12 @@ module.exports = function (range) {
             result['parom_due_next_30'],
             result['parom_comp_last_30']
           )
+
+          var stagingId = result['staging_id']
+
           return getStagingCaseDetails(result['om_key']).then(function (caseDetails) {
             omWorkloads.push(new OmWorkload(
-                casesSummary, courtReport, institutionalReport, caseDetails
+              stagingId, casesSummary, courtReport, institutionalReport, caseDetails
             ))
           })
         })

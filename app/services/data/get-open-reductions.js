@@ -10,6 +10,6 @@ module.exports = function (workloadIdStart, workloadIdEnd) {
       'reductions.effective_to AS effectiveTo',
       'reductions.status AS status'
     )
-    .whereRaw('workload.id BETWEEN ? AND ? AND (status IS NULL OR status IN (\'ACTIVE\',\'SCHEDULED\'))',
+    .whereRaw('workload.staging_id BETWEEN ? AND ? AND (status IS NULL OR status IN (\'ACTIVE\',\'SCHEDULED\'))',
       [workloadIdStart, workloadIdEnd])
 }

@@ -27,9 +27,11 @@ exports.seed = function (knex, Promise) {
     })
     .then(function (workloadOwners) {
       var workloadsToInsert = []
+      var stagingId = 1
       for (var workloadOwner in workloadOwners) {
         for (var i = 0; i < 5; i++) {
-          workloadsToInsert.push(Object.assign({}, workloadRow, {workload_owner_id: workloadOwners[workloadOwner].id}))
+          workloadsToInsert.push(Object.assign({}, workloadRow, {workload_owner_id: workloadOwners[workloadOwner].id, staging_id: stagingId}))
+          stagingId++
         }
       }
       // Need to split the array into 4 as one query caused an error with too many parameters in one request (2100)

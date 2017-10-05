@@ -12,6 +12,7 @@
         .leftJoin('offender_manager', 'workload_owner.offender_manager_id', 'offender_manager.id')
         .whereBetween('workload.id', [initialId, maxId])
         .select('workload.id',
+                'workload.staging_id',
                 'workload.workload_owner_id',
                 'workload.total_cases',
                 'workload.total_custody_cases',
@@ -48,6 +49,7 @@
                 CUSTODY: new Array(8)
               }
               tempWorkloads[index].id = row.id
+              tempWorkloads[index].stagingId = row.staging_id
               tempWorkloads[index].workloadOwnerId = row.workload_owner_id
               tempWorkloads[index].totalCases = row.total_cases
               tempWorkloads[index].totalCustodyCases = row.total_custody_cases
@@ -85,7 +87,8 @@
                 new Tiers(Locations.COMMUNITY, ...tempWorkload[Locations.COMMUNITY], tempWorkload.totalCommunityCases),
                 new Tiers(Locations.LICENSE, ...tempWorkload[Locations.LICENSE], tempWorkload.totalLicenseCases),
                 tempWorkload.licenseCasesLast16Weeks,
-                tempWorkload.communityCasesLast16Weeks
+                tempWorkload.communityCasesLast16Weeks,
+                tempWorkload.stagingId
               )
               }
             )

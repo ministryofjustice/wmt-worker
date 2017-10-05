@@ -17,27 +17,27 @@ const wpcOperationType = require('../../constants/calculate-workload-points-oper
 const adjustmentCategory = require('../../constants/adjustment-category')
 
 module.exports.execute = function (task) {
-  var id = task.additionalData.workloadBatch.startingId
+  var startingStagingId = task.additionalData.workloadBatch.startingId
   var batchSize = task.additionalData.workloadBatch.batchSize
   var reportId = task.workloadReportId
   var operationType = task.additionalData.operationType
-  var maxId = id
+  var maxStagingId = startingStagingId
   var message
 
   if (batchSize <= 0) {
     logger.error('Batchsize must be greater than 0')
     throw (new Error('Batchsize must be greater than 0'))
   } else if (batchSize > 1) {
-    maxId = id + batchSize - 1
-    message = 'Calculating Workload Points for Workloads ' + id + ' - ' + (id + batchSize - 1)
+    maxStagingId = startingStagingId + batchSize - 1
+    message = 'Calculating Workload Points for workloads with staging ids ' + startingStagingId + ' - ' + (startingStagingId + batchSize - 1)
   } else {
-    message = 'Calculating Workload Points for Workload ' + id
+    message = 'Calculating Workload Points for workload with staging id ' + startingStagingId
   }
   logger.info(message)
 
   var pointsConfigurationPromise = getWorkloadPointsConfiguration()
 
-  return getAppWorkloads(id, maxId, batchSize).then(function (workloads) {
+  return getAppWorkloads(startingStagingId, maxStagingId, batchSize).then(function (workloads) {
     return Promise.each(workloads, function (workloadResult) {
       var workload = workloadResult.values
       var workloadId = workloadResult.id
@@ -51,6 +51,7 @@ module.exports.execute = function (task) {
         var sdrConversionPoints = calculateSdrConversionPoints(workload.sdrConversionsLast30Days, caseTypeWeightings.pointsConfiguration.sdrConversion)
         var sdrPoints = calculateSdrConversionPoints(workload.monthlySdrs, caseTypeWeightings.pointsConfiguration.sdr)
         var paromsPoints = calculateParomPoints(workload.paromsCompletedLast30Days, caseTypeWeightings.pointsConfiguration.parom, caseTypeWeightings.pointsConfiguration.paromsEnabled)
+        console.log(workload)
         var workloadPoints = calculateWorkloadPoints(workload, caseTypeWeightings)
         return getAppReductionsPromise.then(function (reductions) {
           return getCmsAdjustmentPointsPromise.then(function (cmsAdjustments) {
@@ -77,7 +78,7 @@ module.exports.execute = function (task) {
       })
     })
   }).catch(function (error) {
-    logger.error('Unable to retrieve workloads with IDs ' + id + ' - ' + (id + batchSize - 1))
+    logger.error('Unable to retrieve workloads with staging ids ' + startingStagingId + ' - ' + (startingStagingId + batchSize - 1))
     logger.error(error)
     throw (error)
   })
