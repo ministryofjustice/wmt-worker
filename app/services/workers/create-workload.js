@@ -15,7 +15,6 @@ const mapWorkload = require('wmt-probation-rules').mapWorkload
 const Ldu = require('wmt-probation-rules').Ldu
 const Region = require('wmt-probation-rules').Region
 const Task = require('../domain/task')
-const Batch = require('../domain/batch')
 const taskType = require('../../constants/task-type')
 const taskStatus = require('../../constants/task-status')
 const submittingAgent = require('../../constants/task-submitting-agent')

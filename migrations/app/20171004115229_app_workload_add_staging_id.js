@@ -1,5 +1,5 @@
 exports.up = function (knex, promise) {
-  var sql = 'ALTER TABLE app.workload ADD staging_id INT;' + 
+  var sql = 'ALTER TABLE app.workload ADD staging_id INT;' +
     'CREATE INDEX ix_workload ON app.workload (staging_id);'
   return knex.schema
       .raw('SET ARITHABORT ON')

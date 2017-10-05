@@ -51,7 +51,6 @@ module.exports.execute = function (task) {
         var sdrConversionPoints = calculateSdrConversionPoints(workload.sdrConversionsLast30Days, caseTypeWeightings.pointsConfiguration.sdrConversion)
         var sdrPoints = calculateSdrConversionPoints(workload.monthlySdrs, caseTypeWeightings.pointsConfiguration.sdr)
         var paromsPoints = calculateParomPoints(workload.paromsCompletedLast30Days, caseTypeWeightings.pointsConfiguration.parom, caseTypeWeightings.pointsConfiguration.paromsEnabled)
-        console.log(workload)
         var workloadPoints = calculateWorkloadPoints(workload, caseTypeWeightings)
         return getAppReductionsPromise.then(function (reductions) {
           return getCmsAdjustmentPointsPromise.then(function (cmsAdjustments) {

@@ -6,24 +6,24 @@ const getAppWorkloads = require('../../../../app/services/data/get-app-workloads
 const Workload = require('wmt-probation-rules').Workload
 
 var inserts = []
+var initialWorkloadStagingId
 
 describe('services/data/get-app-workloads', function () {
   before(function (done) {
     helper.insertDependencies(inserts)
       .then(function (builtInserts) {
         inserts = builtInserts
+        initialWorkloadStagingId = helper.maxStagingId + 1
         done()
       })
   })
 
-  it('should retrieve all the workloads within a given id range', function (done) {
-    var insertedWorkloads = inserts.filter((item) => item.table === 'workload')
-    var initialWorkloadId = insertedWorkloads[0].id
-    var batchSize = insertedWorkloads.length
-    var maxId = initialWorkloadId + batchSize - 1
+  it('should retrieve all the workloads with staging ids within a given range', function (done) {
+    var batchSize = 2
+    var maxStagingId = initialWorkloadStagingId + batchSize - 1
     var workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
 
-    getAppWorkloads(initialWorkloadId, maxId, batchSize)
+    getAppWorkloads(initialWorkloadStagingId, maxStagingId, batchSize)
       .then(function (queryResults) {
         expect(queryResults.length).to.equal(batchSize)
         var firstWorkload = queryResults[0].values
@@ -45,13 +45,11 @@ describe('services/data/get-app-workloads', function () {
       })
   })
 
-  it('should retrieve a workload for a given id with a batchSize of 1', function (done) {
-    var insertedWorkloads = inserts.filter((item) => item.table === 'workload')
-    var initialWorkloadId = insertedWorkloads[0].id
+  it('should retrieve a workload for a given staging id with a batchSize of 1', function (done) {
     var batchSize = 1
-    var maxId = initialWorkloadId
+    var maxStagingId = initialWorkloadStagingId
     var workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
-    getAppWorkloads(initialWorkloadId, maxId, batchSize)
+    getAppWorkloads(initialWorkloadStagingId, maxStagingId, batchSize)
       .then(function (queryResults) {
         expect(queryResults.length).to.equal(batchSize)
         var firstWorkload = queryResults[0].values

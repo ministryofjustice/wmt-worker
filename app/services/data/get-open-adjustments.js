@@ -1,7 +1,7 @@
 const knexConfig = require('../../../knexfile').app
 const knex = require('knex')(knexConfig)
 
-module.exports = function (workloadIdStart, workloadIdEnd) {
+module.exports = function (workloadStagingIdStart, workloadStagingIdEnd) {
   return knex('adjustments')
     .join('workload', 'workload.workload_owner_id', 'adjustments.workload_owner_id')
     .select(
@@ -10,6 +10,6 @@ module.exports = function (workloadIdStart, workloadIdEnd) {
       'adjustments.effective_to AS effectiveTo',
       'adjustments.status AS status'
     )
-    .whereRaw('workload.id BETWEEN ? AND ? AND (status IS NULL OR status IN (\'ACTIVE\',\'SCHEDULED\'))',
-      [workloadIdStart, workloadIdEnd])
+    .whereRaw('workload.staging_id BETWEEN ? AND ? AND (status IS NULL OR status IN (\'ACTIVE\',\'SCHEDULED\'))',
+      [workloadStagingIdStart, workloadStagingIdEnd])
 }

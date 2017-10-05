@@ -3,8 +3,14 @@ const knex = require('knex')(knexConfig)
 const Locations = require('wmt-probation-rules').Locations
 var Promise = require('bluebird').Promise
 
+module.exports.maxStagingId = null
+
 module.exports.insertDependencies = function (inserts) {
-  var promise = knex('offender_manager_type').returning('id').insert({description: 'test'})
+  var promise = getMaxStagingId()
+    .then(function (returnedMaxStagingId) {
+      module.exports.maxStagingId = returnedMaxStagingId
+      return knex('offender_manager_type').returning('id').insert({description: 'test'})
+    })
     .then(function (ids) {
       inserts.push({ table: 'offender_manager_type', id: ids[0] })
       return knex('offender_manager').returning('id').insert({type_id: ids[0]})
@@ -24,8 +30,11 @@ module.exports.insertDependencies = function (inserts) {
     .then(function (ids) {
       inserts.push({table: 'team', id: ids[0]})
       return knex('workload_owner').returning('id')
-        .insert({team_id: inserts.filter((item) => item.table === 'team')[0].id,
-          offender_manager_id: inserts.filter((item) => item.table === 'offender_manager')[0].id})
+        .insert({
+          team_id: inserts.filter((item) => item.table === 'team')[0].id,
+          offender_manager_id: inserts.filter((item) => item.table === 'offender_manager')[0].id,
+          contracted_hours: 40
+        })
     })
     .then(function (ids) {
       inserts.push({table: 'workload_owner', id: ids[0]})
@@ -46,8 +55,9 @@ module.exports.insertDependencies = function (inserts) {
       }
 
       var workloads = [
-        Object.assign({}, defaultWorkload, {total_cases: 20}),
-        Object.assign({}, defaultWorkload, {total_cases: 30})
+        Object.assign({}, defaultWorkload, { total_cases: 20, staging_id: module.exports.maxStagingId + 1 }),
+        Object.assign({}, defaultWorkload, { total_cases: 30, staging_id: module.exports.maxStagingId + 2 }),
+        Object.assign({}, defaultWorkload, { total_cases: 30, staging_id: module.exports.maxStagingId + 3 })
       ]
 
       return knex('workload').returning('id').insert(workloads)
@@ -101,4 +111,12 @@ module.exports.removeDependencies = function (inserts) {
   return Promise.each(groupedDeletions, (deletion) => {
     return knex(deletion.table).whereIn('id', deletion.id).del()
   })
+}
+
+var getMaxStagingId = function () {
+  return knex('workload')
+    .max('staging_id AS maxStagingId')
+    .then(function (results) {
+      return results[0].maxStagingId
+    })
 }

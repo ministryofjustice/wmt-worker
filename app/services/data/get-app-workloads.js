@@ -10,7 +10,7 @@
         .leftJoin('tiers', 'workload.id', 'workload_id')
         .leftJoin('workload_owner', 'workload.workload_owner_id', 'workload_owner.id')
         .leftJoin('offender_manager', 'workload_owner.offender_manager_id', 'offender_manager.id')
-        .whereBetween('workload.id', [initialId, maxId])
+        .whereBetween('workload.staging_id', [initialId, maxId])
         .select('workload.id',
                 'workload.staging_id',
                 'workload.workload_owner_id',
