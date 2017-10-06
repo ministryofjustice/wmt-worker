@@ -4,8 +4,8 @@ const getAdjustmentReasonFromCode = require('./data/get-adjustment-reason-from-c
 const getWorkloadOwnersInWorkloadRange = require('./data/get-workload-owners-in-workload-range')
 const adjustmentStatus = require('../constants/adjustment-status')
 
-module.exports = function (workloadStagingIdStart, workloadStagingIdEnd) {
-  return getWorkloadOwnersInWorkloadRange(workloadStagingIdStart, workloadStagingIdEnd)
+module.exports = function (workloadStagingIdStart, workloadStagingIdEnd, workloadReportId) {
+  return getWorkloadOwnersInWorkloadRange(workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
   .then(function (workloadOwnerIds) {
     return getStagingCms()
     .then(function (cmsRecords) {

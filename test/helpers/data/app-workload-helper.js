@@ -3,12 +3,10 @@ const knex = require('knex')(knexConfig)
 const Locations = require('wmt-probation-rules').Locations
 var Promise = require('bluebird').Promise
 
-module.exports.maxStagingId = null
-
 module.exports.insertDependencies = function (inserts) {
-  var promise = getMaxStagingId()
-    .then(function (returnedMaxStagingId) {
-      module.exports.maxStagingId = returnedMaxStagingId
+  var promise = knex('workload_report').returning('id').insert({})
+    .then(function (ids) {
+      inserts.push({table: 'workload_report', id: ids[0]})
       return knex('offender_manager_type').returning('id').insert({description: 'test'})
     })
     .then(function (ids) {
@@ -51,13 +49,14 @@ module.exports.insertDependencies = function (inserts) {
         paroms_completed_last_30_days: 7,
         paroms_due_next_30_days: 8,
         license_last_16_weeks: 9,
-        community_last_16_weeks: 10
+        community_last_16_weeks: 10,
+        workload_report_id: inserts.filter((item) => item.table === 'workload_report')[0].id
       }
 
       var workloads = [
-        Object.assign({}, defaultWorkload, { total_cases: 20, staging_id: module.exports.maxStagingId + 1 }),
-        Object.assign({}, defaultWorkload, { total_cases: 30, staging_id: module.exports.maxStagingId + 2 }),
-        Object.assign({}, defaultWorkload, { total_cases: 30, staging_id: module.exports.maxStagingId + 3 })
+        Object.assign({}, defaultWorkload, { total_cases: 20, staging_id: 1 }),
+        Object.assign({}, defaultWorkload, { total_cases: 30, staging_id: 2 }),
+        Object.assign({}, defaultWorkload, { total_cases: 30, staging_id: 3 })
       ]
 
       return knex('workload').returning('id').insert(workloads)
@@ -111,12 +110,4 @@ module.exports.removeDependencies = function (inserts) {
   return Promise.each(groupedDeletions, (deletion) => {
     return knex(deletion.table).whereIn('id', deletion.id).del()
   })
-}
-
-var getMaxStagingId = function () {
-  return knex('workload')
-    .max('staging_id AS maxStagingId')
-    .then(function (results) {
-      return results[0].maxStagingId
-    })
 }

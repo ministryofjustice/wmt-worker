@@ -31,8 +31,8 @@ module.exports.removeDependencies = function (inserts) {
   })
 }
 
-module.exports.getAdjustmentsForTest = function (adjustmentCategory, minWorkloadId, maxWorkloadId) {
-  return getAppAdjustmentsForBatch(adjustmentCategory, minWorkloadId, maxWorkloadId)
+module.exports.getAdjustmentsForTest = function (adjustmentCategory, minWorkloadId, maxWorkloadId, workloadReportId) {
+  return getAppAdjustmentsForBatch(adjustmentCategory, minWorkloadId, maxWorkloadId, workloadReportId)
   .then(function (results) {
     var formattedResults = []
     results.forEach(function (adjustment) {

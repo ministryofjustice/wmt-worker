@@ -1,7 +1,6 @@
 const expect = require('chai').expect
 
 const adjustmentsHelper = require('../../../helpers/data/app-adjustments-helper')
-const appWorkloadHelper = require('../../../helpers/data/app-workload-helper')
 const getAdjustments = require('../../../../app/services/data/get-app-adjustments-for-batch')
 const adjustmentCategory = require('../../../../app/constants/adjustment-category')
 const adjustmentStatus = require('../../../../app/constants/adjustment-status')
@@ -9,20 +8,22 @@ const adjustmentStatus = require('../../../../app/constants/adjustment-status')
 var inserts = []
 var startStagingId
 var endStagingId
+var workloadReportId
 
 describe('services/data/get-app-adjustments-for-batch', function () {
   before(function (done) {
     adjustmentsHelper.insertDependencies(inserts)
     .then(function (builtInserts) {
       inserts = builtInserts
-      startStagingId = appWorkloadHelper.maxStagingId + 1
+      startStagingId = 1
       endStagingId = startStagingId + 2
+      workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
       done()
     })
   })
 
-  it('should retrieve the CMS adjustments in DB, for a given batch of workload staging ids -> workload owners -> adjustments', function () {
-    return getAdjustments(adjustmentCategory.CMS, startStagingId, endStagingId)
+  it('should retrieve the CMS adjustments in DB, for a given batch of active workload staging ids -> workload owners -> adjustments', function () {
+    return getAdjustments(adjustmentCategory.CMS, startStagingId, endStagingId, workloadReportId)
     .then(function (adjustments) {
       var adjustmentIds = []
       adjustments.forEach(function (adjustment) {
@@ -34,8 +35,8 @@ describe('services/data/get-app-adjustments-for-batch', function () {
     })
   })
 
-  it('should retrieve the GS adjustments in DB, for a given batch of workload staging ids -> workload owners -> adjustments', function () {
-    return getAdjustments(adjustmentCategory.GS, startStagingId, endStagingId)
+  it('should retrieve the GS adjustments in DB, for a given batch of active workload staging ids -> workload owners -> adjustments', function () {
+    return getAdjustments(adjustmentCategory.GS, startStagingId, endStagingId, workloadReportId)
     .then(function (adjustments) {
       var adjustmentIds = []
       adjustments.forEach(function (adjustment) {

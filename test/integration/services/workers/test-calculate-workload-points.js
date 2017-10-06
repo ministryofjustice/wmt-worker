@@ -4,7 +4,6 @@ const knex = require('knex')(knexConfig)
 const expect = require('chai').expect
 
 const appWorkloadPointsCalculationHelper = require('../../../helpers/data/app-workload-points-calculation-helper')
-const appWorkloadHelper = require('../../../helpers/data/app-workload-helper')
 const appReductionsHelper = require('../../../helpers/data/app-reductions-helper')
 const calculatePointsWorker = require('../../../../app/services/workers/calculate-workload-points')
 const wpcOperation = require('../../../../app/constants/calculate-workload-points-operation')
@@ -18,7 +17,7 @@ describe('services/workers/calculate-workload-points', function () {
     appWorkloadPointsCalculationHelper.insertDependencies(inserts)
       .then(function (builtInserts) {
         inserts = builtInserts
-        initialWorkloadStagingId = appWorkloadHelper.maxStagingId + 1
+        initialWorkloadStagingId = 1
         done()
       })
   })

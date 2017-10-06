@@ -74,7 +74,7 @@ module.exports.execute = function (task) {
                           ))
           })
           .then(function (workloadOwnerId) {
-            var workloadToInsert = mapWorkload(stagingWorkload, parseInt(workloadOwnerId))
+            var workloadToInsert = mapWorkload(stagingWorkload, parseInt(workloadOwnerId), parseInt(workloadReportId))
             return insertWorkload(workloadToInsert)
                 .then(function (workloadId) {
                   insertedWorkloadIds.push(workloadId)

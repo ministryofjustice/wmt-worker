@@ -17,9 +17,10 @@ module.exports.execute = function (task) {
 
   var workloadStagingIdStart = task.additionalData.startingId
   var workloadStagingIdEnd = workloadStagingIdStart + task.additionalData.batchSize - 1
+  var workloadReportId = task.workloadReportId
 
   logger.info('Retrieving open reductions for workload owners with workloads\' staging ids ' + workloadStagingIdStart + ' - ' + workloadStagingIdEnd)
-  return getOpenReductions(workloadStagingIdStart, workloadStagingIdEnd)
+  return getOpenReductions(workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
     .then(function (reductions) {
       reductions.forEach(function (reduction) {
         status = getReductionStatus(reduction)

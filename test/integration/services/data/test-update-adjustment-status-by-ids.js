@@ -5,12 +5,14 @@ const updateAdjustmentStatusByIds = require('../../../../app/services/data/updat
 const getOpenAdjustments = require('../../../../app/services/data/get-open-adjustments')
 
 var inserts = []
+var workloadReportId
 
 describe('services/data/update-adjustment-status-by-ids', function () {
   before(function () {
     return appAdjustmentsHelper.insertDependencies(inserts)
     .then(function (builtInserts) {
       inserts = builtInserts
+      workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
     })
   })
 
@@ -26,7 +28,7 @@ describe('services/data/update-adjustment-status-by-ids', function () {
 
     return updateAdjustmentStatusByIds(ids, 'ACTIVE')
     .then(function () {
-      return getOpenAdjustments(minWorkloadId, maxWorkloadId)
+      return getOpenAdjustments(minWorkloadId, maxWorkloadId, workloadReportId)
       .then(function (results) {
         results.forEach(function (result) {
           if (ids.includes(result.id)) {

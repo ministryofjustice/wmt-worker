@@ -3,13 +3,14 @@ const knex = require('knex')(knexConfig)
 
 const adjustmentStatus = require('../../constants/adjustment-status')
 
-module.exports = function (category, workloadStagingIdStart, workloadStagingIdEnd) {
+module.exports = function (category, workloadStagingIdStart, workloadStagingIdEnd, workloadReportId) {
   return knex('adjustments')
     .join('adjustment_reason', 'adjustment_reason.id', 'adjustments.adjustment_reason_id')
     .join('workload', 'workload.workload_owner_id', 'adjustments.workload_owner_id')
     .andWhere('status', adjustmentStatus.ACTIVE)
     .andWhere('adjustment_reason.category_id', category)
     .andWhereBetween('workload.staging_id', [workloadStagingIdStart, workloadStagingIdEnd])
+    .andWhere('workload.workload_report_id', workloadReportId)
     .select('adjustments.id AS id',
       'adjustments.workload_owner_id AS workloadOwnerId',
       'adjustments.contact_id AS contactId',

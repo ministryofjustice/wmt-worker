@@ -28,10 +28,6 @@ module.exports.insertDependenciesForUpdate = function (inserts) {
 module.exports.insertDependencies = function (inserts) {
   var promise = workloadHelper.insertDependencies(inserts)
     .then(function (inserts) {
-      return knex('workload_report').returning('id').insert({})
-    })
-    .then(function (ids) {
-      inserts.push({table: 'workload_report', id: ids[0]})
       return knex('workload_points').returning('id').insert({
         comm_tier_1: 1,
         comm_tier_2: 2,

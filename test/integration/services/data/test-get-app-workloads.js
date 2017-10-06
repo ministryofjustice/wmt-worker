@@ -13,7 +13,7 @@ describe('services/data/get-app-workloads', function () {
     helper.insertDependencies(inserts)
       .then(function (builtInserts) {
         inserts = builtInserts
-        initialWorkloadStagingId = helper.maxStagingId + 1
+        initialWorkloadStagingId = 1
         done()
       })
   })
@@ -22,8 +22,9 @@ describe('services/data/get-app-workloads', function () {
     var batchSize = 2
     var maxStagingId = initialWorkloadStagingId + batchSize - 1
     var workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
+    var workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
 
-    getAppWorkloads(initialWorkloadStagingId, maxStagingId, batchSize)
+    getAppWorkloads(initialWorkloadStagingId, maxStagingId, batchSize, workloadReportId)
       .then(function (queryResults) {
         expect(queryResults.length).to.equal(batchSize)
         var firstWorkload = queryResults[0].values
@@ -49,7 +50,9 @@ describe('services/data/get-app-workloads', function () {
     var batchSize = 1
     var maxStagingId = initialWorkloadStagingId
     var workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
-    getAppWorkloads(initialWorkloadStagingId, maxStagingId, batchSize)
+    var workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
+
+    getAppWorkloads(initialWorkloadStagingId, maxStagingId, batchSize, workloadReportId)
       .then(function (queryResults) {
         expect(queryResults.length).to.equal(batchSize)
         var firstWorkload = queryResults[0].values

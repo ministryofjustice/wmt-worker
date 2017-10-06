@@ -37,7 +37,7 @@ module.exports.execute = function (task) {
 
   var pointsConfigurationPromise = getWorkloadPointsConfiguration()
 
-  return getAppWorkloads(startingStagingId, maxStagingId, batchSize).then(function (workloads) {
+  return getAppWorkloads(startingStagingId, maxStagingId, batchSize, reportId).then(function (workloads) {
     return Promise.each(workloads, function (workloadResult) {
       var workload = workloadResult.values
       var workloadId = workloadResult.id
