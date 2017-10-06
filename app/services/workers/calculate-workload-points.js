@@ -21,7 +21,7 @@ module.exports.execute = function (task) {
   var batchSize = task.additionalData.workloadBatch.batchSize
   var reportId = task.workloadReportId
   var operationType = task.additionalData.operationType
-  var maxStagingId = startingStagingId
+  var maxStagingId = batchSize
   var message
 
   if (batchSize <= 0) {
