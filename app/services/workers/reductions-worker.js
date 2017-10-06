@@ -15,8 +15,8 @@ module.exports.execute = function (task) {
   idsMap.set(reductionStatus.DELETED, [])
   idsMap.set(reductionStatus.ARCHIVED, [])
 
-  var workloadIdStart = task.additionalData.workloadBatch.startingId
-  var workloadIdEnd = workloadIdStart + task.additionalData.workloadBatch.batchSize - 1
+  var workloadIdStart = task.additionalData.startingId
+  var workloadIdEnd = workloadIdStart + task.additionalData.batchSize - 1
 
   logger.info('Retrieving open reductions')
   return getOpenReductions(workloadIdStart, workloadIdEnd)
