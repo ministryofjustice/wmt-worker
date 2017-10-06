@@ -21,14 +21,13 @@ module.exports.execute = function (task) {
   var batchSize = task.additionalData.workloadBatch.batchSize
   var reportId = task.workloadReportId
   var operationType = task.additionalData.operationType
-  var maxStagingId = batchSize
+  var maxStagingId = startingStagingId + batchSize - 1
   var message
 
   if (batchSize <= 0) {
     logger.error('Batchsize must be greater than 0')
     throw (new Error('Batchsize must be greater than 0'))
   } else if (batchSize > 1) {
-    maxStagingId = startingStagingId + batchSize - 1
     message = 'Calculating Workload Points for workloads with staging ids ' + startingStagingId + ' - ' + (startingStagingId + batchSize - 1)
   } else {
     message = 'Calculating Workload Points for workload with staging id ' + startingStagingId

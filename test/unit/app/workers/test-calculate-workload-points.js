@@ -101,7 +101,7 @@ describe('services/workers/calculate-workload-points', function () {
     getCmsAdjustmentPoints.resolves(0)
     var batchSize = 1
     calculateWorkloadPoints.execute(task).then(function () {
-      expect(getWorkloadsStub.calledWith(WORKLOAD_ID, batchSize, batchSize)).to.equal(true)
+      expect(getWorkloadsStub.calledWith(WORKLOAD_ID, WORKLOAD_ID, batchSize)).to.equal(true)
       done()
     })
   })
