@@ -60,8 +60,8 @@ var getAdjustmentStatus = function (adjustment) {
 }
 
 var processAdjustments = function (task) {
-  var workloadIdStart = task.additionalData.workloadBatch.startingId
-  var workloadIdEnd = workloadIdStart + task.additionalData.workloadBatch.batchSize - 1
+  var workloadIdStart = task.additionalData.startingId
+  var workloadIdEnd = workloadIdStart + task.additionalData.batchSize - 1
 
   return mapStagingCmsAdjustments(workloadIdStart, workloadIdEnd)
   .then(function (stgAdjustments) {
@@ -112,11 +112,11 @@ var updateAdjustmentsStatus = function (task) {
   idsMap.set(adjustmentStatus.SCHEDULED, [])
   idsMap.set(adjustmentStatus.ARCHIVED, [])
 
-  var workloadIdStart = task.additionalData.workloadBatch.startingId
-  var workloadIdEnd = workloadIdStart + task.additionalData.workloadBatch.batchSize - 1
+  var workloadIdStart = task.additionalData.startingId
+  var workloadIdEnd = workloadIdStart + task.additionalData.batchSize - 1
 
   logger.info('Retrieving open adjustments for workload owners with workloads ' + workloadIdStart + ' - ' + workloadIdEnd)
-  return getAppAdjustmentsForBatch(workloadIdStart, workloadIdEnd)
+  return getAppAdjustmentsForBatch(adjustmentCategory.CMS, workloadIdStart, workloadIdEnd)
   .then(function (adjustments) {
     adjustments.forEach(function (adjustment) {
       status = getAdjustmentStatus(adjustment)
