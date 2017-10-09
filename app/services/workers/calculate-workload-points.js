@@ -76,7 +76,7 @@ module.exports.execute = function (task) {
       })
     })
   }).catch(function (error) {
-    logger.error('Unable to retrieve workloads with staging ids ' + startingStagingId + ' - ' + maxStagingId, + ', for workload report ' + reportId)
+    logger.error('Unable to retrieve workloads with staging ids ' + startingStagingId + ' - ' + maxStagingId + ', for workload report ' + reportId)
     logger.error(error)
     throw (error)
   })
