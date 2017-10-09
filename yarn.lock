@@ -2053,9 +2053,9 @@ which@^1.2.12:
   dependencies:
     isexe "^2.0.0"
 
-wmt-probation-rules@ministryofjustice/wmt-probation-rules.git#fix/batching:
-  version "0.1.13"
-  resolved "https://codeload.github.com/ministryofjustice/wmt-probation-rules/tar.gz/9862fa8719175e14667f8356355859450467cddb"
+wmt-probation-rules@ministryofjustice/wmt-probation-rules.git#v0.2.0:
+  version "0.2.0"
+  resolved "https://codeload.github.com/ministryofjustice/wmt-probation-rules/tar.gz/e7af2ad0bb49eac5738258146bfe35185b6f33ae"
   dependencies:
     lodash "^4.17.4"
     moment "^2.18.1"

@@ -30,7 +30,8 @@ describe('app/services/data/insert-app-workload', function () {
         buildTier(Locations.CUSTODY),
         9,
         10,
-        11
+        11,
+        12
     )
     insertAppWorkload(workload).then(function (id) {
       workloadId = id
@@ -49,6 +50,7 @@ describe('app/services/data/insert-app-workload', function () {
           expect(result.license_last_16_weeks).to.equal(9)
           expect(result.community_last_16_weeks).to.equal(10)
           expect(result.staging_id).to.equal(11)
+          expect(result.workload_report_id).to.equal(12)
           done()
         })
     })

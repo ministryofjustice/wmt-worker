@@ -51,6 +51,7 @@ module.exports = function (initialId, maxId, batchSize, workloadReportId) {
             }
             tempWorkloads[index].id = row.id
             tempWorkloads[index].stagingId = row.staging_id
+            tempWorkloads[index].workloadReportId = workloadReportId
             tempWorkloads[index].workloadOwnerId = row.workload_owner_id
             tempWorkloads[index].totalCases = row.total_cases
             tempWorkloads[index].totalCustodyCases = row.total_custody_cases
@@ -89,7 +90,8 @@ module.exports = function (initialId, maxId, batchSize, workloadReportId) {
               new Tiers(Locations.LICENSE, ...tempWorkload[Locations.LICENSE], tempWorkload.totalLicenseCases),
               tempWorkload.licenseCasesLast16Weeks,
               tempWorkload.communityCasesLast16Weeks,
-              tempWorkload.stagingId
+              tempWorkload.stagingId,
+              tempWorkload.workloadReportId
             )
             }
           )
