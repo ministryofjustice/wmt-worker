@@ -9,9 +9,9 @@ const adjustmentCategory = require('../../../../app/constants/adjustment-categor
 
 var inserts = []
 var workloadOwnerId
-var workloads
-var minWorkloadId
-var maxWorkloadId
+var minWorkloadStagingId
+var maxWorkloadStagingId
+var workloadReportId
 
 var effectiveFrom = new Date()
 var effectiveTo = new Date()
@@ -42,9 +42,9 @@ describe('app/services/data/insert-adjustment', function () {
       .then(function (builtInserts) {
         inserts = builtInserts
         workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
-        workloads = inserts.filter((item) => item.table === 'workload')
-        minWorkloadId = workloads[0].id
-        maxWorkloadId = workloads[workloads.length - 1].id
+        workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
+        minWorkloadStagingId = 1
+        maxWorkloadStagingId = minWorkloadStagingId + 1
         done()
       })
   })
@@ -55,7 +55,7 @@ describe('app/services/data/insert-adjustment', function () {
     .then(function (resultId) {
       inserts.push({table: 'adjustments', id: resultId})
       expect(resultId).to.be.a('number')
-      return adjustmentsHelper.getAdjustmentsForTest(adjustmentCategory.CMS, minWorkloadId, maxWorkloadId)
+      return adjustmentsHelper.getAdjustmentsForTest(adjustmentCategory.CMS, minWorkloadStagingId, maxWorkloadStagingId, workloadReportId)
       .then(function (adjustments) {
         var expected = {
           id: resultId,
@@ -78,7 +78,7 @@ describe('app/services/data/insert-adjustment', function () {
     .then(function (resultId) {
       inserts.push({table: 'adjustments', id: resultId})
       expect(resultId).to.be.a('number')
-      return adjustmentsHelper.getAdjustmentsForTest(adjustmentCategory.GS, minWorkloadId, maxWorkloadId)
+      return adjustmentsHelper.getAdjustmentsForTest(adjustmentCategory.GS, minWorkloadStagingId, maxWorkloadStagingId, workloadReportId)
       .then(function (adjustments) {
         var expected = {
           id: resultId,

@@ -15,9 +15,13 @@ const updateAdjustmentEffectiveTo = require('../data/update-adjustment-effective
 const insertAdjustment = require('../data/insert-adjustment')
 
 module.exports.execute = function (task) {
-  return processAdjustments(task)
+  var workloadStagingIdStart = task.additionalData.startingId
+  var workloadStagingIdEnd = workloadStagingIdStart + task.additionalData.batchSize - 1
+  var workloadReportId = task.workloadReportId
+
+  return processAdjustments(workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
   .then(function () {
-    return updateAdjustmentsStatus(task)
+    return updateAdjustmentsStatus(workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
     .then(function () {
       var calculateWpAdditionalData = {
         workloadBatch: task.additionalData,
@@ -59,13 +63,10 @@ var getAdjustmentStatus = function (adjustment) {
   return status
 }
 
-var processAdjustments = function (task) {
-  var workloadIdStart = task.additionalData.workloadBatch.startingId
-  var workloadIdEnd = workloadIdStart + task.additionalData.workloadBatch.batchSize - 1
-
-  return mapStagingCmsAdjustments(workloadIdStart, workloadIdEnd)
+var processAdjustments = function (workloadStagingIdStart, workloadStagingIdEnd, workloadReportId) {
+  return mapStagingCmsAdjustments(workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
   .then(function (stgAdjustments) {
-    return getAppAdjustmentsForBatch(adjustmentCategory.CMS, workloadIdStart, workloadIdEnd)
+    return getAppAdjustmentsForBatch(adjustmentCategory.CMS, workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
     .then(function (appAdjustments) {
       var updateAdjustmentsEffectiveTo = []
       var insertAdjustments = []
@@ -106,17 +107,14 @@ var processAdjustments = function (task) {
   })
 }
 
-var updateAdjustmentsStatus = function (task) {
+var updateAdjustmentsStatus = function (workloadStagingIdStart, workloadStagingIdEnd, workloadReportId) {
   var idsMap = new Map()
   idsMap.set(adjustmentStatus.ACTIVE, [])
   idsMap.set(adjustmentStatus.SCHEDULED, [])
   idsMap.set(adjustmentStatus.ARCHIVED, [])
 
-  var workloadIdStart = task.additionalData.workloadBatch.startingId
-  var workloadIdEnd = workloadIdStart + task.additionalData.workloadBatch.batchSize - 1
-
-  logger.info('Retrieving open adjustments for workload owners with workloads ' + workloadIdStart + ' - ' + workloadIdEnd)
-  return getAppAdjustmentsForBatch(workloadIdStart, workloadIdEnd)
+  logger.info('Retrieving open adjustments for workload owners with workloads\' staging ids ' + workloadStagingIdStart + ' - ' + workloadStagingIdEnd + ', for workload report ' + workloadReportId)
+  return getAppAdjustmentsForBatch(adjustmentCategory.CMS, workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
   .then(function (adjustments) {
     adjustments.forEach(function (adjustment) {
       status = getAdjustmentStatus(adjustment)

@@ -7,6 +7,7 @@ const updateReductionStatusByIds = require('../../../../app/services/data/update
 const getOpenReductions = require('../../../../app/services/data/get-open-reductions')
 
 var inserts = []
+var workloadReportId
 
 describe('services/data/update-reduction-status-by-ids', function () {
   before(function (done) {
@@ -15,6 +16,7 @@ describe('services/data/update-reduction-status-by-ids', function () {
         return appReductionsHelper.insertDependencies(inserts)
         .then(function (builtInserts) {
           inserts = builtInserts
+          workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
           done()
         })
       })
@@ -28,7 +30,7 @@ describe('services/data/update-reduction-status-by-ids', function () {
 
     return updateReductionStatusByIds(ids, 'ACTIVE')
     .then(function () {
-      return getOpenReductions(ids[0], ids[ids.length - 1])
+      return getOpenReductions(1, 3, workloadReportId)
       .then(function (results) {
         results.forEach(function (result) {
           if (ids.includes(result.id)) {

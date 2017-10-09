@@ -15,11 +15,12 @@ module.exports.execute = function (task) {
   idsMap.set(reductionStatus.DELETED, [])
   idsMap.set(reductionStatus.ARCHIVED, [])
 
-  var workloadIdStart = task.additionalData.workloadBatch.startingId
-  var workloadIdEnd = workloadIdStart + task.additionalData.workloadBatch.batchSize - 1
+  var workloadStagingIdStart = task.additionalData.startingId
+  var workloadStagingIdEnd = workloadStagingIdStart + task.additionalData.batchSize - 1
+  var workloadReportId = task.workloadReportId
 
-  logger.info('Retrieving open reductions')
-  return getOpenReductions(workloadIdStart, workloadIdEnd)
+  logger.info('Retrieving open reductions for workload owners with workloads\' staging ids ' + workloadStagingIdStart + ' - ' + workloadStagingIdEnd + ', for workload report ' + workloadReportId)
+  return getOpenReductions(workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
     .then(function (reductions) {
       reductions.forEach(function (reduction) {
         status = getReductionStatus(reduction)
@@ -31,8 +32,10 @@ module.exports.execute = function (task) {
       })
       var updateReductionsPromises = []
       for (var [status, ids] of idsMap) {
-        logger.info('Updating status to ' + status + ' for reductions with id in ' + ids + '.')
-        updateReductionsPromises.push(updateReductionStatusByIds(ids, status))
+        if (ids.length !== 0) {
+          logger.info('Updating status to ' + status + ' for reductions with id in ' + ids)
+          updateReductionsPromises.push(updateReductionStatusByIds(ids, status))
+        }
       }
 
       return Promise.all(updateReductionsPromises)
