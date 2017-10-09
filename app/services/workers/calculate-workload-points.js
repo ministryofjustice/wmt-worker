@@ -28,7 +28,7 @@ module.exports.execute = function (task) {
     logger.error('Batchsize must be greater than 0')
     throw (new Error('Batchsize must be greater than 0'))
   } else if (batchSize > 1) {
-    message = 'Calculating Workload Points for workloads with staging ids ' + startingStagingId + ' - ' + (startingStagingId + batchSize - 1)
+    message = 'Calculating Workload Points for workloads with staging ids ' + startingStagingId + ' - ' + maxStagingId
   } else {
     message = 'Calculating Workload Points for workload with staging id ' + startingStagingId
   }
@@ -76,7 +76,7 @@ module.exports.execute = function (task) {
       })
     })
   }).catch(function (error) {
-    logger.error('Unable to retrieve workloads with staging ids ' + startingStagingId + ' - ' + (startingStagingId + batchSize - 1))
+    logger.error('Unable to retrieve workloads with staging ids ' + startingStagingId + ' - ' + maxStagingId)
     logger.error(error)
     throw (error)
   })

@@ -8,9 +8,9 @@ exports.up = function (knex, promise) {
 }
 
 exports.down = function (knex, Promise) {
-  var sql = 'DROP INDEX ix_workload_staging_id ON app.workload' +
-    'ALTER TABLE app.workload DROP COLUMN staging_id' +
-    'ALTER TABLE app.workload DROP COLUMN workload_report_id'
+  var sql = 'DROP INDEX ix_workload_staging_id ON app.workload;' +
+    'ALTER TABLE app.workload DROP COLUMN staging_id;' +
+    'ALTER TABLE app.workload DROP COLUMN workload_report_id;'
   return knex.schema
       .raw('SET ARITHABORT ON')
       .raw(sql)
