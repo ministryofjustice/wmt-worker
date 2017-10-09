@@ -9,7 +9,7 @@ module.exports.insertDependencies = function (workloadOwnerId, inserts = []) {
   var promise = helper.insertDependencies(inserts)
     .then(function (idsArray) {
       var workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
-      var reductions = getReductionObjects(workloadOwnerId)
+      var reductions = module.exports.getReductionObjects(workloadOwnerId)
       return knex('reductions').returning('id').insert(reductions)
     }).then(function (ids) {
       ids.forEach((id) => {
@@ -31,7 +31,7 @@ module.exports.removeDependencies = function (inserts) {
   })
 }
 
-function getReductionObjects (workloadOwnerId) {
+module.exports.getReductionObjects = function (workloadOwnerId) {
   var effectiveFrom = new Date(new Date().setDate(new Date().getDate() - 20))
   var effectiveTo = new Date(new Date().setDate(new Date().getDate() + 20))
 

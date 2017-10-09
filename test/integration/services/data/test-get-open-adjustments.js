@@ -1,20 +1,23 @@
 const expect = require('chai').expect
 const appAdjustmentsHelper = require('../../../helpers/data/app-adjustments-helper')
-const getOpenReductions = require('../../../../app/services/data/get-open-adjustments')
+const getOpenAdjustments = require('../../../../app/services/data/get-open-adjustments')
 
 var inserts = []
+var workloadReportId
 
 describe('services/data/get-open-adjustments', function () {
-  before(function () {
-    return appAdjustmentsHelper.insertDependencies(inserts)
+  before(function (done) {
+    appAdjustmentsHelper.insertDependencies(inserts)
     .then(function (builtInserts) {
       inserts = builtInserts
+      workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
+      done()
     })
   })
 
-  it('should retrieve the open adjustments in system for a given range of workloads -> workload owners -> adjustments', function () {
-    var startId = inserts.filter((item) => item.table === 'workload')[0].id
-    return getOpenReductions(startId, startId)
+  it('should retrieve the open adjustments in system for a given range of active workload staging ids -> workload owners -> adjustments', function () {
+    var startStagingId = 1
+    return getOpenAdjustments(startStagingId, startStagingId, workloadReportId)
     .then(function (results) {
       expect(results.length).to.be.eql(6)
       var openIds = []
