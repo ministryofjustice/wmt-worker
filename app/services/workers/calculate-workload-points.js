@@ -11,9 +11,9 @@ const updateWorkloadPointsCalculations = require('../data/update-workload-points
 const getWorkloadPointsConfiguration = require('../data/get-workload-points-configuration')
 const getOffenderManagerTypeId = require('../data/get-offender-manager-type-id')
 const getContractedHours = require('../data/get-contracted-hours')
-const getReductionHours = require('../data/get-app-reduction-hours')
+const getAdjustmentPoints = require('../data/get-adjustment-points')
 const wpcOperationType = require('../../constants/calculate-workload-points-operation')
-const reductionContactType = require('../../constants/reduction-contact-type')
+const adjustmentCategory = require('../../constants/adjustment-category')
 
 module.exports.execute = function (task) {
   var id = task.additionalData.workloadBatch.startingId
@@ -41,9 +41,8 @@ module.exports.execute = function (task) {
       var workload = workloadResult.values
       var workloadId = workloadResult.id
       var getOffenderManagerTypePromise = getOffenderManagerTypeId(workload.workloadOwnerId)
-      var getAppReductionsPromise = getReductionHours(workload.workloadOwnerId)
-      var getAppCmsReductionHoursPromise = getReductionHours(workload.workloadOwnerId, reductionContactType.CMS)
-      var getAppGsReductionHoursPromise = getReductionHours(workload.workloadOwnerId, reductionContactType.GS)
+      var getAppReductionsPromise = getAppReductions(workload.workloadOwnerId)
+      var getCmsAdjustmentPointsPromise = getAdjustmentPoints(workload.workloadOwnerId, adjustmentCategory.CMS)
       var getContractedHoursPromise = getContractedHours(workload.workloadOwnerId)
 
       return pointsConfigurationPromise.then(function (pointsConfiguration) {
@@ -52,26 +51,24 @@ module.exports.execute = function (task) {
         var sdrPoints = calculateSdrConversionPoints(workload.monthlySdrs, caseTypeWeightings.pointsConfiguration.sdr)
         var paromsPoints = calculateParomPoints(workload.paromsCompletedLast30Days, caseTypeWeightings.pointsConfiguration.parom, caseTypeWeightings.pointsConfiguration.paromsEnabled)
         var workloadPoints = calculateWorkloadPoints(workload, caseTypeWeightings)
-        var totalPoints = (workloadPoints + sdrConversionPoints + sdrPoints + paromsPoints)
         return getAppReductionsPromise.then(function (reductions) {
-          return getAppCmsReductionHoursPromise.then(function (cmsReductions) {
-            return getAppGsReductionHoursPromise.then(function (gsReductions) {
-              return getContractedHoursPromise.then(function (contractedHours) {
-                return getOffenderManagerTypePromise.then(function (offenderManagerTypeId) {
-                  var nominalTarget = calculateNominalTarget(offenderManagerTypeId, caseTypeWeightings.pointsConfiguration.defaultNominalTargets)
-                  var availablePoints = calculateAvailablePoints(nominalTarget, offenderManagerTypeId, contractedHours,
-                      reductions, caseTypeWeightings.pointsConfiguration.defaultContractedHours)
-                  switch (operationType) {
-                    case wpcOperationType.INSERT:
-                      return insertWorkloadPointsCalculations(reportId, pointsConfiguration.id, workloadId, totalPoints,
-                            sdrPoints, sdrConversionPoints, paromsPoints, nominalTarget, availablePoints, contractedHours, reductions, cmsReductions, gsReductions)
-                    case wpcOperationType.UPDATE:
-                      return updateWorkloadPointsCalculations(reportId, pointsConfiguration.id, workloadId, totalPoints,
-                            sdrPoints, sdrConversionPoints, paromsPoints, nominalTarget, availablePoints, contractedHours, reductions, cmsReductions, gsReductions)
-                    default:
-                      throw new Error('Operation type of ' + operationType + ' is not valid. Should be ' + wpcOperationType.INSERT + ' or ' + wpcOperationType.UPDATE)
-                  }
-                })
+          return getCmsAdjustmentPointsPromise.then(function (cmsAdjustments) {
+            var totalPoints = (workloadPoints + sdrConversionPoints + sdrPoints + paromsPoints + cmsAdjustments)
+            return getContractedHoursPromise.then(function (contractedHours) {
+              return getOffenderManagerTypePromise.then(function (offenderManagerTypeId) {
+                var nominalTarget = calculateNominalTarget(offenderManagerTypeId, caseTypeWeightings.pointsConfiguration.defaultNominalTargets)
+                var availablePoints = calculateAvailablePoints(nominalTarget, offenderManagerTypeId, contractedHours,
+                    reductions, caseTypeWeightings.pointsConfiguration.defaultContractedHours)
+                switch (operationType) {
+                  case wpcOperationType.INSERT:
+                    return insertWorkloadPointsCalculations(reportId, pointsConfiguration.id, workloadId, totalPoints,
+                          sdrPoints, sdrConversionPoints, paromsPoints, nominalTarget, availablePoints, reductions, contractedHours, cmsAdjustments)
+                  case wpcOperationType.UPDATE:
+                    return updateWorkloadPointsCalculations(reportId, pointsConfiguration.id, workloadId, totalPoints,
+                          sdrPoints, sdrConversionPoints, paromsPoints, nominalTarget, availablePoints, reductions, contractedHours, cmsAdjustments)
+                  default:
+                    throw new Error('Operation type of ' + operationType + ' is not valid. Should be ' + wpcOperationType.INSERT + ' or ' + wpcOperationType.UPDATE)
+                }
               })
             })
           })
