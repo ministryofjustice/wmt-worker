@@ -19,7 +19,7 @@ module.exports.execute = function (task) {
   var workloadStagingIdEnd = workloadStagingIdStart + task.additionalData.batchSize - 1
   var workloadReportId = task.workloadReportId
 
-  logger.info('Retrieving open reductions for workload owners with workloads\' staging ids ' + workloadStagingIdStart + ' - ' + workloadStagingIdEnd)
+  logger.info('Retrieving open reductions for workload owners with workloads\' staging ids ' + workloadStagingIdStart + ' - ' + workloadStagingIdEnd + ', for workload report ' + workloadReportId)
   return getOpenReductions(workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
     .then(function (reductions) {
       reductions.forEach(function (reduction) {

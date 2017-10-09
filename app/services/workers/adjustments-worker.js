@@ -113,7 +113,7 @@ var updateAdjustmentsStatus = function (workloadStagingIdStart, workloadStagingI
   idsMap.set(adjustmentStatus.SCHEDULED, [])
   idsMap.set(adjustmentStatus.ARCHIVED, [])
 
-  logger.info('Retrieving open adjustments for workload owners with workloads\' staging ids ' + workloadStagingIdStart + ' - ' + workloadStagingIdEnd)
+  logger.info('Retrieving open adjustments for workload owners with workloads\' staging ids ' + workloadStagingIdStart + ' - ' + workloadStagingIdEnd + ', for workload report ' + workloadReportId)
   return getAppAdjustmentsForBatch(adjustmentCategory.CMS, workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
   .then(function (adjustments) {
     adjustments.forEach(function (adjustment) {
