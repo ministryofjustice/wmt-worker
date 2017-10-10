@@ -13,7 +13,8 @@ exports.seed = function (knex, Promise) {
         { description: 'Team 3', ldu_id: lduIds[2].id },
         { description: 'Team 4', ldu_id: lduIds[0].id },
         { description: 'Team 5', ldu_id: lduIds[1].id },
-        { description: 'Team 6', ldu_id: lduIds[2].id }
+        { description: 'Team 6', ldu_id: lduIds[2].id },
+        { description: 'CR Team 1', ldu_id: lduIds[2].id }
       ])
     })
 }
