@@ -3,13 +3,18 @@ exports.seed = function (knex, Promise) {
       WITH SCHEMABINDING 
       AS 
       SELECT
-        wo.id AS workload_owner_id 
+        wo.id AS id 
         , om_type.grade_code AS grade_code
-        , t.id AS team_id
+        , t.id AS link_id
         , t.description AS team_name
-        , wo.contracted_hours AS contracted_hours
+        , CASE 
+            WHEN wo.contracted_hours IS NULL THEN crwp.default_contracted_hours
+            ELSE wo.contracted_hours
+          END AS contracted_hours
         , crwpc.reduction_hours AS reduction_hours
-        , crwp.default_contracted_hours AS default_contracted_hours
+        , crw.total_cases_sdr AS total_cases_sdrs
+        , crw.total_cases_fdr AS total_cases_fdrs
+        , crw.total_cases_oral_reports AS total_cases_oral_reports
       FROM app.workload_owner wo
         JOIN app.team t ON wo.team_id = t.id
         JOIN app.offender_manager om ON om.id = wo.offender_manager_id

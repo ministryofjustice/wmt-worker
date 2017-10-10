@@ -6,14 +6,16 @@ exports.seed = function (knex, promise) {
         MAX(CONCAT(om.forename, ' ', om.surname)) AS name
       , MAX(iv.grade_code) AS grade_code
       , MAX(iv.contracted_hours) AS contracted_hours
-      , MAX(iv.default_contracted_hours) AS default_contracted_hours
       , MAX(iv.reduction_hours) AS reduction_hours
-      , MAX(iv.team_id) AS id
-      , MAX(iv.workload_owner_id) AS link_id
+      , MAX(iv.link_id) AS id
+      , MAX(iv.id) AS link_id
+      , SUM(iv.total_cases_sdrs) AS total_sdrs
+      , SUM(iv.total_cases_fdrs) AS total_fdrs
+      , SUM(iv.total_cases_oral_reports) AS total_oral_reports
     FROM app.individual_court_reporter_overview iv
-      JOIN app.workload_owner wo ON wo.id = iv.workload_owner_id
+      JOIN app.workload_owner wo ON wo.id = iv.id
       JOIN app.offender_manager om ON om.id = wo.offender_manager_id
-    GROUP BY iv.workload_owner_id;`
+    GROUP BY iv.id;`
   
     return knex.schema
       .raw('DROP VIEW IF EXISTS app.team_court_report_overview;')
