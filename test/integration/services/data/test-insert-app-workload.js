@@ -31,7 +31,9 @@ describe('app/services/data/insert-app-workload', function () {
         9,
         10,
         11,
-        12
+        12,
+        13,
+        14
     )
     insertAppWorkload(workload).then(function (id) {
       workloadId = id
@@ -51,6 +53,8 @@ describe('app/services/data/insert-app-workload', function () {
           expect(result.community_last_16_weeks).to.equal(10)
           expect(result.arms_community_cases).to.equal(11)
           expect(result.arms_license_cases).to.equal(12)
+          expect(result.staging_id).to.equal(13)
+          expect(result.workload_report_id).to.equal(14)
           done()
         })
     })

@@ -39,20 +39,19 @@ describe('services/data/get-staging-workload', function () {
     })
   })
 
-  it('should return the union of all staged case details', function (done) {
+  it('should return the union of all staged case details', function () {
     var workloads = insertedRecords.filter((item) => item.table === 'wmt_extract')
     var firstId = workloads[0].id
     var lastId = parseInt(firstId) + workloads.length
     caseSummaryReport.armsCommunityCases = 3
     caseSummaryReport.armsLicenseCases = 2
 
-    getStagingWorkload([firstId, lastId])
+    return getStagingWorkload([firstId, lastId])
     .then(function (omWorkload) {
       expect(omWorkload.length).to.be.equal(1)
       expect(omWorkload[0].casesSummary).to.deep.eq(caseSummaryReport)
       expect(omWorkload[0].courtReports).to.deep.eq(courtReport)
       expect(omWorkload[0].instReports).to.deep.eq(institutionReport)
-      done()
     })
   })
 

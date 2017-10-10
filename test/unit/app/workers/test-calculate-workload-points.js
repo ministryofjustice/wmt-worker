@@ -103,10 +103,9 @@ describe('services/workers/calculate-workload-points', function () {
         operationType: wpcOperation.INSERT
       }}
     getCmsAdjustmentPoints.resolves(0)
-    var maxId = 10
     var batchSize = 1
     calculateWorkloadPoints.execute(task).then(function () {
-      expect(getWorkloadsStub.calledWith(WORKLOAD_ID, maxId, batchSize)).to.equal(true)
+      expect(getWorkloadsStub.calledWith(WORKLOAD_ID, WORKLOAD_ID, batchSize)).to.equal(true)
       done()
     })
   })

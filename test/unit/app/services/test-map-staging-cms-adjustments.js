@@ -11,7 +11,7 @@ var getWorkloadOwnerId
 var getAdjustmentReasonFromCode
 var getWorkloadOwnersInWorkloadRange
 
-const reductionReason = {
+const adjustmentReason = {
   id: 1,
   points: 15
 }
@@ -44,8 +44,8 @@ const expectedAdjustments = [
   {
     contactId: cmsStagingRows[0].contactId,
     workloadOwnerId: 1,
-    points: reductionReason.points,
-    reductionReasonId: reductionReason.id,
+    points: adjustmentReason.points,
+    adjustmentReasonId: adjustmentReason.id,
     effectiveFrom: now,
     effectiveTo: thirtyDays,
     status: adjustmentStatus.ACTIVE
@@ -53,8 +53,8 @@ const expectedAdjustments = [
   {
     contactId: cmsStagingRows[0].contactId,
     workloadOwnerId: 1,
-    points: reductionReason.points * -1,
-    reductionReasonId: reductionReason.id,
+    points: adjustmentReason.points * -1,
+    adjustmentReasonId: adjustmentReason.id,
     effectiveFrom: now,
     effectiveTo: thirtyDays,
     status: adjustmentStatus.ACTIVE
@@ -62,8 +62,8 @@ const expectedAdjustments = [
   {
     contactId: cmsStagingRows[1].contactId,
     workloadOwnerId: 1,
-    points: reductionReason.points,
-    reductionReasonId: reductionReason.id,
+    points: adjustmentReason.points,
+    adjustmentReasonId: adjustmentReason.id,
     effectiveFrom: now,
     effectiveTo: thirtyDays,
     status: adjustmentStatus.ACTIVE
@@ -71,8 +71,8 @@ const expectedAdjustments = [
   {
     contactId: cmsStagingRows[1].contactId,
     workloadOwnerId: 1,
-    points: reductionReason.points * -1,
-    reductionReasonId: reductionReason.id,
+    points: adjustmentReason.points * -1,
+    adjustmentReasonId: adjustmentReason.id,
     effectiveFrom: now,
     effectiveTo: thirtyDays,
     status: adjustmentStatus.ACTIVE
@@ -97,7 +97,7 @@ describe('services/map-staging-cms-adjustments', function () {
   it('should call getStagingCmsAdjustments and when no records return do nothing', function () {
     getStagingCmsRecords.resolves(undefined)
     getWorkloadOwnerId.resolves(1)
-    getAdjustmentReasonFromCode.resolves(reductionReason)
+    getAdjustmentReasonFromCode.resolves(adjustmentReason)
     getWorkloadOwnersInWorkloadRange.resolves([1])
 
     return mapStagingCmsAdjustments()
@@ -112,7 +112,7 @@ describe('services/map-staging-cms-adjustments', function () {
   it('should return 2 adjustments for each row in the CMS staging table', function () {
     getStagingCmsRecords.resolves(cmsStagingRows)
     getWorkloadOwnerId.resolves(1)
-    getAdjustmentReasonFromCode.resolves(reductionReason)
+    getAdjustmentReasonFromCode.resolves(adjustmentReason)
     getWorkloadOwnersInWorkloadRange.resolves([1])
 
     return mapStagingCmsAdjustments()
@@ -132,7 +132,7 @@ describe('services/map-staging-cms-adjustments', function () {
   it('should return 0 adjustments if workload_owner is not in batch', function () {
     getStagingCmsRecords.resolves(undefined)
     getWorkloadOwnerId.resolves(1)
-    getAdjustmentReasonFromCode.resolves(reductionReason)
+    getAdjustmentReasonFromCode.resolves(adjustmentReason)
     getWorkloadOwnersInWorkloadRange.resolves([2])
 
     return mapStagingCmsAdjustments()
