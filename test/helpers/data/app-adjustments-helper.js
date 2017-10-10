@@ -9,7 +9,7 @@ module.exports.insertDependencies = function (workloadOwnerId, inserts = []) {
   var promise = helper.insertDependencies(inserts)
     .then(function (idsArray) {
       var workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
-      var adjustments = getAdjustmentObjects(workloadOwnerId)
+      var adjustments = module.exports.getAdjustmentObjects(workloadOwnerId)
       return knex('adjustments').returning('id').insert(adjustments)
     }).then(function (ids) {
       ids.forEach((id) => {
@@ -51,7 +51,7 @@ module.exports.getAdjustmentsForTest = function (adjustmentCategory, minWorkload
   })
 }
 
-function getAdjustmentObjects (workloadOwnerId) {
+module.exports.getAdjustmentObjects = function (workloadOwnerId) {
   var effectiveFrom = new Date(new Date().setDate(new Date().getDate() - 20))
   var effectiveTo = new Date(new Date().setDate(new Date().getDate() + 20))
 
@@ -62,9 +62,10 @@ function getAdjustmentObjects (workloadOwnerId) {
     {workload_owner_id: workloadOwnerId, points: 4, effective_from: effectiveFrom, effective_to: effectiveTo, adjustment_reason_id: 1, status: 'SCHEDULED', contact_id: null},
     {workload_owner_id: workloadOwnerId, points: 5, effective_from: effectiveFrom, effective_to: effectiveTo, adjustment_reason_id: 1, status: 'ARCHIVED', contact_id: 312},
     // GS
-    {workload_owner_id: workloadOwnerId, points: 7, effective_from: effectiveFrom, effective_to: effectiveTo, adjustment_reason_id: 40, status: null, contact_id: 222},
-    {workload_owner_id: workloadOwnerId, points: 9, effective_from: effectiveFrom, effective_to: effectiveTo, adjustment_reason_id: 40, status: 'ACTIVE', contact_id: 333},
-    {workload_owner_id: workloadOwnerId, points: 4, effective_from: effectiveFrom, effective_to: effectiveTo, adjustment_reason_id: 40, status: 'SCHEDULED', contact_id: null},
-    {workload_owner_id: workloadOwnerId, points: 5, effective_from: effectiveFrom, effective_to: effectiveTo, adjustment_reason_id: 40, status: 'ARCHIVED', contact_id: 444}
+    {workload_owner_id: workloadOwnerId, points: 1, effective_from: effectiveFrom, effective_to: effectiveTo, adjustment_reason_id: 40, status: null, contact_id: 222},
+    {workload_owner_id: workloadOwnerId, points: 2, effective_from: effectiveFrom, effective_to: effectiveTo, adjustment_reason_id: 40, status: 'ACTIVE', contact_id: 333},
+    {workload_owner_id: workloadOwnerId, points: 3, effective_from: effectiveFrom, effective_to: effectiveTo, adjustment_reason_id: 40, status: 'SCHEDULED', contact_id: null},
+    {workload_owner_id: workloadOwnerId, points: 4, effective_from: effectiveFrom, effective_to: effectiveTo, adjustment_reason_id: 40, status: 'ARCHIVED', contact_id: 444},
+    {workload_owner_id: workloadOwnerId, points: 2, effective_from: effectiveFrom, effective_to: effectiveTo, adjustment_reason_id: 40, status: 'ACTIVE', contact_id: 111}
   ]
 }

@@ -43,8 +43,8 @@ describe('services/workers/calculate-workload-points', function () {
         expect(workloadPointsCalculations[0].workload_id).to.equal(insertedWorkloads[0].id)
         expect(workloadPointsCalculations[0].contracted_hours).to.equal(40)
         expect(workloadPointsCalculations[0].reduction_hours).to.equal(9)
-        // expect(workloadPointsCalculations[0].cms_adjustment_points).to.equal(9)
-        // expect(workloadPointsCalculations[0].gs_adjustment_points).to.equal(9)
+        expect(workloadPointsCalculations[0].cms_adjustment_points).to.equal(9)
+        expect(workloadPointsCalculations[0].gs_adjustment_points).to.equal(4)
         expect(workloadPointsCalculations[1].workload_report_id).to.equal(workloadReportId)
         expect(workloadPointsCalculations[2].workload_report_id).to.equal(workloadReportId)
         workloadPointsCalculations.forEach(function (insertedCalculation) {

@@ -19,7 +19,7 @@ describe('services/data/get-open-adjustments', function () {
     var startStagingId = 1
     return getOpenAdjustments(startStagingId, startStagingId, workloadReportId)
     .then(function (results) {
-      expect(results.length).to.be.eql(6)
+      expect(results.length).to.be.eql(7)
       var openIds = []
       results.forEach(function (result) {
         expect(['ACTIVE', 'SCHEDULED', null]).to.include(result.status)
