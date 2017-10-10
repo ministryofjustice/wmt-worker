@@ -64,7 +64,11 @@ module.exports.insertPriority = function (inserts) {
 module.exports.deleteAll = function (inserts) {
   inserts = inserts.reverse()
   return Promise.each(inserts, function (insert) {
-    return knex(insert.table).where('id', insert.id).del()
+    if (insert.id instanceof Array) {
+      return knex(insert.table).whereIn('id', insert.id).del()
+    } else {
+      return knex(insert.table).where('id', insert.id).del()
+    }
   })
 }
 

@@ -8,7 +8,7 @@ module.exports = function (omKey, teamCode) {
     'assessmentent_team_key': teamCode // typo in extract
   }
 
-  return knex.count('sentence_type').select('sentence_type')
+  return knex.count('sentence_type as count').select('sentence_type')
           .from(`${config.DB_STG_SCHEMA}.arms`)
           .where(whereObject) // .andWhere(disposal_or_release_date is no more than 6 weeks ago)
           .groupBy('sentence_type')
@@ -19,15 +19,15 @@ module.exports = function (omKey, teamCode) {
     }
 
     results.forEach(function (row) {
-      switch (row.sentenceType) {
+      switch (row.sentence_type) {
         case 'Community':
-          armsTotals.community = row[0]
+          armsTotals.community = row.count
           break
         case 'License':
-          armsTotals.license = row[0]
+          armsTotals.license = row.count
           break
         default:
-          console.log('Unrecognised sentence type: ' + row.sentenceType)
+          console.log('Unrecognised sentence type: ' + row.sentence_type)
       }
     })
 
