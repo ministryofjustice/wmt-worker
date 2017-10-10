@@ -62,6 +62,7 @@ describe('services/workers/calculate-workload-points', function () {
     calculateWorkloadPoints = proxyquire('../../../../app/services/workers/calculate-workload-points', {
       '../log': { info: function (message) {}, error: function (message) {} },
       '../data/get-app-workloads': getWorkloadsStub,
+      '../data/get-app-reduction-hours': getAppReductions,
       '../data/get-workload-points-configuration': getPointsConfigurationStub,
       '../data/get-offender-manager-type-id': getOffenderManagerTypeIdStub,
       '../data/get-contracted-hours': getContractedHours,
@@ -132,7 +133,7 @@ describe('services/workers/calculate-workload-points', function () {
     calculateWorkloadPoints.execute(task).then(function () {
       expect(
         insertWorkloadPointsCalculationsStub.calledWith(REPORT_ID, WORKLOAD_ID, WORKLOAD_ID, expectedTotalPoints, SDR_POINTS, SDR_POINTS,
-          PAROM_POINTS, NOMINAL_TARGET, AVAILABLE_POINTS, REDUCTION_HOURS, CONTRACTED_HOURS, CMS_POINTS_POSITIVE)
+          PAROM_POINTS, NOMINAL_TARGET, AVAILABLE_POINTS, CONTRACTED_HOURS, REDUCTION_HOURS, CMS_POINTS_POSITIVE)
       ).to.equal(true)
       done()
     })
@@ -146,7 +147,7 @@ describe('services/workers/calculate-workload-points', function () {
     calculateWorkloadPoints.execute(task).then(function () {
       expect(
         insertWorkloadPointsCalculationsStub.calledWith(REPORT_ID, WORKLOAD_ID, WORKLOAD_ID, expectedTotalPoints, SDR_POINTS, SDR_POINTS,
-          PAROM_POINTS, NOMINAL_TARGET, AVAILABLE_POINTS, REDUCTION_HOURS, CONTRACTED_HOURS, CMS_POINTS_NEGATIVE)
+          PAROM_POINTS, NOMINAL_TARGET, AVAILABLE_POINTS, CONTRACTED_HOURS, REDUCTION_HOURS, CMS_POINTS_NEGATIVE)
       ).to.equal(true)
       done()
     })

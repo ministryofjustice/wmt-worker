@@ -2,7 +2,6 @@ const expect = require('chai').expect
 
 const getAppReductions = require('../../../../app/services/data/get-app-reduction-hours')
 const appReductionsHelper = require('../../../helpers/data/app-reductions-helper')
-const reductionContactType = require('../../../../app/constants/reduction-contact-type')
 
 var inserts = []
 
@@ -15,26 +14,10 @@ describe('services/data/get-app-reduction-hours', function () {
     })
   })
 
-  it('should retrieve the total of active CMS reductions for a given workload owner', function (done) {
-    var workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
-    getAppReductions(workloadOwnerId, reductionContactType.CMS).then(function (hours) {
-      expect(hours).to.equal(10)
-      done()
-    })
-  })
-
-  it('should retrieve the total of active GS reductions for a given workload owner', function (done) {
-    var workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
-    getAppReductions(workloadOwnerId, reductionContactType.GS).then(function (hours) {
-      expect(hours).to.equal(5)
-      done()
-    })
-  })
-
-  it('should retrieve the total of active standard reductions (i.e. non-CMS and non-GS reductions) for a given workload owner', function (done) {
+  it('should retrieve the total of active reductions for a given workload owner', function (done) {
     var workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
     getAppReductions(workloadOwnerId).then(function (hours) {
-      expect(hours).to.equal(2)
+      expect(hours).to.equal(9)
       done()
     })
   })

@@ -29,11 +29,10 @@ describe('services/data/insert-workload-points-calculation', function () {
     var availablePoints = 6
     var reductionHours = 1.5
     var contractedHours = 38.5
-    var reductionHours = 32
     var cmsAdjustmentPoints = 15
     var gsAdjustmentPoints = -1
 
-    insertWorkloadPointsCalculations(workloadReportId, workloadPointsId, workloadId, totalPoints, sdrPoints, sdrConversionPoints, 
+    insertWorkloadPointsCalculations(workloadReportId, workloadPointsId, workloadId, totalPoints, sdrPoints, sdrConversionPoints,
       paromsPoints, nominalTarget, availablePoints, contractedHours, reductionHours, cmsAdjustmentPoints, gsAdjustmentPoints)
     .then(function (ids) {
       var insertedId = ids[0]

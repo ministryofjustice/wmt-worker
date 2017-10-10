@@ -10,6 +10,7 @@ const insertWorkloadPointsCalculations = require('../data/insert-workload-points
 const updateWorkloadPointsCalculations = require('../data/update-workload-points-calculation')
 const getWorkloadPointsConfiguration = require('../data/get-workload-points-configuration')
 const getOffenderManagerTypeId = require('../data/get-offender-manager-type-id')
+const getAppReductions = require('../data/get-app-reduction-hours')
 const getContractedHours = require('../data/get-contracted-hours')
 const getAdjustmentPoints = require('../data/get-adjustment-points')
 const wpcOperationType = require('../../constants/calculate-workload-points-operation')
@@ -61,10 +62,10 @@ module.exports.execute = function (task) {
                 switch (operationType) {
                   case wpcOperationType.INSERT:
                     return insertWorkloadPointsCalculations(reportId, pointsConfiguration.id, workloadId, totalPoints,
-                          sdrPoints, sdrConversionPoints, paromsPoints, nominalTarget, availablePoints, reductions, contractedHours, cmsAdjustments)
+                          sdrPoints, sdrConversionPoints, paromsPoints, nominalTarget, availablePoints, contractedHours, reductions, cmsAdjustments)
                   case wpcOperationType.UPDATE:
                     return updateWorkloadPointsCalculations(reportId, pointsConfiguration.id, workloadId, totalPoints,
-                          sdrPoints, sdrConversionPoints, paromsPoints, nominalTarget, availablePoints, reductions, contractedHours, cmsAdjustments)
+                          sdrPoints, sdrConversionPoints, paromsPoints, nominalTarget, availablePoints, contractedHours, reductions, cmsAdjustments)
                   default:
                     throw new Error('Operation type of ' + operationType + ' is not valid. Should be ' + wpcOperationType.INSERT + ' or ' + wpcOperationType.UPDATE)
                 }

@@ -9,7 +9,7 @@ const submittingAgent = require('../../constants/task-submitting-agent')
 const wpcOperationType = require('../../constants/calculate-workload-points-operation')
 const logger = require('../log')
 
-const mapStagingCmsAdjustments = require('../map-staging-cms-adjustments')
+const stagingAdjustmentsMapper = require('../staging-adjustments-mapper')
 const getAppAdjustmentsForBatch = require('../data/get-app-adjustments-for-batch')
 const updateAdjustmentEffectiveTo = require('../data/update-adjustment-effective-to')
 const insertAdjustment = require('../data/insert-adjustment')
@@ -64,7 +64,7 @@ var getAdjustmentStatus = function (adjustment) {
 }
 
 var processAdjustments = function (workloadStagingIdStart, workloadStagingIdEnd, workloadReportId) {
-  return mapStagingCmsAdjustments(workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
+  return stagingAdjustmentsMapper.mapCmsAdjustments(workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
   .then(function (stgAdjustments) {
     return getAppAdjustmentsForBatch(adjustmentCategory.CMS, workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
     .then(function (appAdjustments) {

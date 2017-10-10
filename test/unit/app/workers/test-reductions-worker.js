@@ -5,6 +5,7 @@ const expect = require('chai').expect
 
 const reductionStatus = require('../../../../app/constants/reduction-status')
 const Task = require('../../../../app/services/domain/task')
+const dateHelper = require('../../../helpers/data/date-helper')
 
 var reductionsWorker
 var getOpenReductions
@@ -12,45 +13,31 @@ var updateReductionStatusByIds
 var createNewTasks
 var relativeFilePath = 'services/workers/reductions-worker'
 
-var today = new Date()
-
-var yesterday = new Date(today)
-yesterday.setDate(today.getDate() - 1)
-
-var dayBeforeYesterday = new Date(today)
-dayBeforeYesterday.setDate(today.getDate() - 2)
-
-var tomorrow = new Date(today)
-tomorrow.setDate(today.getDate() + 1)
-
-var dayAfterTomorrow = new Date(today)
-dayAfterTomorrow.setDate(today.getDate() + 2)
-
 var activeReduction = {
   id: 1,
-  effectiveFrom: yesterday,
-  effectiveTo: tomorrow,
+  effectiveFrom: dateHelper.yesterday,
+  effectiveTo: dateHelper.tomorrow,
   status: null
 }
 
 var scheduledReduction = {
   id: 2,
-  effectiveFrom: tomorrow,
-  effectiveTo: dayAfterTomorrow,
+  effectiveFrom: dateHelper.tomorrow,
+  effectiveTo: dateHelper.dayAfterTomorrow,
   status: null
 }
 
 var archivedReduction = {
   id: 3,
-  effectiveFrom: dayBeforeYesterday,
-  effectiveTo: yesterday,
+  effectiveFrom: dateHelper.dayBeforeYesterday,
+  effectiveTo: dateHelper.yesterday,
   status: null
 }
 
 var existingActiveReduction = {
   id: 1,
-  effectiveFrom: yesterday,
-  effectiveTo: tomorrow,
+  effectiveFrom: dateHelper.yesterday,
+  effectiveTo: dateHelper.tomorrow,
   status: reductionStatus.ACTIVE
 }
 
@@ -92,5 +79,4 @@ describe(relativeFilePath, function () {
       expect(updateReductionStatusByIds.calledWith([archivedReduction.id], 'ARCHIVED')).to.be.equal(true)
     })
   })
-
 })

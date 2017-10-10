@@ -37,11 +37,19 @@ describe('services/workers/calculate-workload-points', function () {
     calculatePointsWorker.execute(task).then(() => {
       knex('workload_points_calculations')
       .whereBetween('workload_id', [insertedWorkloads[0].id, insertedWorkloads[insertedWorkloads.length - 1].id])
-      .then((workloadPointsCalculations) => {
+      .then(function (workloadPointsCalculations) {
         expect(workloadPointsCalculations.length).to.equal(batchSize)
-        expect(workloadPointsCalculations[0].reduction_hours).to.equal(2)
-        workloadPointsCalculations.forEach((insertedCalculation) =>
-          inserts.push({table: 'workload_points_calculations', id: insertedCalculation.id}))
+        expect(workloadPointsCalculations[0].workload_report_id).to.equal(workloadReportId)
+        expect(workloadPointsCalculations[0].workload_id).to.equal(insertedWorkloads[0].id)
+        expect(workloadPointsCalculations[0].contracted_hours).to.equal(40)
+        expect(workloadPointsCalculations[0].reduction_hours).to.equal(9)
+        // expect(workloadPointsCalculations[0].cms_adjustment_points).to.equal(9)
+        // expect(workloadPointsCalculations[0].gs_adjustment_points).to.equal(9)
+        expect(workloadPointsCalculations[1].workload_report_id).to.equal(workloadReportId)
+        expect(workloadPointsCalculations[2].workload_report_id).to.equal(workloadReportId)
+        workloadPointsCalculations.forEach(function (insertedCalculation) {
+          inserts.push({table: 'workload_points_calculations', id: insertedCalculation.id})
+        })
         done()
       })
     })
