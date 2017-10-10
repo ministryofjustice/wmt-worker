@@ -83,7 +83,6 @@ module.exports.mapGsAdjustments = function (workloadStagingIdStart, workloadStag
             .then(function (adjustmentReason) {
               return getWorkloadOwnerId(gsAdjustment.omKey, gsAdjustment.omTeamKey)
               .then(function (workloadOwnerId) {
-                // TODO: Work out what's happening with date times
                 var startDate = new Date(gsAdjustment.contactDate)
                 var endDate = new Date(startDate)
                 endDate.setDate(endDate.getDate() + 30)
