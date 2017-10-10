@@ -6,7 +6,7 @@ exports.seed = function (knex, Promise) {
         wo.id AS id 
         , om_type.grade_code AS grade_code
         , t.id AS link_id
-        , t.description AS team_name
+        , t.description AS name
         , crwpc.contracted_hours AS contracted_hours
         , crwpc.reduction_hours AS reduction_hours
         , crw.total_cases_sdr AS total_cases_sdrs
