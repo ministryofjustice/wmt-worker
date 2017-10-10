@@ -25,7 +25,8 @@ exports.seed = function (knex, Promise) {
   var partFourWorkloads = []
   return knex(tableName).del()
     .then(function () {
-      return knex('workload_owner').select('id')
+      return knex('workload_owner').join('team','workload_owner.team_id', 'team.id')
+      .select('workload_owner.id').whereNot('team.description','CR Team 1')
     })
     .then(function (workloadOwners) {
       var workloadsToInsert = []
