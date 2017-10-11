@@ -15,7 +15,6 @@ const mapWorkload = require('wmt-probation-rules').mapWorkload
 const Ldu = require('wmt-probation-rules').Ldu
 const Region = require('wmt-probation-rules').Region
 const Task = require('../domain/task')
-const Batch = require('../domain/batch')
 const taskType = require('../../constants/task-type')
 const taskStatus = require('../../constants/task-status')
 const submittingAgent = require('../../constants/task-submitting-agent')
@@ -24,11 +23,12 @@ const createNewTasks = require('../data/create-tasks')
 const filterOmGradeCode = require('wmt-probation-rules').filterOmGradeCode
 
 module.exports.execute = function (task) {
-  var nextId = task.additionalData.startingId
-  var lastId = nextId + (task.additionalData.batchSize - 1)
+  var workloadBatchSize = task.additionalData.batchSize
+  var startingStagingId = task.additionalData.startingId
+  var endingStagingId = startingStagingId + (workloadBatchSize - 1)
   var workloadReportId = task.workloadReportId
 
-  return getStagingWorkload([nextId, lastId]).then(function (stagingWorkloads) {
+  return getStagingWorkload([startingStagingId, endingStagingId]).then(function (stagingWorkloads) {
     var insertedWorkloadIds = []
     return Promise.each(stagingWorkloads, function (stagingWorkload) {
       var caseSummary = stagingWorkload.casesSummary
@@ -74,7 +74,8 @@ module.exports.execute = function (task) {
                           ))
           })
           .then(function (workloadOwnerId) {
-            return insertWorkload(mapWorkload(stagingWorkload, parseInt(workloadOwnerId)))
+            var workloadToInsert = mapWorkload(stagingWorkload, parseInt(workloadOwnerId), parseInt(workloadReportId))
+            return insertWorkload(workloadToInsert)
                 .then(function (workloadId) {
                   insertedWorkloadIds.push(workloadId)
                 })
@@ -82,12 +83,11 @@ module.exports.execute = function (task) {
       })
     })
     .then(function () {
-      var taskDetails = new Batch(insertedWorkloadIds[0], insertedWorkloadIds.length)
       var reductionsWorkerTask = new Task(
                 undefined,
                 submittingAgent.WORKER,
                 taskType.PROCESS_REDUCTIONS,
-                taskDetails,
+                task.additionalData,
                 workloadReportId,
                 undefined,
                 undefined,
@@ -95,26 +95,8 @@ module.exports.execute = function (task) {
                 )
 
       return createNewTasks([reductionsWorkerTask])
-            .then(function () {
-              logger.info('Reduction Worker Task created')
-            })
-    })
-    .then(function () {
-      var taskDetails = new Batch(insertedWorkloadIds[0], insertedWorkloadIds.length)
-      var adjustmentsWorkerTask = new Task(
-        undefined,
-        submittingAgent.WORKER,
-        taskType.PROCESS_ADJUSTMENTS,
-        taskDetails,
-        workloadReportId,
-        undefined,
-        undefined,
-        taskStatus.PENDING
-      )
-
-      return createNewTasks([adjustmentsWorkerTask])
       .then(function () {
-        logger.info('Adjustment Worker Task created')
+        logger.info('Reduction Worker Task created')
       })
     })
   })

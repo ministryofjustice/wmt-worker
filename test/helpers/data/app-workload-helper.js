@@ -4,7 +4,11 @@ const Locations = require('wmt-probation-rules').Locations
 var Promise = require('bluebird').Promise
 
 module.exports.insertDependencies = function (inserts) {
-  var promise = knex('offender_manager_type').returning('id').insert({description: 'test'})
+  var promise = knex('workload_report').returning('id').insert({})
+    .then(function (ids) {
+      inserts.push({table: 'workload_report', id: ids[0]})
+      return knex('offender_manager_type').returning('id').insert({description: 'test'})
+    })
     .then(function (ids) {
       inserts.push({ table: 'offender_manager_type', id: ids[0] })
       return knex('offender_manager').returning('id').insert({type_id: ids[0]})
@@ -24,8 +28,11 @@ module.exports.insertDependencies = function (inserts) {
     .then(function (ids) {
       inserts.push({table: 'team', id: ids[0]})
       return knex('workload_owner').returning('id')
-        .insert({team_id: inserts.filter((item) => item.table === 'team')[0].id,
-          offender_manager_id: inserts.filter((item) => item.table === 'offender_manager')[0].id})
+        .insert({
+          team_id: inserts.filter((item) => item.table === 'team')[0].id,
+          offender_manager_id: inserts.filter((item) => item.table === 'offender_manager')[0].id,
+          contracted_hours: 40
+        })
     })
     .then(function (ids) {
       inserts.push({table: 'workload_owner', id: ids[0]})
@@ -42,12 +49,14 @@ module.exports.insertDependencies = function (inserts) {
         paroms_completed_last_30_days: 7,
         paroms_due_next_30_days: 8,
         license_last_16_weeks: 9,
-        community_last_16_weeks: 10
+        community_last_16_weeks: 10,
+        workload_report_id: inserts.filter((item) => item.table === 'workload_report')[0].id
       }
 
       var workloads = [
-        Object.assign({}, defaultWorkload, {total_cases: 20}),
-        Object.assign({}, defaultWorkload, {total_cases: 30})
+        Object.assign({}, defaultWorkload, { total_cases: 20, staging_id: 1 }),
+        Object.assign({}, defaultWorkload, { total_cases: 30, staging_id: 2 }),
+        Object.assign({}, defaultWorkload, { total_cases: 30, staging_id: 3 })
       ]
 
       return knex('workload').returning('id').insert(workloads)

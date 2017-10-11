@@ -32,7 +32,9 @@ const aliases = {
   totalCustodyCases: 'total_custody_cases',
   licenseCasesLast16Weeks: 'license_last_16_weeks',
   communityCasesLast16Weeks: 'community_last_16_weeks',
-  totalLicenseCases: 'total_license_cases'
+  totalLicenseCases: 'total_license_cases',
+  stagingId: 'staging_id',
+  workloadReportId: 'workload_report_id'
 }
 
 var insertTiers = function (tiers, workloadId, location) {

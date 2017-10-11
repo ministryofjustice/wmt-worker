@@ -10,38 +10,33 @@ const wpcOperation = require('../../../../app/constants/calculate-workload-point
 const Batch = require('../../../../app/services/domain/batch')
 
 var inserts = []
+var initialWorkloadStagingId
 
 describe('services/workers/calculate-workload-points', function () {
   before(function (done) {
     appWorkloadPointsCalculationHelper.insertDependencies(inserts)
       .then(function (builtInserts) {
         inserts = builtInserts
-      }).then(function () {
-        var workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')
-        appReductionsHelper.insertDependencies(workloadOwnerId, inserts)
-          .then(function (builtInserts) {
-            inserts = builtInserts
-            done()
-          })
+        initialWorkloadStagingId = 1
+        done()
       })
   })
 
   it('creates the expected points calculations', function (done) {
     var workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
     var insertedWorkloads = inserts.filter((item) => item.table === 'workload')
-    var initialWorkloadId = insertedWorkloads[0].id
-    var batchSize = insertedWorkloads.length
+    var batchSize = 3
 
     var task = {
       additionalData: {
-        workloadBatch: new Batch(initialWorkloadId, batchSize),
+        workloadBatch: new Batch(initialWorkloadStagingId, batchSize),
         operationType: wpcOperation.INSERT
       },
       workloadReportId: workloadReportId }
 
     calculatePointsWorker.execute(task).then(() => {
       knex('workload_points_calculations')
-      .whereBetween('workload_id', [initialWorkloadId, (initialWorkloadId + batchSize - 1)])
+      .whereBetween('workload_id', [insertedWorkloads[0].id, insertedWorkloads[insertedWorkloads.length - 1].id])
       .then((workloadPointsCalculations) => {
         expect(workloadPointsCalculations.length).to.equal(batchSize)
         expect(workloadPointsCalculations[0].reduction_hours).to.equal(37)

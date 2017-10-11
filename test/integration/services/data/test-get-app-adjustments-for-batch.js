@@ -6,23 +6,24 @@ const adjustmentCategory = require('../../../../app/constants/adjustment-categor
 const adjustmentStatus = require('../../../../app/constants/adjustment-status')
 
 var inserts = []
-var workloads
-var minWorkloadId
-var maxWorkloadId
+var startStagingId
+var endStagingId
+var workloadReportId
 
 describe('services/data/get-app-adjustments-for-batch', function () {
-  before(function () {
-    return adjustmentsHelper.insertDependencies(inserts)
+  before(function (done) {
+    adjustmentsHelper.insertDependencies(inserts)
     .then(function (builtInserts) {
       inserts = builtInserts
-      workloads = inserts.filter((item) => item.table === 'workload')
-      minWorkloadId = workloads[0].id
-      maxWorkloadId = workloads[workloads.length - 1].id
+      startStagingId = 1
+      endStagingId = startStagingId + 2
+      workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
+      done()
     })
   })
 
-  it('should retrieve the CMS adjustments in DB, for a given batch of workloads -> workload owners -> adjustments', function () {
-    return getAdjustments(adjustmentCategory.CMS, minWorkloadId, maxWorkloadId)
+  it('should retrieve the CMS adjustments in DB, for a given batch of active workload staging ids -> workload owners -> adjustments', function () {
+    return getAdjustments(adjustmentCategory.CMS, startStagingId, endStagingId, workloadReportId)
     .then(function (adjustments) {
       var adjustmentIds = []
       adjustments.forEach(function (adjustment) {
@@ -34,8 +35,8 @@ describe('services/data/get-app-adjustments-for-batch', function () {
     })
   })
 
-  it('should retrieve the GS adjustments in DB, for a given batch of workloads -> workload owners -> adjustments', function () {
-    return getAdjustments(adjustmentCategory.GS, minWorkloadId, maxWorkloadId)
+  it('should retrieve the GS adjustments in DB, for a given batch of active workload staging ids -> workload owners -> adjustments', function () {
+    return getAdjustments(adjustmentCategory.GS, startStagingId, endStagingId, workloadReportId)
     .then(function (adjustments) {
       var adjustmentIds = []
       adjustments.forEach(function (adjustment) {
