@@ -7,7 +7,6 @@ module.exports = function () {
     'id',
     'contact_id AS contactId',
     'contact_type_code AS contactCode',
-    'contact_type_desc AS contactTypeDesc',
     'contact_date AS contactDate',
     'contact_staff_key AS contactStaffKey',
     'contact_team_key AS contactTeamKey',

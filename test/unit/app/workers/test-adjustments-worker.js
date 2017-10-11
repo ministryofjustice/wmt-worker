@@ -2,6 +2,8 @@ const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 require('sinon-bluebird')
 const expect = require('chai').expect
+const assert = require('chai').assert
+
 const adjustmentStatus = require('../../../../app/constants/adjustment-status')
 const Task = require('../../../../app/services/domain/task')
 const dateHelper = require('../../../helpers/data/date-helper')
@@ -321,6 +323,32 @@ describe(relativeFilePath, function () {
       expect(getAppAdjustments.called).to.be.equal(true)
       expect(updateAdjustmentEffectiveTo.calledWith(appAdjustments[2].id, updateTime)).to.be.equal(true)
       expect(insertAdjustment.calledWith(gsAdjustments[0])).to.be.equal(true)
+    })
+  })
+
+  it('should throw an error (and  subsequently fail the task) if any internal functions error, e.g. mapping function', function () {
+    stagingAdjustmentsMapper.mapCmsAdjustments.rejects(new Error('Test error'))
+
+    return adjustmentsWorker.execute(task)
+    .then(function () {
+      assert.fail()
+    })
+    .catch(function (err) {
+      expect(err.message).to.eql('Test error')
+    })
+  })
+
+  it('should throw an error (and  subsequently fail the task) if any internal functions error, e.g. data service', function () {
+    getAppAdjustments.rejects(new Error('Test error'))
+    stagingAdjustmentsMapper.mapCmsAdjustments.resolves([])
+    stagingAdjustmentsMapper.mapGsAdjustments.resolves([])
+
+    return adjustmentsWorker.execute(task)
+    .then(function () {
+      assert.fail()
+    })
+    .catch(function (err) {
+      expect(err.message).to.eql('Test error')
     })
   })
 })

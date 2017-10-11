@@ -22,7 +22,7 @@ var workloadStagingIdEnd = 5
 var workloadReportId = 11
 
 describe('services/staging-adjustments-mapper', function () {
-  beforeEach(function (done) {
+  beforeEach(function () {
     getStagingCms = sinon.stub()
     getStagingGs = sinon.stub()
     getWorkloadOwnerId = sinon.stub()
@@ -36,7 +36,6 @@ describe('services/staging-adjustments-mapper', function () {
       './data/get-app-workload-owner-id': getWorkloadOwnerId,
       './data/get-adjustment-reason-from-code': getAdjustmentReasonFromCode
     })
-    done()
   })
 
   describe('mapCmsAdjustments', function () {

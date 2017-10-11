@@ -1,8 +1,5 @@
 const adjustmentStatus = require('../../../app/constants/adjustment-status')
-
-var now = new Date()
-var thirtyDays = new Date(now)
-thirtyDays.setDate(thirtyDays.getDate() + 30)
+const dateHelper = require('./date-helper')
 
 module.exports.adjustmentReason = {
   id: 1,
@@ -14,7 +11,7 @@ module.exports.stagingAdjustmentRows = [
     contactId: 123,
     contactCode: 'abc',
     contactTypeDesc: 'def',
-    contactDate: now,
+    contactDate: dateHelper.today,
     contactStaffKey: 12,
     contactTeamKey: 13,
     omKey: 14,
@@ -23,7 +20,7 @@ module.exports.stagingAdjustmentRows = [
     contactId: 321,
     contactCode: 'cba',
     contactTypeDesc: 'fed',
-    contactDate: now,
+    contactDate: dateHelper.today,
     contactStaffKey: 21,
     contactTeamKey: 31,
     omKey: 41,
@@ -37,8 +34,8 @@ module.exports.expectedCmsAdjustments = [
     workloadOwnerId: 1,
     points: module.exports.adjustmentReason.points,
     adjustmentReasonId: module.exports.adjustmentReason.id,
-    effectiveFrom: now,
-    effectiveTo: thirtyDays,
+    effectiveFrom: dateHelper.today,
+    effectiveTo: dateHelper.thirtyDays,
     status: adjustmentStatus.ACTIVE
   },
   {
@@ -46,8 +43,8 @@ module.exports.expectedCmsAdjustments = [
     workloadOwnerId: 1,
     points: module.exports.adjustmentReason.points * -1,
     adjustmentReasonId: module.exports.adjustmentReason.id,
-    effectiveFrom: now,
-    effectiveTo: thirtyDays,
+    effectiveFrom: dateHelper.today,
+    effectiveTo: dateHelper.thirtyDays,
     status: adjustmentStatus.ACTIVE
   },
   {
@@ -55,8 +52,8 @@ module.exports.expectedCmsAdjustments = [
     workloadOwnerId: 1,
     points: module.exports.adjustmentReason.points,
     adjustmentReasonId: module.exports.adjustmentReason.id,
-    effectiveFrom: now,
-    effectiveTo: thirtyDays,
+    effectiveFrom: dateHelper.today,
+    effectiveTo: dateHelper.thirtyDays,
     status: adjustmentStatus.ACTIVE
   },
   {
@@ -64,8 +61,8 @@ module.exports.expectedCmsAdjustments = [
     workloadOwnerId: 1,
     points: module.exports.adjustmentReason.points * -1,
     adjustmentReasonId: module.exports.adjustmentReason.id,
-    effectiveFrom: now,
-    effectiveTo: thirtyDays,
+    effectiveFrom: dateHelper.today,
+    effectiveTo: dateHelper.thirtyDays,
     status: adjustmentStatus.ACTIVE
   }
 ]
@@ -76,8 +73,8 @@ module.exports.expectedGsAdjustments = [
     workloadOwnerId: 1,
     points: module.exports.adjustmentReason.points * -1,
     adjustmentReasonId: module.exports.adjustmentReason.id,
-    effectiveFrom: now,
-    effectiveTo: thirtyDays,
+    effectiveFrom: dateHelper.today,
+    effectiveTo: dateHelper.thirtyDays,
     status: adjustmentStatus.ACTIVE
   },
   {
@@ -85,8 +82,8 @@ module.exports.expectedGsAdjustments = [
     workloadOwnerId: 1,
     points: module.exports.adjustmentReason.points * -1,
     adjustmentReasonId: module.exports.adjustmentReason.id,
-    effectiveFrom: now,
-    effectiveTo: thirtyDays,
+    effectiveFrom: dateHelper.today,
+    effectiveTo: dateHelper.thirtyDays,
     status: adjustmentStatus.ACTIVE
   }
 ]
