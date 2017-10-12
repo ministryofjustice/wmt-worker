@@ -49,7 +49,14 @@ exports.seed = function (knex, Promise) {
     .then(function (categoryIdResult) {
       categoryId = categoryIdResult.id
       sql = 'SET IDENTITY_INSERT app.' + tableName + ' ON;' +
-      insertStatement + '(19, \'Co-Worked Cases\', \'Co-Worked Cases\', ' + categoryId + ', null, null, null)'
+      insertStatement + '(19, \'Co-Worked Cases\', \'Co-Worked Cases\', ' + categoryId + ', null, null, null)' + 
+      insertStatement + '(20, \'Groups (Group Supervision)\', \'Groups (Group Supervision)\', ' + categoryId + ', null, null, null)' +
+      insertStatement + '(21, \'Groups (Induction)\', \'Groups (Induction)\', ' + categoryId + ', null, null, null)' + 
+      insertStatement + '(22, \'Court Duty\', \'Court Duty\', ' + categoryId + ', null, null, null)' + 
+      insertStatement + '(23, \'Pre Sentence Reports – Court Duty / Sessional\', \'Pre Sentence Reports – Court Duty / Sessional\', ' + categoryId + ', null, null, null)' + 
+      insertStatement + '(24, \'Split Role\', \'Split Role\', ' + categoryId + ', null, null, null)' +
+      insertStatement + '(25, \'OM in Custody - Transactional work\', \'OM Custody\', ' + categoryId + ', null, null, null)' +
+      insertStatement + '(26, \'Single Point of Contact (SPOC) leads\', \'SPOC lead\', ' + categoryId + ', null, 5, null)'       
       return knex.schema
         .raw(sql)
     })
