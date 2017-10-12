@@ -16,7 +16,7 @@ describe('services/data/get-workload-points', function () {
       })
   })
 
-  xit('retrieves the latest points configuration', function (done) {
+  it('retrieves the latest points configuration', function (done) {
     getWorkloadPoints().then(function (result) {
       var points = result.values
       expect(points).to.be.an.instanceof(CaseTypeWeightings)
