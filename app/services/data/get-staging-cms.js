@@ -1,5 +1,4 @@
-const knexConfig = require('../../../knexfile').staging
-const knex = require('knex')(knexConfig)
+const knex = require('../../../knex').stagingSchema
 
 module.exports = function () {
   return knex('cms')

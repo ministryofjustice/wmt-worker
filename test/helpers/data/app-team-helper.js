@@ -1,5 +1,4 @@
-const knexConfig = require('../../../knexfile').app
-const knex = require('knex')(knexConfig)
+const knex = require('../../../knex').appSchema
 const lduHelper = require('./app-ldu-helper')
 var Promise = require('bluebird').Promise
 

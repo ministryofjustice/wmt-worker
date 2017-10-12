@@ -1,6 +1,5 @@
 const expect = require('chai').expect
-const knexConfig = require('../../../../knexfile').app
-const knex = require('knex')(knexConfig)
+const knex = require('../../../../knex').appSchema
 const insertRegion = require('../../../../app/services/data/insert-region')
 const Region = require('wmt-probation-rules').Region
 

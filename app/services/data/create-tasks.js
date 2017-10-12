@@ -1,5 +1,4 @@
-const config = require('../../../knexfile').app
-const knex = require('knex')(config)
+const knex = require('../../../knex').appSchema
 const TaskStatus = require('../../constants/task-status')
 
 module.exports = function (tasks) {

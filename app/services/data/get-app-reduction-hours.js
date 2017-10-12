@@ -1,5 +1,4 @@
-const knexConfig = require('../../../knexfile').app
-const knex = require('knex')(knexConfig)
+const knex = require('../../../knex').appSchema
 const reductionStatus = require('../../constants/reduction-status')
 
 module.exports = function (workloadOwnerId) {
