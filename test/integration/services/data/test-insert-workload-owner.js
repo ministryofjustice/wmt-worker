@@ -1,6 +1,5 @@
 const expect = require('chai').expect
-const knexConfig = require('../../../../knexfile').app
-const knex = require('knex')(knexConfig)
+const knex = require('../../../../knex').appSchema
 const config = require('../../../../config')
 const workloadOwnerHelper = require('../../../helpers/data/workload-owner-helper')
 const insertWorkloadOwner = require('../../../../app/services/data/insert-workload-owner')

@@ -6,6 +6,7 @@ const pointsHelper = require('wmt-probation-rules').pointsHelper
 
 const Batch = require('../../../../app/services/domain/batch')
 const wpcOperation = require('../../../../app/constants/calculate-workload-points-operation')
+const adjustmentCategory = require('../../../../app/constants/adjustment-category')
 
 const WORKLOAD_ID = 10
 const BATCH_SIZE = 20
@@ -26,6 +27,7 @@ const WORKLOAD_POINTS_BREAKDOWN = {
   sdrPoints: SDR_POINTS,
   paromsPoints: PAROM_POINTS
 }
+const GS_POINTS = -10
 
 var calculateWorkloadPoints
 var getWorkloadsStub
@@ -34,7 +36,7 @@ var getPointsConfigurationStub
 var getOffenderManagerTypeIdStub
 var insertWorkloadPointsCalculationsStub
 var getAppReductions
-var getCmsAdjustmentPoints
+var getAdjustmentPoints
 var getContractedHours
 var task
 
@@ -42,7 +44,7 @@ describe('services/workers/calculate-workload-points', function () {
   beforeEach(function () {
     getWorkloadsStub = sinon.stub()
     getAppReductions = sinon.stub()
-    getCmsAdjustmentPoints = sinon.stub()
+    getAdjustmentPoints = sinon.stub()
 
     getContractedHours = sinon.stub()
     getPointsConfigurationStub = sinon.stub()
@@ -68,13 +70,13 @@ describe('services/workers/calculate-workload-points', function () {
     calculateWorkloadPoints = proxyquire('../../../../app/services/workers/calculate-workload-points', {
       '../log': { info: function (message) {}, error: function (message) {} },
       '../data/get-app-workloads': getWorkloadsStub,
+      '../data/get-app-reduction-hours': getAppReductions,
       '../data/get-workload-points-configuration': getPointsConfigurationStub,
       '../data/get-offender-manager-type-id': getOffenderManagerTypeIdStub,
-      '../data/get-app-reductions': getAppReductions,
       '../data/get-contracted-hours': getContractedHours,
       '../data/insert-workload-points-calculation': insertWorkloadPointsCalculationsStub,
       'wmt-probation-rules': probationRulesStub,
-      '../data/get-adjustment-points': getCmsAdjustmentPoints
+      '../data/get-adjustment-points': getAdjustmentPoints
     })
     getWorkloadsStub.resolves([{values: sinon.stub(), id: WORKLOAD_ID}])
     getPointsConfigurationStub.resolves({values: pointsHelper.getCaseTypeWeightings(), id: WORKLOAD_ID})
@@ -86,15 +88,14 @@ describe('services/workers/calculate-workload-points', function () {
     probationRulesStub.calculateAvailablePoints.returns(AVAILABLE_POINTS)
   })
 
-  it('calls the get workloads promise correctly', function (done) {
-    getCmsAdjustmentPoints.resolves(0)
-    calculateWorkloadPoints.execute(task).then(function () {
+  it('calls the get workloads promise correctly', function () {
+    getAdjustmentPoints.resolves(0)
+    return calculateWorkloadPoints.execute(task).then(function () {
       expect(getWorkloadsStub.calledWith(WORKLOAD_ID, MAX_ID, BATCH_SIZE)).to.equal(true)
-      done()
     })
   })
 
-  it('calls the get workloads promise correctly with a batchSize of 1', function (done) {
+  it('calls the get workloads promise correctly with a batchSize of 1', function () {
     task = {
       id: 1,
       workloadReportId: REPORT_ID,
@@ -102,47 +103,59 @@ describe('services/workers/calculate-workload-points', function () {
         workloadBatch: new Batch(WORKLOAD_ID, 1),
         operationType: wpcOperation.INSERT
       }}
-    getCmsAdjustmentPoints.resolves(0)
+    getAdjustmentPoints.resolves(0)
     var batchSize = 1
-    calculateWorkloadPoints.execute(task).then(function () {
+    return calculateWorkloadPoints.execute(task).then(function () {
       expect(getWorkloadsStub.calledWith(WORKLOAD_ID, WORKLOAD_ID, batchSize)).to.equal(true)
-      done()
     })
   })
 
-  it('retrieves the points configuration', function (done) {
-    getCmsAdjustmentPoints.resolves(0)
-    calculateWorkloadPoints.execute(task).then(function () {
+  it('retrieves the points configuration', function () {
+    getAdjustmentPoints.resolves(0)
+    return calculateWorkloadPoints.execute(task).then(function () {
       expect(getPointsConfigurationStub.called).to.equal(true)
-      done()
     })
   })
 
-  it('should call insertWorkloadPointsCalculations with the correct params when positive CMS adjustments are applied', function (done) {
-    getCmsAdjustmentPoints.resolves(CMS_POINTS_POSITIVE)
+  it('should call insertWorkloadPointsCalculations with the correct params when positive CMS adjustments are applied', function () {
+    getAdjustmentPoints.withArgs(undefined, adjustmentCategory.CMS).resolves(CMS_POINTS_POSITIVE)
+    getAdjustmentPoints.withArgs(undefined, adjustmentCategory.GS).resolves(0)
 
     var expectedTotalPoints = (WORKLOAD_POINTS + CMS_POINTS_POSITIVE)
 
-    calculateWorkloadPoints.execute(task).then(function () {
+    return calculateWorkloadPoints.execute(task).then(function () {
       expect(
         insertWorkloadPointsCalculationsStub.calledWith(REPORT_ID, WORKLOAD_ID, WORKLOAD_ID, expectedTotalPoints, SDR_POINTS, SDR_POINTS,
-          PAROM_POINTS, NOMINAL_TARGET, AVAILABLE_POINTS, REDUCTION_HOURS, CONTRACTED_HOURS, CMS_POINTS_POSITIVE)
+          PAROM_POINTS, NOMINAL_TARGET, AVAILABLE_POINTS, CONTRACTED_HOURS, REDUCTION_HOURS, CMS_POINTS_POSITIVE, 0)
       ).to.equal(true)
-      done()
     })
   })
 
-  it('should call insertWorkloadPointsCalculations with the correct params when negative CMS adjustments are applied', function (done) {
-    getCmsAdjustmentPoints.resolves(CMS_POINTS_NEGATIVE)
+  it('should call insertWorkloadPointsCalculations with the correct params when negative CMS adjustments are applied', function () {
+    getAdjustmentPoints.withArgs(undefined, adjustmentCategory.CMS).resolves(CMS_POINTS_NEGATIVE)
+    getAdjustmentPoints.withArgs(undefined, adjustmentCategory.GS).resolves(0)
 
     var expectedTotalPoints = (WORKLOAD_POINTS + CMS_POINTS_NEGATIVE)
 
-    calculateWorkloadPoints.execute(task).then(function () {
+    return calculateWorkloadPoints.execute(task).then(function () {
       expect(
         insertWorkloadPointsCalculationsStub.calledWith(REPORT_ID, WORKLOAD_ID, WORKLOAD_ID, expectedTotalPoints, SDR_POINTS, SDR_POINTS,
-          PAROM_POINTS, NOMINAL_TARGET, AVAILABLE_POINTS, REDUCTION_HOURS, CONTRACTED_HOURS, CMS_POINTS_NEGATIVE)
+          PAROM_POINTS, NOMINAL_TARGET, AVAILABLE_POINTS, CONTRACTED_HOURS, REDUCTION_HOURS, CMS_POINTS_NEGATIVE, 0)
       ).to.equal(true)
-      done()
+    })
+  })
+
+  it('should call insertWorkloadPointsCalculations with the correct params when GS adjustments are applied', function () {
+    getAdjustmentPoints.withArgs(undefined, adjustmentCategory.CMS).resolves(0)
+    getAdjustmentPoints.withArgs(undefined, adjustmentCategory.GS).resolves(GS_POINTS)
+
+    var expectedTotalPoints = (WORKLOAD_POINTS + GS_POINTS)
+
+    return calculateWorkloadPoints.execute(task).then(function () {
+      expect(
+        insertWorkloadPointsCalculationsStub.calledWith(REPORT_ID, WORKLOAD_ID, WORKLOAD_ID, expectedTotalPoints, SDR_POINTS, SDR_POINTS,
+          PAROM_POINTS, NOMINAL_TARGET, AVAILABLE_POINTS, CONTRACTED_HOURS, REDUCTION_HOURS, 0, GS_POINTS)
+      ).to.equal(true)
     })
   })
 })

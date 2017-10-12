@@ -1,6 +1,5 @@
 const config = require('../../../config')
-const knexConfig = require('../../../knexfile').app
-const knex = require('knex')(knexConfig)
+const knex = require('../../../knex').appSchema
 const CaseDetails = require('wmt-probation-rules').CaseDetails
 
 const columns = ['row_type', 'case_ref_no', 'tier_code', 'team_code', 'om_grade_code', 'om_key', 'location']

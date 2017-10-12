@@ -1,5 +1,4 @@
-const knexConfig = require('../../../knexfile').app
-const knex = require('knex')(knexConfig)
+const knex = require('../../../knex').appSchema
 const CaseTypeWeightings = require('wmt-probation-rules').CaseTypeWeightings
 const PointsConfiguration = require('wmt-probation-rules').PointsConfiguration
 const LocationPointsConfiguration = require('wmt-probation-rules').LocationPointsConfiguration

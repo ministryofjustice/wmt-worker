@@ -1,5 +1,4 @@
-const knexConfig = require('../../../../knexfile').app
-const knex = require('knex')(knexConfig)
+const knex = require('../../../../knex').appSchema
 
 const expect = require('chai').expect
 
@@ -30,7 +29,10 @@ describe('services/data/insert-workload-points-calculation', function () {
     var reductionHours = 1.5
     var contractedHours = 38.5
     var cmsAdjustmentPoints = 15
-    insertWorkloadPointsCalculations(workloadReportId, workloadPointsId, workloadId, totalPoints, sdrPoints, sdrConversionPoints, paromsPoints, nominalTarget, availablePoints, reductionHours, contractedHours, cmsAdjustmentPoints)
+    var gsAdjustmentPoints = -1
+
+    insertWorkloadPointsCalculations(workloadReportId, workloadPointsId, workloadId, totalPoints, sdrPoints, sdrConversionPoints,
+      paromsPoints, nominalTarget, availablePoints, contractedHours, reductionHours, cmsAdjustmentPoints, gsAdjustmentPoints)
     .then(function (ids) {
       var insertedId = ids[0]
       inserts.push({table: 'workload_points_calculations', id: insertedId})
@@ -45,8 +47,9 @@ describe('services/data/insert-workload-points-calculation', function () {
             expect(insertedObject.paroms_points).to.eql(paromsPoints)
             expect(insertedObject.available_points).to.eql(availablePoints)
             expect(insertedObject.reduction_hours).to.eql(reductionHours)
-            expect(insertedObject.contracted_hours).to.eql(contractedHours)
             expect(insertedObject.cms_adjustment_points).to.eql(cmsAdjustmentPoints)
+            expect(insertedObject.gs_adjustment_points).to.eql(gsAdjustmentPoints)
+            expect(insertedObject.contracted_hours).to.eql(contractedHours)
             done()
           })
     })

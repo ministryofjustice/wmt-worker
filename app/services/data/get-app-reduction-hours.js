@@ -1,12 +1,11 @@
-const knexConfig = require('../../../knexfile').app
-const knex = require('knex')(knexConfig)
+const knex = require('../../../knex').appSchema
+const reductionStatus = require('../../constants/reduction-status')
 
 module.exports = function (workloadOwnerId) {
-  return knex('reductions').withSchema('app')
+  return knex('reductions')
     .sum('hours AS hours')
     .where('workload_owner_id', workloadOwnerId)
-    .where('effective_from', '<=', knex.fn.now())
-    .andWhere('effective_to', '>=', knex.fn.now())
+    .andWhere('status', reductionStatus.ACTIVE)
     .then(function (result) {
       if (result === null || result[0].hours === null) {
         return 0

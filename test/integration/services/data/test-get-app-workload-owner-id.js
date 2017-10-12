@@ -1,6 +1,5 @@
 const expect = require('chai').expect
-const knexConfig = require('../../../../knexfile').app
-const knex = require('knex')(knexConfig)
+const knex = require('../../../../knex').appSchema
 
 const appWorkloadOwnerHelper = require('../../../helpers/data/app-workload-owner-helper')
 const appReductionsHelper = require('../../../helpers/data/app-reductions-helper')

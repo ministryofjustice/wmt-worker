@@ -1,5 +1,4 @@
-const knexConfig = require('../../../knexfile').app
-const knex = require('knex')(knexConfig)
+const knex = require('../../../knex').appSchema
 
 module.exports = function (adjustment) {
   return knex('adjustments')
