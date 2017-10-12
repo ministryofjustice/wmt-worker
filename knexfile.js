@@ -38,7 +38,6 @@ module.exports = {
     seeds: {
       directory: 'seed/data/ref'
     },
-    pool: { max: 100 },
     debug: false
   },
   dev: {
