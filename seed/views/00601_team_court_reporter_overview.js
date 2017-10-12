@@ -1,5 +1,5 @@
 exports.seed = function (knex, promise) {
-    var sql = `CREATE VIEW app.team_court_reporter_overview
+  var sql = `CREATE VIEW app.team_court_reporter_overview
     WITH SCHEMABINDING
     AS
     SELECT
@@ -16,10 +16,9 @@ exports.seed = function (knex, promise) {
       JOIN app.workload_owner wo ON wo.id = iv.id
       JOIN app.offender_manager om ON om.id = wo.offender_manager_id
     GROUP BY iv.id;`
-  
-    return knex.schema
+
+  return knex.schema
       .raw('DROP VIEW IF EXISTS app.team_court_reporter_overview;')
       .raw('SET ARITHABORT ON')
       .raw(sql)
-  }
-  
+}

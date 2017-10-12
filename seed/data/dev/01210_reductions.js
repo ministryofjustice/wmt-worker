@@ -8,7 +8,7 @@ exports.seed = function (knex, Promise) {
     .then(function () {
       return knex('workload_owner')
       .join('team', 'workload_owner.team_id', 'team.id')
-      .where('team.description','CR Team 1')
+      .where('team.description', 'CR Team 1')
       .first('workload_owner.id')
     })
     .then(function (firstWorkloadOwnerId) {

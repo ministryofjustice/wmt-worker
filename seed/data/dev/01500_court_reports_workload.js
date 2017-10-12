@@ -4,7 +4,7 @@ const workloadRow = {
   workload_owner_id: 1,
   total_cases_sdr: 10,
   total_cases_fdr: 11,
-  total_cases_oral_reports:12
+  total_cases_oral_reports: 12
 }
 
 exports.seed = function (knex, Promise) {
@@ -12,7 +12,7 @@ exports.seed = function (knex, Promise) {
   return knex(tableName).del()
     .then(function () {
       return knex('workload_owner').select('workload_owner.id')
-      .join('team','team.id', 'workload_owner.team_id').where('team.description','CR Team 1')
+      .join('team', 'team.id', 'workload_owner.team_id').where('team.description', 'CR Team 1')
     })
     .then(function (workloadOwners) {
       var workloadsToInsert = []
