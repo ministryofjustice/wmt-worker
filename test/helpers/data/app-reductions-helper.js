@@ -1,6 +1,8 @@
 const knex = require('../../../knex').appSchema
 var Promise = require('bluebird').Promise
+
 const helper = require('./app-workload-helper')
+const reductionStatus = require('../../../app/constants/reduction-status')
 
 module.exports.insertDependencies = function (workloadOwnerId, inserts = []) {
   var promise = helper.insertDependencies(inserts)
@@ -34,9 +36,9 @@ module.exports.getReductionObjects = function (workloadOwnerId) {
 
   return [
     {workload_owner_id: workloadOwnerId, hours: 7, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: null},
-    {workload_owner_id: workloadOwnerId, hours: 12, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: 'DELETED'},
-    {workload_owner_id: workloadOwnerId, hours: 9, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: 'ACTIVE'},
-    {workload_owner_id: workloadOwnerId, hours: 4, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: 'SCHEDULED'},
-    {workload_owner_id: workloadOwnerId, hours: 5, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: 'ARCHIVED'}
+    {workload_owner_id: workloadOwnerId, hours: 12, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: reductionStatus.DELETED},
+    {workload_owner_id: workloadOwnerId, hours: 9, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: reductionStatus.ACTIVE},
+    {workload_owner_id: workloadOwnerId, hours: 4, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: reductionStatus.SCHEDULED},
+    {workload_owner_id: workloadOwnerId, hours: 5, effective_from: effectiveFrom, effective_to: effectiveTo, reduction_reason_id: 1, status: reductionStatus.ARCHIVED}
   ]
 }

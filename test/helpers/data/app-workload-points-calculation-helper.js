@@ -1,6 +1,7 @@
 const knex = require('../../../knex').appSchema
 const workloadHelper = require('./app-workload-helper')
 const reductionsHelper = require('./app-reductions-helper')
+const adjustmentsHelper = require('./app-adjustments-helper')
 var Promise = require('bluebird').Promise
 
 module.exports.defaultWorkloadPointsCalculation = {
@@ -73,6 +74,15 @@ module.exports.insertDependencies = function (inserts) {
       ids.forEach((id) => {
         inserts.push({ table: 'reductions', id: id })
       })
+      var workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
+      var adjustments = adjustmentsHelper.getAdjustmentObjects(workloadOwnerId)
+      return knex('adjustments').returning('id').insert(adjustments)
+    })
+    .then(function (ids) {
+      ids.forEach((id) => {
+        inserts.push({ table: 'adjustments', id: id })
+      })
+
       return inserts
     })
 

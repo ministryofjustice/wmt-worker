@@ -4,9 +4,10 @@ exports.seed = function (knex, promise) {
   AS
   SELECT
       l.description AS name
+    , SUM(w.total_cases) AS total_cases
     , SUM(wpc.available_points) AS available_points
     , SUM(wpc.total_points) AS total_points
-    , SUM(wo.contracted_hours) AS contracted_hours
+    , SUM(wpc.contracted_hours) AS contracted_hours
     , SUM(wpc.reduction_hours) AS reduction_hours
     , r.id AS id
     , l.id AS link_id
@@ -23,7 +24,7 @@ exports.seed = function (knex, promise) {
   GROUP BY l.id, l.description, r.id;`
 
   var index = `CREATE UNIQUE CLUSTERED INDEX idx_region_case_overview
-  ON app.team_case_overview (name)`
+  ON app.region_case_overview (name)`
 
   return knex.schema
     .raw('DROP VIEW IF EXISTS app.region_case_overview;')

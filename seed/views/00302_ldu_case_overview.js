@@ -4,12 +4,14 @@ exports.seed = function (knex, promise) {
   AS
   SELECT
       t.description AS name
+    , SUM(w.total_cases) AS total_cases
     , SUM(wpc.available_points) AS available_points
     , SUM(wpc.total_points) AS total_points
-    , SUM(wo.contracted_hours) AS contracted_hours
+    , SUM(wpc.contracted_hours) AS contracted_hours
     , SUM(wpc.reduction_hours) AS reduction_hours
     , l.id AS id
     , t.id AS link_id
+    , COUNT_BIG(*) AS count
   FROM app.workload_owner wo
     JOIN app.team t ON wo.team_id = t.id
     JOIN app.ldu l ON t.ldu_id = l.id
@@ -17,11 +19,11 @@ exports.seed = function (knex, promise) {
     JOIN app.workload_points_calculations wpc ON wpc.workload_id = w.id
     JOIN app.workload_report wr ON wr.id = wpc.workload_report_id
   WHERE wr.effective_from IS NOT NULL
-    AND wr.effective_to IS NULL;  FROM 
+    AND wr.effective_to IS NULL
   GROUP BY t.id, t.description, l.id;`
 
   var index = `CREATE UNIQUE CLUSTERED INDEX idx_ldu_case_overview
-  ON app.team_case_overview (name)`
+  ON app.ldu_case_overview (name)`
 
   return knex.schema
     .raw('DROP VIEW IF EXISTS app.ldu_case_overview;')
