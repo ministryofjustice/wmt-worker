@@ -1,6 +1,5 @@
 const expect = require('chai').expect
-const knexConfig = require('../../../../knexfile').app
-const knex = require('knex')(knexConfig)
+const knex = require('../../../../knex').appSchema
 const insertAppWorkload = require('../../../../app/services/data/insert-app-workload')
 const Workload = require('wmt-probation-rules').Workload
 const Tiers = require('wmt-probation-rules').AppTiers

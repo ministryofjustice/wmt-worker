@@ -1,5 +1,4 @@
-const knexConfig = require('../../../knexfile').staging
-const knex = require('knex')(knexConfig)
+const knex = require('../../../knex').stagingSchema
 const CasesSummary = require('wmt-probation-rules').CasesSummary
 const Tiers = require('wmt-probation-rules').Tiers
 const locations = require('wmt-probation-rules').Locations

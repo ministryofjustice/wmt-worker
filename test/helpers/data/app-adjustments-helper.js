@@ -1,5 +1,4 @@
-const knexConfig = require('../../../knexfile').app
-const knex = require('knex')(knexConfig)
+const knex = require('../../../knex').appSchema
 var Promise = require('bluebird').Promise
 const helper = require('./app-workload-helper')
 const getAppAdjustmentsForBatch = require('../../../app/services/data/get-app-adjustments-for-batch')

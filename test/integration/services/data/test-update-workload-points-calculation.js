@@ -1,6 +1,5 @@
 const expect = require('chai').expect
-const knexConfig = require('../../../../knexfile').app
-const knex = require('knex')(knexConfig)
+const knex = require('../../../../knex').appSchema
 const updateWpc = require('../../../../app/services/data/update-workload-points-calculation')
 const helper = require('../../../helpers/data/app-workload-points-calculation-helper')
 
