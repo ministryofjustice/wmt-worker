@@ -8,9 +8,9 @@ module.exports = function (omKey, teamCode) {
     'assessmentent_team_key': teamCode // typo in extract
   }
 
-  return knex.count('sentence_type as count').select('sentence_type')
+  return knex.count('sentence_type AS count').select('sentence_type')
           .from(`${config.DB_STG_SCHEMA}.arms`)
-          .where(whereObject) // .andWhere(disposal_or_release_date is no more than 6 weeks ago)
+          .where(whereObject)
           .groupBy('sentence_type')
   .then(function (results) {
     var armsTotals = {
