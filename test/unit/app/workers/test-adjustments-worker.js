@@ -2,57 +2,46 @@ const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 require('sinon-bluebird')
 const expect = require('chai').expect
+const assert = require('chai').assert
+
 const adjustmentStatus = require('../../../../app/constants/adjustment-status')
 const Task = require('../../../../app/services/domain/task')
+const dateHelper = require('../../../helpers/data/date-helper')
 
 var adjustmentsWorker
 var updateAdjustmentStatusByIds
 var createNewTasks
-var mapStagingCmsAdjustments
-var getAdjustments
+var stagingAdjustmentsMapper
+var getAppAdjustments
 var updateAdjustmentEffectiveTo
 var insertAdjustment
 var relativeFilePath = 'services/workers/adjustments-worker'
 
-var today = new Date()
-
-var yesterday = new Date(today)
-yesterday.setDate(today.getDate() - 1)
-
-var dayBeforeYesterday = new Date(today)
-dayBeforeYesterday.setDate(today.getDate() - 2)
-
-var tomorrow = new Date(today)
-tomorrow.setDate(today.getDate() + 1)
-
-var dayAfterTomorrow = new Date(today)
-dayAfterTomorrow.setDate(today.getDate() + 2)
-
 var activeAdjustment = {
   id: 1,
-  effectiveFrom: yesterday,
-  effectiveTo: tomorrow,
+  effectiveFrom: dateHelper.yesterday,
+  effectiveTo: dateHelper.tomorrow,
   status: null
 }
 
 var scheduledAdjustment = {
   id: 2,
-  effectiveFrom: tomorrow,
-  effectiveTo: dayAfterTomorrow,
+  effectiveFrom: dateHelper.tomorrow,
+  effectiveTo: dateHelper.dayAfterTomorrow,
   status: null
 }
 
 var archivedAdjustment = {
   id: 3,
-  effectiveFrom: dayBeforeYesterday,
-  effectiveTo: yesterday,
+  effectiveFrom: dateHelper.dayBeforeYesterday,
+  effectiveTo: dateHelper.yesterday,
   status: null
 }
 
 var existingActiveAdjustment = {
   id: 1,
-  effectiveFrom: yesterday,
-  effectiveTo: tomorrow,
+  effectiveFrom: dateHelper.yesterday,
+  effectiveTo: dateHelper.tomorrow,
   status: adjustmentStatus.ACTIVE
 }
 
@@ -62,6 +51,7 @@ var existingContactId = 12
 var existingContactOmId = 31
 var existingOmId = 43
 var changedOmId = 55
+var gsContactId = 99
 
 var cmsAdjustments = [
   {
@@ -84,6 +74,18 @@ var cmsAdjustments = [
   }
 ]
 
+var gsAdjustments = [
+  {
+    contactId: gsContactId,
+    workloadOwnerId: existingOmId,
+    points: -6,
+    adjsutmentReasonId: 2,
+    effectiveFrom: 'testfrom',
+    effetiveTo: 'testto',
+    status: adjustmentStatus.ACTIVE
+  }
+]
+
 var updateTime = new Date()
 updateTime.setHours(0, 0, 0, 0)
 
@@ -100,28 +102,43 @@ var task = new Task(
   'PENDING'
 )
 
+var adjustmentRow = {
+  id: 1,
+  contactId: existingContactId,
+  points: 1,
+  workloadOwnerId: existingContactOmId,
+  effectiveFrom: dateHelper.yesterday,
+  effectiveTo: dateHelper.dayAfterTomorrow,
+  status: adjustmentStatus.ACTIVE
+}
+
 describe(relativeFilePath, function () {
   beforeEach(function () {
     updateAdjustmentStatusByIds = sinon.stub()
     createNewTasks = sinon.stub()
-    mapStagingCmsAdjustments = sinon.stub()
-    getAdjustments = sinon.stub()
+    getAppAdjustments = sinon.stub()
     updateAdjustmentEffectiveTo = sinon.stub()
     insertAdjustment = sinon.stub()
+    stagingAdjustmentsMapper = {
+      mapCmsAdjustments: sinon.stub(),
+      mapGsAdjustments: sinon.stub()
+    }
+
     adjustmentsWorker = proxyquire('../../../../app/' + relativeFilePath, {
       '../log': { info: function (message) { } },
       '../data/update-adjustment-status-by-ids': updateAdjustmentStatusByIds,
       '../data/create-tasks': createNewTasks,
-      '../map-staging-cms-adjustments': mapStagingCmsAdjustments,
-      '../data/get-app-adjustments-for-batch': getAdjustments,
+      '../staging-adjustments-mapper': stagingAdjustmentsMapper,
+      '../data/get-app-adjustments-for-batch': getAppAdjustments,
       '../data/update-adjustment-effective-to': updateAdjustmentEffectiveTo,
       '../data/insert-adjustment': insertAdjustment
     })
   })
 
   it('should call the database to get the adjustments assigned statuses and call to update database', function () {
-    mapStagingCmsAdjustments.resolves([{id: 1}, {id: 2}, {id: 3}])
-    getAdjustments.resolves(adjustments)
+    stagingAdjustmentsMapper.mapCmsAdjustments.resolves([{id: 1}, {id: 2}, {id: 3}])
+    stagingAdjustmentsMapper.mapGsAdjustments.resolves([])
+    getAppAdjustments.resolves(adjustments)
     updateAdjustmentEffectiveTo.resolves()
     insertAdjustment.resolves()
     updateAdjustmentStatusByIds.resolves(1)
@@ -132,36 +149,22 @@ describe(relativeFilePath, function () {
       expect(updateAdjustmentStatusByIds.calledWith([archivedAdjustment.id], 'ARCHIVED')).to.be.equal(true)
       expect(createNewTasks.called).to.be.equal(true)
 
-      expect(mapStagingCmsAdjustments.called).to.be.equal(true)
-      expect(getAdjustments.called).to.be.equal(true)
+      expect(stagingAdjustmentsMapper.mapCmsAdjustments.called).to.be.equal(true)
+      expect(getAppAdjustments.called).to.be.equal(true)
       expect(updateAdjustmentEffectiveTo.called).to.be.equal(false)
       expect(insertAdjustment.called).to.be.equal(false)
     })
   })
 
-  it('should return cms adjustments that exist already in WMT and not update anything', function () {
-    var appAdjustments = [{
-      id: 1,
-      contactId: existingContactId,
-      points: 1,
-      workloadOwnerId: existingContactOmId,
-      effectiveFrom: yesterday,
-      effectiveTo: dayAfterTomorrow,
-      status: adjustmentStatus.ACTIVE
-    },
-    {
-      id: 12,
-      contactId: existingContactId,
-      points: -1,
-      workloadOwnerId: existingOmId,
-      effectiveFrom: yesterday,
-      effectiveTo: dayAfterTomorrow,
-      status: adjustmentStatus.ACTIVE
-    }
+  it('should return CMS adjustments that exist already in WMT and not update anything', function () {
+    var appAdjustments = [
+      adjustmentRow,
+      Object.assign({}, adjustmentRow, { id: 12, points: -1, workloadOwnerId: existingOmId })
     ]
 
-    mapStagingCmsAdjustments.resolves(cmsAdjustments)
-    getAdjustments.resolves(appAdjustments)
+    stagingAdjustmentsMapper.mapCmsAdjustments.resolves(cmsAdjustments)
+    stagingAdjustmentsMapper.mapGsAdjustments.resolves([])
+    getAppAdjustments.resolves(appAdjustments)
     updateAdjustmentEffectiveTo.resolves()
     insertAdjustment.resolves()
     updateAdjustmentStatusByIds.resolves(1)
@@ -171,16 +174,17 @@ describe(relativeFilePath, function () {
       expect(updateAdjustmentStatusByIds.called).to.be.equal(false)
       expect(createNewTasks.called).to.be.equal(true)
 
-      expect(mapStagingCmsAdjustments.called).to.be.equal(true)
-      expect(getAdjustments.called).to.be.equal(true)
+      expect(stagingAdjustmentsMapper.mapCmsAdjustments.called).to.be.equal(true)
+      expect(getAppAdjustments.called).to.be.equal(true)
       expect(updateAdjustmentEffectiveTo.called).to.be.equal(false)
       expect(insertAdjustment.called).to.be.equal(false)
     })
   })
 
   it('should return CMS adjustments that do not exist already in WMT and insert new adjustment', function () {
-    mapStagingCmsAdjustments.resolves(cmsAdjustments)
-    getAdjustments.resolves([])
+    stagingAdjustmentsMapper.mapCmsAdjustments.resolves(cmsAdjustments)
+    stagingAdjustmentsMapper.mapGsAdjustments.resolves([])
+    getAppAdjustments.resolves([])
     updateAdjustmentEffectiveTo.resolves()
     insertAdjustment.resolves()
     updateAdjustmentStatusByIds.resolves(1)
@@ -190,8 +194,8 @@ describe(relativeFilePath, function () {
       expect(updateAdjustmentStatusByIds.called).to.be.equal(false)
       expect(createNewTasks.called).to.be.equal(true)
 
-      expect(mapStagingCmsAdjustments.called).to.be.equal(true)
-      expect(getAdjustments.called).to.be.equal(true)
+      expect(stagingAdjustmentsMapper.mapCmsAdjustments.called).to.be.equal(true)
+      expect(getAppAdjustments.called).to.be.equal(true)
       expect(updateAdjustmentEffectiveTo.called).to.be.equal(false)
       expect(insertAdjustment.calledWith(cmsAdjustments[0])).to.be.equal(true)
       expect(insertAdjustment.calledWith(cmsAdjustments[1])).to.be.equal(true)
@@ -199,27 +203,14 @@ describe(relativeFilePath, function () {
   })
 
   it('should return CMS adjustments that exist but are not in the extract and update adjustments', function () {
-    var appAdjustments = [{
-      id: 1,
-      contactId: existingContactId,
-      points: 1,
-      workloadOwnerId: existingContactOmId,
-      effectiveFrom: yesterday,
-      effectiveTo: dayAfterTomorrow,
-      status: adjustmentStatus.ACTIVE
-    },
-    {
-      id: 12,
-      contactId: existingContactId,
-      points: -1,
-      workloadOwnerId: existingOmId,
-      effectiveFrom: yesterday,
-      effectiveTo: dayAfterTomorrow,
-      status: adjustmentStatus.ACTIVE
-    }]
+    var appAdjustments = [
+      adjustmentRow,
+      Object.assign({}, adjustmentRow, { id: 12, points: -1, workloadOwnerId: existingOmId })
+    ]
 
-    mapStagingCmsAdjustments.resolves([])
-    getAdjustments.resolves(appAdjustments)
+    stagingAdjustmentsMapper.mapCmsAdjustments.resolves([])
+    stagingAdjustmentsMapper.mapGsAdjustments.resolves([])
+    getAppAdjustments.resolves(appAdjustments)
     updateAdjustmentEffectiveTo.resolves()
     insertAdjustment.resolves()
     updateAdjustmentStatusByIds.resolves(1)
@@ -229,36 +220,23 @@ describe(relativeFilePath, function () {
       expect(updateAdjustmentStatusByIds.called).to.be.equal(false)
       expect(createNewTasks.called).to.be.equal(true)
 
-      expect(mapStagingCmsAdjustments.called).to.be.equal(true)
-      expect(getAdjustments.called).to.be.equal(true)
+      expect(stagingAdjustmentsMapper.mapCmsAdjustments.called).to.be.equal(true)
+      expect(getAppAdjustments.called).to.be.equal(true)
       expect(updateAdjustmentEffectiveTo.calledWith(Number(appAdjustments[0].id), updateTime)).to.be.equal(true)
       expect(updateAdjustmentEffectiveTo.calledWith(appAdjustments[1].id, updateTime)).to.be.equal(true)
       expect(insertAdjustment.called).to.be.equal(false)
     })
   })
 
-  it('should return CMS adjustments that exist but OM key has changed and update old om record and insert new one', function () {
-    var appAdjustments = [{
-      id: 1,
-      contactId: existingContactId,
-      workloadOwnerId: existingContactOmId,
-      points: 1,
-      effectiveFrom: yesterday,
-      effectiveTo: dayAfterTomorrow,
-      status: adjustmentStatus.ACTIVE
-    },
-    {
-      id: 12,
-      contactId: existingContactId,
-      workloadOwnerId: changedOmId,
-      points: -1,
-      effectiveFrom: yesterday,
-      effectiveTo: dayAfterTomorrow,
-      status: adjustmentStatus.ACTIVE
-    }]
+  it('should return CMS adjustments that exist but OM key has changed and update old OM record and insert new one', function () {
+    var appAdjustments = [
+      adjustmentRow,
+      Object.assign({}, adjustmentRow, { id: 12, points: -1, workloadOwnerId: changedOmId })
+    ]
 
-    mapStagingCmsAdjustments.resolves(cmsAdjustments)
-    getAdjustments.resolves(appAdjustments)
+    stagingAdjustmentsMapper.mapCmsAdjustments.resolves(cmsAdjustments)
+    stagingAdjustmentsMapper.mapGsAdjustments.resolves([])
+    getAppAdjustments.resolves(appAdjustments)
     updateAdjustmentEffectiveTo.resolves()
     insertAdjustment.resolves()
     updateAdjustmentStatusByIds.resolves(1)
@@ -268,10 +246,109 @@ describe(relativeFilePath, function () {
       expect(updateAdjustmentStatusByIds.called).to.be.equal(false)
       expect(createNewTasks.called).to.be.equal(true)
 
-      expect(mapStagingCmsAdjustments.called).to.be.equal(true)
-      expect(getAdjustments.called).to.be.equal(true)
+      expect(stagingAdjustmentsMapper.mapCmsAdjustments.called).to.be.equal(true)
+      expect(getAppAdjustments.called).to.be.equal(true)
       expect(updateAdjustmentEffectiveTo.calledWith(appAdjustments[1].id, updateTime)).to.be.equal(true)
       expect(insertAdjustment.calledWith(cmsAdjustments[1])).to.be.equal(true)
+    })
+  })
+
+  it('should retrieve staging GS adjustments and insert them as a new adjustment in app when they do not exist', function () {
+    stagingAdjustmentsMapper.mapCmsAdjustments.resolves([])
+    stagingAdjustmentsMapper.mapGsAdjustments.resolves(gsAdjustments)
+    getAppAdjustments.resolves([])
+    updateAdjustmentEffectiveTo.resolves()
+    insertAdjustment.resolves()
+    updateAdjustmentStatusByIds.resolves(1)
+    createNewTasks.resolves()
+
+    return adjustmentsWorker.execute(task).then(function () {
+      expect(updateAdjustmentStatusByIds.called).to.be.equal(false)
+      expect(createNewTasks.called).to.be.equal(true)
+
+      expect(stagingAdjustmentsMapper.mapCmsAdjustments.called).to.be.equal(true)
+      expect(stagingAdjustmentsMapper.mapGsAdjustments.called).to.be.equal(true)
+      expect(getAppAdjustments.called).to.be.equal(true)
+      expect(updateAdjustmentEffectiveTo.called).to.be.equal(false)
+      expect(insertAdjustment.calledWith(gsAdjustments[0])).to.be.equal(true)
+    })
+  })
+
+  it('should retrieve staging GS adjustments and update them in app when they exist but are not in the extract', function () {
+    var appAdjustments = [
+      Object.assign({}, adjustmentRow, { id: 24, points: -6, contactId: gsContactId, workloadOwnerId: existingOmId })
+    ]
+
+    stagingAdjustmentsMapper.mapCmsAdjustments.resolves([])
+    stagingAdjustmentsMapper.mapGsAdjustments.resolves([])
+    getAppAdjustments.resolves(appAdjustments)
+    updateAdjustmentEffectiveTo.resolves()
+    insertAdjustment.resolves()
+    updateAdjustmentStatusByIds.resolves(1)
+    createNewTasks.resolves()
+
+    return adjustmentsWorker.execute(task).then(function () {
+      expect(updateAdjustmentStatusByIds.called).to.be.equal(false)
+      expect(createNewTasks.called).to.be.equal(true)
+
+      expect(stagingAdjustmentsMapper.mapCmsAdjustments.called).to.be.equal(true)
+      expect(stagingAdjustmentsMapper.mapGsAdjustments.called).to.be.equal(true)
+      expect(getAppAdjustments.called).to.be.equal(true)
+      expect(updateAdjustmentEffectiveTo.calledWith(appAdjustments[0].id, updateTime)).to.be.equal(true)
+      expect(insertAdjustment.called).to.be.equal(false)
+    })
+  })
+
+  it('should correctly process a combination of adding and updating CMS and GS adjustments', function () {
+    var appAdjustments = [
+      adjustmentRow,
+      Object.assign({}, adjustmentRow, { id: 12, points: -1, workloadOwnerId: existingOmId }),
+      Object.assign({}, adjustmentRow, { id: 24, points: -6, contactId: 123, workloadOwnerId: existingOmId })
+    ]
+
+    stagingAdjustmentsMapper.mapCmsAdjustments.resolves(cmsAdjustments)
+    stagingAdjustmentsMapper.mapGsAdjustments.resolves(gsAdjustments)
+    getAppAdjustments.resolves(appAdjustments)
+    updateAdjustmentEffectiveTo.resolves()
+    insertAdjustment.resolves()
+    updateAdjustmentStatusByIds.resolves(1)
+    createNewTasks.resolves()
+
+    return adjustmentsWorker.execute(task).then(function () {
+      expect(updateAdjustmentStatusByIds.called).to.be.equal(false)
+      expect(createNewTasks.called).to.be.equal(true)
+
+      expect(stagingAdjustmentsMapper.mapCmsAdjustments.called).to.be.equal(true)
+      expect(stagingAdjustmentsMapper.mapGsAdjustments.called).to.be.equal(true)
+      expect(getAppAdjustments.called).to.be.equal(true)
+      expect(updateAdjustmentEffectiveTo.calledWith(appAdjustments[2].id, updateTime)).to.be.equal(true)
+      expect(insertAdjustment.calledWith(gsAdjustments[0])).to.be.equal(true)
+    })
+  })
+
+  it('should throw an error (and  subsequently fail the task) if any internal functions error, e.g. mapping function', function () {
+    stagingAdjustmentsMapper.mapCmsAdjustments.rejects(new Error('Test error'))
+
+    return adjustmentsWorker.execute(task)
+    .then(function () {
+      assert.fail()
+    })
+    .catch(function (err) {
+      expect(err.message).to.eql('Test error')
+    })
+  })
+
+  it('should throw an error (and  subsequently fail the task) if any internal functions error, e.g. data service', function () {
+    getAppAdjustments.rejects(new Error('Test error'))
+    stagingAdjustmentsMapper.mapCmsAdjustments.resolves([])
+    stagingAdjustmentsMapper.mapGsAdjustments.resolves([])
+
+    return adjustmentsWorker.execute(task)
+    .then(function () {
+      assert.fail()
+    })
+    .catch(function (err) {
+      expect(err.message).to.eql('Test error')
     })
   })
 })
