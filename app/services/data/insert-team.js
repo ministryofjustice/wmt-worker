@@ -1,6 +1,5 @@
 const config = require('../../../config')
-const knexConfig = require('../../../knexfile').app
-const knex = require('knex')(knexConfig)
+const knex = require('../../../knex').appSchema
 const teamTable = `${config.DB_APP_SCHEMA}.team`
 
 module.exports = function (team) {

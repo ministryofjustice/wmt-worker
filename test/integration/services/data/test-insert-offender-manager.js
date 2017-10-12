@@ -1,6 +1,5 @@
 const expect = require('chai').expect
-const knexConfig = require('../../../../knexfile').app
-const knex = require('knex')(knexConfig)
+const knex = require('../../../../knex').appSchema
 const insertOffenderManager = require('../../../../app/services/data/insert-offender-manager')
 const OffenderManager = require('wmt-probation-rules').OffenderManager
 const moment = require('moment')

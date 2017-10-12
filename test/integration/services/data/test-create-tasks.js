@@ -1,6 +1,5 @@
 const expect = require('chai').expect
-const knexConfig = require('../../../../knexfile').app
-const knex = require('knex')(knexConfig)
+const knex = require('../../../../knex').appSchema
 const createTasks = require('../../../../app/services/data/create-tasks')
 const workloadReportHelper = require('../../../helpers/data/app-workload-report-helper')
 const moment = require('moment')

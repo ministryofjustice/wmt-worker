@@ -12,6 +12,7 @@ exports.seed = function (knex, promise) {
     , ldu_totals.available_points
     , ldu_totals.reduction_hours
     , ldu_totals.cms_adjustment_points
+    , ldu_totals.gs_adjustment_points
     , ldu_totals.contracted_hours
     FROM (
       SELECT
@@ -19,6 +20,7 @@ exports.seed = function (knex, promise) {
       , SUM(lcbv.available_points) AS available_points
       , SUM(lcbv.reduction_hours) AS reduction_hours
       , SUM(lcbv.cms_adjustment_points) AS cms_adjustment_points
+      , SUM(lcbv.gs_adjustment_points) AS gs_adjustment_points
       , SUM(lcbv.total_cases) AS total_cases
       , SUM(lcbv.contracted_hours) AS contracted_hours      
       , l.id as id

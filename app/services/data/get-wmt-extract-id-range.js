@@ -1,5 +1,4 @@
-const config = require('../../../knexfile').app
-const knex = require('knex')(config)
+const knex = require('../../../knex').appSchema
 const IdRange = require('../domain/id-range')
 
 module.exports = function () {

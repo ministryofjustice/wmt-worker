@@ -9,7 +9,7 @@ const submittingAgent = require('../../constants/task-submitting-agent')
 const wpcOperationType = require('../../constants/calculate-workload-points-operation')
 const logger = require('../log')
 
-const mapStagingCmsAdjustments = require('../map-staging-cms-adjustments')
+const stagingAdjustmentsMapper = require('../staging-adjustments-mapper')
 const getAppAdjustmentsForBatch = require('../data/get-app-adjustments-for-batch')
 const updateAdjustmentEffectiveTo = require('../data/update-adjustment-effective-to')
 const insertAdjustment = require('../data/insert-adjustment')
@@ -64,9 +64,9 @@ var getAdjustmentStatus = function (adjustment) {
 }
 
 var processAdjustments = function (workloadStagingIdStart, workloadStagingIdEnd, workloadReportId) {
-  return mapStagingCmsAdjustments(workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
+  return getAllStgAdjustmentsForBatch(workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
   .then(function (stgAdjustments) {
-    return getAppAdjustmentsForBatch(adjustmentCategory.CMS, workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
+    return getAllAppAdjustmentsForBatch(workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
     .then(function (appAdjustments) {
       var updateAdjustmentsEffectiveTo = []
       var insertAdjustments = []
@@ -77,18 +77,18 @@ var processAdjustments = function (workloadStagingIdStart, workloadStagingIdEnd,
       })
 
       var appAdjustmentIds = []
-      appAdjustments.forEach(function (cmsAdjustment) {
-        appAdjustmentIds.push(String(cmsAdjustment.contactId) + ':' + String(cmsAdjustment.workloadOwnerId))
+      appAdjustments.forEach(function (appAdjustment) {
+        appAdjustmentIds.push(String(appAdjustment.contactId) + ':' + String(appAdjustment.workloadOwnerId))
       })
 
       var updateTime = new Date()
       updateTime.setHours(0, 0, 0, 0)
 
-      appAdjustments.forEach(function (cmsAdjustment) {
-        var appAdjustmentId = String(cmsAdjustment.contactId) + ':' + String(cmsAdjustment.workloadOwnerId)
+      appAdjustments.forEach(function (appAdjustment) {
+        var appAdjustmentId = String(appAdjustment.contactId) + ':' + String(appAdjustment.workloadOwnerId)
         if (!stgAdjustmentIds.includes(appAdjustmentId)) {
           // set date of this adjustment to today at 00.00 in order to set as archived in next stage of worker
-          updateAdjustmentsEffectiveTo.push(updateAdjustmentEffectiveTo(cmsAdjustment.id, updateTime))
+          updateAdjustmentsEffectiveTo.push(updateAdjustmentEffectiveTo(appAdjustment.id, updateTime))
         }
       })
 
@@ -103,6 +103,30 @@ var processAdjustments = function (workloadStagingIdStart, workloadStagingIdEnd,
       .then(function () {
         return Promise.all(insertAdjustments)
       })
+    })
+  })
+}
+
+var getAllStgAdjustmentsForBatch = function (workloadStagingIdStart, workloadStagingIdEnd, workloadReportId) {
+  return stagingAdjustmentsMapper.mapCmsAdjustments(workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
+  .then(function (stgCmsAdjustments) {
+    return stagingAdjustmentsMapper.mapGsAdjustments(workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
+    .then(function (stgGsAdjustments) {
+      var stgAdjustments = []
+      stgAdjustments = stgCmsAdjustments.concat(stgGsAdjustments)
+      return stgAdjustments
+    })
+  })
+}
+
+var getAllAppAdjustmentsForBatch = function (workloadStagingIdStart, workloadStagingIdEnd, workloadReportId) {
+  return getAppAdjustmentsForBatch(adjustmentCategory.CMS, workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
+  .then(function (appCmsAdjustments) {
+    return getAppAdjustmentsForBatch(adjustmentCategory.GS, workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
+    .then(function (appGsAdjustments) {
+      var appAdjustments = []
+      appAdjustments = appCmsAdjustments.concat(appGsAdjustments)
+      return appAdjustments
     })
   })
 }

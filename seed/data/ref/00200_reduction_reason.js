@@ -1,5 +1,6 @@
 var tableName = 'reduction_reason'
 var insertStatement = 'INSERT INTO app.' + tableName + ' (id, reason, reason_short_name, category_id, allowance_percentage, max_allowance_percentage, months_to_expiry) VALUES '
+
 var categoryId
 var sql
 
