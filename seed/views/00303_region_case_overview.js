@@ -4,15 +4,22 @@ exports.seed = function (knex, promise) {
   AS
   SELECT
       l.description AS name
-    , SUM(lv.available_points) AS available_points
-    , SUM(lv.total_points) AS total_points
-    , SUM(lv.contracted_hours) AS contracted_hours
-    , SUM(lv.reduction_hours) AS reduction_hours
+    , SUM(wpc.available_points) AS available_points
+    , SUM(wpc.total_points) AS total_points
+    , SUM(wo.contracted_hours) AS contracted_hours
+    , SUM(wpc.reduction_hours) AS reduction_hours
     , r.id AS id
     , l.id AS link_id
-  FROM app.ldu_case_overview lv
-    JOIN app.ldu l ON l.id = lv.id
+    , COUNT_BIG(*) AS count
+  FROM app.workload_owner wo
+    JOIN app.team t ON wo.team_id = t.id
+    JOIN app.ldu l ON t.ldu_id = l.id
     JOIN app.region r ON r.id = l.region_id
+    JOIN app.workload w ON wo.id = w.workload_owner_id
+    JOIN app.workload_points_calculations wpc ON wpc.workload_id = w.id
+    JOIN app.workload_report wr ON wr.id = wpc.workload_report_id
+  WHERE wr.effective_from IS NOT NULL
+    AND wr.effective_to IS NULL
   GROUP BY l.id, l.description, r.id;`
 
   var index = `CREATE UNIQUE CLUSTERED INDEX idx_region_case_overview

@@ -4,15 +4,20 @@ exports.seed = function (knex, promise) {
   AS
   SELECT
       t.description AS name
-    , SUM(tv.available_points) AS available_points
-    , SUM(tv.total_points) AS total_points
-    , SUM(tv.contracted_hours) AS contracted_hours
-    , SUM(tv.reduction_hours) AS reduction_hours
+    , SUM(wpc.available_points) AS available_points
+    , SUM(wpc.total_points) AS total_points
+    , SUM(wo.contracted_hours) AS contracted_hours
+    , SUM(wpc.reduction_hours) AS reduction_hours
     , l.id AS id
     , t.id AS link_id
-  FROM app.team_case_overview tv
-    JOIN app.team t ON t.id = tv.id
+  FROM app.workload_owner wo
+    JOIN app.team t ON wo.team_id = t.id
     JOIN app.ldu l ON t.ldu_id = l.id
+    JOIN app.workload w ON wo.id = w.workload_owner_id
+    JOIN app.workload_points_calculations wpc ON wpc.workload_id = w.id
+    JOIN app.workload_report wr ON wr.id = wpc.workload_report_id
+  WHERE wr.effective_from IS NOT NULL
+    AND wr.effective_to IS NULL;  FROM 
   GROUP BY t.id, t.description, l.id;`
 
   var index = `CREATE UNIQUE CLUSTERED INDEX idx_ldu_case_overview

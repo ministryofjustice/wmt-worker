@@ -4,17 +4,23 @@ exports.seed = function (knex, promise) {
   AS
   SELECT
       r.description AS name
-    , SUM(rv.total_cases) AS total_cases
-    , SUM(rv.available_points) AS available_points
-    , SUM(rv.total_points) AS total_points
-    , SUM(rv.contracted_hours) AS contracted_hours
-    , SUM(rv.reduction_hours) AS reduction_hours
-    , rv.id AS link_id
+    , SUM(wpc.total_cases) AS total_cases
+    , SUM(wpc.available_points) AS available_points
+    , SUM(wpc.total_points) AS total_points
+    , SUM(wo.contracted_hours) AS contracted_hours
+    , SUM(wpc.reduction_hours) AS reduction_hours
+    , r.id AS link_id
     , COUNT_BIG(*) AS count
-  FROM app.region_case_overview rv
-    JOIN app.region r ON r.id = rv.id
-  GROUP BY rv.id
-     , r.description;`
+  FROM app.workload_owner wo
+    JOIN app.team t ON wo.team_id = t.id
+    JOIN app.ldu l ON t.ldu_id = l.id
+    JOIN app.region r ON r.id = l.region_id
+    JOIN app.workload w ON wo.id = w.workload_owner_id
+    JOIN app.workload_points_calculations wpc ON wpc.workload_id = w.id
+    JOIN app.workload_report wr ON wr.id = wpc.workload_report_id
+  WHERE wr.effective_from IS NOT NULL
+    AND wr.effective_to IS NULL;
+  GROUP BY rv.id, r.description;`
 
   return knex.schema
     .raw('DROP VIEW IF EXISTS app.national_case_overview;')
