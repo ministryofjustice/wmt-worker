@@ -24,7 +24,7 @@ exports.seed = function (knex, promise) {
   GROUP BY l.id, l.description, r.id;`
 
   var index = `CREATE UNIQUE CLUSTERED INDEX idx_region_case_overview
-  ON app.region_case_overview (name)`
+  ON app.region_case_overview (link_id)`
 
   return knex.schema
     .raw('DROP VIEW IF EXISTS app.region_case_overview;')
