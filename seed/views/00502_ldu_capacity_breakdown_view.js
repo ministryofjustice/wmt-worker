@@ -8,6 +8,7 @@ exports.seed = function (knex, promise) {
     , t.description AS name
     , team_totals.grade_code
     , team_totals.total_cases
+    , team_totals.t2a_cases
     , team_totals.total_points
     , team_totals.available_points
     , team_totals.reduction_hours
@@ -20,8 +21,9 @@ exports.seed = function (knex, promise) {
       , SUM(tcbv.reduction_hours) AS reduction_hours
       , SUM(tcbv.cms_adjustment_points) AS cms_adjustment_points
       , SUM(tcbv.total_cases) AS total_cases
+      , SUM(tcbv.t2a_cases) AS t2a_cases
       , SUM(tcbv.contracted_hours) AS contracted_hours
-      , t.id as id
+      , t.id AS id
       , tcbv.grade_code
       FROM app.team_capacity_breakdown_view tcbv
         JOIN app.team t ON tcbv.id = t.id
