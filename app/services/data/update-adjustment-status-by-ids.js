@@ -1,5 +1,4 @@
-const config = require('../../../knexfile').app
-const knex = require('knex')(config)
+const knex = require('../../../knex').appSchema
 
 module.exports = function (ids, status) {
   return knex('adjustments').whereIn('id', ids)

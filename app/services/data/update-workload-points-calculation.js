@@ -1,5 +1,4 @@
-const knexConfig = require('../../../knexfile').app
-const knex = require('knex')(knexConfig)
+const knex = require('../../../knex').appSchema
 
 module.exports = function (workloadReportId, workloadPointsId, workloadId, totalPoints, sdrPoints,
   sdrPointsConversion, paromsPoints, nominalTarget, availablePoints, reductionHours, contractedHours, cmsAdjustmentPoints) {

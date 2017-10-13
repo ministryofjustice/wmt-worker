@@ -1,6 +1,5 @@
 const expect = require('chai').expect
-const knexConfig = require('../../../../knexfile').app
-const knex = require('knex')(knexConfig)
+const knex = require('../../../../knex').appSchema
 const workloadReportStatus = require('../../../../app/constants/workload-report-status')
 const insertWorkloadReport = require('../../../../app/services/data/insert-workload-report')
 const tableName = 'workload_report'

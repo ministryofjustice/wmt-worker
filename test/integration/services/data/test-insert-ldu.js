@@ -1,6 +1,5 @@
 const expect = require('chai').expect
-const knexConfig = require('../../../../knexfile').app
-const knex = require('knex')(knexConfig)
+const knex = require('../../../../knex').appSchema
 const insertLdu = require('../../../../app/services/data/insert-ldu')
 const Ldu = require('wmt-probation-rules').Ldu
 const moment = require('moment')

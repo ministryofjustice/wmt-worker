@@ -1,5 +1,4 @@
-const config = require('../../../knexfile').app
-const knex = require('knex')(config)
+const knex = require('../../../knex').appSchema
 const taskStatus = require('../../constants/task-status')
 const updateTaskStatusByIds = require('./update-task-status-by-ids')
 const Task = require('../domain/task')
