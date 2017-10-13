@@ -2,6 +2,7 @@ const reductionStatus = require('../../../app/constants/reduction-status')
 
 var tableName = 'reductions'
 var workloadOwnerId
+var courtReporterId
 
 exports.seed = function (knex, Promise) {
   return knex(tableName).del()
@@ -9,8 +10,15 @@ exports.seed = function (knex, Promise) {
       return knex('workload_owner').select('id').first()
     })
     .then(function (firstWorkloadOwnerId) {
-      workloadOwnerId = firstWorkloadOwnerId.id
-      return knex('reduction_reason').select('id')
+    workloadOwnerId = firstWorkloadOwnerId.id
+      return knex('workload_owner')
+      .join('team', 'workload_owner.team_id', 'team.id')
+      .where('team.description', 'CR Team 1')
+      .first('workload_owner.id')
+      .then(function (firstCourtReporterId) {
+        courtReporterId = firstCourtReporterId.id
+        return knex('reduction_reason').select('id')          
+      })
     })
     .then(function (reductionReasonId) {
       var effectiveFromDate = (new Date()).getDate()
@@ -64,6 +72,34 @@ exports.seed = function (knex, Promise) {
           status: reductionStatus.ARCHIVED
         },
         { workload_owner_id: workloadOwnerId,
+          reduction_reason_id: reductionReasonId[2].id,
+          effective_from: deletedFromDate,
+          effective_to: deletedToDate,
+          hours: Math.floor(Math.random() * 6) + 1,
+          status: reductionStatus.DELETED
+        },
+        { workload_owner_id: courtReporterId,
+          reduction_reason_id: reductionReasonId[0].id,
+          effective_from: activeFromDate,
+          effective_to: activeToDate,
+          hours: Math.floor(Math.random() * 6) + 1,
+          status: reductionStatus.ACTIVE
+        },
+        { workload_owner_id: courtReporterId,
+          reduction_reason_id: reductionReasonId[1].id,
+          effective_from: scheduledFromDate,
+          effective_to: scheduleToDate,
+          hours: Math.floor(Math.random() * 6) + 1,
+          status: reductionStatus.SCHEDULED
+        },
+        { workload_owner_id: courtReporterId,
+          reduction_reason_id: reductionReasonId[2].id,
+          effective_from: archivedFromDate,
+          effective_to: archivedToDate,
+          hours: Math.floor(Math.random() * 6) + 1,
+          status: reductionStatus.ARCHIVED
+        },
+        { workload_owner_id: courtReporterId,
           reduction_reason_id: reductionReasonId[2].id,
           effective_from: deletedFromDate,
           effective_to: deletedToDate,

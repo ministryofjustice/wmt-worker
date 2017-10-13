@@ -9,9 +9,9 @@ exports.seed = function (knex, promise) {
       , MAX(rv.grade_code) AS grade_code
       , MAX(rv.contracted_hours) AS contracted_hours
       , MAX(rv.reduction_hours) AS reduction_hours
-      , SUM(rv.total_cases_sdrs) AS total_cases_sdrs
-      , SUM(rv.total_cases_fdrs) AS total_cases_fdrs
-      , SUM(rv.total_cases_oral_reports) AS total_cases_oral_reports
+      , SUM(rv.total_sdrs) AS total_sdrs
+      , SUM(rv.total_fdrs) AS total_fdrs
+      , SUM(rv.total_oral_reports) AS total_oral_reports
     FROM app.region_court_reporter_overview rv
       JOIN app.region r ON rv.id = r.id  
     GROUP BY rv.id;`

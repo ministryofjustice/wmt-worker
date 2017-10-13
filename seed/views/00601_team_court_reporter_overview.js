@@ -9,9 +9,9 @@ exports.seed = function (knex, promise) {
       , MAX(iv.reduction_hours) AS reduction_hours
       , MAX(iv.link_id) AS id
       , MAX(iv.id) AS link_id
-      , SUM(iv.total_cases_sdrs) AS total_cases_sdrs
-      , SUM(iv.total_cases_fdrs) AS total_cases_fdrs
-      , SUM(iv.total_cases_oral_reports) AS total_cases_oral_reports
+      , SUM(iv.total_sdrs) AS total_sdrs
+      , SUM(iv.total_fdrs) AS total_fdrs
+      , SUM(iv.total_oral_reports) AS total_oral_reports
     FROM app.individual_court_reporter_overview iv
       JOIN app.workload_owner wo ON wo.id = iv.id
       JOIN app.offender_manager om ON om.id = wo.offender_manager_id

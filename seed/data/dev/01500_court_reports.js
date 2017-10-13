@@ -1,10 +1,10 @@
-var tableName = 'court_reports_workload'
+var tableName = 'court_reports'
 
 const workloadRow = {
   workload_owner_id: 1,
-  total_cases_sdr: 10,
-  total_cases_fdr: 11,
-  total_cases_oral_reports: 12
+  total_sdrs: 10,
+  total_fdrs: 11,
+  total_oral_reports: 12
 }
 
 exports.seed = function (knex, Promise) {
