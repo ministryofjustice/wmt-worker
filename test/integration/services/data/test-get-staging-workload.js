@@ -13,6 +13,9 @@ describe('services/data/get-staging-workload', function () {
   before(function () {
     return workloadHelper.insertCaseSummaryReport(caseSummaryReport, insertedRecords)
     .then(function (inserts) {
+      return workloadHelper.insertCaseSummaryReport(caseSummaryReport, insertedRecords, true)
+    })
+    .then(function (inserts) {
       return workloadHelper.insertCourtReport(courtReport, inserts)
     })
     .then(function (inserts) {

@@ -19,6 +19,7 @@ describe('app/services/data/insert-app-workload', function () {
     var workload = new Workload(
         inserts.filter((item) => item.table === 'workload_owner')[0].id,
         2,
+        1,
         3,
         4,
         5,
@@ -41,6 +42,7 @@ describe('app/services/data/insert-app-workload', function () {
         .then(function (result) {
           expect(result).not.to.be.undefined // eslint-disable-line
           expect(result.total_cases).to.equal(2)
+          expect(result.t2a_cases).to.equal(1)
           expect(result.monthly_sdrs).to.equal(3)
           expect(result.sdr_due_next_30_days).to.equal(4)
           expect(result.sdr_conversions_last_30_days).to.equal(5)

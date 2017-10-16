@@ -22,6 +22,7 @@ module.exports = function (workload) {
 const aliases = {
   workloadOwnerId: 'workload_owner_id',
   totalCases: 'total_cases',
+  t2aCases: 't2a_cases',
   monthlySdrs: 'monthly_sdrs',
   sdrsDueNext30Days: 'sdr_due_next_30_days',
   sdrConversionsLast30Days: 'sdr_conversions_last_30_days',
