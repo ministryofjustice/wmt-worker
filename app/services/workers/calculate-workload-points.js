@@ -56,6 +56,7 @@ module.exports.execute = function (task) {
                   var nominalTarget = calculateNominalTarget(offenderManagerTypeId, caseTypeWeightings.pointsConfiguration.defaultNominalTargets)
                   var availablePoints = calculateAvailablePoints(nominalTarget, offenderManagerTypeId, contractedHours,
                       reductions, caseTypeWeightings.pointsConfiguration.defaultContractedHours)
+                  var armsTotalCases = workload.armsCommunityCases + workload.armsLicenseCases
 
                   switch (operationType) {
                     case wpcOperationType.INSERT:
@@ -72,7 +73,8 @@ module.exports.execute = function (task) {
                               contractedHours,
                               reductions,
                               cmsAdjustments,
-                              gsAdjustments)
+                              gsAdjustments,
+                              armsTotalCases)
 
                     case wpcOperationType.UPDATE:
                       return updateWorkloadPointsCalculations(
@@ -88,7 +90,8 @@ module.exports.execute = function (task) {
                               contractedHours,
                               reductions,
                               cmsAdjustments,
-                              gsAdjustments)
+                              gsAdjustments,
+                              armsTotalCases)
                     default:
                       throw new Error('Operation type of ' + operationType + ' is not valid. Should be ' + wpcOperationType.INSERT + ' or ' + wpcOperationType.UPDATE)
                   }

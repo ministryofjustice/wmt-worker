@@ -14,6 +14,7 @@ exports.seed = function (knex, promise) {
     , region_totals.cms_adjustment_points
     , region_totals.gs_adjustment_points
     , region_totals.contracted_hours
+    , region_totals.arms_total_cases
     FROM (
       SELECT
           SUM(rcbv.total_points) AS total_points
@@ -23,6 +24,7 @@ exports.seed = function (knex, promise) {
         , SUM(rcbv.gs_adjustment_points) AS gs_adjustment_points
         , SUM(rcbv.total_cases) AS total_cases
         , SUM(rcbv.contracted_hours) AS contracted_hours        
+        , SUM(rcbv.arms_total_cases) AS arms_total_cases
         , r.id as id
         , rcbv.grade_code
       FROM app.region_capacity_breakdown_view rcbv
