@@ -16,13 +16,13 @@ exports.up = function (knex, Promise) {
     table.string('sdr_due_next_30')
     table.string('sdr_conv_last_30')
     table.string('oral_reports')
-    table.string('datestamp')    
+    table.string('datestamp')
   }).catch(function (error) {
     console.log(error)
     throw error
   })
 }
-  
+
 exports.down = function (knex, Promise) {
   return knex.schema.withSchema('staging').dropTable('court_reporters')
 }
