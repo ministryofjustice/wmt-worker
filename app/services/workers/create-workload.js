@@ -1,7 +1,5 @@
 const Promise = require('bluebird').Promise
 const logger = require('../log')
-const insertWorkloadOwnerAndDependencies = require('../insert-workload-owner-and-dependencies')
-const insertWorkload = require('../data/insert-app-workload')
 
 const mapWorkload = require('wmt-probation-rules').mapWorkload
 const Task = require('../domain/task')
@@ -9,6 +7,8 @@ const taskType = require('../../constants/task-type')
 const taskStatus = require('../../constants/task-status')
 const submittingAgent = require('../../constants/task-submitting-agent')
 const getStagingWorkload = require('../data/get-staging-workload')
+const insertWorkloadOwnerAndDependencies = require('../insert-workload-owner-and-dependencies')
+const insertWorkload = require('../data/insert-app-workload')
 const createNewTasks = require('../data/create-tasks')
 
 module.exports.execute = function (task) {
@@ -41,7 +41,6 @@ module.exports.execute = function (task) {
                 undefined,
                 taskStatus.PENDING
                 )
-
       return createNewTasks([reductionsWorkerTask])
       .then(function () {
         logger.info('Reduction Worker Task created')
