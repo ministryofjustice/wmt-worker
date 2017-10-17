@@ -24,6 +24,8 @@ module.exports = function (initialId, maxId, batchSize, workloadReportId) {
               'workload.paroms_due_next_30_days',
               'workload.paroms_completed_last_30_days',
               'workload.license_last_16_weeks',
+              'workload.arms_community_cases',
+              'workload.arms_license_cases',
               'workload.community_last_16_weeks',
               'tiers.total_cases as tiers_total_cases',
               'tiers.warrants_total',
@@ -63,6 +65,8 @@ module.exports = function (initialId, maxId, batchSize, workloadReportId) {
             tempWorkloads[index].sdrsDueNext30Days = row.sdr_due_next_30_days
             tempWorkloads[index].communityCasesLast16Weeks = row.community_last_16_weeks
             tempWorkloads[index].licenseCasesLast16Weeks = row.license_last_16_weeks
+            tempWorkloads[index].armsCommunityCases = row.arms_community_cases
+            tempWorkloads[index].armsLicenseCases = row.arms_license_cases
           }
 
           tempWorkloads[index][row.location][row.tier_number] = new TierCounts(
@@ -89,6 +93,8 @@ module.exports = function (initialId, maxId, batchSize, workloadReportId) {
               new Tiers(Locations.LICENSE, ...tempWorkload[Locations.LICENSE], tempWorkload.totalLicenseCases),
               tempWorkload.licenseCasesLast16Weeks,
               tempWorkload.communityCasesLast16Weeks,
+              tempWorkload.armsCommunityCases,
+              tempWorkload.armsLicenseCases,
               tempWorkload.stagingId,
               tempWorkload.workloadReportId
             )

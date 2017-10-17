@@ -27,6 +27,7 @@ describe('services/data/get-app-workloads', function () {
     getAppWorkloads(initialWorkloadStagingId, maxStagingId, batchSize, workloadReportId)
       .then(function (queryResults) {
         expect(queryResults.length).to.equal(batchSize)
+
         var firstWorkload = queryResults[0].values
         expect(firstWorkload).to.be.an.instanceof(Workload)
         expect(firstWorkload.workloadOwnerId).to.equal(workloadOwnerId)
@@ -39,6 +40,10 @@ describe('services/data/get-app-workloads', function () {
         expect(firstWorkload.sdrConversionsLast30Days).to.equal(6)
         expect(firstWorkload.paromsCompletedLast30Days).to.equal(7)
         expect(firstWorkload.paromsDueNext30Days).to.equal(8)
+        expect(firstWorkload.licenseCasesLast16Weeks).to.equal(9)
+        expect(firstWorkload.communityCasesLast16Weeks).to.equal(10)
+        expect(firstWorkload.armsCommunityCases).to.equal(11)
+        expect(firstWorkload.armsLicenseCases).to.equal(12)
 
         var secondWorkload = queryResults[1].values
         expect(secondWorkload.totalCases).to.equal(30)
@@ -55,6 +60,7 @@ describe('services/data/get-app-workloads', function () {
     getAppWorkloads(initialWorkloadStagingId, maxStagingId, batchSize, workloadReportId)
       .then(function (queryResults) {
         expect(queryResults.length).to.equal(batchSize)
+
         var firstWorkload = queryResults[0].values
         expect(firstWorkload).to.be.an.instanceof(Workload)
         expect(firstWorkload.workloadOwnerId).to.equal(workloadOwnerId)
@@ -67,6 +73,10 @@ describe('services/data/get-app-workloads', function () {
         expect(firstWorkload.sdrConversionsLast30Days).to.equal(6)
         expect(firstWorkload.paromsCompletedLast30Days).to.equal(7)
         expect(firstWorkload.paromsDueNext30Days).to.equal(8)
+        expect(firstWorkload.licenseCasesLast16Weeks).to.equal(9)
+        expect(firstWorkload.communityCasesLast16Weeks).to.equal(10)
+        expect(firstWorkload.armsCommunityCases).to.equal(11)
+        expect(firstWorkload.armsLicenseCases).to.equal(12)
         done()
       })
   })

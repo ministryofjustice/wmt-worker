@@ -4,7 +4,6 @@ const PointsConfiguration = require('wmt-probation-rules').PointsConfiguration
 const LocationPointsConfiguration = require('wmt-probation-rules').LocationPointsConfiguration
 const DefaultNominalTargets = require('wmt-probation-rules').DefaultNominalTargets
 const DefaultContractedHours = require('wmt-probation-rules').DefaultContractedHours
-const calculateWeighting = require('wmt-probation-rules').calculateWeighting
 
 module.exports = function () {
   return knex('workload_points')
@@ -44,11 +43,11 @@ module.exports = function () {
                                                         result.paroms_enabled,
                                                         result.parom)
 
-      var caseTypeWeightings = new CaseTypeWeightings(calculateWeighting(result.weighting_w),
-                                                      calculateWeighting(result.weighting_u),
-                                                      calculateWeighting(result.weighting_o),
-                                                      calculateWeighting(result.weighting_arms_comm),
-                                                      calculateWeighting(result.weighting_arms_lic),
+      var caseTypeWeightings = new CaseTypeWeightings(result.weighting_w,
+                                                      result.weighting_u,
+                                                      result.weighting_o,
+                                                      result.weighting_arms_comm,
+                                                      result.weighting_arms_lic,
                                                       pointsConfiguration)
 
       return { values: caseTypeWeightings, id: result.id }

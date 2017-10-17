@@ -16,7 +16,7 @@ describe('services/data/get-workload-points', function () {
       })
   })
 
-  xit('retrieves the latest points configuration', function (done) {
+  it('retrieves the latest points configuration', function (done) {
     getWorkloadPoints().then(function (result) {
       var points = result.values
       expect(points).to.be.an.instanceof(CaseTypeWeightings)
@@ -55,12 +55,12 @@ describe('services/data/get-workload-points', function () {
       expect(points.pointsConfiguration.defaultContractedHours.po).to.equal(26)
       expect(points.pointsConfiguration.defaultContractedHours.pso).to.equal(27)
 
-      expect(points.overdueTermination).to.equal(0.72)
-      expect(points.warrants).to.equal(0.71)
-      expect(points.unpaidWork).to.equal(0.7)
+      expect(points.overdueTermination).to.equal(28)
+      expect(points.warrants).to.equal(29)
+      expect(points.unpaidWork).to.equal(30)
 
-      expect(points.armsLicense).to.equal(0.68)
-      expect(points.armsCommunity).to.equal(0.67)
+      expect(points.armsLicense).to.equal(32)
+      expect(points.armsCommunity).to.equal(33)
 
       expect(points.pointsConfiguration.paromsEnabled).to.equal(true)
       expect(points.pointsConfiguration.parom).to.equal(31)

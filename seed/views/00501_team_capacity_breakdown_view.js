@@ -14,6 +14,7 @@ exports.seed = function (knex, Promise) {
           , wpc.cms_adjustment_points
           , wpc.gs_adjustment_points
           , wpc.contracted_hours
+          , wpc.arms_total_cases
         FROM app.workload_points_calculations wpc
           JOIN app.workload w ON wpc.workload_id = w.id
           JOIN app.workload_owner wo ON w.workload_owner_id = wo.id
