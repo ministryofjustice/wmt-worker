@@ -14,7 +14,9 @@ exports.seed = function (knex, Promise) {
           { type_id: probationSupportOfficerTypeId.id, key: 'JS02', forename: 'Tony', surname: 'Test' },
           { type_id: probationOfficerTypeId.id, key: 'JS03', forename: 'Jane', surname: 'Doe' },
           { type_id: probationSupportOfficerTypeId.id, key: 'JS04', forename: 'Marcin', surname: 'Martin' },
-          { type_id: probationOfficerTypeId.id, key: 'JS05', forename: 'Courtney', surname: 'Larry' }
+          { type_id: probationOfficerTypeId.id, key: 'JS05', forename: 'Courtney', surname: 'Larry' },
+          { type_id: probationOfficerTypeId.id, key: 'CR01', forename: 'Courts', surname: 'John' },
+          { type_id: probationOfficerTypeId.id, key: 'CR02', forename: 'Reports', surname: 'Frank' }
         ])
       })
     })
