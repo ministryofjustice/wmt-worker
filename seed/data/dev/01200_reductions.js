@@ -10,14 +10,14 @@ exports.seed = function (knex, Promise) {
       return knex('workload_owner').select('id').first()
     })
     .then(function (firstWorkloadOwnerId) {
-    workloadOwnerId = firstWorkloadOwnerId.id
+      workloadOwnerId = firstWorkloadOwnerId.id
       return knex('workload_owner')
       .join('team', 'workload_owner.team_id', 'team.id')
       .where('team.description', 'CR Team 1')
       .first('workload_owner.id')
       .then(function (firstCourtReporterId) {
         courtReporterId = firstCourtReporterId.id
-        return knex('reduction_reason').select('id')          
+        return knex('reduction_reason').select('id')
       })
     })
     .then(function (reductionReasonId) {

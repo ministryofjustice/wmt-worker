@@ -36,7 +36,7 @@ exports.seed = function (knex, Promise) {
             // Inserts seed entries
             var contractedHours = [37, 36, 35, 33, 32]
             var insertData = []
-      
+
             var counter = 0
             omIds.forEach(function (omId) {
               var hours = contractedHours[counter++]
