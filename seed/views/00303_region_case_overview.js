@@ -1,25 +1,34 @@
 exports.seed = function (knex, promise) {
-  var sql = `CREATE VIEW app.region_case_overview
+  var view = `CREATE VIEW app.region_case_overview
   WITH SCHEMABINDING
   AS
   SELECT
-      MAX(l.description) AS name
-    , SUM(lv.total_cases) AS total_cases
-    , SUM(lv.available_points) AS available_points
-    , SUM(lv.total_points) AS total_points
-    , SUM(lv.contracted_hours) AS contracted_hours
-    , SUM(lv.reduction_hours) AS reduction_hours
-    , MAX(lv.default_contracted_hours_po) AS default_contracted_hours_po
-    , MAX(lv.default_contracted_hours_pso) AS default_contracted_hours_pso
-    , MAX(r.id) AS id
-    , MAX(l.id) AS link_id
-  FROM app.ldu_case_overview lv
-    JOIN app.ldu l ON l.id = lv.id
+      l.description AS name
+    , SUM(w.total_cases) AS total_cases
+    , SUM(wpc.available_points) AS available_points
+    , SUM(wpc.total_points) AS total_points
+    , SUM(wpc.contracted_hours) AS contracted_hours
+    , SUM(wpc.reduction_hours) AS reduction_hours
+    , r.id AS id
+    , l.id AS link_id
+    , COUNT_BIG(*) AS count
+  FROM app.workload_owner wo
+    JOIN app.team t ON wo.team_id = t.id
+    JOIN app.ldu l ON t.ldu_id = l.id
     JOIN app.region r ON r.id = l.region_id
-  GROUP BY l.id;`
+    JOIN app.workload w ON wo.id = w.workload_owner_id
+    JOIN app.workload_points_calculations wpc ON wpc.workload_id = w.id
+    JOIN app.workload_report wr ON wr.id = wpc.workload_report_id
+  WHERE wr.effective_from IS NOT NULL
+    AND wr.effective_to IS NULL
+  GROUP BY l.id, l.description, r.id;`
+
+  var index = `CREATE UNIQUE CLUSTERED INDEX idx_region_case_overview
+  ON app.region_case_overview (link_id)`
 
   return knex.schema
     .raw('DROP VIEW IF EXISTS app.region_case_overview;')
     .raw('SET ARITHABORT ON')
-    .raw(sql)
+    .raw(view)
+    .raw(index)
 }
