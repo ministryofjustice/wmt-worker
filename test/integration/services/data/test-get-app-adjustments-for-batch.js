@@ -48,6 +48,13 @@ describe('services/data/get-app-adjustments-for-batch', function () {
     })
   })
 
+  it('should return an empty array if there are no adjustments matching the query criteria', function () {
+    return getAdjustments(adjustmentCategory.CMS, endStagingId * 2, endStagingId * 2, workloadReportId + 1)
+    .then(function (adjustments) {
+      expect(adjustments).to.eql([])
+    })
+  })
+
   after(function () {
     return adjustmentsHelper.removeDependencies(inserts)
   })

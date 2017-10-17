@@ -7,7 +7,6 @@ const cmsRecords = [{
   contact_id: Number.MAX_SAFE_INTEGER,
   contact_date: new Date().toISOString(),
   contact_type_code: 'abc',
-  contact_type_desc: 'def',
   contact_staff_name: 'ghi',
   contact_staff_key: 'jkl',
   contact_staff_grade: 'mno',
@@ -39,7 +38,6 @@ describe('services/data/get-staging-cms', function () {
         if (reduction.id === insertedRecords[0].id[0]) {
           expect(Number(reduction.contactId)).to.be.equal(cmsRecords[0].contact_id)
           expect(reduction.contactCode).to.be.equal(cmsRecords[0].contact_type_code)
-          expect(reduction.contactTypeDesc).to.be.equal(cmsRecords[0].contact_type_desc)
           expect(new Date(reduction.contactDate)).to.be.eql(new Date(cmsRecords[0].contact_date))
           expect(reduction.contactStaffKey).to.be.equal(cmsRecords[0].contact_staff_key)
           expect(reduction.contactTeamKey).to.be.equal(cmsRecords[0].contact_team_key)
@@ -47,7 +45,7 @@ describe('services/data/get-staging-cms', function () {
           expect(reduction.omTeamKey).to.be.equal(cmsRecords[0].om_team_key)
         }
       })
-      expect(ids.includes(insertedRecords[0].id)).to.be.equal(true)
+      expect(ids).to.include(insertedRecords[0].id)
     })
   })
 
