@@ -1,9 +1,9 @@
-const insertOffenderManagerTypeId = require('../data/insert-offender-manager-type-id')
-const insertOffenderManager = require('../data/insert-offender-manager')
-const insertWorkloadOwner = require('../data/insert-workload-owner')
-const insertTeam = require('../data/insert-team')
-const insertLdu = require('../data/insert-ldu')
-const insertRegion = require('../data/insert-region')
+const insertOffenderManagerTypeId = require('./data/insert-offender-manager-type-id')
+const insertOffenderManager = require('./data/insert-offender-manager')
+const insertWorkloadOwner = require('./data/insert-workload-owner')
+const insertTeam = require('./data/insert-team')
+const insertLdu = require('./data/insert-ldu')
+const insertRegion = require('./data/insert-region')
 
 const OffenderManager = require('wmt-probation-rules').OffenderManager
 const Team = require('wmt-probation-rules').Team
