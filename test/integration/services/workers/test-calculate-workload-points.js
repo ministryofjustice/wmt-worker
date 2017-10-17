@@ -12,12 +12,11 @@ var inserts = []
 var initialWorkloadStagingId
 
 describe('services/workers/calculate-workload-points', function () {
-  before(function (done) {
-    appWorkloadPointsCalculationHelper.insertDependencies(inserts)
+  before(function () {
+    return appWorkloadPointsCalculationHelper.insertDependencies(inserts)
       .then(function (builtInserts) {
         inserts = builtInserts
         initialWorkloadStagingId = 1
-        done()
       })
   })
 
@@ -45,6 +44,7 @@ describe('services/workers/calculate-workload-points', function () {
         expect(workloadPointsCalculations[0].reduction_hours).to.equal(9)
         expect(workloadPointsCalculations[0].cms_adjustment_points).to.equal(9)
         expect(workloadPointsCalculations[0].gs_adjustment_points).to.equal(4)
+        expect(workloadPointsCalculations[0].arms_total_cases).to.equal(23)
         expect(workloadPointsCalculations[1].workload_report_id).to.equal(workloadReportId)
         expect(workloadPointsCalculations[2].workload_report_id).to.equal(workloadReportId)
         workloadPointsCalculations.forEach(function (insertedCalculation) {
@@ -54,8 +54,7 @@ describe('services/workers/calculate-workload-points', function () {
     })
   })
 
-  after(function (done) {
-    appReductionsHelper.removeDependencies(inserts)
-      .then(() => done())
+  after(function () {
+    return appReductionsHelper.removeDependencies(inserts)
   })
 })

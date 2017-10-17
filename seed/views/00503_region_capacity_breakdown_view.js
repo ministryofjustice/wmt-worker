@@ -14,6 +14,7 @@ exports.seed = function (knex, promise) {
     , ldu_totals.cms_adjustment_points
     , ldu_totals.gs_adjustment_points
     , ldu_totals.contracted_hours
+    , ldu_totals.arms_total_cases
     FROM (
       SELECT
         SUM(lcbv.total_points) AS total_points
@@ -23,6 +24,7 @@ exports.seed = function (knex, promise) {
       , SUM(lcbv.gs_adjustment_points) AS gs_adjustment_points
       , SUM(lcbv.total_cases) AS total_cases
       , SUM(lcbv.contracted_hours) AS contracted_hours      
+      , SUM(lcbv.arms_total_cases) AS arms_total_cases
       , l.id as id
       , lcbv.grade_code
       FROM app.ldu_capacity_breakdown_view lcbv

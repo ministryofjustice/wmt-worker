@@ -55,6 +55,8 @@ module.exports.insertDependencies = function (inserts) {
         paroms_due_next_30_days: 8,
         license_last_16_weeks: 9,
         community_last_16_weeks: 10,
+        arms_community_cases: 11,
+        arms_license_cases: 12,
         workload_report_id: inserts.filter((item) => item.table === 'workload_report')[0].id
       }
 

@@ -24,7 +24,7 @@ const currentWorkloads = [
 ]
 
 describe('services/close-previous-workload-report', function () {
-  before(function (done) {
+  before(function () {
     getOpenWorkloadReports = sinon.stub()
     updateWorkloadEffectiveTo = sinon.stub()
 
@@ -32,16 +32,14 @@ describe('services/close-previous-workload-report', function () {
       './data/get-open-workload-reports': getOpenWorkloadReports,
       './data/update-workload-report-effective-to': updateWorkloadEffectiveTo
     })
-    done()
   })
 
-  it('should call get-open-workload-reports and update-workload-report-effective-to', function (done) {
+  it('should call get-open-workload-reports and update-workload-report-effective-to', function () {
     getOpenWorkloadReports.resolves(currentWorkloads)
     updateWorkloadEffectiveTo.resolves()
-    closePreviousWorkloadReport(newWorkloadReportId).then(function () {
+    return closePreviousWorkloadReport(newWorkloadReportId).then(function () {
       expect(getOpenWorkloadReports.called).to.be.true //eslint-disable-line
       expect(updateWorkloadEffectiveTo.calledWith(previousWorkloadReportId, now)).to.be.true //eslint-disable-line
-      done()
     })
   })
 })

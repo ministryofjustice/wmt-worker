@@ -5,9 +5,10 @@ const caseDetailsHelper = require('../../../helpers/data/staging-case-details-he
 
 describe('services/data/get-staging-workload', function () {
   const testOmKey = (Math.random() * 1000).toString()
-  const caseSummaryReport = workloadHelper.getTestCaseSummary(testOmKey)
   const courtReport = workloadHelper.getTestCourtReport(testOmKey)
   const institutionReport = workloadHelper.getTestInstitutionalReport(testOmKey)
+  const armsData = workloadHelper.getArmsData(testOmKey)
+  var caseSummaryReport = workloadHelper.getTestCaseSummary(testOmKey)
   var insertedRecords = []
 
   before(function () {
@@ -17,6 +18,9 @@ describe('services/data/get-staging-workload', function () {
     })
     .then(function (inserts) {
       return workloadHelper.insertInstitutionalReport(institutionReport, inserts)
+    })
+    .then(function (inserts) {
+      return workloadHelper.insertArms(armsData, inserts)
     })
     .then(function (inserts) {
       return caseDetailsHelper.insertOverdueTermination(inserts)
@@ -35,17 +39,19 @@ describe('services/data/get-staging-workload', function () {
     })
   })
 
-  it('should return the union of all staged case details', function (done) {
+  it('should return the union of all staged case details', function () {
     var workloads = insertedRecords.filter((item) => item.table === 'wmt_extract')
     var firstId = workloads[0].id
-    var lastId = firstId + workloads.length
-    getStagingWorkload([firstId, lastId])
+    var lastId = parseInt(firstId) + workloads.length
+    caseSummaryReport.armsCommunityCases = 3
+    caseSummaryReport.armsLicenseCases = 2
+
+    return getStagingWorkload([firstId, lastId])
     .then(function (omWorkload) {
       expect(omWorkload.length).to.be.equal(1)
       expect(omWorkload[0].casesSummary).to.deep.eq(caseSummaryReport)
       expect(omWorkload[0].courtReports).to.deep.eq(courtReport)
       expect(omWorkload[0].instReports).to.deep.eq(institutionReport)
-      done()
     })
   })
 

@@ -6,13 +6,20 @@ const InstitutionalReport = require('wmt-probation-rules').InstitutionalReport
 const Tiers = require('wmt-probation-rules').Tiers
 const locations = require('wmt-probation-rules').Locations
 const getStagingCaseDetails = require('../data/get-staging-case-details')
+const getArmsTotals = require('../data/get-arms-totals')
 const Promise = require('bluebird').Promise
 
 module.exports = function (range) {
   var omWorkloads = []
   return knex('wmt_extract').whereBetween('wmt_extract.id', range)
-    .leftJoin('court_reports', 'wmt_extract.om_key', 'court_reports.om_key')
-    .leftJoin('inst_reports', 'wmt_extract.om_key', 'inst_reports.om_key')
+    .leftJoin('court_reports', function () {
+      this.on('court_reports.om_key', 'wmt_extract.om_key')
+           .andOn('court_reports.team_code', 'wmt_extract.team_code')
+    })
+    .leftJoin('inst_reports', function () {
+      this.on('inst_reports.om_key', 'wmt_extract.om_key')
+           .andOn('inst_reports.team_code', 'wmt_extract.team_code')
+    })
     .select('wmt_extract.id AS staging_id', 'wmt_extract.trust', 'wmt_extract.region_desc', 'wmt_extract.region_code',
       'wmt_extract.ldu_desc', 'wmt_extract.ldu_code', 'wmt_extract.team_desc', 'wmt_extract.team_code',
       'wmt_extract.om_surname', 'wmt_extract.om_forename', 'wmt_extract.om_grade_code',
@@ -30,83 +37,86 @@ module.exports = function (range) {
     .then(function (results) {
       if (results !== 'undefined' && results.length > 0) {
         return Promise.each(results, function (result) {
-          var communityTiers = new Tiers(
-            locations.COMMUNITY,
-            result['commtier0'],
-            result['commtierd2'],
-            result['commtierd1'],
-            result['commtierc2'],
-            result['commtierc1'],
-            result['commtierb2'],
-            result['commtierb1'],
-            result['commtiera']
-          )
+          return getArmsTotals(result['om_key'], result['team_code']).then(function (armsCases) {
+            var communityTiers = new Tiers(
+              locations.COMMUNITY,
+              result['commtier0'],
+              result['commtierd2'],
+              result['commtierd1'],
+              result['commtierc2'],
+              result['commtierc1'],
+              result['commtierb2'],
+              result['commtierb1'],
+              result['commtiera']
+            )
 
-          var licenseTiers = new Tiers(
-            locations.LICENSE,
-            result['licencetier0'],
-            result['licencetierd2'],
-            result['licencetierd1'],
-            result['licencetierc2'],
-            result['licencetierc1'],
-            result['licencetierb2'],
-            result['licencetierb1'],
-            result['licencetiera']
-          )
+            var licenseTiers = new Tiers(
+              locations.LICENSE,
+              result['licencetier0'],
+              result['licencetierd2'],
+              result['licencetierd1'],
+              result['licencetierc2'],
+              result['licencetierc1'],
+              result['licencetierb2'],
+              result['licencetierb1'],
+              result['licencetiera']
+            )
 
-          var custodyTiers = new Tiers(
-            locations.CUSTODY,
-            result['custtier0'],
-            result['custtierd2'],
-            result['custtierd1'],
-            result['custtierc2'],
-            result['custtierc1'],
-            result['custtierb2'],
-            result['custtierb1'],
-            result['custtiera']
-          )
+            var custodyTiers = new Tiers(
+              locations.CUSTODY,
+              result['custtier0'],
+              result['custtierd2'],
+              result['custtierd1'],
+              result['custtierc2'],
+              result['custtierc1'],
+              result['custtierb2'],
+              result['custtierb1'],
+              result['custtiera']
+            )
 
-          var casesSummary = new CasesSummary(
-            result['trust'],
-            result['region_desc'],
-            result['region_code'],
-            result['ldu_desc'],
-            result['ldu_code'],
-            result['team_desc'],
-            result['team_code'],
-            result['om_surname'],
-            result['om_forename'],
-            result['om_grade_code'],
-            result['om_key'],
-            communityTiers,
-            licenseTiers,
-            custodyTiers,
-            result['comIn1st16Weeks'],
-            result['licIn1st16Weeks'],
-            result['datestamp']
-          )
+            var casesSummary = new CasesSummary(
+              result['trust'],
+              result['region_desc'],
+              result['region_code'],
+              result['ldu_desc'],
+              result['ldu_code'],
+              result['team_desc'],
+              result['team_code'],
+              result['om_surname'],
+              result['om_forename'],
+              result['om_grade_code'],
+              result['om_key'],
+              communityTiers,
+              licenseTiers,
+              custodyTiers,
+              result['comIn1st16Weeks'],
+              result['licIn1st16Weeks'],
+              armsCases.community,
+              armsCases.license
+            )
 
-          var courtReport = new CourtReport(
-            result['om_key'],
-            result['om_team_staff_grade'],
-            result['sdr_last_30'],
-            result['sdr_due_next_30'],
-            result['sdr_conv_last_30']
-          )
+            var courtReport = new CourtReport(
+              result['om_key'],
+              result['om_team_staff_grade'],
+              result['sdr_last_30'],
+              result['sdr_due_next_30'],
+              result['sdr_conv_last_30']
+            )
 
-          var institutionalReport = new InstitutionalReport(
-            result['om_key'],
-            result['om_team_staff_grade'],
-            result['parom_due_next_30'],
-            result['parom_comp_last_30']
-          )
+            var institutionalReport = new InstitutionalReport(
+              result['om_key'],
+              result['om_team_staff_grade'],
+              result['parom_due_next_30'],
+              result['parom_comp_last_30']
+            )
 
-          var stagingId = result['staging_id']
+            var stagingId = result['staging_id']
 
-          return getStagingCaseDetails(result['om_key']).then(function (caseDetails) {
-            omWorkloads.push(new OmWorkload(
-              stagingId, casesSummary, courtReport, institutionalReport, caseDetails
-            ))
+            return getStagingCaseDetails(result['om_key'], result['team_code']).then(function (caseDetails) {
+              omWorkloads.push(new OmWorkload(
+                stagingId, casesSummary, courtReport, institutionalReport, caseDetails
+              ))
+            })
           })
         })
         .then(function () {
