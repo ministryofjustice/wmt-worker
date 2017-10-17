@@ -41,7 +41,7 @@ exports.seed = function (knex, Promise) {
         weighting_arms_comm: 100,
         paroms_enabled: 1,
         parom: 123,
-        isT2A: false
+        is_t2a: false
       })
       .then(function () {
         return knex(tableName).insert({
@@ -80,7 +80,7 @@ exports.seed = function (knex, Promise) {
           weighting_arms_comm: 96,
           paroms_enabled: 1,
           parom: 119,
-          isT2A: true
+          is_t2a: true
         })
       })
     })
