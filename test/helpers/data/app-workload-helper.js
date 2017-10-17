@@ -26,18 +26,24 @@ module.exports.insertDependencies = function (inserts) {
     })
     .then(function (ids) {
       inserts.push({table: 'team', id: ids[0]})
-      return knex('workload_owner').returning('id')
-        .insert({
-          team_id: inserts.filter((item) => item.table === 'team')[0].id,
-          offender_manager_id: inserts.filter((item) => item.table === 'offender_manager')[0].id,
-          contracted_hours: 40
-        })
+
+      var offenderManagers = inserts.filter((item) => item.table === 'offender_manager')
+      var defaultWorkloadOwner = { team_id: inserts.filter((item) => item.table === 'team')[0].id, contracted_hours: 40, offender_manager_id: offenderManagers[0].id }
+
+      var workloadOwners = [
+        defaultWorkloadOwner,
+        defaultWorkloadOwner,
+        defaultWorkloadOwner
+      ]
+
+      return knex('workload_owner').returning('id').insert(workloadOwners)
     })
     .then(function (ids) {
-      inserts.push({table: 'workload_owner', id: ids[0]})
+      ids.forEach((id) => {
+        inserts.push({table: 'workload_owner', id: id})
+      })
 
       var defaultWorkload = {
-        workload_owner_id: ids[0],
         total_cases: 8,
         total_custody_cases: 1,
         total_community_cases: 2,
@@ -53,9 +59,9 @@ module.exports.insertDependencies = function (inserts) {
       }
 
       var workloads = [
-        Object.assign({}, defaultWorkload, { total_cases: 20, staging_id: 1 }),
-        Object.assign({}, defaultWorkload, { total_cases: 30, staging_id: 2 }),
-        Object.assign({}, defaultWorkload, { total_cases: 30, staging_id: 3 })
+        Object.assign({}, defaultWorkload, { total_cases: 20, staging_id: 1, workload_owner_id: ids[0] }),
+        Object.assign({}, defaultWorkload, { total_cases: 30, staging_id: 2, workload_owner_id: ids[1] }),
+        Object.assign({}, defaultWorkload, { total_cases: 30, staging_id: 3, workload_owner_id: ids[2] })
       ]
 
       return knex('workload').returning('id').insert(workloads)

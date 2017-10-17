@@ -31,7 +31,8 @@ describe('services/workers/calculate-workload-points', function () {
         workloadBatch: new Batch(initialWorkloadStagingId, batchSize),
         operationType: wpcOperation.INSERT
       },
-      workloadReportId: workloadReportId }
+      workloadReportId: workloadReportId
+    }
 
     return calculatePointsWorker.execute(task).then(() => {
       return knex('workload_points_calculations')
