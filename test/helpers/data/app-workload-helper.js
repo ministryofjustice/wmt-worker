@@ -45,6 +45,7 @@ module.exports.insertDependencies = function (inserts) {
 
       var defaultWorkload = {
         total_cases: 8,
+        t2a_cases: 5,
         total_custody_cases: 1,
         total_community_cases: 2,
         total_license_cases: 3,

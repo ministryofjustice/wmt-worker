@@ -55,6 +55,7 @@ const aliases = {
 const wmtExtractTable = 'wmt_extract'
 const courtReportsTable = 'court_reports'
 const institutionalReportsTable = 'inst_reports'
+const t2aTable = 't2a'
 
 const testOmKey = 'l102A'
 // Create a test CaseDetails object, mapping properties to column names
@@ -71,12 +72,14 @@ module.exports.getTestInstitutionalReport = function (omKey = testOmKey) {
   return stagingHelper.getTestInstitutionalReport(omKey)
 }
 
-module.exports.insertCaseSummaryReport = function (caseSummary, inserts) {
-  return knex(wmtExtractTable)
-    .insert(mapForInsert(caseSummary))
+module.exports.insertCaseSummaryReport = function (caseSummary, inserts, isT2A = false) {
+  var tableName = isT2A ? t2aTable : wmtExtractTable
+
+  return knex(tableName)
+    .insert(mapForInsert(caseSummary, isT2A))
     .returning('id')
     .then(function (id) {
-      inserts.push({table: wmtExtractTable, id: id})
+      inserts.push({table: tableName, id: id})
       return inserts
     })
 }
@@ -111,24 +114,45 @@ module.exports.deleteAll = function () {
     })
 }
 
-function mapForInsert (record) {
+function mapForInsert (record, isT2A = false) {
   var row = {}
   for (let key in record) {
-    if (key === 'communityTiers') {
+    if (key === 'communityTiers' && !isT2A) {
       for (let subkey in record[key]) {
         let alias = subkey === 'untiered' ? '0' : subkey
         if (typeof aliases['commtier' + alias] !== 'undefined') {
           row[aliases['commtier' + alias]] = record[key][subkey]
         }
       }
-    } else if (key === 'licenseTiers') {
+    } else if (key === 'licenseTiers' && !isT2A) {
       for (let subkey in record[key]) {
         let alias = subkey === 'untiered' ? '0' : subkey
         if (typeof aliases['licencetier' + alias] !== 'undefined') {
           row[aliases['licencetier' + alias]] = record[key][subkey]
         }
       }
-    } else if (key === 'custodyTiers') {
+    } else if (key === 'custodyTiers' && !isT2A) {
+      for (let subkey in record[key]) {
+        let alias = subkey === 'untiered' ? '0' : subkey
+        if (typeof aliases['custtier' + alias] !== 'undefined') {
+          row[aliases['custtier' + alias]] = record[key][subkey]
+        }
+      }
+    } if (key === 't2aCommunityTiers' && isT2A) {
+      for (let subkey in record[key]) {
+        let alias = subkey === 'untiered' ? '0' : subkey
+        if (typeof aliases['commtier' + alias] !== 'undefined') {
+          row[aliases['commtier' + alias]] = record[key][subkey]
+        }
+      }
+    } else if (key === 't2aLicenseTiers' && isT2A) {
+      for (let subkey in record[key]) {
+        let alias = subkey === 'untiered' ? '0' : subkey
+        if (typeof aliases['licencetier' + alias] !== 'undefined') {
+          row[aliases['licencetier' + alias]] = record[key][subkey]
+        }
+      }
+    } else if (key === 't2aCustodyTiers' && isT2A) {
       for (let subkey in record[key]) {
         let alias = subkey === 'untiered' ? '0' : subkey
         if (typeof aliases['custtier' + alias] !== 'undefined') {

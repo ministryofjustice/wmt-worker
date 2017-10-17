@@ -13,6 +13,10 @@ describe('services/data/get-staging-workload', function () {
   before(function () {
     return workloadHelper.insertCaseSummaryReport(caseSummaryReport, insertedRecords)
     .then(function (inserts) {
+      var isT2A = true
+      return workloadHelper.insertCaseSummaryReport(caseSummaryReport, insertedRecords, isT2A)
+    })
+    .then(function (inserts) {
       return workloadHelper.insertCourtReport(courtReport, inserts)
     })
     .then(function (inserts) {

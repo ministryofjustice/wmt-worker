@@ -15,6 +15,7 @@ module.exports = function (initialId, maxId, batchSize, workloadReportId) {
               'workload.staging_id',
               'workload.workload_owner_id',
               'workload.total_cases',
+              'workload.t2a_cases',
               'workload.total_custody_cases',
               'workload.total_community_cases',
               'workload.total_license_cases',
@@ -53,6 +54,7 @@ module.exports = function (initialId, maxId, batchSize, workloadReportId) {
             tempWorkloads[index].workloadReportId = workloadReportId
             tempWorkloads[index].workloadOwnerId = row.workload_owner_id
             tempWorkloads[index].totalCases = row.total_cases
+            tempWorkloads[index].t2aCases = row.t2a_cases
             tempWorkloads[index].totalCustodyCases = row.total_custody_cases
             tempWorkloads[index].totalCommunityCases = row.total_community_cases
             tempWorkloads[index].totalLicenseCases = row.total_license_cases
@@ -79,6 +81,7 @@ module.exports = function (initialId, maxId, batchSize, workloadReportId) {
               values: new Workload(
               tempWorkload.workloadOwnerId,
               tempWorkload.totalCases,
+              tempWorkload.t2aCases,
               tempWorkload.monthlySdrs,
               tempWorkload.sdrsDueNext30Days,
               tempWorkload.sdrConversionsLast30Days,
