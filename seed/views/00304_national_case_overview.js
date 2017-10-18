@@ -26,5 +26,5 @@ exports.seed = function (knex, promise) {
     .raw('DROP VIEW IF EXISTS app.national_case_overview;')
     .raw('SET ARITHABORT ON')
     .raw(sql)
-    .raw('CREATE UNIQUE CLUSTERED INDEX idx_national_case_overview on app.national_case_overview (id)')
+    .raw('CREATE UNIQUE CLUSTERED INDEX idx_national_case_overview on app.national_case_overview (link_id)')
 }
