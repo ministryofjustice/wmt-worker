@@ -11,7 +11,10 @@ const Promise = require('bluebird').Promise
 module.exports = function (range) {
   var omWorkloads = []
   return knex('wmt_extract').whereBetween('wmt_extract.id', range)
-    .leftJoin('t2a', 'wmt_extract.om_key', 't2a.om_key')
+    .leftJoin('t2a', function () {
+      this.on('wmt_extract.om_key', 't2a.om_key')
+      this.andOn('wmt_extract.team_code', 't2a.team_code')
+    })
     .leftJoin('court_reports', 'wmt_extract.om_key', 'court_reports.om_key')
     .leftJoin('inst_reports', 'wmt_extract.om_key', 'inst_reports.om_key')
     .select('wmt_extract.id AS staging_id', 'wmt_extract.trust', 'wmt_extract.region_desc', 'wmt_extract.region_code',
