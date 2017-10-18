@@ -6,6 +6,7 @@ exports.seed = function (knex, Promise) {
       , SUM(available_points) AS available_points
       , SUM(reduction_hours) AS reduction_hours
       , wr.effective_from AS effective_from
+      , wr.id AS workload_report_id
       , ldu.id AS id
       , COUNT_BIG(*) AS count
     FROM app.workload_points_calculations AS wpc
@@ -14,10 +15,10 @@ exports.seed = function (knex, Promise) {
       JOIN app.team AS t ON wo.team_id = t.id
       JOIN app.ldu AS ldu ON t.ldu_id = ldu.id
       JOIN app.workload_report AS wr ON wpc.workload_report_id = wr.id
-    GROUP BY ldu.id, wr.effective_from;`
+    GROUP BY ldu.id, wr.effective_from, wr.id;`
 
   var index = `CREATE UNIQUE CLUSTERED INDEX idx_ldu_capacity_view
-  ON app.ldu_capacity_view (id, effective_from)`
+  ON app.ldu_capacity_view (id, workload_report_id)`
 
   return knex.schema
              .raw('DROP VIEW IF EXISTS app.ldu_capacity_view;')

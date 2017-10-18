@@ -8,6 +8,7 @@ exports.seed = function (knex, Promise) {
       , wr.effective_from AS effective_from
       , region.id AS id
       , COUNT_BIG(*) AS count
+      , wr.id AS workload_report_id
     FROM app.workload_points_calculations AS wpc
       JOIN app.workload AS w ON wpc.workload_id = w.id
       JOIN app.workload_owner AS wo ON w.workload_owner_id = wo.id
@@ -15,10 +16,10 @@ exports.seed = function (knex, Promise) {
       JOIN app.ldu AS ldu ON t.ldu_id = ldu.id
       JOIN app.region AS region ON ldu.region_id = region.id
       JOIN app.workload_report AS wr ON wpc.workload_report_id = wr.id
-    GROUP BY region.id, wr.effective_from;`
+    GROUP BY region.id, wr.effective_from, wr.id;`
 
   var index = `CREATE UNIQUE CLUSTERED INDEX idx_region_capacity_view
-  ON app.region_capacity_view (id, effective_from)`
+  ON app.region_capacity_view (id, workload_report_id)`
 
   return knex.schema
            .raw('DROP VIEW IF EXISTS app.region_capacity_view;')

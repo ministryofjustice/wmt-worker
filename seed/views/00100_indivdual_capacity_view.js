@@ -8,12 +8,13 @@ exports.seed = function (knex, Promise) {
       , wpc.available_points
       , wpc.reduction_hours
       , w.workload_owner_id AS id
+      , wr.id AS workload_report_id
     FROM app.workload_points_calculations wpc
       JOIN app.workload w ON wpc.workload_id = w.id
       JOIN app.workload_report wr ON wpc.workload_report_id = wr.id;`
 
   var index = `CREATE UNIQUE CLUSTERED INDEX idx_individual_capacity_view
-  ON app.individual_capacity_view (id, effective_from)`
+  ON app.individual_capacity_view (id, workload_report_id)`
 
   return knex.schema
     .raw('DROP VIEW IF EXISTS app.individual_capacity_view;')
