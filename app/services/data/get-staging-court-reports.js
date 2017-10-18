@@ -9,7 +9,7 @@ module.exports = function (range) {
 
   var tableName = 'court_reporters'
   var selectCols = [
-    'id AS stagingId',
+    'id AS staging_id',
     'trust',
     'region_desc',
     'region_code',
@@ -49,15 +49,17 @@ module.exports = function (range) {
           null,
           null,
           null,
-          result['datestamp']
+          null,
+          null
         )
 
         var courtReport = new CourtReport(
           result['om_key'],
-          result['om_team_staff_grade'],
+          result['om_grade_code'],
           result['sdr_last_30'],
           result['sdr_due_next_30'],
-          result['sdr_conv_last_30']
+          result['sdr_conv_last_30'],
+          result['oral_reports']
         )
 
         var stagingId = result['staging_id']
