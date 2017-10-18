@@ -37,10 +37,10 @@ var task = new Task(
   taskStatus.PENDING
 )
 
-var adjustmentsTask = new Task(
+var courtReportsCalculationTask = new Task(
   undefined,
   submittingAgent.WORKER,
-  taskType.PROCESS_ADJUSTMENTS_COURT_REPORTERS,
+  taskType.COURT_REPORTS_CALCULATION,
   task.additionalData,
   task.workloadReportId,
   undefined,
@@ -71,12 +71,12 @@ describe(relativeFilePath, function () {
     })
   })
 
-  it('should call createNewTasks with the correct adjustments task array', function () {
+  it('should call createNewTasks with the correct court reports calculation task array', function () {
     getOpenReductionsForCourtReporters.resolves(reductions)
     updateReductionStatuses.resolves()
     createNewTasks.resolves()
     return reductionsWorker.execute(task).then(function () {
-      expect(createNewTasks.calledWith([adjustmentsTask])).to.be.equal(true)
+      expect(createNewTasks.calledWith([courtReportsCalculationTask])).to.be.equal(true)
     })
   })
 })
