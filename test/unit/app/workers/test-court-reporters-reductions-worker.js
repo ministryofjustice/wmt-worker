@@ -10,10 +10,10 @@ const Task = require('../../../../app/services/domain/task')
 const dateHelper = require('../../../helpers/data/date-helper')
 
 var reductionsWorker
-var getOpenReductions
+var getOpenReductionsForCourtReporters
 var updateReductionStatuses
 var createNewTasks
-var relativeFilePath = 'services/workers/reductions-worker'
+var relativeFilePath = 'services/workers/court-reporters-reductions-worker'
 
 var reductions = [
   {
@@ -27,7 +27,7 @@ var reductions = [
 var task = new Task(
   undefined,
   submittingAgent.WORKER,
-  taskType.PROCESS_REDUCTIONS,
+  taskType.PROCESS_REDUCTIONS_COURT_REPORTERS,
   {
     workloadBatch: { startingId: 1, batchSize: 5 },
     operationType: 'UPDATE'},
@@ -40,7 +40,7 @@ var task = new Task(
 var adjustmentsTask = new Task(
   undefined,
   submittingAgent.WORKER,
-  taskType.PROCESS_ADJUSTMENTS,
+  taskType.PROCESS_ADJUSTMENTS_COURT_REPORTERS,
   task.additionalData,
   task.workloadReportId,
   undefined,
@@ -50,29 +50,29 @@ var adjustmentsTask = new Task(
 
 describe(relativeFilePath, function () {
   beforeEach(function () {
-    getOpenReductions = sinon.stub()
+    getOpenReductionsForCourtReporters = sinon.stub()
     updateReductionStatuses = sinon.stub()
     createNewTasks = sinon.stub()
     reductionsWorker = proxyquire('../../../../app/' + relativeFilePath, {
       '../log': { info: function (message) { } },
-      '../data/get-open-reductions': getOpenReductions,
+      '../data/get-open-reductions-for-court-reporters': getOpenReductionsForCourtReporters,
       '../update-reduction-statuses': updateReductionStatuses,
       '../data/create-tasks': createNewTasks
     })
   })
 
   it('should call the database to get the reductions and call updateReductionStatuses with the result', function () {
-    getOpenReductions.resolves(reductions)
+    getOpenReductionsForCourtReporters.resolves(reductions)
     updateReductionStatuses.resolves()
     createNewTasks.resolves()
     return reductionsWorker.execute(task).then(function () {
-      expect(getOpenReductions.called).to.be.equal(true)
+      expect(getOpenReductionsForCourtReporters.called).to.be.equal(true)
       expect(updateReductionStatuses.calledWith(reductions)).to.be.equal(true)
     })
   })
 
   it('should call createNewTasks with the correct adjustments task array', function () {
-    getOpenReductions.resolves(reductions)
+    getOpenReductionsForCourtReporters.resolves(reductions)
     updateReductionStatuses.resolves()
     createNewTasks.resolves()
     return reductionsWorker.execute(task).then(function () {
