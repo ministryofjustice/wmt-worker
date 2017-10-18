@@ -19,7 +19,7 @@ exports.seed = function (knex, Promise) {
     JOIN app.workload_owner wo ON wo.id = w.workload_owner_id
     JOIN app.team t ON wo.team_id = t.id
   WHERE wr.effective_from IS NOT NULL
-  AND wr.effective_to IS NULL
+    AND wr.effective_to IS NULL
   GROUP BY
       w.workload_owner_id
     , t.id

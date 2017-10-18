@@ -19,6 +19,8 @@ exports.seed = function (knex, Promise) {
     JOIN app.workload_owner wo ON wo.id = w.workload_owner_id
     JOIN app.team t ON wo.team_id = t.id
     JOIN app.ldu l ON t.ldu_id = l.id
+  WHERE wr.effective_from IS NOT NULL
+    AND wr.effective_to IS NULL
   GROUP BY t.description, l.id;`
 
   var index = `CREATE UNIQUE CLUSTERED INDEX idx_ldu_case_progress_view
