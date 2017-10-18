@@ -11,6 +11,7 @@ const aliases = {
   sdrLast30: 'sdr_last_30',
   sdrDueNext30: 'sdr_due_next_30',
   sdrConvLast30: 'sdr_conv_last_30',
+  oralReports: 'oral_reports',
   paromDueNext30: 'parom_due_next_30',
   paromCompLast30: 'parom_comp_last_30',
   trust: 'trust',
