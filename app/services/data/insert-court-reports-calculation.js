@@ -1,14 +1,14 @@
 const knex = require('../../../knex').appSchema
 
 module.exports = function (courtReportCalculation) {
-    var dbObject = mapToDbObject(courtReportCalculation)
+  var dbObject = mapToDbObject(courtReportCalculation)
 
-    return knex('court_reports_calculations')
+  return knex('court_reports_calculations')
     .returning('id')
     .insert(dbObject)
 }
 
-var mapToDbObject = function(courtReportCalculation) {
+var mapToDbObject = function (courtReportCalculation) {
   return {
     workload_report_id: courtReportCalculation.workloadReportId,
     workload_points_id: courtReportCalculation.workloadPointsId,

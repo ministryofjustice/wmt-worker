@@ -1,11 +1,12 @@
-module.export = function(startId, endId, reportId) {
-  
+const knex = require('../../../knex').appSchema
+
+module.export = function (startingId, maxId, reportId) {
   var selectCols = [
     'workload_owner_id AS workloadOwnerId',
     'id'
   ]
   return knex('court-reports')
-  .select('workload_owner_id AS workloadOwnerId')
-  .whereBetween('staging_id', [startId, endId])
+  .select(selectCols)
+  .whereBetween('staging_id', [startingId, maxId])
   .andWhere('workload_report_id', reportId)
 }

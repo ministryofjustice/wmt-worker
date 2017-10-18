@@ -1,6 +1,6 @@
 const knex = require('../../../knex').appSchema
 
-module.exports = function(courtReportsCalculation) {
+module.exports = function (courtReportsCalculation) {
   var dbObject = mapToDbObject(courtReportsCalculation)
 
   return knex('court_reports_calculation')
@@ -9,7 +9,7 @@ module.exports = function(courtReportsCalculation) {
   .update(dbObject)
 }
 
-var mapToDbObject = function(courtReportCalculation) {
+var mapToDbObject = function (courtReportCalculation) {
   return {
     workload_report_id: courtReportCalculation.workloadReportId,
     workload_points_id: courtReportCalculation.workloadPointsId,

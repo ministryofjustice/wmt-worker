@@ -8,14 +8,14 @@ const getAppReductions = require('../data/get-app-reduction-hours')
 const getContractedHours = require('../data/get-contracted-hours')
 const operationTypes = require('../../constants/calculation-tasks-operation-type')
 
-module.exports.execute(task) = function(task) {
+module.exports.execute = function (task) {
   var startingStagingId = task.additionalData.workloadBatch.startingId
   var batchSize = task.additionalData.workloadBatch.batchSize
   var reportId = task.workloadReportId
   var operationType = task.additionalData.operationType
   var maxStagingId = startingStagingId + batchSize - 1
   var message
-  
+
   if (batchSize <= 0) {
     logger.error('Batchsize must be greater than 0')
     throw (new Error('Batchsize must be greater than 0'))
@@ -25,13 +25,13 @@ module.exports.execute(task) = function(task) {
     message = 'Calculating Workload Points for workload with staging id ' + startingStagingId + ', for workload report ' + reportId
   }
   logger.info(message)
-  
+
   return getAppCourtReports(startingStagingId, maxStagingId, reportId)
   .then(function (courtReports) {
     return Promise.each(courtReports, function (courtReport) {
       var workloadOwnerId = courtReport.workloadOwnerId
       var courtReportsId = courtReport.id
-    
+
       return getWorkloadPointsConfiguration()
       .then(function (pointsConfiguration) {
         return getAppReductions(workloadOwnerId)
