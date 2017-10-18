@@ -11,7 +11,7 @@ const getOffenderManagerTypeId = require('../data/get-offender-manager-type-id')
 const getAppReductions = require('../data/get-app-reduction-hours')
 const getContractedHours = require('../data/get-contracted-hours')
 const getAdjustmentPoints = require('../data/get-adjustment-points')
-const wpcOperationType = require('../../constants/calculate-workload-points-operation')
+const operationTypes = require('../../constants/calculation-tasks-operation-type')
 const adjustmentCategory = require('../../constants/adjustment-category')
 
 module.exports.execute = function (task) {
@@ -59,7 +59,7 @@ module.exports.execute = function (task) {
                   var armsTotalCases = workload.armsCommunityCases + workload.armsLicenseCases
 
                   switch (operationType) {
-                    case wpcOperationType.INSERT:
+                    case operationTypes.INSERT:
                       return insertWorkloadPointsCalculations(
                               reportId,
                               pointsConfiguration.id,
@@ -76,7 +76,7 @@ module.exports.execute = function (task) {
                               gsAdjustments,
                               armsTotalCases)
 
-                    case wpcOperationType.UPDATE:
+                    case operationTypes.UPDATE:
                       return updateWorkloadPointsCalculations(
                               reportId,
                               pointsConfiguration.id,
@@ -93,7 +93,7 @@ module.exports.execute = function (task) {
                               gsAdjustments,
                               armsTotalCases)
                     default:
-                      throw new Error('Operation type of ' + operationType + ' is not valid. Should be ' + wpcOperationType.INSERT + ' or ' + wpcOperationType.UPDATE)
+                      throw new Error('Operation type of ' + operationType + ' is not valid. Should be ' + operationTypes.INSERT + ' or ' + operationTypes.UPDATE)
                   }
                 })
               })
