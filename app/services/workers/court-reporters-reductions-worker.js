@@ -22,7 +22,7 @@ module.exports.execute = function (task) {
         var processAdjustments = new Task(
           undefined,
           submittingAgent.WORKER,
-          taskType.PROCESS_ADJUSTMENTS_COURT_REPORTERS,
+          taskType.COURT_REPORTS_CALCULATION,
           task.additionalData,
           task.workloadReportId,
           undefined,
@@ -32,7 +32,7 @@ module.exports.execute = function (task) {
 
         return createNewTasks([processAdjustments])
         .then(function () {
-          logger.info('Process adjustments - court reporters - task created')
+          logger.info('Court reports calculation task created')
         })
       })
     })

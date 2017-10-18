@@ -1,5 +1,5 @@
 const expect = require('chai').expect
-const appReductionsHelper = require('../../../helpers/data/app-reductions-helper')
+const courtReportsReductionsHelper = require('../../../helpers/data/app-court-reports-reductions-helper')
 const getOpenReductionsForCourtReporters = require('../../../../app/services/data/get-open-reductions-for-court-reporters')
 
 var inserts = []
@@ -7,7 +7,7 @@ var workloadReportId
 
 describe('services/data/get-open-reductions-for-court-reporters', function () {
   before(function (done) {
-    appReductionsHelper.insertDependencies(inserts)
+    courtReportsReductionsHelper.insertDependencies(inserts)
     .then(function (builtInserts) {
       inserts = builtInserts
       workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
@@ -29,7 +29,7 @@ describe('services/data/get-open-reductions-for-court-reporters', function () {
   })
 
   after(function (done) {
-    appReductionsHelper.removeDependencies(inserts)
+    courtReportsReductionsHelper.removeDependencies(inserts)
     .then(() => done())
   })
 })
