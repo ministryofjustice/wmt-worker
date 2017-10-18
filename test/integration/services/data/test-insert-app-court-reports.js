@@ -1,0 +1,1 @@
+const CourtReports = require('wmt-probation-rules').CourtReports
