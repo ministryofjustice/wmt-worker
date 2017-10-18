@@ -2055,7 +2055,7 @@ which@^1.2.12:
 
 wmt-probation-rules@ministryofjustice/wmt-probation-rules.git#feature/wmt-175/court-reports-worker-tasks:
   version "0.4.0"
-  resolved "https://codeload.github.com/ministryofjustice/wmt-probation-rules/tar.gz/48a9c0e7ccf8ab88174d4693230d01ee176a7f25"
+  resolved "https://codeload.github.com/ministryofjustice/wmt-probation-rules/tar.gz/5fdbffa4b6e403c70365c046d6cf365690d740ce"
   dependencies:
     lodash "^4.17.4"
     moment "^2.18.1"
