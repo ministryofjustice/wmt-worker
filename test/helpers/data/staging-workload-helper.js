@@ -49,26 +49,65 @@ const aliases = {
   custtierc1: 'custtierc1',
   custtierb2: 'custtierb2',
   custtierb1: 'custtierb1',
-  custtiera: 'custtiera'
+  custtiera: 'custtiera',
+  assessmentDate: 'assessment_date',
+  assessmentCode: 'assessment_code',
+  assessmentDescription: 'assessment_desc',
+  assessmentStaffName: 'assessment_staff_name',
+  assessmentStaffKey: 'assessment_staff_key',
+  assessmentStaffGrade: 'assessment_staff_grade',
+  assessmentTeamKey: 'assessmentent_team_key',
+  assessmentProviderCode: 'assessment_provider_code',
+  crn: 'crn',
+  disposalOrReleaseDate: 'disposal_or_release_date',
+  sentenceType: 'sentence_type',
+  soRegistrationDate: 'so_registration_date'
 }
 
 const wmtExtractTable = 'wmt_extract'
 const courtReportsTable = 'court_reports'
 const institutionalReportsTable = 'inst_reports'
+const armsTable = 'arms'
 
 const testOmKey = 'l102A'
+const testTeamCode = 'KNS'
 // Create a test CaseDetails object, mapping properties to column names
 
 module.exports.getTestCaseSummary = function (omKey = testOmKey) {
   return stagingHelper.getTestCaseSummary(omKey)
 }
 
-module.exports.getTestCourtReport = function (omKey = testOmKey) {
-  return stagingHelper.getTestCourtReport(omKey)
+module.exports.getTestCourtReport = function (omKey = testOmKey, teamCode = testTeamCode) {
+  return stagingHelper.getTestCourtReport(omKey, undefined, teamCode)
 }
 
 module.exports.getTestInstitutionalReport = function (omKey = testOmKey) {
   return stagingHelper.getTestInstitutionalReport(omKey)
+}
+
+module.exports.getArmsData = function (omKey = testOmKey, teamCode = testTeamCode) {
+  var defaultArmsObject = {
+    assessmentDate: '09/10/2017',
+    assessmentCode: 'acode',
+    assessmentDescription: 'A description',
+    assessmentStaffName: 'A name',
+    assessmentStaffKey: omKey,
+    assessmentStaffGrade: 'C',
+    assessmentTeamKey: teamCode,
+    assessmentProviderCode: 'providerCode',
+    crn: '123456',
+    disposalOrReleaseDate: '09/10/2017',
+    sentenceType: 'License',
+    soRegistrationDate: '09/10/2017'
+  }
+
+  return [
+    Object.assign({}, defaultArmsObject),
+    Object.assign({}, defaultArmsObject),
+    Object.assign({}, defaultArmsObject, {sentenceType: 'Community'}),
+    Object.assign({}, defaultArmsObject, {sentenceType: 'Community'}),
+    Object.assign({}, defaultArmsObject, {sentenceType: 'Community'})
+  ]
 }
 
 module.exports.insertCaseSummaryReport = function (caseSummary, inserts) {
@@ -82,8 +121,9 @@ module.exports.insertCaseSummaryReport = function (caseSummary, inserts) {
 }
 
 module.exports.insertCourtReport = function (courtReport, inserts) {
+  var courtReportToInsert = Object.assign({}, courtReport, { teamCode: testTeamCode })
   return knex(courtReportsTable)
-    .insert(mapForInsert(courtReport))
+    .insert(mapForInsert(courtReportToInsert))
     .returning('id')
     .then(function (id) {
       inserts.push({table: courtReportsTable, id: id})
@@ -92,11 +132,22 @@ module.exports.insertCourtReport = function (courtReport, inserts) {
 }
 
 module.exports.insertInstitutionalReport = function (institutionalReport, inserts) {
+  var instReportToInsert = Object.assign({}, institutionalReport, { teamCode: testTeamCode })
   return knex(institutionalReportsTable)
-    .insert(mapForInsert(institutionalReport))
+    .insert(mapForInsert(instReportToInsert))
     .returning('id')
     .then(function (id) {
       inserts.push({table: institutionalReportsTable, id: id})
+      return inserts
+    })
+}
+
+module.exports.insertArms = function (arms, inserts) {
+  return knex(armsTable)
+    .insert(arms.map(mapForInsert))
+    .returning('id')
+    .then(function (id) {
+      inserts.push({table: armsTable, id: id})
       return inserts
     })
 }

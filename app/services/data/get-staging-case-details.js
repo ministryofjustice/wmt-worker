@@ -4,11 +4,15 @@ const CaseDetails = require('wmt-probation-rules').CaseDetails
 
 const columns = ['row_type', 'case_ref_no', 'tier_code', 'team_code', 'om_grade_code', 'om_key', 'location']
 
-module.exports = function (omKey) {
-  return knex.select(columns).from(`${config.DB_STG_SCHEMA}.flag_warr_4_n`).where('om_key', omKey).unionAll(function () {
-    return this.select(columns).from(`${config.DB_STG_SCHEMA}.flag_upw`).where('om_key', omKey).unionAll(function () {
-      return this.select(columns).from(`${config.DB_STG_SCHEMA}.flag_o_due`).where('om_key', omKey).unionAll(function () {
-        return this.select(columns).from(`${config.DB_STG_SCHEMA}.flag_priority`).where('om_key', omKey)
+module.exports = function (omKey, teamCode) {
+  var whereObject = {
+    'om_key': omKey,
+    'team_code': teamCode
+  }
+  return knex.select(columns).from(`${config.DB_STG_SCHEMA}.flag_warr_4_n`).where(whereObject).unionAll(function () {
+    return this.select(columns).from(`${config.DB_STG_SCHEMA}.flag_upw`).where(whereObject).unionAll(function () {
+      return this.select(columns).from(`${config.DB_STG_SCHEMA}.flag_o_due`).where(whereObject).unionAll(function () {
+        return this.select(columns).from(`${config.DB_STG_SCHEMA}.flag_priority`).where(whereObject)
       })
     })
   })
