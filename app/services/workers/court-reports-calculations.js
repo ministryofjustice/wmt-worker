@@ -20,9 +20,9 @@ module.exports.execute = function (task) {
     logger.error('Batchsize must be greater than 0')
     throw (new Error('Batchsize must be greater than 0'))
   } else if (batchSize > 1) {
-    message = 'Calculating Workload Points for workloads with staging ids ' + startingStagingId + ' - ' + maxStagingId + ', for workload report ' + reportId
+    message = 'Performing Court Reports Calculations for court-reports with staging ids ' + startingStagingId + ' - ' + maxStagingId + ', for workload report ' + reportId
   } else {
-    message = 'Calculating Workload Points for workload with staging id ' + startingStagingId + ', for workload report ' + reportId
+    message = 'CPerforming Court Reports Calculations for court-reports with staging id ' + startingStagingId + ', for workload report ' + reportId
   }
   logger.info(message)
 
