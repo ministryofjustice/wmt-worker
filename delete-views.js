@@ -9,7 +9,7 @@ var databaseViewNames = seedViewFileNames.sort().reverse()
     .map((fileName) => fileName.substring(fileName.lastIndexOf('/') + 7, fileName.lastIndexOf('.')))
 
 Promise.each(databaseViewNames, (viewName) =>
-     knex.schema.raw('DROP VIEW IF EXISTS ' + viewName).return()
+     knex.schema.raw('DROP VIEW IF EXISTS app.' + viewName).return()
 )
 .then(() => knex.schema.raw('DROP VIEW IF EXISTS individual_capacity_view').return())
 .finally(() => knex.destroy())
