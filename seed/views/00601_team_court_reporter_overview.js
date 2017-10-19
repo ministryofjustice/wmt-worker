@@ -5,8 +5,8 @@ exports.seed = function (knex, promise) {
     SELECT
         MAX(CONCAT(om.forename, ' ', om.surname)) AS name
       , MAX(iv.grade_code) AS grade_code
-      , MAX(iv.contracted_hours) AS contracted_hours
-      , MAX(iv.reduction_hours) AS reduction_hours
+      , SUM(iv.contracted_hours) AS contracted_hours
+      , SUM(iv.reduction_hours) AS reduction_hours
       , MAX(iv.link_id) AS id
       , MAX(iv.id) AS link_id
       , SUM(iv.total_sdrs) AS total_sdrs

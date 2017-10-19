@@ -7,8 +7,8 @@ exports.seed = function (knex, promise) {
       , MAX(t.description) AS name
       , MAX(tv.id) AS link_id      
       , MAX(tv.grade_code) AS grade_code
-      , MAX(tv.contracted_hours) AS contracted_hours
-      , MAX(tv.reduction_hours) AS reduction_hours
+      , SUM(tv.contracted_hours) AS contracted_hours
+      , SUM(tv.reduction_hours) AS reduction_hours
       , SUM(tv.total_sdrs) AS total_sdrs
       , SUM(tv.total_fdrs) AS total_fdrs
       , SUM(tv.total_oral_reports) AS total_oral_reports
