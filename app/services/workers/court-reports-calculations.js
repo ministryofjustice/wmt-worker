@@ -22,7 +22,7 @@ module.exports.execute = function (task) {
   } else if (batchSize > 1) {
     message = 'Performing Court Reports Calculations for court-reports with staging ids ' + startingStagingId + ' - ' + maxStagingId + ', for workload report ' + reportId
   } else {
-    message = 'CPerforming Court Reports Calculations for court-reports with staging id ' + startingStagingId + ', for workload report ' + reportId
+    message = 'Performing Court Reports Calculations for court-reports with staging id ' + startingStagingId + ', for workload report ' + reportId
   }
   logger.info(message)
 

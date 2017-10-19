@@ -14,7 +14,7 @@ module.exports = function (taskType) {
     case taskTypes.CREATE_WORKLOAD: return createWorkload
     case taskTypes.PROCESS_REDUCTIONS: return reductionsWorker
     case taskTypes.PROCESS_ADJUSTMENTS: return adjustmentsWorker
-    case taskType.COURT_REPORTS_CALCULATIONS: return courtReportsCalculations
+    case taskType.COURT_REPORTS_CALCULATION: return courtReportsCalculations
   }
 
   return null

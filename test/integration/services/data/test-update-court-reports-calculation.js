@@ -15,7 +15,7 @@ describe('services/data/insert-court-reports-calculation', function () {
       })
   })
 
-  it('inserts the workload points calculations with the supplied values', function () {
+  it('updates the workload points calculations with the supplied values', function () {
     return knex('workload_points').first('id')
     .then(function (workloadPointsId) {
       return knex('workload_report').whereNull('effective_to').first('id')
