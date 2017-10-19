@@ -5,7 +5,7 @@ const expect = require('chai').expect
 const appWorkloadPointsCalculationHelper = require('../../../helpers/data/app-workload-points-calculation-helper')
 const appReductionsHelper = require('../../../helpers/data/app-reductions-helper')
 const calculatePointsWorker = require('../../../../app/services/workers/calculate-workload-points')
-const wpcOperation = require('../../../../app/constants/calculate-workload-points-operation')
+const wpcOperation = require('../../../../app/constants/calculation-tasks-operation-type')
 const Batch = require('../../../../app/services/domain/batch')
 
 var inserts = []

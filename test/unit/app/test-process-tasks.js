@@ -6,7 +6,7 @@ const sinon = require('sinon')
 require('sinon-bluebird')
 const taskStatus = require('../../../app/constants/task-status')
 const workloadReportStatus = require('../../../app/constants/workload-report-status')
-const wpcOperation = require('../../../app/constants/calculate-workload-points-operation')
+const wpcOperation = require('../../../app/constants/calculation-tasks-operation-type')
 
 var processTasks
 var getPendingTasksAndMarkInProgress
