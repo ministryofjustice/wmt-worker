@@ -11,7 +11,7 @@ const dateHelper = require('../../../helpers/data/date-helper')
 
 var reductionsWorker
 var getOpenReductions
-var updateReductionStatuses
+var statusUpdater
 var createNewTasks
 var relativeFilePath = 'services/workers/reductions-worker'
 
@@ -50,31 +50,27 @@ var adjustmentsTask = new Task(
 
 describe(relativeFilePath, function () {
   beforeEach(function () {
-    getOpenReductions = sinon.stub()
-    updateReductionStatuses = sinon.stub()
-    createNewTasks = sinon.stub()
+    getOpenReductions = sinon.stub().resolves(reductions)
+    statusUpdater = {
+      updateReductionStatuses: sinon.stub().resolves()
+    }
+    createNewTasks = sinon.stub().resolves()
     reductionsWorker = proxyquire('../../../../app/' + relativeFilePath, {
       '../log': { info: function (message) { } },
       '../data/get-open-reductions': getOpenReductions,
-      '../update-reduction-statuses': updateReductionStatuses,
+      '../status-updater': statusUpdater,
       '../data/create-tasks': createNewTasks
     })
   })
 
   it('should call the database to get the reductions and call updateReductionStatuses with the result', function () {
-    getOpenReductions.resolves(reductions)
-    updateReductionStatuses.resolves()
-    createNewTasks.resolves()
     return reductionsWorker.execute(task).then(function () {
       expect(getOpenReductions.called).to.be.equal(true)
-      expect(updateReductionStatuses.calledWith(reductions)).to.be.equal(true)
+      expect(statusUpdater.updateReductionStatuses.calledWith(reductions)).to.be.equal(true)
     })
   })
 
   it('should call createNewTasks with the correct adjustments task array', function () {
-    getOpenReductions.resolves(reductions)
-    updateReductionStatuses.resolves()
-    createNewTasks.resolves()
     return reductionsWorker.execute(task).then(function () {
       expect(createNewTasks.calledWith([adjustmentsTask])).to.be.equal(true)
     })

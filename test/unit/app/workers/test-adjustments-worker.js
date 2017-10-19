@@ -9,7 +9,7 @@ const Task = require('../../../../app/services/domain/task')
 const dateHelper = require('../../../helpers/data/date-helper')
 
 var adjustmentsWorker
-var updateAdjustmentStatusByIds
+var statusUpdater
 var createNewTasks
 var stagingAdjustmentsMapper
 var getAppAdjustments
@@ -114,11 +114,13 @@ var adjustmentRow = {
 
 describe(relativeFilePath, function () {
   beforeEach(function () {
-    updateAdjustmentStatusByIds = sinon.stub()
-    createNewTasks = sinon.stub()
+    statusUpdater = {
+      updateAdjustmentStatuses: sinon.stub().resolves()
+    }
+    createNewTasks = sinon.stub().resolves()
     getAppAdjustments = sinon.stub()
-    updateAdjustmentEffectiveTo = sinon.stub()
-    insertAdjustment = sinon.stub()
+    updateAdjustmentEffectiveTo = sinon.stub().resolves()
+    insertAdjustment = sinon.stub().resolves()
     stagingAdjustmentsMapper = {
       mapCmsAdjustments: sinon.stub(),
       mapGsAdjustments: sinon.stub()
@@ -126,7 +128,7 @@ describe(relativeFilePath, function () {
 
     adjustmentsWorker = proxyquire('../../../../app/' + relativeFilePath, {
       '../log': { info: function (message) { } },
-      '../data/update-adjustment-status-by-ids': updateAdjustmentStatusByIds,
+      '../status-updater': statusUpdater,
       '../data/create-tasks': createNewTasks,
       '../staging-adjustments-mapper': stagingAdjustmentsMapper,
       '../data/get-app-adjustments-for-batch': getAppAdjustments,
@@ -135,20 +137,13 @@ describe(relativeFilePath, function () {
     })
   })
 
-  it('should call the database to get the adjustments assigned statuses and call to update database', function () {
+  it('should call the database to get the adjustments, assign statuses and call to update database', function () {
     stagingAdjustmentsMapper.mapCmsAdjustments.resolves([{id: 1}, {id: 2}, {id: 3}])
     stagingAdjustmentsMapper.mapGsAdjustments.resolves([])
     getAppAdjustments.resolves(adjustments)
-    updateAdjustmentEffectiveTo.resolves()
-    insertAdjustment.resolves()
-    updateAdjustmentStatusByIds.resolves(1)
-    createNewTasks.resolves()
-    return adjustmentsWorker.execute(task).then(function () {
-      expect(updateAdjustmentStatusByIds.calledWith([activeAdjustment.id], 'ACTIVE')).to.be.equal(true)
-      expect(updateAdjustmentStatusByIds.calledWith([scheduledAdjustment.id], 'SCHEDULED')).to.be.equal(true)
-      expect(updateAdjustmentStatusByIds.calledWith([archivedAdjustment.id], 'ARCHIVED')).to.be.equal(true)
-      expect(createNewTasks.called).to.be.equal(true)
 
+    return adjustmentsWorker.execute(task).then(function () {
+      expect(createNewTasks.called).to.be.equal(true)
       expect(stagingAdjustmentsMapper.mapCmsAdjustments.called).to.be.equal(true)
       expect(getAppAdjustments.called).to.be.equal(true)
       expect(updateAdjustmentEffectiveTo.called).to.be.equal(false)
@@ -165,15 +160,9 @@ describe(relativeFilePath, function () {
     stagingAdjustmentsMapper.mapCmsAdjustments.resolves(cmsAdjustments)
     stagingAdjustmentsMapper.mapGsAdjustments.resolves([])
     getAppAdjustments.resolves(appAdjustments)
-    updateAdjustmentEffectiveTo.resolves()
-    insertAdjustment.resolves()
-    updateAdjustmentStatusByIds.resolves(1)
-    createNewTasks.resolves()
 
     return adjustmentsWorker.execute(task).then(function () {
-      expect(updateAdjustmentStatusByIds.called).to.be.equal(false)
       expect(createNewTasks.called).to.be.equal(true)
-
       expect(stagingAdjustmentsMapper.mapCmsAdjustments.called).to.be.equal(true)
       expect(getAppAdjustments.called).to.be.equal(true)
       expect(updateAdjustmentEffectiveTo.called).to.be.equal(false)
@@ -185,15 +174,9 @@ describe(relativeFilePath, function () {
     stagingAdjustmentsMapper.mapCmsAdjustments.resolves(cmsAdjustments)
     stagingAdjustmentsMapper.mapGsAdjustments.resolves([])
     getAppAdjustments.resolves([])
-    updateAdjustmentEffectiveTo.resolves()
-    insertAdjustment.resolves()
-    updateAdjustmentStatusByIds.resolves(1)
-    createNewTasks.resolves()
 
     return adjustmentsWorker.execute(task).then(function () {
-      expect(updateAdjustmentStatusByIds.called).to.be.equal(false)
       expect(createNewTasks.called).to.be.equal(true)
-
       expect(stagingAdjustmentsMapper.mapCmsAdjustments.called).to.be.equal(true)
       expect(getAppAdjustments.called).to.be.equal(true)
       expect(updateAdjustmentEffectiveTo.called).to.be.equal(false)
@@ -211,15 +194,9 @@ describe(relativeFilePath, function () {
     stagingAdjustmentsMapper.mapCmsAdjustments.resolves([])
     stagingAdjustmentsMapper.mapGsAdjustments.resolves([])
     getAppAdjustments.resolves(appAdjustments)
-    updateAdjustmentEffectiveTo.resolves()
-    insertAdjustment.resolves()
-    updateAdjustmentStatusByIds.resolves(1)
-    createNewTasks.resolves()
 
     return adjustmentsWorker.execute(task).then(function () {
-      expect(updateAdjustmentStatusByIds.called).to.be.equal(false)
       expect(createNewTasks.called).to.be.equal(true)
-
       expect(stagingAdjustmentsMapper.mapCmsAdjustments.called).to.be.equal(true)
       expect(getAppAdjustments.called).to.be.equal(true)
       expect(updateAdjustmentEffectiveTo.calledWith(Number(appAdjustments[0].id), updateTime)).to.be.equal(true)
@@ -237,15 +214,9 @@ describe(relativeFilePath, function () {
     stagingAdjustmentsMapper.mapCmsAdjustments.resolves(cmsAdjustments)
     stagingAdjustmentsMapper.mapGsAdjustments.resolves([])
     getAppAdjustments.resolves(appAdjustments)
-    updateAdjustmentEffectiveTo.resolves()
-    insertAdjustment.resolves()
-    updateAdjustmentStatusByIds.resolves(1)
-    createNewTasks.resolves()
 
     return adjustmentsWorker.execute(task).then(function () {
-      expect(updateAdjustmentStatusByIds.called).to.be.equal(false)
       expect(createNewTasks.called).to.be.equal(true)
-
       expect(stagingAdjustmentsMapper.mapCmsAdjustments.called).to.be.equal(true)
       expect(getAppAdjustments.called).to.be.equal(true)
       expect(updateAdjustmentEffectiveTo.calledWith(appAdjustments[1].id, updateTime)).to.be.equal(true)
@@ -257,15 +228,9 @@ describe(relativeFilePath, function () {
     stagingAdjustmentsMapper.mapCmsAdjustments.resolves([])
     stagingAdjustmentsMapper.mapGsAdjustments.resolves(gsAdjustments)
     getAppAdjustments.resolves([])
-    updateAdjustmentEffectiveTo.resolves()
-    insertAdjustment.resolves()
-    updateAdjustmentStatusByIds.resolves(1)
-    createNewTasks.resolves()
 
     return adjustmentsWorker.execute(task).then(function () {
-      expect(updateAdjustmentStatusByIds.called).to.be.equal(false)
       expect(createNewTasks.called).to.be.equal(true)
-
       expect(stagingAdjustmentsMapper.mapCmsAdjustments.called).to.be.equal(true)
       expect(stagingAdjustmentsMapper.mapGsAdjustments.called).to.be.equal(true)
       expect(getAppAdjustments.called).to.be.equal(true)
@@ -282,15 +247,9 @@ describe(relativeFilePath, function () {
     stagingAdjustmentsMapper.mapCmsAdjustments.resolves([])
     stagingAdjustmentsMapper.mapGsAdjustments.resolves([])
     getAppAdjustments.resolves(appAdjustments)
-    updateAdjustmentEffectiveTo.resolves()
-    insertAdjustment.resolves()
-    updateAdjustmentStatusByIds.resolves(1)
-    createNewTasks.resolves()
 
     return adjustmentsWorker.execute(task).then(function () {
-      expect(updateAdjustmentStatusByIds.called).to.be.equal(false)
       expect(createNewTasks.called).to.be.equal(true)
-
       expect(stagingAdjustmentsMapper.mapCmsAdjustments.called).to.be.equal(true)
       expect(stagingAdjustmentsMapper.mapGsAdjustments.called).to.be.equal(true)
       expect(getAppAdjustments.called).to.be.equal(true)
@@ -309,15 +268,9 @@ describe(relativeFilePath, function () {
     stagingAdjustmentsMapper.mapCmsAdjustments.resolves(cmsAdjustments)
     stagingAdjustmentsMapper.mapGsAdjustments.resolves(gsAdjustments)
     getAppAdjustments.resolves(appAdjustments)
-    updateAdjustmentEffectiveTo.resolves()
-    insertAdjustment.resolves()
-    updateAdjustmentStatusByIds.resolves(1)
-    createNewTasks.resolves()
 
     return adjustmentsWorker.execute(task).then(function () {
-      expect(updateAdjustmentStatusByIds.called).to.be.equal(false)
       expect(createNewTasks.called).to.be.equal(true)
-
       expect(stagingAdjustmentsMapper.mapCmsAdjustments.called).to.be.equal(true)
       expect(stagingAdjustmentsMapper.mapGsAdjustments.called).to.be.equal(true)
       expect(getAppAdjustments.called).to.be.equal(true)

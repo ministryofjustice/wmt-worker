@@ -5,7 +5,7 @@ const taskStatus = require('../../constants/task-status')
 const Task = require('../domain/task')
 const submittingAgent = require('../../constants/task-submitting-agent')
 const getOpenReductionsForCourtReporters = require('../data/get-open-reductions-for-court-reporters')
-const updateReductionStatuses = require('../update-reduction-statuses')
+const statusUpdater = require('../status-updater')
 const operationType = require('../../constants/calculation-tasks-operation-type')
 
 module.exports.execute = function (task) {
@@ -16,7 +16,7 @@ module.exports.execute = function (task) {
   logger.info('Retrieving open reductions for court reporters with court reports\' staging ids ' + courtReportStagingIdStart + ' - ' + courtReportStagingIdEnd + ', for workload report ' + workloadReportId)
   return getOpenReductionsForCourtReporters(courtReportStagingIdStart, courtReportStagingIdEnd, workloadReportId)
     .then(function (reductions) {
-      return updateReductionStatuses(reductions)
+      return statusUpdater.updateReductionStatuses(reductions)
       .then(function (result) {
         logger.info('Reduction statuses updated')
 

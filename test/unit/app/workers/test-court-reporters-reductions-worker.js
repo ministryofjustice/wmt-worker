@@ -11,7 +11,7 @@ const dateHelper = require('../../../helpers/data/date-helper')
 
 var reductionsWorker
 var getOpenReductionsForCourtReporters
-var updateReductionStatuses
+var statusUpdater
 var createNewTasks
 var relativeFilePath = 'services/workers/court-reporters-reductions-worker'
 
@@ -51,12 +51,14 @@ var courtReportsCalculationTask = new Task(
 describe(relativeFilePath, function () {
   beforeEach(function () {
     getOpenReductionsForCourtReporters = sinon.stub().resolves(reductions)
-    updateReductionStatuses = sinon.stub().resolves()
+    statusUpdater = {
+      updateReductionStatuses: sinon.stub().resolves()
+    }
     createNewTasks = sinon.stub().resolves()
     reductionsWorker = proxyquire('../../../../app/' + relativeFilePath, {
       '../log': { info: function (message) { } },
       '../data/get-open-reductions-for-court-reporters': getOpenReductionsForCourtReporters,
-      '../update-reduction-statuses': updateReductionStatuses,
+      '../status-updater': statusUpdater,
       '../data/create-tasks': createNewTasks
     })
   })
@@ -67,7 +69,7 @@ describe(relativeFilePath, function () {
         task.additionalData.startingId,
         task.additionalData.startingId + task.additionalData.batchSize - 1,
         task.workloadReportId)).to.be.equal(true)
-      expect(updateReductionStatuses.calledWith(reductions)).to.be.equal(true)
+      expect(statusUpdater.updateReductionStatuses.calledWith(reductions)).to.be.equal(true)
     })
   })
 
