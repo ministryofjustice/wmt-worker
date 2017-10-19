@@ -12,6 +12,7 @@ const getAppReductions = require('../data/get-app-reduction-hours')
 const getContractedHours = require('../data/get-contracted-hours')
 const getAdjustmentPoints = require('../data/get-adjustment-points')
 const operationTypes = require('../../constants/calculation-tasks-operation-type')
+
 const adjustmentCategory = require('../../constants/adjustment-category')
 
 module.exports.execute = function (task) {

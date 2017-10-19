@@ -6,6 +6,7 @@ const appWorkloadPointsCalculationHelper = require('../../../helpers/data/app-wo
 const appReductionsHelper = require('../../../helpers/data/app-reductions-helper')
 const calculatePointsWorker = require('../../../../app/services/workers/calculate-workload-points')
 const operationTypes = require('../../../../app/constants/calculation-tasks-operation-type')
+
 const Batch = require('../../../../app/services/domain/batch')
 
 var inserts = []
