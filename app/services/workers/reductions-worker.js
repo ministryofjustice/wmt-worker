@@ -5,7 +5,7 @@ const taskStatus = require('../../constants/task-status')
 const Task = require('../domain/task')
 const submittingAgent = require('../../constants/task-submitting-agent')
 const getOpenReductions = require('../data/get-open-reductions')
-const statusUpdater = require('../status-updater')
+const updateStatus = require('../update-adjustment-reduction-status')
 
 module.exports.execute = function (task) {
   var workloadStagingIdStart = task.additionalData.startingId
@@ -15,7 +15,7 @@ module.exports.execute = function (task) {
   logger.info('Retrieving open reductions for workload owners with workloads\' staging ids ' + workloadStagingIdStart + ' - ' + workloadStagingIdEnd + ', for workload report ' + workloadReportId)
   return getOpenReductions(workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
     .then(function (reductions) {
-      return statusUpdater.updateReductionStatuses(reductions)
+      return updateStatus.updateReductionStatuses(reductions)
       .then(function (result) {
         logger.info('Reduction statuses updated')
 

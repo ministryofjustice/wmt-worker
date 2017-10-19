@@ -9,7 +9,7 @@ const Task = require('../../../../app/services/domain/task')
 const dateHelper = require('../../../helpers/data/date-helper')
 
 var adjustmentsWorker
-var statusUpdater
+var updateStatus
 var createNewTasks
 var stagingAdjustmentsMapper
 var getAppAdjustments
@@ -114,7 +114,7 @@ var adjustmentRow = {
 
 describe(relativeFilePath, function () {
   beforeEach(function () {
-    statusUpdater = {
+    updateStatus = {
       updateAdjustmentStatuses: sinon.stub().resolves()
     }
     createNewTasks = sinon.stub().resolves()
@@ -128,7 +128,7 @@ describe(relativeFilePath, function () {
 
     adjustmentsWorker = proxyquire('../../../../app/' + relativeFilePath, {
       '../log': { info: function (message) { } },
-      '../status-updater': statusUpdater,
+      '../update-adjustment-reduction-status': updateStatus,
       '../data/create-tasks': createNewTasks,
       '../staging-adjustments-mapper': stagingAdjustmentsMapper,
       '../data/get-app-adjustments-for-batch': getAppAdjustments,

@@ -11,7 +11,7 @@ const stagingAdjustmentsMapper = require('../staging-adjustments-mapper')
 const getAppAdjustmentsForBatch = require('../data/get-app-adjustments-for-batch')
 const updateAdjustmentEffectiveTo = require('../data/update-adjustment-effective-to')
 const insertAdjustment = require('../data/insert-adjustment')
-const statusUpdater = require('../status-updater')
+const updateStatus = require('../update-adjustment-reduction-status')
 
 module.exports.execute = function (task) {
   var workloadStagingIdStart = task.additionalData.startingId
@@ -23,7 +23,7 @@ module.exports.execute = function (task) {
     logger.info('Retrieving open adjustments for workload owners with workloads\' staging ids ' + workloadStagingIdStart + ' - ' + workloadStagingIdEnd + ', for workload report ' + workloadReportId)
     return getAppAdjustmentsForBatch(adjustmentCategory.CMS, workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
     .then(function (adjustments) {
-      return statusUpdater.updateAdjustmentStatuses(adjustments)
+      return updateStatus.updateAdjustmentStatuses(adjustments)
       .then(function () {
         logger.info('Adjustment statuses updated')
         var calculateWpAdditionalData = {

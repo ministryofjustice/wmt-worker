@@ -40,11 +40,11 @@ var existingActiveReduction = {
 
 var reductions = [activeReduction, scheduledReduction, archivedReduction, existingActiveReduction]
 
-describe('services/status-updater', function () {
+describe('services/update-adjustment-reduction-status', function () {
   beforeEach(function () {
     updateReductionStatusByIds = sinon.stub()
     updateAdjustmentStatusByIds = sinon.stub()
-    statusUpdater = proxyquire('../../../../app/services/status-updater', {
+    statusUpdater = proxyquire('../../../../app/services/update-adjustment-reduction-status', {
       '../log': { info: function (message) { } },
       './data/update-reduction-status-by-ids': updateReductionStatusByIds,
       './data/update-adjustment-status-by-ids': updateAdjustmentStatusByIds
