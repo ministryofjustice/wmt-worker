@@ -1,0 +1,57 @@
+const knex = require('../../../../knex').appSchema
+const expect = require('chai').expect
+
+const helper = require('../../../helpers/data/app-workload-owner-helper')
+const insertCourtReportsCalculations = require('../../../../app/services/data/insert-court-reports-calculation')
+
+var inserts = []
+
+describe('services/data/insert-court-reports-calculation', function () {
+  before(function () {
+    return helper.insertDependencies(inserts)
+      .then(function (builtInserts) {
+        inserts = builtInserts
+      })
+  })
+
+  it('inserts the workload points calculations with the supplied values', function () {
+    return knex('workload_points').first('id')
+    .then(function (workloadPointsId) {
+      return knex('workload_report').whereNull('effective_to').first('id')
+      .then(function (workloadReportId) {
+        return knex('court_reports').first('id')
+        .then(function (courtReportsId) {
+          var insertObject = {
+            workloadReportId: workloadReportId.id,
+            workloadPointsId: workloadPointsId.id,
+            courtReportsId: courtReportsId.id,
+            contractedHours: 37,
+            reductionHours: 7
+          }
+
+          return insertCourtReportsCalculations(insertObject)
+          .then(function (insertedId) {
+            inserts.push({table: 'court_reports_calculations', id: insertedId[0]})
+            return knex('court_reports_calculations').where({id: insertedId[0]}).first()
+            .then(function (result) {
+              var expectedResult = {
+                id: insertedId[0],
+                workload_report_id: insertObject.workloadReportId,
+                workload_points_id: insertObject.workloadPointsId,
+                court_reports_id: insertObject.courtReportsId,
+                contracted_hours: insertObject.contractedHours,
+                reduction_hours: insertObject.reductionHours
+              }
+              expect(result).to.be.eql(expectedResult)
+            })
+          })
+        })
+      })
+    })
+  })
+
+  after(function (done) {
+    helper.removeDependencies(inserts)
+      .then(() => done())
+  })
+})

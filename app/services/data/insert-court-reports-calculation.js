@@ -14,6 +14,6 @@ var mapToDbObject = function (courtReportCalculation) {
     workload_points_id: courtReportCalculation.workloadPointsId,
     court_reports_id: courtReportCalculation.courtReportsId,
     contracted_hours: courtReportCalculation.contractedHours,
-    reductions_hours: courtReportCalculation.reductionHours
+    reduction_hours: courtReportCalculation.reductionHours
   }
 }
