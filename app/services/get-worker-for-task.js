@@ -4,6 +4,7 @@ var processImport = require('./workers/process-import')
 var createWorkload = require('./workers/create-workload')
 var reductionsWorker = require('./workers/reductions-worker')
 var adjustmentsWorker = require('./workers/adjustments-worker')
+var createCourtReports = require('./workers/create-court-reports')
 
 // ALL WORKERS SHOULD HAVE A METHOD `execute(task)` that returns a Promise
 module.exports = function (taskType) {
@@ -13,6 +14,7 @@ module.exports = function (taskType) {
     case taskTypes.CREATE_WORKLOAD: return createWorkload
     case taskTypes.PROCESS_REDUCTIONS: return reductionsWorker
     case taskTypes.PROCESS_ADJUSTMENTS: return adjustmentsWorker
+    case taskTypes.CREATE_COURT_REPORTS: return createCourtReports
   }
 
   return null

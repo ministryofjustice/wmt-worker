@@ -12,22 +12,21 @@ const insertCourtReports = require('../data/insert-app-court-reports')
 const createNewTasks = require('../data/create-tasks')
 
 module.exports.execute = function (task) {
-  var workloadBatchSize = task.additionalData.batchSize
+  var batchSize = task.additionalData.batchSize
   var startingStagingId = task.additionalData.startingId
-  var endingStagingId = startingStagingId + (workloadBatchSize - 1)
+  var endingStagingId = startingStagingId + (batchSize - 1)
   var workloadReportId = task.workloadReportId
 
   return getStgCourtReports([startingStagingId, endingStagingId])
   .then(function (stagingCourtReports) {
-    var insertedCourtReportIds = []
     return Promise.each(stagingCourtReports, function (stagingCourtReport) {
       var caseSummary = stagingCourtReport.casesSummary
       return insertWorkloadOwnerAndDependencies(caseSummary)
       .then(function (workloadOwnerId) {
         var courtReportToInsert = mapCourtReports(stagingCourtReport, parseInt(workloadOwnerId), parseInt(workloadReportId))
         return insertCourtReports(courtReportToInsert)
-        .then(function (courtReportId) {
-          insertedCourtReportIds.push(courtReportId)
+        .then(function (insertedId) {
+          logger.info('Court Rerport with id:' + insertedId + ' added')
         })
       })
     })
@@ -44,7 +43,7 @@ module.exports.execute = function (task) {
                 )
       return createNewTasks([reductionsWorkerTask])
       .then(function () {
-        logger.info('Reduction Worker Task created')
+        logger.info('Court Reporters Reduction Worker Task created')
       })
     })
   })

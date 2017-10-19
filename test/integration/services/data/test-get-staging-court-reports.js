@@ -3,10 +3,10 @@ const getStgCourtReports = require('../../../../app/services/data/get-staging-co
 const CasesSummay = require('wmt-probation-rules').CasesSummary
 const CourtReport = require('wmt-probation-rules').CourtReport
 const OmCourtReports = require('wmt-probation-rules').OmCourtReports
-const helper = require('../../../helpers/data/staging-court-reports-helper')
+const helper = require('../../../helpers/data/staging-court-reporters-helper')
 
 var inserts = []
-describe('services/data/get-staging-workload', function () {
+describe('services/data/get-staging-court-reports', function () {
   before(function () {
     return helper.insertDependencies(inserts)
     .then(function (builtInserts) {
@@ -14,7 +14,7 @@ describe('services/data/get-staging-workload', function () {
     })
   })
 
-  it('should retrive any staging court reports', function () {
+  it('should retrive any staging court reports in the batch', function () {
     var crId = inserts.filter((item) => item.table === 'court_reporters')[0].id
 
     var expectCaseSummary = new CasesSummay(
@@ -47,7 +47,8 @@ describe('services/data/get-staging-workload', function () {
     )
     var expectedCourtReports = new OmCourtReports(
       crId,
-      expectCaseSummary, expectedCourtReport
+      expectCaseSummary,
+      expectedCourtReport
     )
 
     return getStgCourtReports([crId, crId])

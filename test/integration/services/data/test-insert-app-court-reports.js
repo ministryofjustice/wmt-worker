@@ -14,7 +14,6 @@ var stagingId = 4
 var inserts = []
 describe('app/services/data/insert-app-court-reports', function () {
   before(function () {
-    // get woid
     return workloadOwnerHelper.insertDependencies(inserts)
     .then(function (builtInserts) {
       inserts = builtInserts
@@ -46,7 +45,6 @@ describe('app/services/data/insert-app-court-reports', function () {
           staging_id: stagingId,
           workload_report_id: workloadReportId
         }
-        expect(results).to.not.be.undefined // eslint-disable-line
         expect(results).to.be.eql(expectedCourtReports)
       })
     })

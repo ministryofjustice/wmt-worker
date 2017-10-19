@@ -18,16 +18,12 @@ module.exports.execute = function (task) {
   var workloadReportId = task.workloadReportId
 
   return getStagingWorkload([startingStagingId, endingStagingId]).then(function (stagingWorkloads) {
-    var insertedWorkloadIds = []
     return Promise.each(stagingWorkloads, function (stagingWorkload) {
       var caseSummary = stagingWorkload.casesSummary
       return insertWorkloadOwnerAndDependencies(caseSummary)
       .then(function (workloadOwnerId) {
         var workloadToInsert = mapWorkload(stagingWorkload, parseInt(workloadOwnerId), parseInt(workloadReportId))
         return insertWorkload(workloadToInsert)
-        .then(function (workloadId) {
-          insertedWorkloadIds.push(workloadId)
-        })
       })
     })
     .then(function () {
