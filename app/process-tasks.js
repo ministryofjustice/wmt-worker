@@ -12,7 +12,7 @@ const getWorkerForTask = require('./services/get-worker-for-task')
 const callWebRefreshEndpoint = require('./services/refresh-web-org-hierarchy')
 const closePreviousWorkloadReport = require('./services/close-previous-workload-report')
 const updateWorkloadReportEffectiveTo = require('./services/data/update-workload-report-effective-to')
-const wpcOperationType = require('./constants/calculate-workload-points-operation')
+const wpcOperationType = require('./constants/calculation-tasks-operation-type')
 
 module.exports = function () {
   var batchSize = parseInt(config.ASYNC_WORKER_BATCH_SIZE, 10)
