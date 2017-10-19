@@ -6,7 +6,7 @@ const Task = require('../domain/task')
 const submittingAgent = require('../../constants/task-submitting-agent')
 const getOpenReductionsForCourtReporters = require('../data/get-open-reductions-for-court-reporters')
 const updateReductionStatuses = require('../update-reduction-statuses')
-const operationType = require('../../constants/calculation-task-operation')
+const operationType = require('../../constants/calculation-tasks-operation-type')
 
 module.exports.execute = function (task) {
   var courtReportStagingIdStart = task.additionalData.startingId

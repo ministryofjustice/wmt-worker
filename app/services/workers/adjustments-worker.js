@@ -6,7 +6,7 @@ const taskType = require('../../constants/task-type')
 const taskStatus = require('../../constants/task-status')
 const Task = require('../domain/task')
 const submittingAgent = require('../../constants/task-submitting-agent')
-const wpcOperationType = require('../../constants/calculation-task-operation')
+const wpcOperationType = require('../../constants/calculation-tasks-operation-type')
 const logger = require('../log')
 
 const stagingAdjustmentsMapper = require('../staging-adjustments-mapper')
