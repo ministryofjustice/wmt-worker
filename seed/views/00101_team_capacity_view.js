@@ -5,7 +5,7 @@ exports.seed = function (knex, Promise) {
       SELECT SUM(total_points) AS total_points
         , SUM(available_points) AS available_points
         , SUM(reduction_hours) AS reduction_hours
-        , SUM(wo.contracted_hours) AS contracted_hours
+        , SUM(wpc.contracted_hours) AS contracted_hours
         , wr.effective_from AS effective_from
         , t.id AS id
       FROM app.workload_points_calculations wpc
