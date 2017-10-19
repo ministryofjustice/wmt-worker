@@ -8,7 +8,7 @@ exports.seed = function (knex, Promise) {
         , SUM(wo.contracted_hours) AS contracted_hours
         , wr.effective_from AS effective_from
         , region.id AS id
-      FROM app.workload_points_calculations AS wpc
+      FROM app.workload_points_calculations wpc
         JOIN app.workload w ON wpc.workload_id = w.id
         JOIN app.workload_owner wo ON w.workload_owner_id = wo.id
         JOIN app.team t ON wo.team_id = t.id
