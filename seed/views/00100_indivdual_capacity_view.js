@@ -9,6 +9,7 @@ exports.seed = function (knex, Promise) {
       , wpc.reduction_hours
       , w.workload_owner_id AS id
       , wr.id AS workload_report_id
+      , wpc.contracted_hours
     FROM app.workload_points_calculations wpc
       JOIN app.workload w ON wpc.workload_id = w.id
       JOIN app.workload_report wr ON wpc.workload_report_id = wr.id;`
