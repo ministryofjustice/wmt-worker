@@ -11,7 +11,7 @@ const getOffenderManagerTypeId = require('../data/get-offender-manager-type-id')
 const getAppReductions = require('../data/get-app-reduction-hours')
 const getContractedHours = require('../data/get-contracted-hours')
 const getAdjustmentPoints = require('../data/get-adjustment-points')
-const wpcOperationType = require('../../constants/calculate-workload-points-operation')
+const wpcOperationType = require('../../constants/calculation-task-operation')
 const adjustmentCategory = require('../../constants/adjustment-category')
 
 module.exports.execute = function (task) {

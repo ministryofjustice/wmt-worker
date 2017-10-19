@@ -1,4 +1,5 @@
 const knex = require('../../../knex').appSchema
+const reductionStatus = require('../../constants/reduction-status')
 
 module.exports = function (courtReportStagingIdStart, courtReportStagingIdEnd, workloadReportId) {
   return knex('reductions')
@@ -9,6 +10,7 @@ module.exports = function (courtReportStagingIdStart, courtReportStagingIdEnd, w
       'reductions.effective_to AS effectiveTo',
       'reductions.status AS status'
     )
-    .whereRaw('court_reports.staging_id BETWEEN ? AND ? AND (status IS NULL OR status IN (\'ACTIVE\',\'SCHEDULED\')) ' +
+    .whereRaw('court_reports.staging_id BETWEEN ? AND ? ' +
+      'AND (status IS NULL OR status IN (\'' + reductionStatus.ACTIVE + '\',\'' + reductionStatus.SCHEDULED + '\')) ' +
       'AND court_reports.workload_report_id = ?', [courtReportStagingIdStart, courtReportStagingIdEnd, workloadReportId])
 }

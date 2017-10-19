@@ -6,6 +6,7 @@ const Task = require('../domain/task')
 const submittingAgent = require('../../constants/task-submitting-agent')
 const getOpenReductionsForCourtReporters = require('../data/get-open-reductions-for-court-reporters')
 const updateReductionStatuses = require('../update-reduction-statuses')
+const operationType = require('../../constants/calculation-task-operation')
 
 module.exports.execute = function (task) {
   var courtReportStagingIdStart = task.additionalData.startingId
@@ -19,18 +20,23 @@ module.exports.execute = function (task) {
       .then(function (result) {
         logger.info('Reduction statuses updated')
 
-        var processAdjustments = new Task(
+        var courtReportsCalculationAdditionalData = {
+          workloadBatch: task.additionalData,
+          operationType: operationType.INSERT
+        }
+
+        var courtReportsCalculation = new Task(
           undefined,
           submittingAgent.WORKER,
           taskType.COURT_REPORTS_CALCULATION,
-          task.additionalData,
+          courtReportsCalculationAdditionalData,
           task.workloadReportId,
           undefined,
           undefined,
           taskStatus.PENDING
           )
 
-        return createNewTasks([processAdjustments])
+        return createNewTasks([courtReportsCalculation])
         .then(function () {
           logger.info('Court reports calculation task created')
         })

@@ -5,7 +5,7 @@ require('sinon-bluebird')
 const pointsHelper = require('wmt-probation-rules').pointsHelper
 
 const Batch = require('../../../../app/services/domain/batch')
-const wpcOperation = require('../../../../app/constants/calculate-workload-points-operation')
+const wpcOperation = require('../../../../app/constants/calculation-task-operation')
 const adjustmentCategory = require('../../../../app/constants/adjustment-category')
 
 const WORKLOAD_ID = 10

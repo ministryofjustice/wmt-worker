@@ -31,3 +31,18 @@ module.exports.removeDependencies = function (inserts) {
     return knex(insert.table).where('id', insert.id).del()
   })
 }
+
+module.exports.getAllReductionStatusesForCourtReporters = function (courtReportStagingIdStart, courtReportStagingIdEnd, workloadReportId) {
+  return knex('reductions')
+  .join('court_reports', 'court_reports.workload_owner_id', 'reductions.workload_owner_id')
+  .select('reductions.status')
+  .whereRaw('court_reports.staging_id BETWEEN ? AND ? ' +
+    'AND court_reports.workload_report_id = ?', [courtReportStagingIdStart, courtReportStagingIdEnd, workloadReportId])
+  .then(function (results) {
+    var statuses = []
+    results.forEach(function (statusRecord) {
+      statuses.push(statusRecord.status)
+    })
+    return statuses
+  })
+}
