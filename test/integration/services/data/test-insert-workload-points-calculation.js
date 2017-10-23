@@ -18,7 +18,9 @@ describe('services/data/insert-workload-points-calculation', function () {
 
   it('inserts the workload points calculations with the supplied values', function (done) {
     var workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
-    var workloadPointsId = inserts.filter((item) => item.table === 'workload_points')[0].id
+    var workloadPointIds = inserts.filter((item) => item.table === 'workload_points')
+    var workloadPointsId = workloadPointIds[0].id
+    var t2aWorkloadPointsId = workloadPointIds[1].id
     var workloadId = inserts.filter((item) => item.table === 'workload')[0].id
     var totalPoints = 1
     var sdrPoints = 2
@@ -31,7 +33,7 @@ describe('services/data/insert-workload-points-calculation', function () {
     var cmsAdjustmentPoints = 15
     var gsAdjustmentPoints = -1
 
-    insertWorkloadPointsCalculations(workloadReportId, workloadPointsId, workloadId, totalPoints, sdrPoints, sdrConversionPoints,
+    insertWorkloadPointsCalculations(workloadReportId, workloadPointsId, t2aWorkloadPointsId, workloadId, totalPoints, sdrPoints, sdrConversionPoints,
       paromsPoints, nominalTarget, availablePoints, contractedHours, reductionHours, cmsAdjustmentPoints, gsAdjustmentPoints)
     .then(function (ids) {
       var insertedId = ids[0]
@@ -40,6 +42,7 @@ describe('services/data/insert-workload-points-calculation', function () {
           .first().then(function (insertedObject) {
             expect(insertedObject.workload_report_id).to.eql(workloadReportId)
             expect(insertedObject.workload_points_id).to.eql(workloadPointsId)
+            expect(insertedObject.t2a_workload_points_id).to.eql(t2aWorkloadPointsId)
             expect(insertedObject.workload_id).to.eql(workloadId)
             expect(insertedObject.total_points).to.eql(totalPoints)
             expect(insertedObject.sdr_points).to.eql(sdrPoints)

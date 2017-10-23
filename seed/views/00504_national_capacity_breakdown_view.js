@@ -7,7 +7,8 @@ exports.seed = function (knex, promise) {
     , region_totals.id AS link_id
     , r.description AS name
     , region_totals.grade_code
-    , region_totals.total_cases    
+    , region_totals.total_cases
+    , region_totals.total_t2a_cases
     , region_totals.total_points
     , region_totals.available_points
     , region_totals.reduction_hours
@@ -23,6 +24,7 @@ exports.seed = function (knex, promise) {
         , SUM(rcbv.cms_adjustment_points) AS cms_adjustment_points
         , SUM(rcbv.gs_adjustment_points) AS gs_adjustment_points
         , SUM(rcbv.total_cases) AS total_cases
+        , SUM(rcbv.total_t2a_cases) AS total_t2a_cases
         , SUM(rcbv.contracted_hours) AS contracted_hours        
         , SUM(rcbv.arms_total_cases) AS arms_total_cases
         , r.id as id

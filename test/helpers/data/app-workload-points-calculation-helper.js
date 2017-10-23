@@ -61,7 +61,49 @@ module.exports.insertDependencies = function (inserts) {
         weighting_w: 29,
         weighting_u: 30,
         paroms_enabled: 1,
-        parom: 31
+        parom: 31,
+        is_t2a: false
+      })
+    })
+    .then(function (ids) {
+      inserts.push({table: 'workload_points', id: ids[0]})
+    })
+    .then(function (inserts) {
+      return knex('workload_points').returning('id').insert({
+        comm_tier_1: 1,
+        comm_tier_2: 2,
+        comm_tier_3: 3,
+        comm_tier_4: 4,
+        comm_tier_5: 5,
+        comm_tier_6: 6,
+        comm_tier_7: 7,
+        cust_tier_1: 8,
+        cust_tier_2: 9,
+        cust_tier_3: 10,
+        cust_tier_4: 11,
+        cust_tier_5: 12,
+        cust_tier_6: 13,
+        cust_tier_7: 14,
+        lic_tier_1: 15,
+        lic_tier_2: 16,
+        lic_tier_3: 17,
+        lic_tier_4: 18,
+        lic_tier_5: 19,
+        lic_tier_6: 20,
+        lic_tier_7: 21,
+        user_id: 0,
+        sdr: 0,
+        sdr_conversion: 0,
+        nominal_target_spo: 0,
+        nominal_target_po: 0,
+        default_contracted_hours_po: 0,
+        default_contracted_hours_pso: 0,
+        weighting_o: 28,
+        weighting_w: 29,
+        weighting_u: 30,
+        paroms_enabled: 0,
+        parom: 0,
+        is_t2a: true
       })
     })
     .then(function (ids) {

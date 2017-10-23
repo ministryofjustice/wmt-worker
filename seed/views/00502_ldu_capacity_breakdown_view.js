@@ -8,6 +8,7 @@ exports.seed = function (knex, promise) {
     , t.description AS name
     , team_totals.grade_code
     , team_totals.total_cases
+    , team_totals.total_t2a_cases
     , team_totals.total_points
     , team_totals.available_points
     , team_totals.reduction_hours
@@ -23,6 +24,7 @@ exports.seed = function (knex, promise) {
       , SUM(tcbv.cms_adjustment_points) AS cms_adjustment_points
       , SUM(tcbv.gs_adjustment_points) AS gs_adjustment_points
       , SUM(tcbv.total_cases) AS total_cases
+      , SUM(tcbv.total_t2a_cases) AS total_t2a_cases
       , SUM(tcbv.contracted_hours) AS contracted_hours
       , SUM(tcbv.arms_total_cases) AS arms_total_cases
       , t.id as id

@@ -8,6 +8,7 @@ exports.seed = function (knex, Promise) {
           , CONCAT(om.forename, ' ', om.surname) AS name
           , omt.grade_code as grade_code
           , w.total_cases
+          , w.total_t2a_cases
           , wpc.total_points
           , wpc.available_points
           , wpc.reduction_hours

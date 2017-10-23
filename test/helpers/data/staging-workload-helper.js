@@ -68,6 +68,7 @@ const wmtExtractTable = 'wmt_extract'
 const courtReportsTable = 'court_reports'
 const institutionalReportsTable = 'inst_reports'
 const armsTable = 'arms'
+const t2aTable = 't2a'
 
 const testOmKey = 'l102A'
 const testTeamCode = 'KNS'
@@ -104,10 +105,20 @@ module.exports.getArmsData = function (omKey = testOmKey, teamCode = testTeamCod
   return [
     Object.assign({}, defaultArmsObject),
     Object.assign({}, defaultArmsObject),
-    Object.assign({}, defaultArmsObject, {sentenceType: 'Community'}),
-    Object.assign({}, defaultArmsObject, {sentenceType: 'Community'}),
-    Object.assign({}, defaultArmsObject, {sentenceType: 'Community'})
+    Object.assign({}, defaultArmsObject, { sentenceType: 'Community' }),
+    Object.assign({}, defaultArmsObject, { sentenceType: 'Community' }),
+    Object.assign({}, defaultArmsObject, { sentenceType: 'Community' })
   ]
+}
+
+module.exports.insertT2aCaseSummaryReport = function (caseSummary, inserts) {
+  return knex(t2aTable)
+    .insert(mapT2aForInsert(caseSummary))
+    .returning('id')
+    .then(function (id) {
+      inserts.push({ table: t2aTable, id: id })
+      return inserts
+    })
 }
 
 module.exports.insertCaseSummaryReport = function (caseSummary, inserts) {
@@ -115,7 +126,7 @@ module.exports.insertCaseSummaryReport = function (caseSummary, inserts) {
     .insert(mapForInsert(caseSummary))
     .returning('id')
     .then(function (id) {
-      inserts.push({table: wmtExtractTable, id: id})
+      inserts.push({ table: wmtExtractTable, id: id })
       return inserts
     })
 }
@@ -126,7 +137,7 @@ module.exports.insertCourtReport = function (courtReport, inserts) {
     .insert(mapForInsert(courtReportToInsert))
     .returning('id')
     .then(function (id) {
-      inserts.push({table: courtReportsTable, id: id})
+      inserts.push({ table: courtReportsTable, id: id })
       return inserts
     })
 }
@@ -137,7 +148,7 @@ module.exports.insertInstitutionalReport = function (institutionalReport, insert
     .insert(mapForInsert(instReportToInsert))
     .returning('id')
     .then(function (id) {
-      inserts.push({table: institutionalReportsTable, id: id})
+      inserts.push({ table: institutionalReportsTable, id: id })
       return inserts
     })
 }
@@ -147,7 +158,7 @@ module.exports.insertArms = function (arms, inserts) {
     .insert(arms.map(mapForInsert))
     .returning('id')
     .then(function (id) {
-      inserts.push({table: armsTable, id: id})
+      inserts.push({ table: armsTable, id: id })
       return inserts
     })
 }
@@ -157,7 +168,10 @@ module.exports.deleteAll = function () {
     .then(function () {
       return knex(courtReportsTable).del()
         .then(function () {
-          return knex(wmtExtractTable).del()
+          return knex(t2aTable).del()
+          .then(function () {
+            return knex(wmtExtractTable).del()
+          })
         })
     })
 }
@@ -180,6 +194,39 @@ function mapForInsert (record) {
         }
       }
     } else if (key === 'custodyTiers') {
+      for (let subkey in record[key]) {
+        let alias = subkey === 'untiered' ? '0' : subkey
+        if (typeof aliases['custtier' + alias] !== 'undefined') {
+          row[aliases['custtier' + alias]] = record[key][subkey]
+        }
+      }
+    } else {
+      if (typeof aliases[key] !== 'undefined') {
+        row[aliases[key]] = record[key]
+      }
+    }
+  }
+  return row
+}
+
+function mapT2aForInsert (record) {
+  var row = {}
+  for (let key in record) {
+    if (key === 't2aCommunityTiers') {
+      for (let subkey in record[key]) {
+        let alias = subkey === 'untiered' ? '0' : subkey
+        if (typeof aliases['commtier' + alias] !== 'undefined') {
+          row[aliases['commtier' + alias]] = record[key][subkey]
+        }
+      }
+    } else if (key === 't2aLicenseTiers') {
+      for (let subkey in record[key]) {
+        let alias = subkey === 'untiered' ? '0' : subkey
+        if (typeof aliases['licencetier' + alias] !== 'undefined') {
+          row[aliases['licencetier' + alias]] = record[key][subkey]
+        }
+      }
+    } else if (key === 't2aCustodyTiers') {
       for (let subkey in record[key]) {
         let alias = subkey === 'untiered' ? '0' : subkey
         if (typeof aliases['custtier' + alias] !== 'undefined') {
