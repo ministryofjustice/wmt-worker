@@ -6,6 +6,7 @@ var reductionsWorker = require('./workers/reductions-worker')
 var reductionsWorkerCourtReporters = require('./workers/court-reporters-reductions-worker')
 var adjustmentsWorker = require('./workers/adjustments-worker')
 var createCourtReports = require('./workers/create-court-reports')
+var courtReportsCalculation = require('./workers/court-reports-calculations')
 
 // ALL WORKERS SHOULD HAVE A METHOD `execute(task)` that returns a Promise
 module.exports = function (taskType) {
@@ -17,6 +18,7 @@ module.exports = function (taskType) {
     case taskTypes.PROCESS_REDUCTIONS_COURT_REPORTERS: return reductionsWorkerCourtReporters
     case taskTypes.PROCESS_ADJUSTMENTS: return adjustmentsWorker
     case taskTypes.CREATE_COURT_REPORTS: return createCourtReports
+    case taskTypes.COURT_REPORTS_CALCULATION: return courtReportsCalculation
   }
 
   return null
