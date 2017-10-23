@@ -1,43 +1,40 @@
 exports.seed = function (knex, promise) {
-  var sql = `CREATE VIEW app.ldu_capacity_breakdown_view
+  var view = `CREATE VIEW app.ldu_capacity_breakdown_view
     WITH SCHEMABINDING
     AS
     SELECT
       l.id AS id
-    , team_totals.id AS link_id
+    , t.id AS link_id
     , t.description AS name
-    , team_totals.grade_code
-    , team_totals.total_cases
-    , team_totals.total_t2a_cases
-    , team_totals.total_points
-    , team_totals.available_points
-    , team_totals.reduction_hours
-    , team_totals.cms_adjustment_points
-    , team_totals.gs_adjustment_points
-    , team_totals.contracted_hours
-    , team_totals.arms_total_cases
-    FROM (
-      SELECT
-        SUM(tcbv.total_points) AS total_points
-      , SUM(tcbv.available_points) AS available_points
-      , SUM(tcbv.reduction_hours) AS reduction_hours
-      , SUM(tcbv.cms_adjustment_points) AS cms_adjustment_points
-      , SUM(tcbv.gs_adjustment_points) AS gs_adjustment_points
-      , SUM(tcbv.total_cases) AS total_cases
-      , SUM(tcbv.total_t2a_cases) AS total_t2a_cases
-      , SUM(tcbv.contracted_hours) AS contracted_hours
-      , SUM(tcbv.arms_total_cases) AS arms_total_cases
-      , t.id as id
-      , tcbv.grade_code
-      FROM app.team_capacity_breakdown_view tcbv
-        JOIN app.team t ON tcbv.id = t.id
-      GROUP BY t.id, tcbv.grade_code
-    ) team_totals
-      JOIN app.team t ON team_totals.id = t.id
-      JOIN app.ldu l ON t.ldu_id = l.id;`
+    , omt.grade_code
+    , SUM(w.total_cases) AS total_cases
+    , SUM(w.total_t2a_cases) AS total_t2a_cases
+    , SUM(wpc.total_points) AS total_points
+    , SUM(wpc.available_points) AS available_points
+    , SUM(wpc.reduction_hours) AS reduction_hours
+    , SUM(wpc.cms_adjustment_points) AS cms_adjustment_points
+    , SUM(wpc.gs_adjustment_points) AS gs_adjustment_points
+    , SUM(wpc.contracted_hours) AS contracted_hours
+    , SUM(wpc.arms_total_cases) AS arms_total_cases
+    , COUNT_BIG(*) AS count
+    FROM app.workload_points_calculations wpc
+      JOIN app.workload w ON wpc.workload_id = w.id
+      JOIN app.workload_owner wo ON w.workload_owner_id = wo.id
+      JOIN app.workload_report wr ON wpc.workload_report_id = wr.id
+      JOIN app.offender_manager om ON wo.offender_manager_id = om.id
+      JOIN app.offender_manager_type omt ON om.type_id = omt.id
+      JOIN app.team t ON wo.team_id = t.id
+      JOIN app.ldu l ON t.ldu_id = l.id
+    WHERE wr.effective_from IS NOT NULL
+      AND wr.effective_to IS NULL
+    GROUP BY l.id, t.id, t.description, omt.grade_code;`
+
+  var index = `CREATE UNIQUE CLUSTERED INDEX idx_ldu_capacity_breakdown_view
+  ON app.ldu_capacity_breakdown_view (link_id, grade_code)`
 
   return knex.schema
       .raw('DROP VIEW IF EXISTS app.ldu_capacity_breakdown_view;')
       .raw('SET ARITHABORT ON')
-      .raw(sql)
+      .raw(view)
+      .raw(index)
 }

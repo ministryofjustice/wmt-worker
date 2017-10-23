@@ -1,12 +1,13 @@
 exports.seed = function (knex, Promise) {
-  var sql = `CREATE VIEW app.team_capacity_breakdown_view
+  var view = `CREATE VIEW app.team_capacity_breakdown_view
         WITH SCHEMABINDING
         AS
         SELECT
             t.id AS id
           , wo.id AS link_id 
-          , CONCAT(om.forename, ' ', om.surname) AS name
-          , omt.grade_code as grade_code
+          , om.forename
+          , om.surname
+          , omt.grade_code
           , w.total_cases
           , w.total_t2a_cases
           , wpc.total_points
@@ -26,8 +27,12 @@ exports.seed = function (knex, Promise) {
         WHERE wr.effective_from IS NOT NULL
         AND wr.effective_to IS NULL;`
 
+  var index = `CREATE UNIQUE CLUSTERED INDEX idx_team_capacity_breakdown_view
+  ON app.team_capacity_breakdown_view (link_id)`
+
   return knex.schema
       .raw('DROP VIEW IF EXISTS app.team_capacity_breakdown_view;')
       .raw('SET ARITHABORT ON')
-      .raw(sql)
+      .raw(view)
+      .raw(index)
 }
