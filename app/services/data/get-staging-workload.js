@@ -33,7 +33,7 @@ module.exports = function (range) {
       'wmt_extract.custtierd2', 'wmt_extract.custtierd1', 'wmt_extract.custtierc2',
       'wmt_extract.custtierc1', 'wmt_extract.custtierb2', 'wmt_extract.custtierb1',
       'wmt_extract.custtiera', 'court_reports.om_team_staff_grade', 'court_reports.sdr_last_30', 'court_reports.sdr_due_next_30',
-      'court_reports.sdr_conv_last_30', 'inst_reports.parom_due_next_30', 'inst_reports.parom_comp_last_30')
+      'court_reports.sdr_conv_last_30', 'court_reports.oral_reports', 'inst_reports.parom_due_next_30', 'inst_reports.parom_comp_last_30')
     .then(function (results) {
       if (results !== 'undefined' && results.length > 0) {
         return Promise.each(results, function (result) {
@@ -100,7 +100,8 @@ module.exports = function (range) {
               result['om_team_staff_grade'],
               result['sdr_last_30'],
               result['sdr_due_next_30'],
-              result['sdr_conv_last_30']
+              result['sdr_conv_last_30'],
+              result['oral_reports']
             )
 
             var institutionalReport = new InstitutionalReport(
