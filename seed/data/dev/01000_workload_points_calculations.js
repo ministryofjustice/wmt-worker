@@ -35,7 +35,7 @@ exports.seed = function (knex, Promise) {
             workload_id: workloadId.id,
             workload_report_id: reportId.id,
             workload_points_id: currentPointsId.id,
-            total_points: Math.floor(Math.random() * 25) + 180,
+            total_points: Math.floor(Math.random() * 25) + 200,
             available_points: 190,
             paroms_points: 50,
             sdr_conversion_points: 50,
