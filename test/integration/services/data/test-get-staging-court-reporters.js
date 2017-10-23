@@ -1,12 +1,12 @@
 const expect = require('chai').expect
-const getStgCourtReports = require('../../../../app/services/data/get-staging-court-reports')
+const getStgCourtReporters = require('../../../../app/services/data/get-staging-court-reporters')
 const CasesSummay = require('wmt-probation-rules').CasesSummary
 const CourtReport = require('wmt-probation-rules').CourtReport
 const OmCourtReports = require('wmt-probation-rules').OmCourtReports
 const helper = require('../../../helpers/data/staging-court-reporters-helper')
 
 var inserts = []
-describe('services/data/get-staging-court-reports', function () {
+describe('services/data/get-staging-court-reporters', function () {
   before(function () {
     return helper.insertDependencies(inserts)
     .then(function (builtInserts) {
@@ -14,7 +14,7 @@ describe('services/data/get-staging-court-reports', function () {
     })
   })
 
-  it('should retrive any staging court reports in the batch', function () {
+  it('should retrieve any staging court reports in the batch', function () {
     var crId = inserts.filter((item) => item.table === 'court_reporters')[0].id
 
     var expectCaseSummary = new CasesSummay(
@@ -51,7 +51,7 @@ describe('services/data/get-staging-court-reports', function () {
       expectedCourtReport
     )
 
-    return getStgCourtReports([crId, crId])
+    return getStgCourtReporters([crId, crId])
     .then(function (results) {
       expect(results).to.be.eql([expectedCourtReports])
     })

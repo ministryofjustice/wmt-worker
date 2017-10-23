@@ -6,7 +6,7 @@ const taskType = require('../../constants/task-type')
 const taskStatus = require('../../constants/task-status')
 const submittingAgent = require('../../constants/task-submitting-agent')
 const mapCourtReports = require('wmt-probation-rules').mapCourtReports
-const getStgCourtReports = require('../data/get-staging-court-reports')
+const getStgCourtReporters = require('../data/get-staging-court-reporters')
 const insertWorkloadOwnerAndDependencies = require('../insert-workload-owner-and-dependencies')
 const insertCourtReports = require('../data/insert-app-court-reports')
 const createNewTasks = require('../data/create-tasks')
@@ -17,7 +17,7 @@ module.exports.execute = function (task) {
   var endingStagingId = startingStagingId + (batchSize - 1)
   var workloadReportId = task.workloadReportId
 
-  return getStgCourtReports([startingStagingId, endingStagingId])
+  return getStgCourtReporters([startingStagingId, endingStagingId])
   .then(function (stagingCourtReports) {
     return Promise.each(stagingCourtReports, function (stagingCourtReport) {
       var caseSummary = stagingCourtReport.casesSummary
@@ -26,7 +26,7 @@ module.exports.execute = function (task) {
         var courtReportToInsert = mapCourtReports(stagingCourtReport, parseInt(workloadOwnerId), parseInt(workloadReportId))
         return insertCourtReports(courtReportToInsert)
         .then(function (insertedId) {
-          logger.info('Court Rerport with id:' + insertedId + ' added')
+          logger.info('Court Report with id:' + insertedId + ' added')
         })
       })
     })

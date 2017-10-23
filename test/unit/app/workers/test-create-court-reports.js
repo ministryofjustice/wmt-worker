@@ -9,7 +9,7 @@ const taskStatus = require('../../../../app/constants/task-status')
 const submittingAgent = require('../../../../app/constants/task-submitting-agent')
 
 var createCourtReports
-var getStagingCourtReports
+var getStagingCourtReporters
 var insertWorkloadOwnerAndDependencies
 var insertCourtReports
 var createNewTasks
@@ -47,7 +47,7 @@ var nextTask = new Task(
 
 describe('services/workers/create-court-reports', function () {
   beforeEach(function () {
-    getStagingCourtReports = sinon.stub()
+    getStagingCourtReporters = sinon.stub()
     insertWorkloadOwnerAndDependencies = sinon.stub()
     insertCourtReports = sinon.stub()
     probationRulesStub = {}
@@ -56,7 +56,7 @@ describe('services/workers/create-court-reports', function () {
 
     createCourtReports = proxyquire('../../../../app/services/workers/create-court-reports', {
       '../log': { info: function (message) {}, error: function (message) {} },
-      '../data/get-staging-court-reports': getStagingCourtReports,
+      '../data/get-staging-court-reporters': getStagingCourtReporters,
       '../insert-workload-owner-and-dependencies': insertWorkloadOwnerAndDependencies,
       '../data/insert-app-court-reports': insertCourtReports,
       'wmt-probation-rules': probationRulesStub,
@@ -65,7 +65,7 @@ describe('services/workers/create-court-reports', function () {
   })
 
   it('should call on services', function () {
-    getStagingCourtReports.resolves(stagingCourtReports)
+    getStagingCourtReporters.resolves(stagingCourtReports)
     insertWorkloadOwnerAndDependencies.resolves(workloadOwnerId)
     insertCourtReports.resolves(courtReportsId)
     createNewTasks.resolves()
@@ -73,7 +73,7 @@ describe('services/workers/create-court-reports', function () {
 
     return createCourtReports.execute(task)
     .then(function (result) {
-      expect(getStagingCourtReports.calledWith([task.additionalData.startingId, endingStagingId])).to.be.equal(true)
+      expect(getStagingCourtReporters.calledWith([task.additionalData.startingId, endingStagingId])).to.be.equal(true)
       expect(insertWorkloadOwnerAndDependencies.calledWith(stagingCourtReports.caseSummary)).to.be.equal(true)
       expect(insertCourtReports.calledWith(appCourtReports)).to.be.equal(true)
       expect(probationRulesStub.mapCourtReports.calledWith(stagingCourtReports, workloadOwnerId, task.workloadReportId))
