@@ -12,7 +12,7 @@ const getWorkerForTask = require('./services/get-worker-for-task')
 const callWebRefreshEndpoint = require('./services/refresh-web-org-hierarchy')
 const closePreviousWorkloadReport = require('./services/close-previous-workload-report')
 const updateWorkloadReportEffectiveTo = require('./services/data/update-workload-report-effective-to')
-const wpcOperationType = require('./constants/calculation-tasks-operation-type')
+const operationTypes = require('./constants/calculation-tasks-operation-type')
 
 module.exports = function () {
   var batchSize = parseInt(config.ASYNC_WORKER_BATCH_SIZE, 10)
@@ -48,7 +48,7 @@ function executeWorkerForTaskType (worker, task) {
     .then(function () {
       return completeTaskWithStatus(task.id, taskStatus.COMPLETE)
       .then(function () {
-        if (task.type === taskType.CALCULATE_WORKLOAD_POINTS && task.additionalData.operationType === wpcOperationType.INSERT) {
+        if (task.type === taskType.CALCULATE_WORKLOAD_POINTS && task.additionalData.operationType === operationTypes.INSERT) {
           return countTaskStatuses(task)
           .then(function (totals) {
             if (totals.numPending === 0 && totals.numInProgress === 0 && totals.numFailed === 0) {
@@ -61,7 +61,7 @@ function executeWorkerForTaskType (worker, task) {
               })
             }
           })
-        } else if (task.type === taskType.CALCULATE_WORKLOAD_POINTS && task.additionalData.operationType === wpcOperationType.UPDATE) {
+        } else if (task.type === taskType.CALCULATE_WORKLOAD_POINTS && task.additionalData.operationType === operationTypes.UPDATE) {
           return callWebRefreshEndpoint()
         }
         log.info(`completed task: ${task.id}-${task.type}`)

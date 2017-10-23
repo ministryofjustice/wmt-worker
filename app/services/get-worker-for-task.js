@@ -5,6 +5,7 @@ var createWorkload = require('./workers/create-workload')
 var reductionsWorker = require('./workers/reductions-worker')
 var reductionsWorkerCourtReporters = require('./workers/court-reporters-reductions-worker')
 var adjustmentsWorker = require('./workers/adjustments-worker')
+var courtReportsCalculations = require('./workers/court-reports-calculations')
 
 // ALL WORKERS SHOULD HAVE A METHOD `execute(task)` that returns a Promise
 module.exports = function (taskType) {
@@ -15,6 +16,7 @@ module.exports = function (taskType) {
     case taskTypes.PROCESS_REDUCTIONS: return reductionsWorker
     case taskTypes.PROCESS_REDUCTIONS_COURT_REPORTERS: return reductionsWorkerCourtReporters
     case taskTypes.PROCESS_ADJUSTMENTS: return adjustmentsWorker
+    case taskType.COURT_REPORTS_CALCULATION: return courtReportsCalculations
   }
 
   return null

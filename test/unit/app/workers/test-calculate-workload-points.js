@@ -5,7 +5,7 @@ require('sinon-bluebird')
 const pointsHelper = require('wmt-probation-rules').pointsHelper
 
 const Batch = require('../../../../app/services/domain/batch')
-const wpcOperation = require('../../../../app/constants/calculation-tasks-operation-type')
+const operationTypes = require('../../../../app/constants/calculation-tasks-operation-type')
 const adjustmentCategory = require('../../../../app/constants/adjustment-category')
 
 const WORKLOAD_ID = 10
@@ -67,7 +67,7 @@ describe('services/workers/calculate-workload-points', function () {
       workloadReportId: REPORT_ID,
       additionalData: {
         workloadBatch: new Batch(WORKLOAD_ID, BATCH_SIZE),
-        operationType: wpcOperation.INSERT
+        operationType: operationTypes.INSERT
       }
     }
 
@@ -108,7 +108,7 @@ describe('services/workers/calculate-workload-points', function () {
       workloadReportId: REPORT_ID,
       additionalData: {
         workloadBatch: new Batch(WORKLOAD_ID, 1),
-        operationType: wpcOperation.INSERT
+        operationType: operationTypes.INSERT
       }}
     getAdjustmentPoints.resolves(0)
     var batchSize = 1
@@ -175,7 +175,7 @@ describe('services/workers/calculate-workload-points', function () {
       workloadReportId: REPORT_ID,
       additionalData: {
         workloadBatch: new Batch(WORKLOAD_ID, 1),
-        operationType: wpcOperation.UPDATE
+        operationType: operationTypes.UPDATE
       }
     }
 
