@@ -11,7 +11,7 @@ exports.seed = function (knex, Promise) {
     , SUM(tv.overdue_terminations_total) AS overdue_terminations_total
     , SUM(tv.unpaid_work_total) AS unpaid_work_total
     , MAX(l.id) AS id
-  FROM app.team_case_progress_view tv
+  FROM app.team_case_progress_view tv WITH (NOEXPAND)
     JOIN app.team t ON t.id = tv.id
     JOIN app.ldu l ON t.ldu_id = l.id
   GROUP BY t.id;`

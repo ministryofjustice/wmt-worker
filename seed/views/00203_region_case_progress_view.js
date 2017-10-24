@@ -4,15 +4,16 @@ exports.seed = function (knex, Promise) {
   AS
   SELECT 
       MAX(l.description) AS name
-    , SUM(lv.community_last_16_weeks) AS community_last_16_weeks
-    , SUM(lv.license_last_16_weeks) AS license_last_16_weeks
-    , SUM(lv.total_cases) AS total_cases
-    , SUM(lv.warrants_total) AS warrants_total
-    , SUM(lv.overdue_terminations_total) AS overdue_terminations_total
-    , SUM(lv.unpaid_work_total) AS unpaid_work_total
+    , SUM(tv.community_last_16_weeks) AS community_last_16_weeks
+    , SUM(tv.license_last_16_weeks) AS license_last_16_weeks
+    , SUM(tv.total_cases) AS total_cases
+    , SUM(tv.warrants_total) AS warrants_total
+    , SUM(tv.overdue_terminations_total) AS overdue_terminations_total
+    , SUM(tv.unpaid_work_total) AS unpaid_work_total
     , MAX(r.id) AS id
-  FROM app.ldu_case_progress_view lv
-    JOIN app.ldu l ON l.id = lv.id
+  FROM app.team_case_progress_view tv WITH (NOEXPAND)
+    JOIN app.team t ON t.id = tv.id
+    JOIN app.ldu l ON l.id = t.ldu_id
     JOIN app.region r ON r.id = l.region_id
   GROUP BY l.id;`
 
