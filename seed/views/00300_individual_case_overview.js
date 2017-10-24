@@ -10,7 +10,7 @@ exports.seed = function (knex, promise) {
     , wpc.available_points AS available_points
     , wpc.total_points AS total_points
     , w.total_cases AS total_cases
-    , wo.contracted_hours AS contracted_hours
+    , wpc.contracted_hours AS contracted_hours
     , wpc.reduction_hours AS reduction_hours
   FROM app.workload_owner wo
     JOIN app.team t ON wo.team_id = t.id
