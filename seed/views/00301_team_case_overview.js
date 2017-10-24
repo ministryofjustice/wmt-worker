@@ -8,7 +8,7 @@ exports.seed = function (knex, promise) {
     , w.total_cases AS total_cases
     , wpc.available_points AS available_points
     , wpc.total_points AS total_points
-    , wo.contracted_hours AS contracted_hours
+    , wpc.contracted_hours AS contracted_hours
     , wpc.reduction_hours AS reduction_hours
     , t.id AS id
     , wo.id AS link_id
