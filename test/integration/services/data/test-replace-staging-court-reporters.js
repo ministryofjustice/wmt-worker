@@ -36,6 +36,20 @@ describe('services/data/replace-staging-court-reporters', function () {
     })
   })
 
+  it('should remove any court reporters records and the table to remain empty if no replacement court reporters are passed in', function () {
+    return courtReportersHelper.getAllStagingCourtReporters()
+    .then(function (oldCourtReporters) {
+      expect(oldCourtReporters.length).to.be.greaterThan(0)
+      return replaceStagingCourtReporters([])
+    })
+    .then(function () {
+      return courtReportersHelper.getAllStagingCourtReporters()
+    })
+    .then(function (newCourtReporters) {
+      expect(newCourtReporters.length).to.eql(0)
+    })
+  })
+
   after(function () {
     return courtReportersHelper.removeDependencies(inserts)
   })

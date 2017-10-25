@@ -1,7 +1,5 @@
 const knex = require('../../../knex').stagingSchema
 
-// TODO: Maybe rename
-
 module.exports = function () {
   return knex('court_reports')
   .leftJoin('wmt_extract', function () {

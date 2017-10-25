@@ -56,6 +56,7 @@ var getCourtReportsTasks = function (tasks, batchSize, workloadReportId) {
     if (courtReportsTasksRequired > 0) {
       return createTaskObjects(tasks, taskType.CREATE_COURT_REPORTS, batchSize, idRange, workloadReportId)
     }
+    return tasks
   })
 }
 
@@ -67,6 +68,7 @@ var getWorkloadTasks = function (tasks, batchSize, workloadReportId) {
     if (workloadTasksRequired > 0) {
       return createTaskObjects(tasks, taskType.CREATE_WORKLOAD, batchSize, idRange, workloadReportId)
     }
+    return tasks
   })
 }
 

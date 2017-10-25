@@ -18,16 +18,14 @@ var replaceStagingCourtReporters
 const firstId = 1
 const lastId = 100
 const workloadReportId = 2
-const courtReporters = [
-
-]
+const courtReporters = []
 
 describe(relativeFilePath, function () {
   beforeEach(function () {
-    getCourtReportersRange = sinon.stub()
-    getWmtExtractRange = sinon.stub()
+    getCourtReportersRange = sinon.stub().resolves(new IdRange(firstId, lastId))
+    getWmtExtractRange = sinon.stub().resolves(new IdRange(firstId, lastId))
     insertWorkloadReportStub = sinon.stub().resolves(workloadReportId)
-    getCourtReportsWithNoWorkloads = sinon.stub()
+    getCourtReportsWithNoWorkloads = sinon.stub().resolves(courtReporters)
     replaceStagingCourtReporters = sinon.stub()
     createNewTasksStub = sinon.stub().resolves()
     processImport = proxyquire('../../../../app/' + relativeFilePath, {
@@ -52,10 +50,6 @@ describe(relativeFilePath, function () {
   })
 
   it('should retrieve court reporters who have no workload cases and call replaceCourtReporters with the result', function () {
-    getWmtExtractRange.resolves(new IdRange(firstId, lastId))
-    getCourtReportsWithNoWorkloads.resolves(courtReporters)
-    getCourtReportersRange.resolves(new IdRange(firstId, lastId))
-
     return processImport.execute({}).then(function () {
       expect(getCourtReportsWithNoWorkloads.called).to.be.equal(true)
       expect(replaceStagingCourtReporters.calledWith(courtReporters)).to.be.equal(true)
@@ -63,30 +57,18 @@ describe(relativeFilePath, function () {
   })
 
   it('should call the database to get the id range for court reporters', function () {
-    getWmtExtractRange.resolves(new IdRange(firstId, lastId))
-    getCourtReportsWithNoWorkloads.resolves(courtReporters)
-    getCourtReportersRange.resolves(new IdRange(firstId, lastId))
-
     return processImport.execute({}).then(function () {
       expect(getWmtExtractRange.called).to.be.equal(true)
     })
   })
 
   it('should call the database to get the id range for wmt extract', function () {
-    getWmtExtractRange.resolves(new IdRange(firstId, lastId))
-    getCourtReportsWithNoWorkloads.resolves(courtReporters)
-    getCourtReportersRange.resolves(new IdRange(firstId, lastId))
-
     return processImport.execute({}).then(function () {
       expect(getCourtReportersRange.called).to.be.equal(true)
     })
   })
 
   it('should create 40 tasks given a batch size of 5, with an id range of 100 for both court reporters and wmt extract', function () {
-    getWmtExtractRange.resolves(new IdRange(firstId, lastId))
-    getCourtReportsWithNoWorkloads.resolves(courtReporters)
-    getCourtReportersRange.resolves(new IdRange(firstId, lastId))
-
     return processImport.execute({}).then(function () {
       var createdTasks = createNewTasksStub.getCall(0).args[0]
       expect(createdTasks.length).to.equal(40)
@@ -99,11 +81,28 @@ describe(relativeFilePath, function () {
     })
   })
 
-  it('should store the generated workload report id in the created tasks', function () {
-    getWmtExtractRange.resolves(new IdRange(firstId, lastId))
-    getCourtReportsWithNoWorkloads.resolves(courtReporters)
-    getCourtReportersRange.resolves(new IdRange(firstId, lastId))
+  it('should create 0 CREATE-COURT-REPORTS tasks given a batch size of 5, when the court reporters table is empty (i.e. firstId and lastId are null)', function () {
+    getCourtReportersRange.resolves(new IdRange(null, null))
 
+    return processImport.execute({}).then(function () {
+      var createdTasks = createNewTasksStub.getCall(0).args[0]
+      expect(createdTasks.length).to.equal(20)
+      for (var i = 1; i < createdTasks.length - 1; i++) {
+        expect(createdTasks[i].type).to.equal(taskType.CREATE_WORKLOAD)
+      }
+    })
+  })
+
+  it('should create 0 tasks when the court reporters and wmt extract tables are empty (i.e. firstId and lastId are null)', function () {
+    getWmtExtractRange.resolves(new IdRange(null, null))
+    getCourtReportersRange.resolves(new IdRange(null, null))
+
+    return processImport.execute({}).then(function () {
+      expect(createNewTasksStub.called).to.be.equal(false)
+    })
+  })
+
+  it('should store the generated workload report id in the created tasks', function () {
     return processImport.execute({}).then(function () {
       var tasksCreated = createNewTasksStub.getCall(0).args[0]
       tasksCreated.forEach(function (task) {
@@ -112,6 +111,3 @@ describe(relativeFilePath, function () {
     })
   })
 })
-
-// TODO: Edge cases - no id range etc
-// Different resolves
