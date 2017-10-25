@@ -26,7 +26,7 @@ module.exports.execute = function (task) {
         var courtReportToInsert = mapCourtReports(stagingCourtReport, parseInt(workloadOwnerId), parseInt(workloadReportId))
         return insertCourtReports(courtReportToInsert)
         .then(function (insertedId) {
-          logger.info('Court Report with id:' + insertedId + ' added')
+          logger.info('Court Report with id ' + insertedId + ' added')
         })
       })
     })
