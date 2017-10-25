@@ -8,6 +8,7 @@ const DefaultContractedHours = require('wmt-probation-rules').DefaultContractedH
 module.exports = function (isT2a) {
   return knex('workload_points')
     .orderBy('effective_from', 'desc')
+    .whereNull('effective_to')
     .where('is_t2a', isT2a)
     .first()
     .then(function (result) {

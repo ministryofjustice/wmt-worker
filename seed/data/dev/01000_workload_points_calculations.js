@@ -3,7 +3,8 @@ var tableName = 'workload_points_calculations'
 exports.seed = function (knex, Promise) {
   var existingReportIds
   var currentPointsId
-    // Deletes ALL existing entries
+  var currentT2aPointsId
+  // Deletes ALL existing entries
   return knex(tableName).del()
     .then(function () {
       return knex('workload_report').select('id')
@@ -14,6 +15,10 @@ exports.seed = function (knex, Promise) {
     })
     .then(function (workloadPointsId) {
       currentPointsId = workloadPointsId
+      return knex('workload_points').select('id').first().where('is_t2a', true)
+    })
+    .then(function (t2aWorkloadPintsId) {
+      currentT2aPointsId = t2aWorkloadPintsId
       return knex('workload_owner')
         .join('workload', 'workload_owner.id', 'workload.workload_owner_id')
         .max('workload.id AS id')
@@ -22,7 +27,7 @@ exports.seed = function (knex, Promise) {
     .then(function (workloadIds) {
       var effectiveFromDate = new Date()
       effectiveFromDate.setDate(effectiveFromDate.getDate() - 365)
-        // Inserts seed entries
+      // Inserts seed entries
 
       var workloadPointsCalculationsToInsert = []
 
@@ -35,6 +40,7 @@ exports.seed = function (knex, Promise) {
             workload_id: workloadId.id,
             workload_report_id: reportId.id,
             workload_points_id: currentPointsId.id,
+            t2a_workload_points_id: currentT2aPointsId.id,
             total_points: Math.floor(Math.random() * 25) + 200,
             available_points: 190,
             paroms_points: 50,

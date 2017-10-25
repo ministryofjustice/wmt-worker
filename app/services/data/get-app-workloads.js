@@ -35,6 +35,10 @@ module.exports = function (initialId, maxId, batchSize, workloadReportId) {
               'tiers.warrants_total',
               'tiers.unpaid_work_total',
               'tiers.overdue_terminations_total',
+              'tiers.t2a_total_cases AS t2a_tiers_total_cases',
+              'tiers.t2a_warrants_total',
+              'tiers.t2a_unpaid_work_total',
+              'tiers.t2a_overdue_terminations_total',
               'tiers.location',
               'tiers.tier_number'
               )
