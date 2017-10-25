@@ -1,33 +1,41 @@
 exports.seed = function (knex, Promise) {
-  var sql = `CREATE VIEW app.ldu_caseload_view
-      WITH SCHEMABINDING
-      AS
-      SELECT     
-          t.ldu_id AS id
-        , t.id AS link_id
-        , t.description AS name
-        , grade_code
-        , case_type
-        , SUM([0]) AS untiered
-        , SUM([1]) AS d2
-        , SUM([2]) AS d1
-        , SUM([3]) AS c2
-        , SUM([4]) AS c1
-        , SUM([5]) AS b2
-        , SUM([6]) AS b1
-        , SUM([7]) AS a
-        , SUM([0] + [1] + [2] + [3] + [4] + [5] + [6] + [7]) AS total_cases
-      FROM app.caseload_base_view AS total_per_workload WITH (NOEXPAND)
-      PIVOT (
-        SUM(tier_number_totals)
-        FOR tier_number
-        IN ([0],[1],[2],[3],[4],[5],[6],[7])
-      ) AS pivoted
-      JOIN app.team t ON t.id = pivoted.id
-      GROUP BY t.id, t.ldu_id, t.description, pivoted.case_type, pivoted.grade_code;`
+  var view = `CREATE VIEW app.ldu_caseload_view
+  WITH SCHEMABINDING
+  AS
+  SELECT
+      t.ldu_id AS id
+    , t.id AS link_id
+    , t.description AS name
+    , omt.grade_code
+    , tr.location
+    , SUM(CASE WHEN tr.tier_number = 0 THEN tr.total_cases ELSE 0 END) AS untiered
+    , SUM(CASE WHEN tr.tier_number = 1 THEN tr.total_cases ELSE 0 END) AS d2
+    , SUM(CASE WHEN tr.tier_number = 2 THEN tr.total_cases ELSE 0 END) AS d1
+    , SUM(CASE WHEN tr.tier_number = 3 THEN tr.total_cases ELSE 0 END) AS c2
+    , SUM(CASE WHEN tr.tier_number = 4 THEN tr.total_cases ELSE 0 END) AS c1
+    , SUM(CASE WHEN tr.tier_number = 5 THEN tr.total_cases ELSE 0 END) AS b2
+    , SUM(CASE WHEN tr.tier_number = 6 THEN tr.total_cases ELSE 0 END) AS b1
+    , SUM(CASE WHEN tr.tier_number = 7 THEN tr.total_cases ELSE 0 END) AS a
+    , SUM(tr.total_cases) AS total_cases
+    , COUNT_BIG(*) AS count
+  FROM app.tiers tr
+      JOIN app.workload w ON tr.workload_id = w.id
+      JOIN app.workload_points_calculations wpc ON wpc.workload_id = w.id
+      JOIN app.workload_report wr ON wr.id = wpc.workload_report_id
+      JOIN app.workload_owner wo ON wo.id = w.workload_owner_id
+      JOIN app.team t ON t.id = wo.team_id
+      JOIN app.offender_manager om ON om.id = wo.offender_manager_id
+      JOIN app.offender_manager_type omt ON omt.id = om.type_id
+  WHERE wr.effective_from IS NOT NULL
+      AND wr.effective_to IS NULL
+  GROUP BY t.ldu_id, t.id, t.description, omt.grade_code, tr.location;`
+
+  var index = `CREATE UNIQUE CLUSTERED INDEX idx_ldu_caseload_view
+  ON app.ldu_caseload_view (link_id, location, grade_code)`
 
   return knex.schema
     .raw('DROP VIEW IF EXISTS app.ldu_caseload_view;')
     .raw('SET ARITHABORT ON')
-    .raw(sql)
+    .raw(view)
+    .raw(index)
 }

@@ -1,32 +1,42 @@
 exports.seed = function (knex, Promise) {
-  var sql = `CREATE VIEW app.team_caseload_view
+  var view = `CREATE VIEW app.team_caseload_view
   WITH SCHEMABINDING
   AS
   SELECT
-    id
-    , link_id
-    , CONCAT(forename, ' ',  surname) AS name
-    , grade_code
-    , [0] AS untiered
-    , [1] AS d2
-    , [2] AS d1
-    , [3] AS c2
-    , [4] AS c1
-    , [5] AS b2
-    , [6] AS b1
-    , [7] AS a
-    , case_type
-    , [0] + [1] + [2] + [3] + [4] + [5] + [6] + [7] AS total_cases
-  FROM app.caseload_base_view AS total_per_workload WITH (NOEXPAND)
-  PIVOT (
-    SUM(tier_number_totals)
-    FOR tier_number
-    IN ([0],[1],[2],[3],[4],[5],[6],[7])
-  ) AS pivoted;`
+      wo.team_id AS id
+    , wo.id AS link_id
+    , om.forename
+    , om.surname
+    , omt.grade_code
+    , tr.location
+    , SUM(CASE WHEN tr.tier_number = 0 THEN tr.total_cases ELSE 0 END) AS untiered
+    , SUM(CASE WHEN tr.tier_number = 1 THEN tr.total_cases ELSE 0 END) AS d2
+    , SUM(CASE WHEN tr.tier_number = 2 THEN tr.total_cases ELSE 0 END) AS d1
+    , SUM(CASE WHEN tr.tier_number = 3 THEN tr.total_cases ELSE 0 END) AS c2
+    , SUM(CASE WHEN tr.tier_number = 4 THEN tr.total_cases ELSE 0 END) AS c1
+    , SUM(CASE WHEN tr.tier_number = 5 THEN tr.total_cases ELSE 0 END) AS b2
+    , SUM(CASE WHEN tr.tier_number = 6 THEN tr.total_cases ELSE 0 END) AS b1
+    , SUM(CASE WHEN tr.tier_number = 7 THEN tr.total_cases ELSE 0 END) AS a
+    , SUM(tr.total_cases) AS total_cases
+    , COUNT_BIG(*) AS count
+  FROM app.tiers tr
+      JOIN app.workload w ON tr.workload_id = w.id
+      JOIN app.workload_points_calculations wpc ON wpc.workload_id = w.id
+      JOIN app.workload_report wr ON wr.id = wpc.workload_report_id
+      JOIN app.workload_owner wo ON wo.id = w.workload_owner_id
+      JOIN app.offender_manager om ON om.id = wo.offender_manager_id
+      JOIN app.offender_manager_type omt ON omt.id = om.type_id
+  WHERE wr.effective_from IS NOT NULL
+      AND wr.effective_to IS NULL
+  GROUP BY wo.team_id, wo.id, om.forename, om.surname, omt.grade_code, tr.location;`
+
+  var index = `CREATE UNIQUE CLUSTERED INDEX idx_team_caseload_view
+  ON app.team_caseload_view (link_id, location, grade_code)`
 
   return knex.schema
     .raw('DROP VIEW IF EXISTS app.team_caseload_view;')
     .raw('DROP VIEW IF EXISTS app.team_caseload_overview;') // Old view name
     .raw('SET ARITHABORT ON')
-    .raw(sql)
+    .raw(view)
+    .raw(index)
 }
