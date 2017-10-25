@@ -6,7 +6,7 @@ const getWorkloadPoints = require('../../../../app/services/data/get-workload-po
 const CaseTypeWeightings = require('wmt-probation-rules').CaseTypeWeightings
 
 var inserts = []
-var isT2a = false
+var isT2A = false
 
 describe('services/data/get-workload-points', function () {
   before(function (done) {
@@ -17,8 +17,8 @@ describe('services/data/get-workload-points', function () {
       })
   })
 
-  xit('retrieves the latest points configuration (non-t2a)', function (done) {
-    getWorkloadPoints(isT2a).then(function (result) {
+  it('retrieves the latest points configuration', function (done) {
+    getWorkloadPoints(isT2A).then(function (result) {
       var points = result.values
       expect(points).to.be.an.instanceof(CaseTypeWeightings)
       var commPointsConf = points.pointsConfiguration.communityTierPointsConfig
@@ -65,14 +65,13 @@ describe('services/data/get-workload-points', function () {
 
       expect(points.pointsConfiguration.paromsEnabled).to.equal(true)
       expect(points.pointsConfiguration.parom).to.equal(31)
-      expect(points.pointsConfiguration.isT2a).to.equal(false)
       done()
     })
   })
 
-  xit('retrieves the latest t2a points configuration', function (done) {
-    isT2a = true
-    getWorkloadPoints(isT2a).then(function (result) {
+  it('retrieves the latest t2a points configuration', function (done) {
+    isT2A = true
+    getWorkloadPoints(isT2A).then(function (result) {
       var points = result.values
       expect(points).to.be.an.instanceof(CaseTypeWeightings)
       var commPointsConf = points.pointsConfiguration.communityTierPointsConfig
@@ -117,9 +116,8 @@ describe('services/data/get-workload-points', function () {
       expect(points.armsLicense).to.equal(0)
       expect(points.armsCommunity).to.equal(0)
 
-      expect(points.pointsConfiguration.paromsEnabled).to.equal(true)
+      expect(points.pointsConfiguration.paromsEnabled).to.equal(false)
       expect(points.pointsConfiguration.parom).to.equal(0)
-      expect(points.pointsConfiguration.isT2a).to.equal(true)
       done()
     })
   })

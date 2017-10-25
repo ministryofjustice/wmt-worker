@@ -49,13 +49,11 @@ describe('services/data/get-staging-workload', function () {
     caseSummaryReport.armsCommunityCases = 3
     caseSummaryReport.armsLicenseCases = 2
 
-    var emptyOralReports // TODO when workreport is contains oral reports
-
     return getStagingWorkload([firstId, lastId])
     .then(function (omWorkload) {
       expect(omWorkload.length).to.be.equal(1)
       expect(omWorkload[0].casesSummary).to.deep.eq(caseSummaryReport)
-      expect(omWorkload[0].courtReports).to.deep.eq(Object.assign({}, courtReport, { oralReports: emptyOralReports }))
+      expect(omWorkload[0].courtReports).to.deep.eq(Object.assign({}, courtReport, { oralReports: undefined }))
       expect(omWorkload[0].instReports).to.deep.eq(institutionReport)
     })
   })

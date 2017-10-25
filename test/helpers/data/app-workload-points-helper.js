@@ -2,47 +2,29 @@ const knex = require('../../../knex').appSchema
 var Promise = require('bluebird').Promise
 
 module.exports.insertDependencies = function (inserts) {
-  return knex('workload_points').returning('id').insert({
-    comm_tier_1: 0,
-    comm_tier_2: 0,
-    comm_tier_3: 0,
-    comm_tier_4: 0,
-    comm_tier_5: 0,
-    comm_tier_6: 0,
-    comm_tier_7: 0,
-    cust_tier_1: 0,
-    cust_tier_2: 0,
-    cust_tier_3: 0,
-    cust_tier_4: 0,
-    cust_tier_5: 0,
-    cust_tier_6: 0,
-    cust_tier_7: 0,
-    lic_tier_1: 0,
-    lic_tier_2: 0,
-    lic_tier_3: 0,
-    lic_tier_4: 0,
-    lic_tier_5: 0,
-    lic_tier_6: 0,
-    lic_tier_7: 0,
-    user_id: 0,
-    sdr: 0,
-    sdr_conversion: 0,
-    nominal_target_spo: 0,
-    nominal_target_po: 0,
-    default_contracted_hours_po: 0,
-    default_contracted_hours_pso: 0,
-    weighting_o: 0,
-    weighting_w: 0,
-    weighting_u: 0,
-    weighting_arms_lic: 0,
-    weighting_arms_comm: 0,
-    paroms_enabled: 0,
-    parom: 0,
-    is_t2a: false
+  var workloadPoints = module.exports.getWorkloadPoints()
+  return knex('workload_points').returning('id').insert(workloadPoints)
+    .then(function (ids) {
+      ids.forEach((id) => {
+        inserts.push({ table: 'workload_points', id: id })
+      })
+      return inserts
+    }).catch((error) => {
+      console.error(error)
+      exports.removeDependencies(inserts)
+    })
+}
+
+module.exports.removeDependencies = function (inserts) {
+  inserts = inserts.reverse()
+  return Promise.each(inserts, (insert) => {
+    return knex(insert.table).where('id', insert.id).del()
   })
-  .then(function (ids) {
-    inserts.push({table: 'workload_points', id: ids[0]})
-    return knex('workload_points').returning('id').insert({
+}
+
+module.exports.getWorkloadPoints = function () {
+  return [
+    {
       comm_tier_1: 1,
       comm_tier_2: 2,
       comm_tier_3: 3,
@@ -74,16 +56,13 @@ module.exports.insertDependencies = function (inserts) {
       weighting_o: 28,
       weighting_w: 29,
       weighting_u: 30,
-      paroms_enabled: 1,
-      parom: 31,
       weighting_arms_lic: 32,
       weighting_arms_comm: 33,
+      paroms_enabled: 1,
+      parom: 31,
       is_t2a: false
-    })
-  })
-  .then(function (ids) {
-    inserts.push({table: 'workload_points', id: ids[0]})
-    return knex('workload_points').returning('id').insert({
+    },
+    {
       comm_tier_1: 5,
       comm_tier_2: 6,
       comm_tier_3: 7,
@@ -115,22 +94,11 @@ module.exports.insertDependencies = function (inserts) {
       weighting_o: 25,
       weighting_w: 26,
       weighting_u: 27,
-      paroms_enabled: 0,
-      parom: 0,
       weighting_arms_lic: 0,
       weighting_arms_comm: 0,
+      paroms_enabled: 0,
+      parom: 0,
       is_t2a: true
-    })
-  })
-    .then(function (ids) {
-      inserts.push({table: 'workload_points', id: ids[0]})
-      return inserts
-    })
-}
-
-module.exports.removeDependencies = function (inserts) {
-  inserts = inserts.reverse()
-  return Promise.each(inserts, (insert) => {
-    return knex(insert.table).where('id', insert.id).del()
-  })
+    }
+  ]
 }

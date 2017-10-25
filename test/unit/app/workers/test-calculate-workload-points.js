@@ -8,6 +8,8 @@ const Batch = require('../../../../app/services/domain/batch')
 const wpcOperation = require('../../../../app/constants/calculate-workload-points-operation')
 const adjustmentCategory = require('../../../../app/constants/adjustment-category')
 
+const T2A_WORKLOAD_POINTS_ID = 10
+const WORKLOAD_POINTS_ID = 10
 const WORKLOAD_ID = 10
 const BATCH_SIZE = 20
 const MAX_ID = WORKLOAD_ID + BATCH_SIZE - 1
@@ -132,7 +134,7 @@ describe('services/workers/calculate-workload-points', function () {
 
     return calculateWorkloadPoints.execute(task).then(function () {
       expect(
-        insertWorkloadPointsCalculationsStub.calledWith(REPORT_ID, WORKLOAD_ID, WORKLOAD_ID, WORKLOAD_ID, expectedTotalPoints, SDR_POINTS, SDR_POINTS,
+        insertWorkloadPointsCalculationsStub.calledWith(REPORT_ID, WORKLOAD_POINTS_ID, T2A_WORKLOAD_POINTS_ID, WORKLOAD_ID, expectedTotalPoints, SDR_POINTS, SDR_POINTS,
           PAROM_POINTS, NOMINAL_TARGET, AVAILABLE_POINTS, CONTRACTED_HOURS, REDUCTION_HOURS, CMS_POINTS_POSITIVE, 0, ARMS_CASES)
       ).to.equal(true)
     })
@@ -146,7 +148,7 @@ describe('services/workers/calculate-workload-points', function () {
 
     return calculateWorkloadPoints.execute(task).then(function () {
       expect(
-        insertWorkloadPointsCalculationsStub.calledWith(REPORT_ID, WORKLOAD_ID, WORKLOAD_ID, WORKLOAD_ID, expectedTotalPoints, SDR_POINTS, SDR_POINTS,
+        insertWorkloadPointsCalculationsStub.calledWith(REPORT_ID, WORKLOAD_POINTS_ID, T2A_WORKLOAD_POINTS_ID, WORKLOAD_ID, expectedTotalPoints, SDR_POINTS, SDR_POINTS,
           PAROM_POINTS, NOMINAL_TARGET, AVAILABLE_POINTS, CONTRACTED_HOURS, REDUCTION_HOURS, CMS_POINTS_NEGATIVE, 0, ARMS_CASES)
       ).to.equal(true)
     })
@@ -160,7 +162,7 @@ describe('services/workers/calculate-workload-points', function () {
 
     return calculateWorkloadPoints.execute(task).then(function () {
       expect(
-        insertWorkloadPointsCalculationsStub.calledWith(REPORT_ID, WORKLOAD_ID, WORKLOAD_ID, WORKLOAD_ID, expectedTotalPoints, SDR_POINTS, SDR_POINTS,
+        insertWorkloadPointsCalculationsStub.calledWith(REPORT_ID, WORKLOAD_POINTS_ID, T2A_WORKLOAD_POINTS_ID, WORKLOAD_ID, expectedTotalPoints, SDR_POINTS, SDR_POINTS,
           PAROM_POINTS, NOMINAL_TARGET, AVAILABLE_POINTS, CONTRACTED_HOURS, REDUCTION_HOURS, 0, GS_POINTS, ARMS_CASES)
       ).to.equal(true)
     })
@@ -183,7 +185,7 @@ describe('services/workers/calculate-workload-points', function () {
 
     return calculateWorkloadPoints.execute(task).then(function () {
       expect(
-        updateWorkloadPointsCalculationsStub.calledWith(REPORT_ID, WORKLOAD_ID, WORKLOAD_ID, WORKLOAD_ID, expectedTotalPoints, SDR_POINTS, SDR_POINTS,
+        updateWorkloadPointsCalculationsStub.calledWith(REPORT_ID, WORKLOAD_POINTS_ID, T2A_WORKLOAD_POINTS_ID, WORKLOAD_ID, expectedTotalPoints, SDR_POINTS, SDR_POINTS,
           PAROM_POINTS, NOMINAL_TARGET, AVAILABLE_POINTS, CONTRACTED_HOURS, REDUCTION_HOURS, 0, GS_POINTS, ARMS_CASES)
       ).to.equal(true)
     })
