@@ -3,23 +3,28 @@ exports.seed = function (knex, Promise) {
       WITH SCHEMABINDING
       AS
       SELECT     
-        MAX(t.ldu_id) AS id
+          t.ldu_id AS id
         , t.id AS link_id
-        , MAX(t.description) AS name
+        , t.description AS name
         , grade_code
         , case_type
-        , SUM(untiered) AS untiered
-        , SUM(d2) AS d2
-        , SUM(d1) AS d1
-        , SUM(c2) AS c2
-        , SUM(c1) AS c1
-        , SUM(b2) AS b2
-        , SUM(b1) AS b1
-        , SUM(a) AS a
-        , SUM(total_cases) AS total_cases
-      FROM app.team_caseload_view tv   
-        JOIN app.team t ON t.id = tv.id
-      GROUP BY t.id, tv.case_type, tv.grade_code;`
+        , SUM([0]) AS untiered
+        , SUM([1]) AS d2
+        , SUM([2]) AS d1
+        , SUM([3]) AS c2
+        , SUM([4]) AS c1
+        , SUM([5]) AS b2
+        , SUM([6]) AS b1
+        , SUM([7]) AS a
+        , SUM([0] + [1] + [2] + [3] + [4] + [5] + [6] + [7]) AS total_cases
+      FROM app.caseload_base_view AS total_per_workload WITH (NOEXPAND)
+      PIVOT (
+        SUM(tier_number_totals)
+        FOR tier_number
+        IN ([0],[1],[2],[3],[4],[5],[6],[7])
+      ) AS pivoted
+      JOIN app.team t ON t.id = pivoted.id
+      GROUP BY t.id, t.ldu_id, t.description, pivoted.case_type, pivoted.grade_code;`
 
   return knex.schema
     .raw('DROP VIEW IF EXISTS app.ldu_caseload_view;')
