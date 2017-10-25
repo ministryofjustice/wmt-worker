@@ -26,10 +26,10 @@ module.exports.execute = function (task) {
     return populateStagingCourtReporters()
   })
   .then(function () {
-    return getCourtReportsTasks(tasks, batchSize, workloadReportId)
+    return createAndGetCourtReportsTaskObjects(tasks, batchSize, workloadReportId)
   })
   .then(function (tasks) {
-    return getWorkloadTasks(tasks, batchSize, workloadReportId)
+    return createAndGetWorkloadTaskObjects(tasks, batchSize, workloadReportId)
   })
   .then(function (tasks) {
     if (tasks.length > 0) {
@@ -48,7 +48,7 @@ var populateStagingCourtReporters = function () {
   })
 }
 
-var getCourtReportsTasks = function (tasks, batchSize, workloadReportId) {
+var createAndGetCourtReportsTaskObjects = function (tasks, batchSize, workloadReportId) {
   return getCourtReportersIdRange().then(function (idRange) {
     var numberOfRecordsToProcess = idRange.lastId - idRange.firstId
     var courtReportsTasksRequired = Math.ceil(numberOfRecordsToProcess / batchSize)
@@ -60,7 +60,7 @@ var getCourtReportsTasks = function (tasks, batchSize, workloadReportId) {
   })
 }
 
-var getWorkloadTasks = function (tasks, batchSize, workloadReportId) {
+var createAndGetWorkloadTaskObjects = function (tasks, batchSize, workloadReportId) {
   return getWmtExtractIdRange().then(function (idRange) {
     var numberOfRecordsToProcess = idRange.lastId - idRange.firstId
     var workloadTasksRequired = Math.ceil(numberOfRecordsToProcess / batchSize)

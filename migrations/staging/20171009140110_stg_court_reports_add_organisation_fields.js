@@ -9,7 +9,6 @@ exports.up = function (knex, Promise) {
     table.string('om_surname')
     table.string('om_forename')
     table.string('om_grade_code')
-    table.string('oral_reports')
     table.dropColumn('om_name')
   }).catch(function (error) {
     console.log(error)
@@ -27,7 +26,6 @@ exports.down = function (knex, Promise) {
     table.dropColumn('om_surname')
     table.dropColumn('om_forename')
     table.dropColumn('om_grade_code')
-    table.dropColumn('oral_reports')
     table.string('om_name')
   })
 }
