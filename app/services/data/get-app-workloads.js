@@ -58,6 +58,11 @@ module.exports = function (initialId, maxId, batchSize, workloadReportId) {
               LICENSE: new Array(8),
               CUSTODY: new Array(8)
             }
+            tempWorkloads[index].T2A = {
+              COMMUNITY: new Array(8),
+              LICENSE: new Array(8),
+              CUSTODY: new Array(8)
+            }
             tempWorkloads[index].id = row.id
             tempWorkloads[index].stagingId = row.staging_id
             tempWorkloads[index].workloadReportId = workloadReportId
@@ -85,11 +90,13 @@ module.exports = function (initialId, maxId, batchSize, workloadReportId) {
                           row.tiers_total_cases,
                           row.warrants_total,
                           row.unpaid_work_total,
-                          row.overdue_terminations_total,
-                          row.t2a_tiers_total_cases,
-                          row.t2a_warrants_total,
-                          row.t2a_unpaid_work_total,
-                          row.t2a_overdue_terminations_total)
+                          row.overdue_terminations_total)
+
+          tempWorkloads[index].T2A[row.location][row.tier_number] = new TierCounts(
+                            row.t2a_tiers_total_cases,
+                            row.t2a_warrants_total,
+                            row.t2a_unpaid_work_total,
+                            row.t2a_overdue_terminations_total)
         })
 
         var workloads = []
@@ -108,9 +115,9 @@ module.exports = function (initialId, maxId, batchSize, workloadReportId) {
               new Tiers(Locations.CUSTODY, ...tempWorkload[Locations.CUSTODY], tempWorkload.totalCustodyCases),
               new Tiers(Locations.COMMUNITY, ...tempWorkload[Locations.COMMUNITY], tempWorkload.totalCommunityCases),
               new Tiers(Locations.LICENSE, ...tempWorkload[Locations.LICENSE], tempWorkload.totalLicenseCases),
-              new Tiers(Locations.CUSTODY, ...tempWorkload[Locations.CUSTODY], tempWorkload.totalT2aCustodyCases),
-              new Tiers(Locations.COMMUNITY, ...tempWorkload[Locations.COMMUNITY], tempWorkload.totalT2aCommunityCases),
-              new Tiers(Locations.LICENSE, ...tempWorkload[Locations.LICENSE], tempWorkload.totalT2aLicenseCases),
+              new Tiers(Locations.CUSTODY, ...tempWorkload.T2A[Locations.CUSTODY], tempWorkload.totalT2aCustodyCases),
+              new Tiers(Locations.COMMUNITY, ...tempWorkload.T2A[Locations.COMMUNITY], tempWorkload.totalT2aCommunityCases),
+              new Tiers(Locations.LICENSE, ...tempWorkload.T2A[Locations.LICENSE], tempWorkload.totalT2aLicenseCases),
               tempWorkload.licenseCasesLast16Weeks,
               tempWorkload.communityCasesLast16Weeks,
               tempWorkload.armsCommunityCases,
