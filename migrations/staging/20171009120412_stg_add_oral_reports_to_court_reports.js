@@ -1,4 +1,3 @@
-
 exports.up = function (knex, Promise) {
   return knex.schema.withSchema('staging').table('court_reports', function (table) {
     table.string('oral_reports')

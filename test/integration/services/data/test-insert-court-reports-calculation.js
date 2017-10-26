@@ -1,7 +1,7 @@
 const knex = require('../../../../knex').appSchema
 const expect = require('chai').expect
 
-const helper = require('../../../helpers/data/app-workload-owner-helper')
+const helper = require('../../../helpers/data/app-court-reports-helper')
 const insertCourtReportsCalculations = require('../../../../app/services/data/insert-court-reports-calculation')
 
 var inserts = []
@@ -19,12 +19,12 @@ describe('services/data/insert-court-reports-calculation', function () {
     .then(function (workloadPointsId) {
       return knex('workload_report').whereNull('effective_to').first('id')
       .then(function (workloadReportId) {
-        return knex('court_reports').first('id')
+        return knex('court_reports').max('id AS id')
         .then(function (courtReportsId) {
           var insertObject = {
             workloadReportId: workloadReportId.id,
             workloadPointsId: workloadPointsId.id,
-            courtReportsId: courtReportsId.id,
+            courtReportsId: courtReportsId[0].id,
             contractedHours: 37,
             reductionHours: 7
           }

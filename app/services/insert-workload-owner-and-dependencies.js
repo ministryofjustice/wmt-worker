@@ -39,7 +39,7 @@ module.exports = function (caseSummary) {
             undefined,
             parseInt(regionId),
             caseSummary.lduCode,
-            caseSummary.teamDesc
+            caseSummary.lduDesc
           )
         )
         .then(function (lduId) {

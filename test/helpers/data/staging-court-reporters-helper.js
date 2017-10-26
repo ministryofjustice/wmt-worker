@@ -36,3 +36,32 @@ module.exports.defaultCourtReporter = {
   oral_reports: '4',
   datestamp: 'datestamp'
 }
+
+module.exports.newCourtReporters = [
+  Object.assign({}, module.exports.defaultCourtReporter, { om_key: 'OM01' }),
+  Object.assign({}, module.exports.defaultCourtReporter, { om_key: 'OM02' }),
+  Object.assign({}, module.exports.defaultCourtReporter, { om_key: 'OM03' }),
+  Object.assign({}, module.exports.defaultCourtReporter, { om_key: 'OM04' })
+]
+
+module.exports.getAllStagingCourtReporters = function () {
+  return knex('court_reporters')
+    .select(
+      'trust',
+      'region_desc',
+      'region_code',
+      'ldu_desc',
+      'ldu_code',
+      'team_desc',
+      'team_code',
+      'om_surname',
+      'om_forename',
+      'om_grade_code',
+      'om_key',
+      'sdr_last_30',
+      'sdr_due_next_30',
+      'sdr_conv_last_30',
+      'oral_reports',
+      'datestamp'
+    )
+}
