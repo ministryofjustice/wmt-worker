@@ -49,7 +49,7 @@ module.exports = function (range) {
     't2a.custtierc1 AS t2a_custtierc1', 't2a.custtierb2 AS t2a_custtierb2',
     't2a.custtierb1 AS t2a_custtierb1', 't2a.custtiera AS t2a_custtiera',
     'court_reports.om_team_staff_grade', 'court_reports.sdr_last_30', 'court_reports.sdr_due_next_30',
-    'court_reports.sdr_conv_last_30', 'court_reports.oral_reports', 
+    'court_reports.sdr_conv_last_30', 'court_reports.oral_reports',
     'inst_reports.parom_due_next_30', 'inst_reports.parom_comp_last_30')
     .then(function (results) {
       if (results !== 'undefined' && results.length > 0) {
