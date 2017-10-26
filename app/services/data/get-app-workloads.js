@@ -21,6 +21,7 @@ module.exports = function (initialId, maxId, batchSize, workloadReportId) {
               'workload.monthly_sdrs',
               'workload.sdr_conversions_last_30_days',
               'workload.sdr_due_next_30_days',
+              'workload.oral_reports',
               'workload.paroms_due_next_30_days',
               'workload.paroms_completed_last_30_days',
               'workload.license_last_16_weeks',
@@ -63,6 +64,7 @@ module.exports = function (initialId, maxId, batchSize, workloadReportId) {
             tempWorkloads[index].monthlySdrs = row.monthly_sdrs
             tempWorkloads[index].sdrConversionsLast30Days = row.sdr_conversions_last_30_days
             tempWorkloads[index].sdrsDueNext30Days = row.sdr_due_next_30_days
+            tempWorkloads[index].oralReports = row.oral_reports
             tempWorkloads[index].communityCasesLast16Weeks = row.community_last_16_weeks
             tempWorkloads[index].licenseCasesLast16Weeks = row.license_last_16_weeks
             tempWorkloads[index].armsCommunityCases = row.arms_community_cases
@@ -86,6 +88,7 @@ module.exports = function (initialId, maxId, batchSize, workloadReportId) {
               tempWorkload.monthlySdrs,
               tempWorkload.sdrsDueNext30Days,
               tempWorkload.sdrConversionsLast30Days,
+              tempWorkload.oralReports,
               tempWorkload.paromsCompletedLast30Days,
               tempWorkload.paromsDueNext30Days,
               new Tiers(Locations.CUSTODY, ...tempWorkload[Locations.CUSTODY], tempWorkload.totalCustodyCases),
