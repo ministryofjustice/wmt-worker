@@ -6,6 +6,7 @@ const workloadRow = {
   monthly_sdrs: 1,
   sdr_due_next_30_days: 2,
   sdr_conversions_last_30_days: 1,
+  oral_reports: 3,
   total_community_cases: 21,
   total_custody_cases: 23,
   total_license_cases: 25,

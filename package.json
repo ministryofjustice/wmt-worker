@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node start.js",
     "unit-test": "standard && mocha --recursive -u exports test/unit/",
-    "integration-test": "mocha --recursive -u exports test/integration/ --timeout 15000",
+    "integration-test": "mocha --recursive -u exports test/integration/ --timeout 40000",
     "test-all": "yarn test && yarn test-integration",
     "test": "yarn unit-test && yarn integration-test",
     "create-views": "knex seed:run --env views",
@@ -56,6 +56,6 @@
     "mssql": "3.3.0",
     "request": "^2.81.0",
     "request-promise": "^4.2.1",
-    "wmt-probation-rules": "ministryofjustice/wmt-probation-rules.git#v0.4.0"
+    "wmt-probation-rules": "ministryofjustice/wmt-probation-rules.git#feature/wmt-175/court-reports-for-oms"
   }
 }

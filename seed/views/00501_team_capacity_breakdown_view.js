@@ -9,6 +9,10 @@ exports.seed = function (knex, Promise) {
           , om.surname
           , omt.grade_code
           , w.total_cases
+          , w.monthly_sdrs
+          , w.sdr_conversions_last_30_days
+          , w.paroms_completed_last_30_days
+          , w.oral_reports
           , wpc.total_points
           , wpc.available_points
           , wpc.reduction_hours

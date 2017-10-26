@@ -24,6 +24,7 @@ describe('app/services/data/insert-app-workload', function () {
         5,
         6,
         7,
+        8,
         buildTier(Locations.COMMUNITY),
         buildTier(Locations.LICENSE),
         buildTier(Locations.CUSTODY),
@@ -46,8 +47,9 @@ describe('app/services/data/insert-app-workload', function () {
           expect(result.monthly_sdrs).to.equal(3)
           expect(result.sdr_due_next_30_days).to.equal(4)
           expect(result.sdr_conversions_last_30_days).to.equal(5)
-          expect(result.paroms_completed_last_30_days).to.equal(6)
-          expect(result.paroms_due_next_30_days).to.equal(7)
+          expect(result.oral_reports).to.equal(6)
+          expect(result.paroms_completed_last_30_days).to.equal(7)
+          expect(result.paroms_due_next_30_days).to.equal(8)
           expect(result.license_last_16_weeks).to.equal(9)
           expect(result.community_last_16_weeks).to.equal(10)
           expect(result.arms_community_cases).to.equal(11)

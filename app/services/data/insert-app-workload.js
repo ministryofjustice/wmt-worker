@@ -25,6 +25,7 @@ const aliases = {
   monthlySdrs: 'monthly_sdrs',
   sdrsDueNext30Days: 'sdr_due_next_30_days',
   sdrConversionsLast30Days: 'sdr_conversions_last_30_days',
+  oralReports: 'oral_reports',
   paromsCompletedLast30Days: 'paroms_completed_last_30_days',
   paromsDueNext30Days: 'paroms_due_next_30_days',
   totalCommunityCases: 'total_community_cases',
