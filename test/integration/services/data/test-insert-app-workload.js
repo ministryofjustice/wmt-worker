@@ -17,22 +17,26 @@ describe('app/services/data/insert-app-workload', function () {
 
   it('should insert a new workload record', function (done) {
     var workload = new Workload(
-        inserts.filter((item) => item.table === 'workload_owner')[0].id,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        buildTier(Locations.COMMUNITY),
-        buildTier(Locations.LICENSE),
-        buildTier(Locations.CUSTODY),
-        9,
-        10,
-        11,
-        12,
-        13,
-        14
+        inserts.filter((item) => item.table === 'workload_owner')[0].id, // workload owner ID
+        2,  // total cases
+        1,  // total t2a cases
+        3,  // monthly SDRs
+        4,  // SDRs Due Next 30 Days
+        5,  // SDR Conversions Last 30 Days
+        6,  // PAROMS Completed Last 30 Days
+        7,  // PAROMS Due Next 30 Days
+        buildTier(Locations.CUSTODY), // Custody Tiers
+        buildTier(Locations.COMMUNITY), // Community Tiers
+        buildTier(Locations.LICENSE), // License Tiers
+        buildTier(Locations.CUSTODY), // T2A Custody Tiers
+        buildTier(Locations.COMMUNITY), // T2A Community Tiers
+        buildTier(Locations.LICENSE), // T2A License Tiers
+        9,  // License Cases Last 16 Weeks
+        10, // Community Cases Last 16 Weeks
+        11, // ARMS Community Cases
+        12, // ARMS License Cases
+        13, // Staging ID
+        14  // Workload Report ID
     )
     insertAppWorkload(workload).then(function (id) {
       workloadId = id
@@ -43,6 +47,7 @@ describe('app/services/data/insert-app-workload', function () {
         .then(function (result) {
           expect(result).not.to.be.undefined // eslint-disable-line
           expect(result.total_cases).to.equal(2)
+          expect(result.total_t2a_cases).to.equal(1)
           expect(result.monthly_sdrs).to.equal(3)
           expect(result.sdr_due_next_30_days).to.equal(4)
           expect(result.sdr_conversions_last_30_days).to.equal(5)

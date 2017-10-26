@@ -8,6 +8,7 @@ exports.seed = function (knex, promise) {
     , l.description AS name
     , omt.grade_code
     , SUM(w.total_cases) AS total_cases
+    , SUM(w.total_t2a_cases) AS total_t2a_cases
     , SUM(wpc.total_points) AS total_points
     , SUM(wpc.available_points) AS available_points
     , SUM(wpc.reduction_hours) AS reduction_hours

@@ -24,6 +24,7 @@ describe('app/services/data/update-workload-points-calculation', function () {
       return updateWpc(
         workloadReportId,
         originalWpc.workload_points_id,
+        originalWpc.t2a_workload_points_id,
         workloadId,
         originalWpc.total_points + 1,
         originalWpc.sdr_points + 1,
