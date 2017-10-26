@@ -16,5 +16,5 @@ exports.up = function (knex, Promise) {
 }
 
 exports.down = function (knex, Promise) {
-  knex.schema.withSchema('staging').dropTable('flag_warr_4_n')
+  return knex.schema.withSchema('staging').dropTable('flag_warr_4_n')
 }
