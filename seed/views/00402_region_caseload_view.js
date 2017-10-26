@@ -1,28 +1,42 @@
 exports.seed = function (knex, Promise) {
-  var sql = `CREATE VIEW app.region_caseload_view
-        WITH SCHEMABINDING
-        AS
-        SELECT     
-          MAX(l.region_id) AS id
-          , l.id AS link_id
-          , MAX(l.description) AS name
-          , grade_code
-          , case_type
-          , SUM(untiered) AS untiered
-          , SUM(d2) AS d2
-          , SUM(d1) AS d1
-          , SUM(c2) AS c2
-          , SUM(c1) AS c1
-          , SUM(b2) AS b2
-          , SUM(b1) AS b1
-          , SUM(a) AS a
-          , SUM(total_cases) AS total_cases
-        FROM app.ldu_caseload_view lv  
-          JOIN app.ldu l ON lv.id = l.id
-        GROUP BY l.id, lv.case_type, lv.grade_code;`
+  var view = `CREATE VIEW app.region_caseload_view
+  WITH SCHEMABINDING
+  AS
+  SELECT
+      l.region_id AS id
+    , l.id AS link_id
+    , l.description AS name
+    , omt.grade_code
+    , tr.location
+    , SUM(CASE WHEN tr.tier_number = 0 THEN tr.total_cases ELSE 0 END) AS untiered
+    , SUM(CASE WHEN tr.tier_number = 1 THEN tr.total_cases ELSE 0 END) AS d2
+    , SUM(CASE WHEN tr.tier_number = 2 THEN tr.total_cases ELSE 0 END) AS d1
+    , SUM(CASE WHEN tr.tier_number = 3 THEN tr.total_cases ELSE 0 END) AS c2
+    , SUM(CASE WHEN tr.tier_number = 4 THEN tr.total_cases ELSE 0 END) AS c1
+    , SUM(CASE WHEN tr.tier_number = 5 THEN tr.total_cases ELSE 0 END) AS b2
+    , SUM(CASE WHEN tr.tier_number = 6 THEN tr.total_cases ELSE 0 END) AS b1
+    , SUM(CASE WHEN tr.tier_number = 7 THEN tr.total_cases ELSE 0 END) AS a
+    , SUM(tr.total_cases) AS total_cases
+    , COUNT_BIG(*) AS count
+  FROM app.tiers tr
+      JOIN app.workload w ON tr.workload_id = w.id
+      JOIN app.workload_points_calculations wpc ON wpc.workload_id = w.id
+      JOIN app.workload_report wr ON wr.id = wpc.workload_report_id
+      JOIN app.workload_owner wo ON wo.id = w.workload_owner_id
+      JOIN app.team t ON t.id = wo.team_id
+      JOIN app.ldu l ON l.id = t.ldu_id
+      JOIN app.offender_manager om ON om.id = wo.offender_manager_id
+      JOIN app.offender_manager_type omt ON omt.id = om.type_id
+  WHERE wr.effective_from IS NOT NULL
+      AND wr.effective_to IS NULL
+  GROUP BY l.region_id, l.id, l.description, omt.grade_code, tr.location;`
+
+  var index = `CREATE UNIQUE CLUSTERED INDEX idx_region_caseload_view
+  ON app.region_caseload_view (link_id, location, grade_code)`
 
   return knex.schema
       .raw('DROP VIEW IF EXISTS app.region_caseload_view;')
       .raw('SET ARITHABORT ON')
-      .raw(sql)
+      .raw(view)
+      .raw(index)
 }

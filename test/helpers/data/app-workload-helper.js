@@ -48,6 +48,10 @@ module.exports.insertDependencies = function (inserts) {
         total_custody_cases: 1,
         total_community_cases: 2,
         total_license_cases: 3,
+        total_t2a_cases: 9,
+        total_t2a_custody_cases: 2,
+        total_t2a_community_cases: 3,
+        total_t2a_license_cases: 4,
         monthly_sdrs: 4,
         sdr_due_next_30_days: 5,
         sdr_conversions_last_30_days: 6,
@@ -61,9 +65,9 @@ module.exports.insertDependencies = function (inserts) {
       }
 
       var workloads = [
-        Object.assign({}, defaultWorkload, { total_cases: 20, staging_id: 1, workload_owner_id: ids[0] }),
-        Object.assign({}, defaultWorkload, { total_cases: 30, staging_id: 2, workload_owner_id: ids[1] }),
-        Object.assign({}, defaultWorkload, { total_cases: 30, staging_id: 3, workload_owner_id: ids[2] })
+        Object.assign({}, defaultWorkload, { total_cases: 20, total_t2a_cases: 10, staging_id: 1, workload_owner_id: ids[0] }),
+        Object.assign({}, defaultWorkload, { total_cases: 30, total_t2a_cases: 15, staging_id: 2, workload_owner_id: ids[1] }),
+        Object.assign({}, defaultWorkload, { total_cases: 30, total_t2a_cases: 20, staging_id: 3, workload_owner_id: ids[2] })
       ]
 
       return knex('workload').returning('id').insert(workloads)
@@ -82,6 +86,10 @@ module.exports.insertDependencies = function (inserts) {
               warrants_total: 1,
               unpaid_work_total: 1,
               total_cases: 10,
+              t2a_overdue_terminations_total: 1,
+              t2a_warrants_total: 1,
+              t2a_unpaid_work_total: 1,
+              t2a_total_cases: 10,
               location: locations[i]
             })
           }

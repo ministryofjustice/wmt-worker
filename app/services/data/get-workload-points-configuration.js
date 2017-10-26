@@ -5,9 +5,11 @@ const LocationPointsConfiguration = require('wmt-probation-rules').LocationPoint
 const DefaultNominalTargets = require('wmt-probation-rules').DefaultNominalTargets
 const DefaultContractedHours = require('wmt-probation-rules').DefaultContractedHours
 
-module.exports = function () {
+module.exports = function (isT2a) {
   return knex('workload_points')
     .orderBy('effective_from', 'desc')
+    .whereNull('effective_to')
+    .where('is_t2a', isT2a)
     .first()
     .then(function (result) {
       var defaultNominalTargets = new DefaultNominalTargets(result.nominal_target_spo, result.nominal_target_po)
