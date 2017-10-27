@@ -13,5 +13,5 @@ exports.up = function (knex, Promise) {
 }
 
 exports.down = function (knex, Promise) {
-  return knex.dropTable('user_role')
+  return knex.schema.dropTable('user_role')
 }
