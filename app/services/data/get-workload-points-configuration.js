@@ -5,7 +5,7 @@ const LocationPointsConfiguration = require('wmt-probation-rules').LocationPoint
 const DefaultNominalTargets = require('wmt-probation-rules').DefaultNominalTargets
 const DefaultContractedHours = require('wmt-probation-rules').DefaultContractedHours
 
-module.exports = function (isT2a) {
+module.exports = function (isT2a = false) {
   return knex('workload_points')
     .orderBy('effective_from', 'desc')
     .whereNull('effective_to')

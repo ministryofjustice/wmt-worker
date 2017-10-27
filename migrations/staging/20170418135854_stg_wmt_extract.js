@@ -53,5 +53,5 @@ exports.up = function (knex, Promise) {
 }
 
 exports.down = function (knex, Promise) {
-  knex.schema.withSchema('staging').dropTable('wmt_extract')
+  return knex.schema.withSchema('staging').dropTable('wmt_extract')
 }
