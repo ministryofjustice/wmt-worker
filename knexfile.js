@@ -48,7 +48,11 @@ module.exports = {
     client: 'mssql',
     connection: Object.assign({}, defaultConnection, {
       user: config.MIGRATION_APP_DATABASE_USERNAME,
-      password: config.MIGRATION_APP_DATABASE_PASSWORD
+      password: config.MIGRATION_APP_DATABASE_PASSWORD,
+      options: {
+        encrypt: true,
+        requestTimeout: 60000
+      }
     }),
     seeds: {
       directory: 'seed/data/dev'
