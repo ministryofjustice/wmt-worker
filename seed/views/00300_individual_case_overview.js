@@ -4,8 +4,11 @@ exports.seed = function (knex, promise) {
   AS
   SELECT
       wo.id AS workload_owner_id
-    , om_type.grade_code AS grade_code
     , t.id AS team_id
+    , l.id AS ldu_id
+    , r.id AS region_id
+    , om_type.grade_code AS grade_code
+    , CONCAT(om.forename, ' ', om.surname) AS of_name
     , t.description AS team_name
     , l.description AS ldu_name
     , r.description AS region_name
