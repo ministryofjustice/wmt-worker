@@ -1,3 +1,4 @@
+const logger = require('../../app/services/log')
 
 exports.up = function (knex, Promise) {
   return knex.schema.withSchema('staging').createTable('cms', function (table) {
@@ -17,7 +18,7 @@ exports.up = function (knex, Promise) {
     table.string('om_team_key')
     table.string('om_provider_code')
   }).catch(function (error) {
-    console.log(error)
+    logger.error(error)
     throw error
   })
 }

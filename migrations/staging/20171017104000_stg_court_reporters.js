@@ -1,3 +1,5 @@
+const logger = require('../../app/services/log')
+
 exports.up = function (knex, Promise) {
   return knex.schema.withSchema('staging').createTable('court_reporters', function (table) {
     table.increments('id')
@@ -18,7 +20,7 @@ exports.up = function (knex, Promise) {
     table.string('oral_reports')
     table.string('datestamp')
   }).catch(function (error) {
-    console.log(error)
+    logger.error(error)
     throw error
   })
 }

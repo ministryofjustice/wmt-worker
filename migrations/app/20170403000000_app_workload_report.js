@@ -1,3 +1,4 @@
+const logger = require('../../app/services/log')
 
 exports.up = function (knex, Promise) {
   return knex.schema.createTable('workload_report', function (table) {
@@ -8,7 +9,7 @@ exports.up = function (knex, Promise) {
     table.string('status')
     table.string('status_description')
   }).catch(function (error) {
-    console.log(error)
+    logger.error(error)
     throw error
   })
 }

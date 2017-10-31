@@ -1,3 +1,4 @@
+const logger = require('../../app/services/log')
 
 exports.up = function (knex, Promise) {
   return knex.schema.withSchema('staging').createTable('wmt_extract', function (table) {
@@ -47,7 +48,7 @@ exports.up = function (knex, Promise) {
     table.string('datestamp')
     table.string('vcrn_count')
   }).catch(function (error) {
-    console.log(error)
+    logger.error(error)
     throw error
   })
 }

@@ -1,3 +1,5 @@
+const logger = require('../../app/services/log')
+
 exports.up = function (knex, Promise) {
   return knex.schema.withSchema('staging').createTable('wmt_extract_sa', function (table) {
     table.increments('id')
@@ -11,7 +13,7 @@ exports.up = function (knex, Promise) {
     table.string('disposal_type_code')
     table.string('standalone_order')
   }).catch(function (error) {
-    console.log(error)
+    logger.error(error)
     throw error
   })
 }

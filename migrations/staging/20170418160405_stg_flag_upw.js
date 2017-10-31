@@ -1,3 +1,4 @@
+const logger = require('../../app/services/log')
 
 exports.up = function (knex, Promise) {
   return knex.schema.withSchema('staging').createTable('flag_upw', function (table) {
@@ -10,7 +11,7 @@ exports.up = function (knex, Promise) {
     table.string('om_key')
     table.string('location')
   }).catch(function (error) {
-    console.log(error)
+    logger.error(error)
     throw error
   })
 }

@@ -1,3 +1,4 @@
+const logger = require('../../app/services/log')
 
 exports.up = function (knex, Promise) {
   var sql = 'ALTER TABLE app.user_role DROP CONSTRAINT user_role_last_updated_by_foreign;' +
@@ -16,7 +17,7 @@ exports.down = function (knex, Promise) {
         .raw('SET ARITHABORT ON')
         .raw(sql)
   } catch (error) {
-        // If the data is populated its possible this will not work.
-    console.log(error)
+    // If the data is populated its possible this will not work.
+    logger.error(error)
   }
 }
