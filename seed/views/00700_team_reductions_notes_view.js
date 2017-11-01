@@ -4,7 +4,9 @@ exports.seed = function (knex, promise) {
       AS
       SELECT
           wo.id AS workload_owner_id
-        , t.id AS team_id
+        , team.id AS team_id
+        , ldu.id AS ldu_id
+        , region.id AS region_id
         , CONCAT(om.forename, ' ', om.surname) AS name
         , rr.reason_short_name AS reduction_reason
         , r.hours AS amount
@@ -13,7 +15,9 @@ exports.seed = function (knex, promise) {
         , r.status AS reduction_status
         , r.notes AS additional_notes
       FROM app.workload_owner wo
-          JOIN app.team t ON wo.team_id = t.id
+          JOIN app.team team ON wo.team_id = team.id
+          JOIN app.ldu ldu ON team.ldu_id = ldu.id
+          JOIN app.region region ON region.id = ldu.region_id
           JOIN app.workload w ON wo.id = w.workload_owner_id
           JOIN app.workload_points_calculations wpc ON wpc.workload_id = w.id
           JOIN app.workload_report wr ON wr.id = wpc.workload_report_id
