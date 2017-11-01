@@ -1,3 +1,4 @@
+const logger = require('../../app/services/log')
 
 exports.up = function (knex, Promise) {
   return knex.schema.createTable('workload_owner', function (table) {
@@ -6,7 +7,7 @@ exports.up = function (knex, Promise) {
     table.decimal('contracted_hours').unsigned()
     table.integer('team_id').unsigned().notNullable().references('team.id')
   }).catch(function (error) {
-    console.log(error)
+    logger.error(error)
     throw error
   })
 }

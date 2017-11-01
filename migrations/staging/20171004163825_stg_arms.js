@@ -1,3 +1,4 @@
+const logger = require('../../app/services/log')
 
 exports.up = function (knex, Promise) {
   return knex.schema.withSchema('staging').createTable('arms', function (table) {
@@ -15,7 +16,7 @@ exports.up = function (knex, Promise) {
     table.string('sentence_type')
     table.string('so_registration_date')
   }).catch(function (error) {
-    console.log(error)
+    logger.error(error)
     throw error
   })
 }

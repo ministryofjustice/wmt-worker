@@ -1,3 +1,4 @@
+const logger = require('../../app/services/log')
 
 exports.up = function (knex, Promise) {
   return knex.schema.createTable('offender_manager', function (table) {
@@ -10,7 +11,7 @@ exports.up = function (knex, Promise) {
     table.timestamp('effective_from').defaultTo(knex.fn.now())
     table.timestamp('effective_to')
   }).catch(function (error) {
-    console.log(error)
+    logger.error(error)
     throw error
   })
 }

@@ -1,3 +1,5 @@
+const logger = require('../../app/services/log')
+
 exports.up = function (knex, Promise) {
   return knex.schema.createTable('tiers', function (table) {
     table.increments('id')
@@ -13,7 +15,7 @@ exports.up = function (knex, Promise) {
       knex.raw('ALTER TABLE tiers ADD total_cases SMALLINT NOT NULL')
     ])
   }).catch(function (error) {
-    console.log(error)
+    logger.error(error)
     throw error
   })
 }
