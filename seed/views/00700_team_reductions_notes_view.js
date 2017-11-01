@@ -3,7 +3,9 @@ exports.seed = function (knex, promise) {
       WITH SCHEMABINDING
       AS
       SELECT
-          CONCAT(om.forename, ' ', om.surname) AS name
+          wo.id AS workload_owner_id
+        , t.id AS team_id
+        , CONCAT(om.forename, ' ', om.surname) AS name
         , rr.reason_short_name AS reduction_reason
         , r.hours AS amount
         , r.effective_from AS start_date
