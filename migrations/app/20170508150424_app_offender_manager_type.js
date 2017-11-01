@@ -1,3 +1,4 @@
+const logger = require('../../app/services/log')
 
 exports.up = function (knex, Promise) {
   return knex.schema.createTable('offender_manager_type', function (table) {
@@ -5,7 +6,7 @@ exports.up = function (knex, Promise) {
     table.string('grade_code')
     table.string('description')
   }).catch(function (error) {
-    console.log(error)
+    logger.error(error)
     throw error
   })
 }
