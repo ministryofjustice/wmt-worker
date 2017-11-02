@@ -1,5 +1,5 @@
 exports.seed = function (knex, promise) {
-    var view = `CREATE VIEW app.team_reductions_notes_view
+    var view = `CREATE VIEW app.reductions_notes_export_view
       WITH SCHEMABINDING
       AS
       SELECT
@@ -28,12 +28,8 @@ exports.seed = function (knex, promise) {
           AND wr.effective_to IS NULL
       ;`
   
-    //var index = `CREATE UNIQUE CLUSTERED INDEX idx_team_reductions_notes_view
-    //ON app.team_reductions_notes_view (workload_owner_id)`
-  
     return knex.schema
         .raw('DROP VIEW IF EXISTS app.team_reductions_notes_view;')
         .raw('SET ARITHABORT ON')
         .raw(view)
-        //.raw(index)
   }
