@@ -25,11 +25,10 @@ exports.seed = function (knex, promise) {
           JOIN app.reductions r ON r.workload_owner_id = wo.id
           JOIN app.reduction_reason rr ON r.reduction_reason_id = rr.id
       WHERE wr.effective_from IS NOT NULL
-          AND wr.effective_to IS NULL
-      ;`
+          AND wr.effective_to IS NULL;`
 
   return knex.schema
-        .raw('DROP VIEW IF EXISTS app.team_reductions_notes_view;')
+        .raw('DROP VIEW IF EXISTS app.reductions_notes_export_view;')
         .raw('SET ARITHABORT ON')
         .raw(view)
 }
