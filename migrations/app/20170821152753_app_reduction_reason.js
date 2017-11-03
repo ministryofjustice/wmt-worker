@@ -1,3 +1,5 @@
+const logger = require('../../app/services/log')
+
 exports.up = function (knex, Promise) {
   return knex.schema.createTable('reduction_reason', function (table) {
     table.increments('id')
@@ -9,7 +11,7 @@ exports.up = function (knex, Promise) {
     table.integer('months_to_expiry')
   })
   .catch(function (error) {
-    console.log(error)
+    logger.error(error)
     throw error
   })
 }

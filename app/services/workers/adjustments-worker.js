@@ -1,18 +1,17 @@
-const updateAdjustmentStatusByIds = require('../data/update-adjustment-status-by-ids')
-const adjustmentStatus = require('../../constants/adjustment-status')
 const adjustmentCategory = require('../../constants/adjustment-category')
 const createNewTasks = require('../data/create-tasks')
 const taskType = require('../../constants/task-type')
 const taskStatus = require('../../constants/task-status')
 const Task = require('../domain/task')
 const submittingAgent = require('../../constants/task-submitting-agent')
-const wpcOperationType = require('../../constants/calculate-workload-points-operation')
+const operationTypes = require('../../constants/calculation-tasks-operation-type')
 const logger = require('../log')
 
 const stagingAdjustmentsMapper = require('../staging-adjustments-mapper')
 const getAppAdjustmentsForBatch = require('../data/get-app-adjustments-for-batch')
 const updateAdjustmentEffectiveTo = require('../data/update-adjustment-effective-to')
 const insertAdjustment = require('../data/insert-adjustment')
+const updateStatus = require('../update-adjustment-reduction-status')
 
 module.exports.execute = function (task) {
   var workloadStagingIdStart = task.additionalData.startingId
@@ -21,46 +20,35 @@ module.exports.execute = function (task) {
 
   return processAdjustments(workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
   .then(function () {
-    return updateAdjustmentsStatus(workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
-    .then(function () {
-      var calculateWpAdditionalData = {
-        workloadBatch: task.additionalData,
-        operationType: wpcOperationType.INSERT
-      }
-
-      var calculateWorkloadPointsTask = new Task(
-        undefined,
-        submittingAgent.WORKER,
-        taskType.CALCULATE_WORKLOAD_POINTS,
-        calculateWpAdditionalData,
-        task.workloadReportId,
-        undefined,
-        undefined,
-        taskStatus.PENDING
-      )
-
-      return createNewTasks([calculateWorkloadPointsTask])
+    logger.info('Retrieving open adjustments for workload owners with workloads\' staging ids ' + workloadStagingIdStart + ' - ' + workloadStagingIdEnd + ', for workload report ' + workloadReportId)
+    return getAppAdjustmentsForBatch(adjustmentCategory.CMS, workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
+    .then(function (adjustments) {
+      return updateStatus.updateAdjustmentStatuses(adjustments)
       .then(function () {
-        logger.info('Calculate Workload Task created')
+        logger.info('Adjustment statuses updated')
+        var calculateWpAdditionalData = {
+          workloadBatch: task.additionalData,
+          operationType: operationTypes.INSERT
+        }
+
+        var calculateWorkloadPointsTask = new Task(
+          undefined,
+          submittingAgent.WORKER,
+          taskType.CALCULATE_WORKLOAD_POINTS,
+          calculateWpAdditionalData,
+          task.workloadReportId,
+          undefined,
+          undefined,
+          taskStatus.PENDING
+        )
+
+        return createNewTasks([calculateWorkloadPointsTask])
+        .then(function () {
+          logger.info('Calculate Workload Task created')
+        })
       })
     })
   })
-}
-
-var getAdjustmentStatus = function (adjustment) {
-  var status = adjustmentStatus.ARCHIVED
-
-  var currentTime = new Date().getTime()
-  var adjustmentStartTime = adjustment.effectiveFrom.getTime()
-  var adjustmentEndTime = adjustment.effectiveTo.getTime()
-
-  if (adjustmentStartTime < currentTime && adjustmentEndTime > currentTime) {
-    status = adjustmentStatus.ACTIVE
-  } else if (adjustmentStartTime > currentTime && adjustmentEndTime > currentTime) {
-    status = adjustmentStatus.SCHEDULED
-  }
-
-  return status
 }
 
 var processAdjustments = function (workloadStagingIdStart, workloadStagingIdEnd, workloadReportId) {
@@ -128,35 +116,5 @@ var getAllAppAdjustmentsForBatch = function (workloadStagingIdStart, workloadSta
       appAdjustments = appCmsAdjustments.concat(appGsAdjustments)
       return appAdjustments
     })
-  })
-}
-
-var updateAdjustmentsStatus = function (workloadStagingIdStart, workloadStagingIdEnd, workloadReportId) {
-  var idsMap = new Map()
-  idsMap.set(adjustmentStatus.ACTIVE, [])
-  idsMap.set(adjustmentStatus.SCHEDULED, [])
-  idsMap.set(adjustmentStatus.ARCHIVED, [])
-
-  logger.info('Retrieving open adjustments for workload owners with workloads\' staging ids ' + workloadStagingIdStart + ' - ' + workloadStagingIdEnd + ', for workload report ' + workloadReportId)
-  return getAppAdjustmentsForBatch(adjustmentCategory.CMS, workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
-  .then(function (adjustments) {
-    adjustments.forEach(function (adjustment) {
-      status = getAdjustmentStatus(adjustment)
-      if (status !== adjustment.status) {
-        ids = idsMap.get(status)
-        ids.push(adjustment.id)
-        idsMap.set(status, ids)
-      }
-    })
-
-    var updateAdjustmentsPromises = []
-    for (var [status, ids] of idsMap) {
-      if (ids.length > 0) {
-        logger.info('Updating status to ' + status + ' for adjustments with id in ' + ids + '.')
-        updateAdjustmentsPromises.push(updateAdjustmentStatusByIds(ids, status))
-      }
-    }
-
-    return Promise.all(updateAdjustmentsPromises)
   })
 }

@@ -1,3 +1,4 @@
+const logger = require('../../app/services/log')
 
 exports.up = function (knex, Promise) {
   return knex.schema.withSchema('staging').createTable('inst_reports', function (table) {
@@ -11,11 +12,11 @@ exports.up = function (knex, Promise) {
     table.string('parom_comp_last_30')
     table.string('datestamp')
   }).catch(function (error) {
-    console.log(error)
+    logger.error(error)
     throw error
   })
 }
 
 exports.down = function (knex, Promise) {
-  knex.schema.withSchema('staging').dropTable('inst_reports')
+  return knex.schema.withSchema('staging').dropTable('inst_reports')
 }

@@ -1,3 +1,4 @@
+const logger = require('../../app/services/log')
 
 exports.up = function (knex, Promise) {
   return knex.schema.createTable('user_role', function (table) {
@@ -7,11 +8,11 @@ exports.up = function (knex, Promise) {
     table.timestamp('last_updated')
     table.integer('last_updated_by').unsigned().notNullable().references('users.id')
   }).catch(function (error) {
-    console.log(error)
+    logger.error(error)
     throw error
   })
 }
 
 exports.down = function (knex, Promise) {
-  return knex.dropTable('user_role')
+  return knex.schema.dropTable('user_role')
 }
