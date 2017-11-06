@@ -9,8 +9,12 @@ exports.seed = function (knex, Promise) {
       , om.surname
       , omt.grade_code
       , SUM(tr.warrants_total) AS ow
-      , SUM(tr.overdue_terminations_total ) AS ot
+      , SUM(tr.overdue_terminations_total) AS ot
       , SUM(tr.unpaid_work_total) AS upw
+      , SUM(tr.t2a_warrants_total) AS t2a_ow
+      , SUM(tr.t2a_overdue_terminations_total) AS t2a_ot
+      , SUM(tr.t2a_unpaid_work_total) AS t2a_upw
+      , SUM(tr.suspended_total) AS sl
       , COUNT_BIG(*) AS count
   FROM app.tiers tr
         JOIN app.workload w ON tr.workload_id = w.id
@@ -24,7 +28,7 @@ exports.seed = function (knex, Promise) {
   GROUP BY wo.team_id, wo.id, om.forename, om.surname, omt.grade_code;`
 
   var index = `CREATE UNIQUE CLUSTERED INDEX idx_team_outstanding_reports_view
-    ON app.team_outstanding_reports_view(link_id, grade_code) `
+    ON app.team_outstanding_reports_view(link_id, grade_code)`
 
   return knex.schema
     .raw('DROP VIEW IF EXISTS app.team_outstanding_reports_view;')
