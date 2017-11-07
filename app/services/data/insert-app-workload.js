@@ -58,6 +58,7 @@ var insertTiers = function (tiers, t2aTiers, workloadId, location) {
       overdue_terminations_total: currentTier.overdueTermination,
       warrants_total: currentTier.warrants,
       unpaid_work_total: currentTier.unpaidWork,
+      suspended_total: currentTier.suspended,
       total_cases: currentTier.total,
       t2a_overdue_terminations_total: currentT2aTier.overdueTermination,
       t2a_warrants_total: currentT2aTier.warrants,

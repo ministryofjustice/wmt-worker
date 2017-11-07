@@ -79,5 +79,5 @@ function buildTier (location) {
 }
 
 function buildTierCount () {
-  return new TierCounts(6, 1, 3, 2)
+  return new TierCounts(7, 1, 3, 2, 1)
 }
