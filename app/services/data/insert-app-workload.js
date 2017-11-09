@@ -1,7 +1,7 @@
 const knex = require('../../../knex').appSchema
 const Locations = require('wmt-probation-rules').Locations
 
-module.exports = function (workload) {
+module.exports = function (workload, caseDetails) {
   workload.totalCommunityCases = workload.communityTiers.total
   workload.totalCustodyCases = workload.custodyTiers.total
   workload.totalLicenseCases = workload.licenseTiers.total
@@ -18,6 +18,12 @@ module.exports = function (workload) {
       promises.push(insertTiers(workload.communityTiers, workload.t2aCommunityTiers, workloadId, Locations.COMMUNITY))
       promises.push(insertTiers(workload.custodyTiers, workload.t2aCustodyTiers, workloadId, Locations.CUSTODY))
       promises.push(insertTiers(workload.licenseTiers, workload.t2aLicenseTiers, workloadId, Locations.LICENSE))
+      var communityCaseDetails = caseDetails.filter((caseDetail) => { return caseDetail.location.toUpperCase() === Locations.COMMUNITY })
+      var custodyCaseDetails = caseDetails.filter((caseDetail) => { return caseDetail.location.toUpperCase() === Locations.CUSTODY })
+      var licenseCaseDetails = caseDetails.filter((caseDetail) => { return caseDetail.location.toUpperCase() === Locations.LICENSE })
+      promises.push(insertCaseDetails(communityCaseDetails, workloadId, Locations.COMMUNITY))
+      promises.push(insertCaseDetails(custodyCaseDetails, workloadId, Locations.CUSTODY))
+      promises.push(insertCaseDetails(licenseCaseDetails, workloadId, Locations.LICENSE))
       return Promise.all(promises).then(function () { return workloadId[0] })
     })
 }
@@ -69,6 +75,23 @@ var insertTiers = function (tiers, t2aTiers, workloadId, location) {
     tiersToInsert.push(tierToInsert)
   }
   return knex('tiers').insert(tiersToInsert)
+}
+
+var insertCaseDetails = function (caseDetails, workloadId, location) {
+  var caseDetailsToInsert = []
+  caseDetails.forEach(function (caseDetail) {
+    var caseDetailToInsert = {
+      workload_id: workloadId,
+      tier_code: caseDetail.tierCode,
+      row_type: caseDetail.rowType,
+      case_ref_no: caseDetail.caseRefNo,
+      team_code: caseDetail.teamCode,
+      grade_code: caseDetail.omGradeCode,
+      location: location
+    }
+    caseDetailsToInsert.push(caseDetailToInsert)
+  })
+  return knex('case_details').insert(caseDetailsToInsert)
 }
 
 var mapForInsert = function (record) {
