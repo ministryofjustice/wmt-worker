@@ -27,7 +27,7 @@ exports.seed = function (knex, promise) {
       WHERE wr.effective_from IS NOT NULL
           AND wr.effective_to IS NULL;`
 
-    var index = `CREATE UNIQUE CLUSTERED INDEX idx_reductions_notes_export_view
+  var index = `CREATE UNIQUE CLUSTERED INDEX idx_reductions_notes_export_view
           ON app.reductions_notes_export_view(workload_owner_id, reduction_reason, start_date, end_date)`
 
   return knex.schema
