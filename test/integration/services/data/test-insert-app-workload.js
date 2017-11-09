@@ -5,6 +5,7 @@ const Workload = require('wmt-probation-rules').Workload
 const Tiers = require('wmt-probation-rules').AppTiers
 const TierCounts = require('wmt-probation-rules').TierCounts
 const Locations = require('wmt-probation-rules').Locations
+const CaseDetails = require('wmt-probation-rules').CaseDetails
 const workloadOwnerHelper = require('../../../helpers/data/app-workload-owner-helper')
 
 var inserts = []
@@ -38,7 +39,13 @@ describe('app/services/data/insert-app-workload', function () {
         13, // Staging ID
         14  // Workload Report ID
     )
-    insertAppWorkload(workload).then(function (id) {
+
+    var caseDetails = []
+    caseDetails.push(buildCaseDetails(Locations.COMMUNITY))
+    caseDetails.push(buildCaseDetails(Locations.CUSTODY))
+    caseDetails.push(buildCaseDetails(Locations.LICENSE))
+
+    insertAppWorkload(workload, caseDetails).then(function (id) {
       workloadId = id
       inserts.push({table: 'workload', id: id})
       return knex('workload')
@@ -66,7 +73,9 @@ describe('app/services/data/insert-app-workload', function () {
 
   after(function () {
     return knex('tiers').where('workload_id', workloadId).del().then(function () {
-      return workloadOwnerHelper.removeDependencies(inserts)
+      return knex('case_details').where('workload_id', workloadId).del().then(function () {
+        return workloadOwnerHelper.removeDependencies(inserts)
+      })
     })
   })
 })
@@ -80,4 +89,9 @@ function buildTier (location) {
 
 function buildTierCount () {
   return new TierCounts(7, 1, 3, 2, 1)
+}
+
+function buildCaseDetails (location) {
+  // row_type, case_ref_no, tier_code, team_code, om_grade_code, om_key, location
+  return new CaseDetails('U', 'CN1234', 1, 'Team 1', 'C', '1001', location)
 }
