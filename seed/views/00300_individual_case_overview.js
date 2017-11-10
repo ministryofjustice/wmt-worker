@@ -4,9 +4,14 @@ exports.seed = function (knex, promise) {
   AS
   SELECT
       wo.id AS workload_owner_id
-    , om_type.grade_code AS grade_code
     , t.id AS team_id
+    , l.id AS ldu_id
+    , r.id AS region_id
+    , om_type.grade_code AS grade_code
+    , CONCAT(om.forename, ' ', om.surname) AS of_name
     , t.description AS team_name
+    , l.description AS ldu_name
+    , r.description AS region_name
     , wpc.available_points AS available_points
     , wpc.total_points AS total_points
     , w.total_cases AS total_cases
@@ -14,6 +19,8 @@ exports.seed = function (knex, promise) {
     , wpc.reduction_hours AS reduction_hours
   FROM app.workload_owner wo
     JOIN app.team t ON wo.team_id = t.id
+    JOIN app.ldu l ON t.ldu_id = l.id
+    JOIN app.region r ON r.id = l.region_id
     JOIN app.workload w ON wo.id = w.workload_owner_id
     JOIN app.workload_points_calculations wpc ON wpc.workload_id = w.id
     JOIN app.workload_report wr ON wr.id = wpc.workload_report_id
