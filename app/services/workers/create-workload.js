@@ -23,7 +23,8 @@ module.exports.execute = function (task) {
       return insertWorkloadOwnerAndDependencies(caseSummary)
       .then(function (workloadOwnerId) {
         var workloadToInsert = mapWorkload(stagingWorkload, parseInt(workloadOwnerId), parseInt(workloadReportId))
-        return insertWorkload(workloadToInsert)
+        var caseDetails = stagingWorkload.caseDetails
+        return insertWorkload(workloadToInsert, caseDetails)
       })
     })
     .then(function () {

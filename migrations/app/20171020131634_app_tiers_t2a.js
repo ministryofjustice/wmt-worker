@@ -13,10 +13,10 @@ exports.down = function (knex, Promise) {
   sql += 'ALTER TABLE app.tiers DROP CONSTRAINT tiers_t2a_warrants_total_default;'
   sql += 'ALTER TABLE app.tiers DROP CONSTRAINT tiers_t2a_unpaid_work_total_default;'
   sql += 'ALTER TABLE app.tiers DROP CONSTRAINT tiers_t2a_total_cases_default;'
-  sql += 'ALTER TABLE app.tiers DROP COLUMN tiers_t2a_overdue_terminations_total_default;'
-  sql += 'ALTER TABLE app.tiers DROP COLUMN tiers_t2a_warrants_total_default;'
-  sql += 'ALTER TABLE app.tiers DROP COLUMN tiers_t2a_unpaid_work_total_default;'
-  sql += 'ALTER TABLE app.tiers DROP COLUMN tiers_t2a_total_cases_default;'
+  sql += 'ALTER TABLE app.tiers DROP COLUMN tiers_t2a_overdue_terminations_total;'
+  sql += 'ALTER TABLE app.tiers DROP COLUMN tiers_t2a_warrants_total;'
+  sql += 'ALTER TABLE app.tiers DROP COLUMN tiers_t2a_unpaid_work_total;'
+  sql += 'ALTER TABLE app.tiers DROP COLUMN tiers_t2a_total_cases;'
   return knex.schema
         .raw('SET ARITHABORT ON')
         .raw(sql)
