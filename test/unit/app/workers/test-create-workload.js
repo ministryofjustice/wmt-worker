@@ -29,7 +29,8 @@ var task = {
 var endingStagingId = task.additionalData.startingId + (task.additionalData.batchSize - 1)
 var stagingWorkload = [
   {
-    caseSummary: 'This is a fake summary'
+    casesSummary: 'This is a fake summary',
+    caseDetails: 'This is a fake caseDetails'
   }
 ]
 var appWorkload = 'This is a fake app workload'
@@ -74,8 +75,8 @@ describe('services/workers/create-workload', function () {
     return createWorkload.execute(task)
     .then(function (result) {
       expect(getStagingWorkload.calledWith([task.additionalData.startingId, endingStagingId])).to.be.equal(true)
-      expect(insertWorkloadOwnerAndDependencies.calledWith(stagingWorkload.caseSummary)).to.be.equal(true)
-      expect(insertWorkload.calledWith(appWorkload)).to.be.equal(true)
+      expect(insertWorkloadOwnerAndDependencies.calledWith(stagingWorkload[0].casesSummary)).to.be.equal(true)
+      expect(insertWorkload.calledWith(appWorkload, stagingWorkload[0].caseDetails)).to.be.equal(true)
       expect(createNewTasks.calledWith([nextTask])).to.be.eql(true)
     })
   })
