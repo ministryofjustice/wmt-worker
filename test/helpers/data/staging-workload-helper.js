@@ -57,7 +57,7 @@ const aliases = {
   assessmentStaffName: 'assessment_staff_name',
   assessmentStaffKey: 'assessment_staff_key',
   assessmentStaffGrade: 'assessment_staff_grade',
-  assessmentTeamKey: 'assessmentent_team_key',
+  assessmentTeamKey: 'assessment_team_key',
   assessmentProviderCode: 'assessment_provider_code',
   crn: 'crn',
   disposalOrReleaseDate: 'disposal_or_release_date',

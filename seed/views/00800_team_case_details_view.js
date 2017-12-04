@@ -29,7 +29,7 @@ exports.seed = function (knex, Promise) {
   GROUP BY wo.team_id, wo.id, om.forename, om.surname, omt.grade_code, cd.row_type, cd.case_ref_no, cd.location, cd.tier_code, l.description, t.description;`
 
   var index = `CREATE UNIQUE CLUSTERED INDEX idx_team_case_details_view
-  ON app.team_case_details_view (id, link_id, grade_code, flag, case_ref_no)`
+  ON app.team_case_details_view (id, link_id, flag, case_ref_no, location, tier_code)`
 
   return knex.schema
       .raw('DROP VIEW IF EXISTS app.team_case_details_view;')

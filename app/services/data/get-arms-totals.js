@@ -5,7 +5,7 @@ const knex = require('knex')(knexConfig)
 module.exports = function (omKey, teamCode) {
   var whereObject = {
     'assessment_staff_key': omKey,
-    'assessmentent_team_key': teamCode // typo in extract
+    'assessment_team_key': teamCode // typo in extract
   }
 
   return knex.count('sentence_type AS count').select('sentence_type')
