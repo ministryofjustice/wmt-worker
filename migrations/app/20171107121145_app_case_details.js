@@ -4,7 +4,7 @@ exports.up = function (knex, Promise) {
   return knex.schema.createTable('case_details', function (table) {
     table.increments('id')
     table.integer('workload_id').unsigned().notNullable().references('workload.id')
-    table.string('row_type')
+    table.string('row_type', 10)
     table.string('case_ref_no').notNullable()
     table.integer('tier_code').unsigned().notNullable()
     table.string('team_code').notNullable()
