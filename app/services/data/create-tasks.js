@@ -14,5 +14,11 @@ module.exports = function (tasks) {
     }
     dbTasks.push(dbTask)
   })
-  return knex('tasks').returning('id').insert(dbTasks)
+  // Default to ((2100 / 7) - 1). This is to avoid 2100 parameter server error.
+  // 7 is the number columns in this table and 2100 is number of max parameters.
+  var batchSize = 299
+  if (dbTasks.length > 40) {
+    batchSize = Math.floor(dbTasks.length / 7) + 1
+  }
+  return knex.batchInsert('tasks', dbTasks, batchSize).returning('id')
 }
