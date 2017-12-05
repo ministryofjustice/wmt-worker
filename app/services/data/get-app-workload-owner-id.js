@@ -8,6 +8,8 @@ module.exports = function (offenderManagerKey, teamCode) {
     .andWhere('team.code', teamCode)
     .first('workload_owner.id')
     .then(function (results) {
-      return results.id
+      if (results !== undefined) {
+        return results.id
+      }
     })
 }
