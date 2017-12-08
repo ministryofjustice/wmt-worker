@@ -8,5 +8,8 @@ module.exports = function (newWorkloadReportId) {
       var newWorkload = results.filter((item) => item.id === newWorkloadReportId)
 
       return updateWorkloadReportEffectiveEndDate(currentWorkload[0].id, newWorkload[0].effective_from)
+      .then(function() {
+        return currentWorkload[0].id
+      })
     })
 }

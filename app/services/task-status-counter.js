@@ -7,11 +7,15 @@ module.exports = function (currentTask) {
     var numPending = 0
     var numInProgress = 0
     var numFailed = 0
+    var numCompleted = 0
 
     for (var taskId in taskList) {
       switch (taskList[taskId].status) {
         case taskStatus.PENDING:
           numPending++
+          break
+        case taskStatus.COMPLETE:
+          numCompleted++
           break
         case taskStatus.INPROGRESS:
           numInProgress++
@@ -25,7 +29,8 @@ module.exports = function (currentTask) {
     return {
       numPending: numPending,
       numInProgress: numInProgress,
-      numFailed: numFailed
+      numFailed: numFailed,
+      numCompleted: numCompleted
     }
   })
 }

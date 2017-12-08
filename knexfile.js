@@ -13,7 +13,10 @@ module.exports = {
   development: {
     client: 'mssql',
     connection: defaultConnection,
-    debug: false
+    debug: false,
+    pool: {
+      max: 500
+    }
   },
   staging: {
     client: 'mssql',
@@ -24,7 +27,10 @@ module.exports = {
     migrations: {
       directory: 'migrations/staging'
     },
-    debug: false
+    debug: false,
+    pool: {
+      max: 500
+    }
   },
   app: {
     client: 'mssql',
@@ -42,7 +48,10 @@ module.exports = {
     seeds: {
       directory: 'seed/data/ref'
     },
-    debug: false
+    debug: false,
+    pool: {
+      max: 500
+    }
   },
   dev: {
     client: 'mssql',
@@ -57,7 +66,10 @@ module.exports = {
     seeds: {
       directory: 'seed/data/dev'
     },
-    debug: false
+    debug: false,
+    pool: {
+      max: 500
+    }
   },
   views: {
     client: 'mssql',
@@ -72,6 +84,9 @@ module.exports = {
     seeds: {
       directory: 'seed/views'
     },
-    debug: false
+    debug: false,
+    pool: {
+      max: 500
+    }
   }
 }
