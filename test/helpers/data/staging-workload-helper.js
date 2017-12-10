@@ -99,7 +99,7 @@ module.exports.getArmsData = function (omKey = testOmKey, teamCode = testTeamCod
     assessmentProviderCode: 'providerCode',
     crn: '123456',
     disposalOrReleaseDate: '09/10/2017',
-    sentenceType: 'Licence',
+    sentenceType: 'Licence', // Change to match new extract
     soRegistrationDate: '09/10/2017'
   }
 
