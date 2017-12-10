@@ -23,7 +23,7 @@ module.exports = function (omKey, teamCode) {
         case 'Community':
           armsTotals.community = row.count
           break
-        case 'License':
+        case 'Licence':
           armsTotals.license = row.count
           break
         default:
