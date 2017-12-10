@@ -53,8 +53,8 @@ function executeWorkerForTaskType (worker, task) {
           .then(function (totals) {
             if (totals.numPending === 0 && totals.numInProgress === 0 && totals.numFailed === 0) {
               return closePreviousWorkloadReport(task.workloadReportId)
-              .then(function () {
-                return updateWorkloadReportStatus(task.workloadReportId, workloadReportStatus.COMPLETE)
+              .then(function (previousWorkloadReportId) {
+                return updateWorkloadReportStatus(previousWorkloadReportId, workloadReportStatus.COMPLETE)
                 .then((result) => {
                   return callWebRefreshEndpoint()
                 })

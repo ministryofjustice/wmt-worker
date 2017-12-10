@@ -84,7 +84,7 @@ describe('process-tasks', function () {
       numFailed: 0
     })
     updateWorkload.resolves({})
-    closePreviousWorkloadReport.resolves()
+    closePreviousWorkloadReport.resolves(3)
 
     return processTasks().then(function () {
       expect(getPendingTasksAndMarkInProgress.calledWith(batchSize)).to.be.true
