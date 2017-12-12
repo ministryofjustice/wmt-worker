@@ -6,7 +6,6 @@ const InstitutionalReport = require('wmt-probation-rules').InstitutionalReport
 const Tiers = require('wmt-probation-rules').Tiers
 const locations = require('wmt-probation-rules').Locations
 const getStagingCaseDetails = require('../data/get-staging-case-details')
-const getStagingSaCaseDetails = require('../data/get-staging-sa-case-details')
 const getArmsTotals = require('../data/get-arms-totals')
 const Promise = require('bluebird').Promise
 
@@ -170,13 +169,9 @@ module.exports = function (range) {
             var stagingId = result['staging_id']
 
             return getStagingCaseDetails(result['om_key'], result['team_code']).then(function (results) {
-              var caseDetails = results
-              return getStagingSaCaseDetails(result['om_key'], result['team_code']).then(function (results) {
-                results.forEach((caseDetail) => { caseDetails.push(caseDetail) })
-                omWorkloads.push(new OmWorkload(
-                  stagingId, casesSummary, courtReport, institutionalReport, caseDetails
-                ))
-              })
+              omWorkloads.push(new OmWorkload(
+                stagingId, casesSummary, courtReport, institutionalReport, results
+              ))
             })
           })
         })

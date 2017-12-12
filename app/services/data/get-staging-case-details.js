@@ -12,7 +12,9 @@ module.exports = function (omKey, teamCode) {
   return knex.select(columns).from(`${config.DB_STG_SCHEMA}.flag_warr_4_n`).where(whereObject).unionAll(function () {
     return this.select(columns).from(`${config.DB_STG_SCHEMA}.flag_upw`).where(whereObject).unionAll(function () {
       return this.select(columns).from(`${config.DB_STG_SCHEMA}.flag_o_due`).where(whereObject).unionAll(function () {
-        return this.select(columns).from(`${config.DB_STG_SCHEMA}.flag_priority`).where(whereObject)
+        return this.select(columns).from(`${config.DB_STG_SCHEMA}.flag_priority`).where(whereObject).unionAll(function () {
+          return this.select(columns).from(`${config.DB_STG_SCHEMA}.wmt_extract_sa`).where(whereObject)
+        })
       })
     })
   })

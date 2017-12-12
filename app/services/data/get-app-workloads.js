@@ -92,14 +92,14 @@ module.exports = function (initialId, maxId, batchSize, workloadReportId) {
                           row.warrants_total,
                           row.unpaid_work_total,
                           row.overdue_terminations_total,
-                          row.suspended_total)
+                          row.suspended_total, false)
 
           tempWorkloads[index].T2A[row.location][row.tier_number] = new TierCounts(
                             row.t2a_tiers_total_cases,
                             row.t2a_warrants_total,
                             row.t2a_unpaid_work_total,
                             row.t2a_overdue_terminations_total,
-                            row.suspended_total)
+                            row.suspended_total, true)
         })
 
         var workloads = []
