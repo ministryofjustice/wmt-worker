@@ -1403,9 +1403,13 @@ moment-timezone@^0.5.x:
   dependencies:
     moment ">= 2.9.0"
 
-"moment@>= 2.9.0", moment@^2.10.6, moment@^2.18.1:
+"moment@>= 2.9.0", moment@^2.10.6:
   version "2.18.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.18.1.tgz#c36193dd3ce1c2eed2adb7c802dbbc77a81b1c0f"
+
+moment@^2.19.2:
+  version "2.19.4"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.19.4.tgz#17e5e2c6ead8819c8ecfad83a0acccb312e94682"
 
 ms@2.0.0:
   version "2.0.0"
@@ -2053,12 +2057,12 @@ which@^1.2.12:
   dependencies:
     isexe "^2.0.0"
 
-wmt-probation-rules@ministryofjustice/wmt-probation-rules.git#v0.7.0:
-  version "0.7.0"
-  resolved "https://codeload.github.com/ministryofjustice/wmt-probation-rules/tar.gz/44ce22f4a2d440e8e5043aa391924c34a2ad8bd1"
+wmt-probation-rules@ministryofjustice/wmt-probation-rules.git#v0.8.2:
+  version "0.8.2"
+  resolved "https://codeload.github.com/ministryofjustice/wmt-probation-rules/tar.gz/c56e73c7700f9299b29d2df9bae82eae927a3d8d"
   dependencies:
     lodash "^4.17.4"
-    moment "^2.18.1"
+    moment "^2.19.2"
 
 wordwrap@~1.0.0:
   version "1.0.0"
