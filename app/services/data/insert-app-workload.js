@@ -80,16 +80,18 @@ var insertTiers = function (tiers, t2aTiers, workloadId, location) {
 var insertCaseDetails = function (caseDetails, workloadId, location) {
   var caseDetailsToInsert = []
   caseDetails.forEach(function (caseDetail) {
-    var caseDetailToInsert = {
-      workload_id: workloadId,
-      tier_code: caseDetail.tierCode,
-      row_type: caseDetail.rowType,
-      case_ref_no: caseDetail.caseRefNo,
-      team_code: caseDetail.teamCode,
-      grade_code: caseDetail.omGradeCode,
-      location: location
+    if (typeof caseDetail.tier_code === 'number') {
+      var caseDetailToInsert = {
+        workload_id: workloadId,
+        tier_code: caseDetail.tierCode,
+        row_type: caseDetail.rowType,
+        case_ref_no: caseDetail.caseRefNo,
+        team_code: caseDetail.teamCode,
+        grade_code: caseDetail.omGradeCode,
+        location: location
+      }
+      caseDetailsToInsert.push(caseDetailToInsert)
     }
-    caseDetailsToInsert.push(caseDetailToInsert)
   })
 
   // Default to ((2100 / 8) - 1). This is to avoid 2100 parameter server error.
