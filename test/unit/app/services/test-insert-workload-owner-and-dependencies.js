@@ -68,7 +68,7 @@ describe('services/insert-workload-owner-and-dependencies', function () {
     return insertWoAndDependencies(caseSummary)
     .then(function (result) {
       expect(result).to.be.eql(woId)
-      expect(insertOffenderManagerTypeId.calledWith(caseSummary.omGradeCode)).to.be.equal(true)
+      expect(insertOffenderManagerTypeId.calledWith(expectedGrade)).to.be.equal(true)
       expect(insertOffenderManager.calledWith(expectedOffenderManager)).to.be.equal(true)
       expect(insertRegion.calledWith(expectedRegion)).to.be.equal(true)
       expect(insertLdu.calledWith(expectedLdu)).to.be.equal(true)

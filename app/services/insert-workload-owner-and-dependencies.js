@@ -13,7 +13,7 @@ const Region = require('wmt-probation-rules').Region
 const filterOmGradeCode = require('wmt-probation-rules').filterOmGradeCode
 
 module.exports = function (caseSummary) {
-  return insertOffenderManagerTypeId(caseSummary.omGradeCode)
+  return insertOffenderManagerTypeId(filterOmGradeCode(caseSummary.omGradeCode))
   .then(function (typeId) {
     return insertOffenderManager(
       new OffenderManager(
