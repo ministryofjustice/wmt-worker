@@ -101,8 +101,6 @@ var insertCaseDetails = function (caseDetails, workloadId, location) {
   return knex.batchInsert('case_details', caseDetailsToInsert, batchSize)
 }
 
-
-
 var mapForInsert = function (record) {
   var row = {}
   for (let key in record) {
