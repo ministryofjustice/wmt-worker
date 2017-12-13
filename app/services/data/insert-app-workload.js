@@ -91,7 +91,14 @@ var insertCaseDetails = function (caseDetails, workloadId, location) {
     }
     caseDetailsToInsert.push(caseDetailToInsert)
   })
-  return knex('case_details').insert(caseDetailsToInsert)
+
+  // Default to ((2100 / 8) - 1). This is to avoid 2100 parameter server error.
+  // 8 is the number columns in this table and 2100 is number of max parameters.
+  var batchSize = 261
+  if (caseDetailsToInsert.length > 30) {
+    batchSize = Math.floor(caseDetailsToInsert.length / 8) + 1
+  }
+  return knex.batchInsert('case_details', caseDetailsToInsert, batchSize)
 }
 
 var mapForInsert = function (record) {
