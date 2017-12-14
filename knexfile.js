@@ -15,7 +15,7 @@ module.exports = {
     connection: defaultConnection,
     debug: false,
     pool: {
-      max: 300
+      max: 400
     }
   },
   staging: {
@@ -29,7 +29,7 @@ module.exports = {
     },
     debug: false,
     pool: {
-      max: 300
+      max: 400
     }
   },
   app: {
@@ -50,7 +50,7 @@ module.exports = {
     },
     debug: false,
     pool: {
-      max: 300
+      max: 400
     }
   },
   dev: {
@@ -68,7 +68,7 @@ module.exports = {
     },
     debug: false,
     pool: {
-      max: 300
+      max: 400
     }
   },
   views: {
@@ -86,7 +86,7 @@ module.exports = {
     },
     debug: false,
     pool: {
-      max: 300
+      max: 400
     }
   }
 }
