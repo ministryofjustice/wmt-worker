@@ -21,14 +21,16 @@ module.exports.execute = function (task) {
   .then(function (stagingCourtReports) {
     return Promise.each(stagingCourtReports, function (stagingCourtReport) {
       var caseSummary = stagingCourtReport.casesSummary
-      return insertWorkloadOwnerAndDependencies(caseSummary)
-      .then(function (workloadOwnerId) {
-        var courtReportToInsert = mapCourtReports(stagingCourtReport, parseInt(workloadOwnerId), parseInt(workloadReportId))
-        return insertCourtReports(courtReportToInsert)
-        .then(function (insertedId) {
-          logger.info('Court Report with id ' + insertedId + ' added')
+      if (caseSummary.omKey !== null) {
+        return insertWorkloadOwnerAndDependencies(caseSummary)
+        .then(function (workloadOwnerId) {
+          var courtReportToInsert = mapCourtReports(stagingCourtReport, parseInt(workloadOwnerId), parseInt(workloadReportId))
+          return insertCourtReports(courtReportToInsert)
+          .then(function (insertedId) {
+            logger.info('Court Report with id ' + insertedId + ' added')
+          })
         })
-      })
+      }
     })
     .then(function () {
       var reductionsWorkerTask = new Task(

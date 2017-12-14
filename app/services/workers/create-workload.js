@@ -20,12 +20,14 @@ module.exports.execute = function (task) {
   return getStagingWorkload([startingStagingId, endingStagingId]).then(function (stagingWorkloads) {
     return Promise.each(stagingWorkloads, function (stagingWorkload) {
       var caseSummary = stagingWorkload.casesSummary
-      return insertWorkloadOwnerAndDependencies(caseSummary)
-      .then(function (workloadOwnerId) {
-        var workloadToInsert = mapWorkload(stagingWorkload, parseInt(workloadOwnerId), parseInt(workloadReportId))
-        var caseDetails = stagingWorkload.caseDetails
-        return insertWorkload(workloadToInsert, caseDetails)
-      })
+      if (caseSummary.omKey !== null) {
+        return insertWorkloadOwnerAndDependencies(caseSummary)
+        .then(function (workloadOwnerId) {
+          var workloadToInsert = mapWorkload(stagingWorkload, parseInt(workloadOwnerId), parseInt(workloadReportId))
+          var caseDetails = stagingWorkload.caseDetails
+          return insertWorkload(workloadToInsert, caseDetails)
+        })
+      }
     })
     .then(function () {
       var reductionsWorkerTask = new Task(

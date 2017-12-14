@@ -29,7 +29,11 @@ var task = {
 var endingStagingId = task.additionalData.startingId + (task.additionalData.batchSize - 1)
 var stagingCourtReports = [
   {
-    caseSummary: 'This is a fake summary'
+    casesSummary: {
+      omKey: 'TestOmKey',
+      omForename: 'TestForename',
+      omSurname: 'TestSurname'
+    }
   }
 ]
 var appCourtReports = 'This is a fake app court reports'
@@ -74,7 +78,7 @@ describe('services/workers/create-court-reports', function () {
     return createCourtReports.execute(task)
     .then(function (result) {
       expect(getStagingCourtReporters.calledWith([task.additionalData.startingId, endingStagingId])).to.be.equal(true)
-      expect(insertWorkloadOwnerAndDependencies.calledWith(stagingCourtReports.caseSummary)).to.be.equal(true)
+      expect(insertWorkloadOwnerAndDependencies.calledWith(stagingCourtReports[0].casesSummary)).to.be.equal(true)
       expect(insertCourtReports.calledWith(appCourtReports)).to.be.equal(true)
       expect(probationRulesStub.mapCourtReports.calledWith(stagingCourtReports, workloadOwnerId, task.workloadReportId))
       expect(createNewTasks.calledWith([nextTask])).to.be.eql(true)
