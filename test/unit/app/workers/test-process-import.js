@@ -68,10 +68,10 @@ describe(relativeFilePath, function () {
     })
   })
 
-  it('should create 4 tasks given a batch size of 5, with an id range of 100 for both court reporters and wmt extract', function () {
+  it('should create 40 tasks given a batch size of 5, with an id range of 100 for both court reporters and wmt extract', function () {
     return processImport.execute({}).then(function () {
       var createdTasks = createNewTasksStub.getCall(0).args[0]
-      expect(createdTasks.length).to.equal(4)
+      expect(createdTasks.length).to.equal(40)
       for (var i = 1; i < createdTasks.length / 2; i++) {
         expect(createdTasks[i].type).to.equal(taskType.CREATE_COURT_REPORTS)
       }
@@ -86,7 +86,7 @@ describe(relativeFilePath, function () {
 
     return processImport.execute({}).then(function () {
       var createdTasks = createNewTasksStub.getCall(0).args[0]
-      expect(createdTasks.length).to.equal(2)
+      expect(createdTasks.length).to.equal(20)
       for (var i = 1; i < createdTasks.length - 1; i++) {
         expect(createdTasks[i].type).to.equal(taskType.CREATE_WORKLOAD)
       }
