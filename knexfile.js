@@ -13,10 +13,7 @@ module.exports = {
   development: {
     client: 'mssql',
     connection: defaultConnection,
-    debug: false,
-    pool: {
-      max: 300
-    }
+    debug: false
   },
   staging: {
     client: 'mssql',
@@ -27,10 +24,7 @@ module.exports = {
     migrations: {
       directory: 'migrations/staging'
     },
-    debug: false,
-    pool: {
-      max: 300
-    }
+    debug: false
   },
   app: {
     client: 'mssql',
@@ -39,7 +33,7 @@ module.exports = {
       password: config.MIGRATION_APP_DATABASE_PASSWORD,
       options: {
         encrypt: true,
-        requestTimeout: 120000
+        requestTimeout: 60000
       }
     }),
     migrations: {
@@ -50,10 +44,25 @@ module.exports = {
     },
     debug: false,
     pool: {
-      max: 300
+      max: 100
     }
   },
   dev: {
+    client: 'mssql',
+    connection: Object.assign({}, defaultConnection, {
+      user: config.MIGRATION_APP_DATABASE_USERNAME,
+      password: config.MIGRATION_APP_DATABASE_PASSWORD,
+      options: {
+        encrypt: true,
+        requestTimeout: 60000
+      }
+    }),
+    seeds: {
+      directory: 'seed/data/dev'
+    },
+    debug: false
+  },
+  views: {
     client: 'mssql',
     connection: Object.assign({}, defaultConnection, {
       user: config.MIGRATION_APP_DATABASE_USERNAME,
@@ -64,29 +73,8 @@ module.exports = {
       }
     }),
     seeds: {
-      directory: 'seed/data/dev'
-    },
-    debug: false,
-    pool: {
-      max: 300
-    }
-  },
-  views: {
-    client: 'mssql',
-    connection: Object.assign({}, defaultConnection, {
-      user: config.MIGRATION_APP_DATABASE_USERNAME,
-      password: config.MIGRATION_APP_DATABASE_PASSWORD,
-      options: {
-        encrypt: true,
-        requestTimeout: 300000
-      }
-    }),
-    seeds: {
       directory: 'seed/views'
     },
-    debug: false,
-    pool: {
-      max: 300
-    }
+    debug: false
   }
 }
