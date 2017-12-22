@@ -69,7 +69,7 @@ module.exports = {
       password: config.MIGRATION_APP_DATABASE_PASSWORD,
       options: {
         encrypt: true,
-        requestTimeout: 120000
+        requestTimeout: 300000
       }
     }),
     seeds: {
