@@ -14,27 +14,27 @@ module.exports = function (isT2a = false) {
     .then(function (result) {
       var defaultNominalTargets = new DefaultNominalTargets(result.nominal_target_spo, result.nominal_target_po)
       var defaultContractedHours = new DefaultContractedHours(result.default_contracted_hours_pso, result.default_contracted_hours_po)
-      var communityLocationPointsConfiguration = new LocationPointsConfiguration(result.comm_tier_1,
-                                                                         result.comm_tier_2,
-                                                                         result.comm_tier_3,
-                                                                         result.comm_tier_4,
-                                                                         result.comm_tier_5,
+      var communityLocationPointsConfiguration = new LocationPointsConfiguration(result.comm_tier_7,
                                                                          result.comm_tier_6,
-                                                                         result.comm_tier_7)
-      var licenseLocationPointsConfiguration = new LocationPointsConfiguration(result.lic_tier_1,
-                                                                       result.lic_tier_2,
-                                                                       result.lic_tier_3,
-                                                                       result.lic_tier_4,
-                                                                       result.lic_tier_5,
+                                                                         result.comm_tier_5,
+                                                                         result.comm_tier_4,
+                                                                         result.comm_tier_3,
+                                                                         result.comm_tier_2,
+                                                                         result.comm_tier_1)
+      var licenseLocationPointsConfiguration = new LocationPointsConfiguration(result.lic_tier_7,
                                                                        result.lic_tier_6,
-                                                                       result.lic_tier_7)
-      var custodyLocationPointsConfiguration = new LocationPointsConfiguration(result.cust_tier_1,
-                                                                       result.cust_tier_2,
-                                                                       result.cust_tier_3,
-                                                                       result.cust_tier_4,
-                                                                       result.cust_tier_5,
+                                                                       result.lic_tier_5,
+                                                                       result.lic_tier_4,
+                                                                       result.lic_tier_3,
+                                                                       result.lic_tier_2,
+                                                                       result.lic_tier_1)
+      var custodyLocationPointsConfiguration = new LocationPointsConfiguration(result.cust_tier_7,
                                                                        result.cust_tier_6,
-                                                                       result.cust_tier_7)
+                                                                       result.cust_tier_5,
+                                                                       result.cust_tier_4,
+                                                                       result.cust_tier_3,
+                                                                       result.cust_tier_2,
+                                                                       result.cust_tier_1)
       var pointsConfiguration = new PointsConfiguration(communityLocationPointsConfiguration,
                                                         licenseLocationPointsConfiguration,
                                                         custodyLocationPointsConfiguration,
