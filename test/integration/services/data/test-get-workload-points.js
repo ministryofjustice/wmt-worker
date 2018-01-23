@@ -55,6 +55,7 @@ describe('services/data/get-workload-points', function () {
       expect(points.pointsConfiguration.defaultNominalTargets.po).to.equal(25)
       expect(points.pointsConfiguration.defaultContractedHours.po).to.equal(26)
       expect(points.pointsConfiguration.defaultContractedHours.pso).to.equal(27)
+      expect(points.pointsConfiguration.defaultContractedHours.spo).to.equal(0)
 
       expect(points.overdueTermination).to.equal(28)
       expect(points.warrants).to.equal(29)
@@ -108,6 +109,7 @@ describe('services/data/get-workload-points', function () {
       expect(points.pointsConfiguration.defaultNominalTargets.po).to.equal(0)
       expect(points.pointsConfiguration.defaultContractedHours.po).to.equal(0)
       expect(points.pointsConfiguration.defaultContractedHours.pso).to.equal(0)
+      expect(points.pointsConfiguration.defaultContractedHours.spo).to.equal(0)
 
       expect(points.overdueTermination).to.equal(25)
       expect(points.warrants).to.equal(26)

@@ -13,7 +13,7 @@ module.exports = function (isT2a = false) {
     .first()
     .then(function (result) {
       var defaultNominalTargets = new DefaultNominalTargets(result.nominal_target_spo, result.nominal_target_po)
-      var defaultContractedHours = new DefaultContractedHours(result.default_contracted_hours_pso, result.default_contracted_hours_po)
+      var defaultContractedHours = new DefaultContractedHours(result.default_contracted_hours_pso, result.default_contracted_hours_po, result.default_contracted_hours_spo)
       var communityLocationPointsConfiguration = new LocationPointsConfiguration(result.comm_tier_7,
                                                                          result.comm_tier_6,
                                                                          result.comm_tier_5,
