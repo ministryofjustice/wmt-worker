@@ -38,6 +38,7 @@ exports.up = function (knex, Promise) {
     table.integer('parom').unsigned().notNullable()
     table.timestamp('effective_from').defaultTo(knex.fn.now())
     table.timestamp('effective_to')
+    table.double('default_contracted_hours_spo').unsigned().notNullable()
   }).catch(function (error) {
     logger.error(error)
     throw error
