@@ -42,7 +42,7 @@ exports.seed = function (knex, Promise) {
         paroms_enabled: 1,
         parom: 123,
         is_t2a: false,
-        default_contracted_hours_spo: 0,
+        default_contracted_hours_spo: 0
       })
       .then(function () {
         return knex(tableName).insert({
@@ -82,7 +82,7 @@ exports.seed = function (knex, Promise) {
           paroms_enabled: 0,
           parom: 0,
           is_t2a: true,
-          default_contracted_hours_spo: 0,
+          default_contracted_hours_spo: 0
         })
       })
     })
