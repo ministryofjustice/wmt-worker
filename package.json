@@ -56,6 +56,6 @@
     "mssql": "3.3.0",
     "request": "^2.81.0",
     "request-promise": "^4.2.1",
-    "wmt-probation-rules": "ministryofjustice/wmt-probation-rules.git#v0.8.6"
+    "wmt-probation-rules": "ministryofjustice/wmt-probation-rules.git#v0.8.7"
   }
 }
