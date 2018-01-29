@@ -62,6 +62,9 @@ module.exports.execute = function (task) {
                     var nominalTarget = calculateNominalTarget(offenderManagerTypeId, caseTypeWeightings.pointsConfiguration.defaultNominalTargets)
                     var availablePoints = calculateAvailablePoints(nominalTarget, offenderManagerTypeId, contractedHours,
                       reductions, caseTypeWeightings.pointsConfiguration.defaultContractedHours)
+                    if (availablePoints === null) {
+                      availablePoints = 0
+                    }
                     var armsTotalCases = workload.armsCommunityCases + workload.armsLicenseCases
                     switch (operationType) {
                       case operationTypes.INSERT:
