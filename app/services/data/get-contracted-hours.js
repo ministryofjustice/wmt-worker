@@ -5,6 +5,7 @@ module.exports = function (workloadOwnerId) {
     .crossJoin('workload_points')
     .whereNull('workload_points.effective_to')
     .andWhere('workload_owner.id', workloadOwnerId)
+    .andWhere('is_t2a', false)
     .first('workload_owner.contracted_hours AS contracted_hours',
       'workload_points.default_contracted_hours_po AS default_hours'
     )
