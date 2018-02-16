@@ -68,10 +68,10 @@ describe(relativeFilePath, function () {
     })
   })
 
-  it('should create 198 tasks given a batch size of 1, with an id range of 100 for both court reporters and wmt extract', function () {
+  it('should create 40 tasks given a batch size of 5, with an id range of 100 for both court reporters and wmt extract', function () {
     return processImport.execute({}).then(function () {
       var createdTasks = createNewTasksStub.getCall(0).args[0]
-      expect(createdTasks.length).to.equal(198)
+      expect(createdTasks.length).to.equal(40)
       for (var i = 1; i < createdTasks.length / 2; i++) {
         expect(createdTasks[i].type).to.equal(taskType.CREATE_COURT_REPORTS)
       }
@@ -81,12 +81,12 @@ describe(relativeFilePath, function () {
     })
   })
 
-  it('should create 0 CREATE-COURT-REPORTS tasks given a batch size of 1, when the court reporters table is empty (i.e. firstId and lastId are null)', function () {
+  it('should create 0 CREATE-COURT-REPORTS tasks given a batch size of 5, when the court reporters table is empty (i.e. firstId and lastId are null)', function () {
     getCourtReportersRange.resolves(new IdRange(null, null))
 
     return processImport.execute({}).then(function () {
       var createdTasks = createNewTasksStub.getCall(0).args[0]
-      expect(createdTasks.length).to.equal(99)
+      expect(createdTasks.length).to.equal(20)
       for (var i = 1; i < createdTasks.length - 1; i++) {
         expect(createdTasks[i].type).to.equal(taskType.CREATE_WORKLOAD)
       }
