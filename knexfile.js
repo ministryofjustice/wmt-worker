@@ -44,7 +44,7 @@ module.exports = {
     },
     debug: false,
     pool: {
-      max: 100
+      max: 200
     }
   },
   dev: {
