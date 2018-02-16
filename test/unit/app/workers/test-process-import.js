@@ -68,7 +68,6 @@ describe(relativeFilePath, function () {
     })
   })
 
-
   it('should create 198 tasks given a batch size of 1, with an id range of 100 for both court reporters and wmt extract', function () {
     return processImport.execute({}).then(function () {
       var createdTasks = createNewTasksStub.getCall(0).args[0]
@@ -80,8 +79,7 @@ describe(relativeFilePath, function () {
         expect(createdTasks[i].type).to.equal(taskType.CREATE_WORKLOAD)
       }
     })
-  }) 
-
+  })
 
   it('should create 0 CREATE-COURT-REPORTS tasks given a batch size of 1, when the court reporters table is empty (i.e. firstId and lastId are null)', function () {
     getCourtReportersRange.resolves(new IdRange(null, null))
