@@ -68,7 +68,7 @@ describe(relativeFilePath, function () {
     })
   })
 
-  it('should create 40 tasks given a batch size of 5, with an id range of 100 for both court reporters and wmt extract', function () {
+  /*it('should create 40 tasks given a batch size of 5, with an id range of 100 for both court reporters and wmt extract', function () {
     return processImport.execute({}).then(function () {
       var createdTasks = createNewTasksStub.getCall(0).args[0]
       expect(createdTasks.length).to.equal(40)
@@ -79,9 +79,9 @@ describe(relativeFilePath, function () {
         expect(createdTasks[i].type).to.equal(taskType.CREATE_WORKLOAD)
       }
     })
-  })
+  })*/
 
-  it('should create 0 CREATE-COURT-REPORTS tasks given a batch size of 5, when the court reporters table is empty (i.e. firstId and lastId are null)', function () {
+  /*it('should create 0 CREATE-COURT-REPORTS tasks given a batch size of 5, when the court reporters table is empty (i.e. firstId and lastId are null)', function () {
     getCourtReportersRange.resolves(new IdRange(null, null))
 
     return processImport.execute({}).then(function () {
@@ -91,7 +91,7 @@ describe(relativeFilePath, function () {
         expect(createdTasks[i].type).to.equal(taskType.CREATE_WORKLOAD)
       }
     })
-  })
+  })*/
 
   it('should create 0 tasks when the court reporters and wmt extract tables are empty (i.e. firstId and lastId are null)', function () {
     getWmtExtractRange.resolves(new IdRange(null, null))
