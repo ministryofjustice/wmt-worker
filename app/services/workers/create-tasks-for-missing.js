@@ -12,7 +12,6 @@ const taskType = require('../../constants/task-type')
 const submittingAgent = require('../../constants/task-submitting-agent')
 
 module.exports.execute = function (task) {
-
   const batchSize = 1
   var tasks = []
   var workloadReportId
@@ -23,23 +22,23 @@ module.exports.execute = function (task) {
       return getMissingStagingIds()
         .then(function (stagingIds) {
           if (stagingIds.length !== 0 && stagingIds !== null && stagingIds !== undefined) {
-            tasks = createTaskObjects(stagingIds, workloadReportId)
+            tasks = createTaskObjects(stagingIds, workloadReportId, batchSize)
             createNewTasks(tasks)
           } else {
             logger.info('CREATE-TASKS-FOR-MISSING - No Missing Offender Managers Found')
           }
         })
-  }).catch(function (error) {
-    logger.error('CREATE-TASKS-FOR-MISSING - Unable to Create Workload Tasks')
-    logger.error(error)
-    throw (error)
-  })
-}
+    }).catch(function (error) {
+      logger.error('CREATE-TASKS-FOR-MISSING - Unable to Create Workload Tasks')
+      logger.error(error)
+      throw (error)
+    })
+  }
 
-var createTaskObjects = function (ids, workloadReportId) {
+var createTaskObjects = function (ids, workloadReportId, batchSize) {
   var tasks = []
   ids.forEach(function (id) {
-    var additionalData = new Batch(id.id, 1)
+    var additionalData = new Batch(id.id, batchSize)
     var taskToWrite = new Task(
       undefined,
       submittingAgent.WORKER,
