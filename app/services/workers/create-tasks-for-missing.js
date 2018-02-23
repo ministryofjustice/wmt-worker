@@ -33,7 +33,7 @@ module.exports.execute = function (task) {
       logger.error(error)
       throw (error)
     })
-  }
+}
 
 var createTaskObjects = function (ids, workloadReportId, batchSize) {
   var tasks = []
