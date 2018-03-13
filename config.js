@@ -3,7 +3,7 @@ module.exports = {
   LOGGING_LEVEL: process.env.LOGGING_LEVEL || 'DEBUG',
 
   // Worker
-  ASYNC_WORKER_CRON: process.env.WMT_ASYNC_WORKER_CRON || '0 */2 * * * *', // default every minute
+  ASYNC_WORKER_CRON: process.env.WMT_ASYNC_WORKER_CRON || '0 * * * * *', // default every minute
   ASYNC_WORKER_BATCH_SIZE: process.env.WMT_ASYNC_WORKER_BATCH_SIZE || '25',
 
   // DB
