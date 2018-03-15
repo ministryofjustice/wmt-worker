@@ -13,10 +13,19 @@ const callWebRefreshEndpoint = require('./services/refresh-web-org-hierarchy')
 const closePreviousWorkloadReport = require('./services/close-previous-workload-report')
 const updateWorkloadReportEffectiveTo = require('./services/data/update-workload-report-effective-to')
 const operationTypes = require('./constants/calculation-tasks-operation-type')
+const getTaskInProgressCount = require('./services/data/get-tasks-inprogress-count')
 
 module.exports = function () {
   var batchSize = parseInt(config.ASYNC_WORKER_BATCH_SIZE, 10)
-  return processTasks(batchSize)
+  // Check if in progress count === 0
+  return getTaskInProgressCount()
+    .then(function (count) {
+      if (count[0].theCount === 0) {
+        return processTasks(batchSize)
+      } else {
+        log.info('Too many tasks already IN-PROGRESS')
+      }
+    })
 }
 
 function processTasks (batchSize) {
