@@ -3,6 +3,6 @@ const taskStatus = require('../../constants/task-status')
 
 module.exports = function (batchSize) {
   return knex('app.tasks')
-    .where('status', 'IN-PROGRESS')
+    .where('status', taskStatus.INPROGRESS)
     .count('* AS theCount')
 }
