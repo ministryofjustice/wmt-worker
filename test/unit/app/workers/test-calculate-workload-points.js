@@ -44,6 +44,7 @@ var getAdjustmentPoints
 var getContractedHours
 var task
 var workloads
+var checkForDuplicateCalculation
 
 describe('services/workers/calculate-workload-points', function () {
   beforeEach(function () {
@@ -56,6 +57,7 @@ describe('services/workers/calculate-workload-points', function () {
     getOffenderManagerTypeIdStub = sinon.stub()
     insertWorkloadPointsCalculationsStub = sinon.stub()
     updateWorkloadPointsCalculationsStub = sinon.stub()
+    checkForDuplicateCalculation = sinon.stub()
 
     probationRulesStub = {}
     probationRulesStub.calculateWorkloadPoints = sinon.stub()
@@ -85,7 +87,8 @@ describe('services/workers/calculate-workload-points', function () {
       '../data/insert-workload-points-calculation': insertWorkloadPointsCalculationsStub,
       '../data/update-workload-points-calculation': updateWorkloadPointsCalculationsStub,
       'wmt-probation-rules': probationRulesStub,
-      '../data/get-adjustment-points': getAdjustmentPoints
+      '../data/get-adjustment-points': getAdjustmentPoints,
+      '../data/check-for-duplicate-calculation': checkForDuplicateCalculation
     })
     getWorkloadsStub.resolves([{values: workloads, id: WORKLOAD_ID}])
     getPointsConfigurationStub.resolves({values: pointsHelper.getCaseTypeWeightings(), id: WORKLOAD_ID})
@@ -98,6 +101,7 @@ describe('services/workers/calculate-workload-points', function () {
   })
 
   it('calls the get workloads promise correctly', function () {
+    checkForDuplicateCalculation.resolves(undefined)
     getAdjustmentPoints.resolves(0)
     return calculateWorkloadPoints.execute(task).then(function () {
       expect(getWorkloadsStub.calledWith(WORKLOAD_ID, MAX_ID, BATCH_SIZE)).to.equal(true)
@@ -112,6 +116,7 @@ describe('services/workers/calculate-workload-points', function () {
         workloadBatch: new Batch(WORKLOAD_ID, 1),
         operationType: operationTypes.INSERT
       }}
+    checkForDuplicateCalculation.resolves(undefined)
     getAdjustmentPoints.resolves(0)
     var batchSize = 1
     return calculateWorkloadPoints.execute(task).then(function () {
@@ -120,6 +125,7 @@ describe('services/workers/calculate-workload-points', function () {
   })
 
   it('retrieves the points configuration', function () {
+    checkForDuplicateCalculation.resolves(undefined)
     getAdjustmentPoints.resolves(0)
     return calculateWorkloadPoints.execute(task).then(function () {
       expect(getPointsConfigurationStub.called).to.equal(true)
@@ -127,6 +133,7 @@ describe('services/workers/calculate-workload-points', function () {
   })
 
   it('should call insertWorkloadPointsCalculations with the correct params when positive CMS adjustments are applied', function () {
+    checkForDuplicateCalculation.resolves(undefined)
     getAdjustmentPoints.withArgs(undefined, adjustmentCategory.CMS).resolves(CMS_POINTS_POSITIVE)
     getAdjustmentPoints.withArgs(undefined, adjustmentCategory.GS).resolves(0)
 
@@ -141,6 +148,7 @@ describe('services/workers/calculate-workload-points', function () {
   })
 
   it('should call insertWorkloadPointsCalculations with the correct params when negative CMS adjustments are applied', function () {
+    checkForDuplicateCalculation.resolves(undefined)
     getAdjustmentPoints.withArgs(undefined, adjustmentCategory.CMS).resolves(CMS_POINTS_NEGATIVE)
     getAdjustmentPoints.withArgs(undefined, adjustmentCategory.GS).resolves(0)
 
@@ -155,6 +163,7 @@ describe('services/workers/calculate-workload-points', function () {
   })
 
   it('should call insertWorkloadPointsCalculations with the correct params when GS adjustments are applied', function () {
+    checkForDuplicateCalculation.resolves(undefined)
     getAdjustmentPoints.withArgs(undefined, adjustmentCategory.CMS).resolves(0)
     getAdjustmentPoints.withArgs(undefined, adjustmentCategory.GS).resolves(GS_POINTS)
 
@@ -169,6 +178,7 @@ describe('services/workers/calculate-workload-points', function () {
   })
 
   it('should call updateWorkloadPointsCalculations when the task type is updated', function () {
+    checkForDuplicateCalculation.resolves(0)
     getAdjustmentPoints.withArgs(undefined, adjustmentCategory.CMS).resolves(0)
     getAdjustmentPoints.withArgs(undefined, adjustmentCategory.GS).resolves(GS_POINTS)
 
