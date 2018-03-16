@@ -67,7 +67,7 @@ module.exports.execute = function (task) {
                       availablePoints = 0
                     }
                     var armsTotalCases = workload.armsCommunityCases + workload.armsLicenseCases
-                    checkForDuplicateCalculation(reportId, workloadId)
+                    return checkForDuplicateCalculation(reportId, workloadId)
                       .then(function (result) {
                         // check if calculation already exists when the operatioType is INSERT
                         // no need to do this change anything if the operationType is UPDATE
