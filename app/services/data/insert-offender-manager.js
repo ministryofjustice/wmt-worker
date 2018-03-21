@@ -23,6 +23,17 @@ module.exports = function (offenderManager) {
             return id
           })
       } else {
+        // check if staff grade is still the same
+        // and update where necessary
+        if (result['type_id'] !== offenderManagerDbObject.type_id) {
+          return knex(offenderManagerTable)
+            .update('type_id', offenderManagerDbObject.type_id)
+            .where({'key': offenderManagerDbObject.key})
+            .returning('id')
+            .then(function (id) {
+              return id
+            })
+        }
         offenderManagerId = result['id']
       }
       return offenderManagerId
