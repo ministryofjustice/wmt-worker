@@ -12,6 +12,7 @@ const getAppReductions = require('../data/get-app-reduction-hours')
 const getContractedHours = require('../data/get-contracted-hours')
 const getAdjustmentPoints = require('../data/get-adjustment-points')
 const operationTypes = require('../../constants/calculation-tasks-operation-type')
+const checkForDuplicateCalculation = require('../data/check-for-duplicate-calculation')
 
 const adjustmentCategory = require('../../constants/adjustment-category')
 
@@ -66,45 +67,53 @@ module.exports.execute = function (task) {
                       availablePoints = 0
                     }
                     var armsTotalCases = workload.armsCommunityCases + workload.armsLicenseCases
-                    switch (operationType) {
-                      case operationTypes.INSERT:
-                        return insertWorkloadPointsCalculations(
-                                reportId,
-                                pointsConfiguration.id,
-                                t2aPointsConfiguration.id,
-                                workloadId,
-                                totalPoints,
-                                workloadPointsBreakdown.sdrPoints,
-                                workloadPointsBreakdown.sdrConversionPoints,
-                                workloadPointsBreakdown.paromsPoints,
-                                nominalTarget,
-                                availablePoints,
-                                contractedHours,
-                                reductions,
-                                cmsAdjustments,
-                                gsAdjustments,
-                                armsTotalCases)
+                    return checkForDuplicateCalculation(reportId, workloadId)
+                      .then(function (result) {
+                        // check if calculation already exists when the operatioType is INSERT
+                        // no need to do this change anything if the operationType is UPDATE
+                        if (operationType === operationTypes.INSERT && result !== undefined) {
+                          operationType = operationTypes.UPDATE
+                        }
+                        switch (operationType) {
+                          case operationTypes.INSERT:
+                            return insertWorkloadPointsCalculations(
+                                    reportId,
+                                    pointsConfiguration.id,
+                                    t2aPointsConfiguration.id,
+                                    workloadId,
+                                    totalPoints,
+                                    workloadPointsBreakdown.sdrPoints,
+                                    workloadPointsBreakdown.sdrConversionPoints,
+                                    workloadPointsBreakdown.paromsPoints,
+                                    nominalTarget,
+                                    availablePoints,
+                                    contractedHours,
+                                    reductions,
+                                    cmsAdjustments,
+                                    gsAdjustments,
+                                    armsTotalCases)
 
-                      case operationTypes.UPDATE:
-                        return updateWorkloadPointsCalculations(
-                                reportId,
-                                pointsConfiguration.id,
-                                t2aPointsConfiguration.id,
-                                workloadId,
-                                totalPoints,
-                                workloadPointsBreakdown.sdrPoints,
-                                workloadPointsBreakdown.sdrConversionPoints,
-                                workloadPointsBreakdown.paromsPoints,
-                                nominalTarget,
-                                availablePoints,
-                                contractedHours,
-                                reductions,
-                                cmsAdjustments,
-                                gsAdjustments,
-                                armsTotalCases)
-                      default:
-                        throw new Error('Operation type of ' + operationType + ' is not valid. Should be ' + operationTypes.INSERT + ' or ' + operationTypes.UPDATE)
-                    }
+                          case operationTypes.UPDATE:
+                            return updateWorkloadPointsCalculations(
+                                    reportId,
+                                    pointsConfiguration.id,
+                                    t2aPointsConfiguration.id,
+                                    workloadId,
+                                    totalPoints,
+                                    workloadPointsBreakdown.sdrPoints,
+                                    workloadPointsBreakdown.sdrConversionPoints,
+                                    workloadPointsBreakdown.paromsPoints,
+                                    nominalTarget,
+                                    availablePoints,
+                                    contractedHours,
+                                    reductions,
+                                    cmsAdjustments,
+                                    gsAdjustments,
+                                    armsTotalCases)
+                          default:
+                            throw new Error('Operation type of ' + operationType + ' is not valid. Should be ' + operationTypes.INSERT + ' or ' + operationTypes.UPDATE)
+                        }
+                      })
                   })
                 })
               })
