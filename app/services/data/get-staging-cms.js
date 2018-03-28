@@ -1,6 +1,6 @@
 const knex = require('../../../knex').stagingSchema
 
-module.exports = function () {
+module.exports = function (workloadStagingIdStart, workloadStagingIdEnd) {
   return knex('cms')
   .select(
     'id',
@@ -12,4 +12,14 @@ module.exports = function () {
     'om_key AS omKey',
     'om_team_key AS omTeamKey'
   )
+  .whereIn('om_key', function () {
+    this.select('om_key')
+      .from('wmt_extract')
+      .whereBetween('id', [workloadStagingIdStart, workloadStagingIdEnd])
+  })
+  .orWhereIn('contact_staff_key', function () {
+    this.select('om_key')
+      .from('wmt_extract')
+      .whereBetween('id', [workloadStagingIdStart, workloadStagingIdEnd])
+  })
 }
