@@ -30,7 +30,7 @@ describe('services/data/get-staging-cms', function () {
   })
 
   it('should return the staging cms records', function () {
-    return getStagingCms()
+    return getStagingCms(insertedRecords[0].id, insertedRecords[insertedRecords.length - 1].id)
     .then(function (reductions) {
       var ids = []
       reductions.forEach(function (reduction) {

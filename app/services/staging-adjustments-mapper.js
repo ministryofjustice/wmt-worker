@@ -8,7 +8,7 @@ const adjustmentStatus = require('../constants/adjustment-status')
 module.exports.mapCmsAdjustments = function (workloadStagingIdStart, workloadStagingIdEnd, workloadReportId) {
   return getWorkloadOwnersInWorkloadRange(workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
   .then(function (workloadOwnerIds) {
-    return getStagingCms()
+    return getStagingCms(workloadStagingIdStart, workloadStagingIdEnd)
     .then(function (cmsRecords) {
       var stgAdjustments = []
       var promises = []
