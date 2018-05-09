@@ -68,7 +68,7 @@ describe('app/services/data/insert-offender-manager', function () {
 
   after(function () {
     return knex('offender_manager').where('id', offenderManagerId).del()
-      .then(function (){
+      .then(function () {
         return knex('offender_manager_type').where('id', typeId).del()
       })
   })

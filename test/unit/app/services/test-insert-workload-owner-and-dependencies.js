@@ -17,6 +17,7 @@ var insertWorkloadOwner
 var insertTeam
 var insertLdu
 var insertRegion
+var getDefaultContractedHours
 
 var omTypeId = 1
 var omId = 2
@@ -24,6 +25,7 @@ var woId = 3
 var teamId = 4
 var lduId = 5
 var regionId = 6
+var contractedHours = 37
 
 var caseSummary = {
   omGradeCode: 'D',
@@ -43,7 +45,7 @@ var expectedOffenderManager = new OffenderManager(undefined, caseSummary.omKey, 
 var expectedRegion = new Region(undefined, caseSummary.regionCode, caseSummary.regionDesc)
 var expectedLdu = new Ldu(undefined, regionId, caseSummary.lduCode, caseSummary.lduDesc)
 var expectedTeam = new Team(undefined, lduId, caseSummary.teamCode, caseSummary.teamDesc)
-var expectedWorkloadOwner = new WorkloadOwner(undefined, omId, undefined, teamId)
+var expectedWorkloadOwner = new WorkloadOwner(undefined, omId, contractedHours, teamId)
 
 describe('services/insert-workload-owner-and-dependencies', function () {
   beforeEach(function () {
@@ -53,9 +55,11 @@ describe('services/insert-workload-owner-and-dependencies', function () {
     insertTeam = sinon.stub().resolves(teamId)
     insertLdu = sinon.stub().resolves(lduId)
     insertRegion = sinon.stub().resolves(regionId)
+    getDefaultContractedHours = sinon.stub().resolves(contractedHours)
 
     insertWoAndDependencies = proxyquire('../../../../app/services/insert-workload-owner-and-dependencies', {
       './data/insert-offender-manager-type-id': insertOffenderManagerTypeId,
+      './data/get-default-contracted-hours': getDefaultContractedHours,
       './data/insert-offender-manager': insertOffenderManager,
       './data/insert-workload-owner': insertWorkloadOwner,
       './data/insert-team': insertTeam,
