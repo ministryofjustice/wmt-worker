@@ -42,4 +42,21 @@ describe('services/data/get-default-contracted-hours', function () {
       done()
     })
   })
+
+  it('should retrieve 0 contracted hours as the default contracted hours for blank grade', function (done) {
+    var grade = ''
+    getDefaultContractedHours(grade).then(function (hours) {
+      expect(hours).to.equal(0)
+      done()
+    })
+  })
+
+  it('should retrieve 0 contracted hours as the default contracted hours for any grade not defined', function (done) {
+    var grade = 'UNRECEGONISED'
+    getDefaultContractedHours(grade).then(function (hours) {
+      expect(hours).to.equal(0)
+      done()
+    })
+  })
+
 })

@@ -3,7 +3,6 @@ const knex = require('../../../knex').appSchema
 module.exports = function (grade) {
   var select = ''
   var selectAlias = ' AS defaultContractedHours'
-  console.log('I get called')
   switch (grade) {
     case 'PO':
     case 'TPO':
@@ -16,6 +15,9 @@ module.exports = function (grade) {
     case 'PSO':
       select = 'default_contracted_hours_pso'
       break
+    default:
+      select = 'default_contracted_hours_spo'
+      break
   }
 
   return knex('workload_points').withSchema('app')
@@ -23,7 +25,6 @@ module.exports = function (grade) {
     .andWhere('is_t2a', false)
     .first(select + selectAlias)
     .then((result) => {
-      console.log('HERE NOW')
       var hours = result.defaultContractedHours
       if (hours === null) {
         hours = 0

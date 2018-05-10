@@ -1,6 +1,7 @@
 const config = require('../../../config')
 const knex = require('../../../knex').appSchema
 const offenderManagerTable = `${config.DB_APP_SCHEMA}.offender_manager`
+const updateOffenderManager = require('./update-offender-manager')
 
 module.exports = function (offenderManager) {
   var offenderManagerId
@@ -23,13 +24,10 @@ module.exports = function (offenderManager) {
             return id
           })
       } else {
-        // check if staff grade is still the same
-        // and update where necessary
-        if (result['type_id'] !== offenderManagerDbObject.type_id) {
-          return knex(offenderManagerTable)
-            .update('type_id', offenderManagerDbObject.type_id)
-            .where({'key': offenderManagerDbObject.key})
-            .returning('id')
+        // check if staff grade, forename or surname is still the same
+        // if any of them aren't, update all
+        if (result['type_id'] !== offenderManagerDbObject.type_id || result['forename'] !== offenderManagerDbObject.forename || result['surname'] !== offenderManagerDbObject.surname) {
+          return updateOffenderManager(offenderManagerDbObject)
             .then(function (id) {
               return id
             })
