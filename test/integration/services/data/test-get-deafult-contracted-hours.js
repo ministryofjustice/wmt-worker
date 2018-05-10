@@ -58,5 +58,4 @@ describe('services/data/get-default-contracted-hours', function () {
       done()
     })
   })
-
 })
