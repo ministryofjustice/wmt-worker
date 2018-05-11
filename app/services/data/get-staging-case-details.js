@@ -1,6 +1,7 @@
 const config = require('../../../config')
 const knex = require('../../../knex').appSchema
 const CaseDetails = require('wmt-probation-rules').CaseDetails
+const sanitiseLocation = require('./helpers/sanitise-location')
 
 const columns = ['row_type', 'case_ref_no', 'tier_code', 'team_code', 'om_grade_code', 'om_key', 'location']
 
@@ -29,7 +30,7 @@ module.exports = function (omKey, teamCode) {
           result.team_code,
           result.om_grade_code,
           result.om_key,
-          result.location
+          sanitiseLocation(result.location) // WMT0047: Changing "Licence" (UK Spelling) to "License" (US Spelling)
         ))
       }
     }
