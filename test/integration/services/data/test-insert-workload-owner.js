@@ -19,8 +19,9 @@ describe('app/services/data/insert-workload-owner', function () {
 
   it('should insert a new workload owner record', function (done) {
     var offenderManagerId = inserts.filter((item) => item.table === 'offender_manager')[0].id
+    var contractedHours = 37
     var teamId = inserts.filter((item) => item.table === 'team')[0].id
-    var workloadOwner = new WorkloadOwner(undefined, offenderManagerId, undefined, teamId)
+    var workloadOwner = new WorkloadOwner(undefined, offenderManagerId, undefined, teamId, contractedHours)
 
     insertWorkloadOwner(workloadOwner).then(function (workloadOwnerId) {
       return knex.table(tableName)
@@ -29,7 +30,7 @@ describe('app/services/data/insert-workload-owner', function () {
         .then(function (result) {
           expect(result['id']).to.not.be.null // eslint-disable-line
           expect(result['offender_manager_id']).to.eq(offenderManagerId) // eslint-disable-line
-          expect(result['contracted_hours']).to.be.null // eslint-disable-line
+          expect(result['contracted_hours']).to.eq(contractedHours) // eslint-disable-line
           expect(result['team_id']).to.eq(teamId) // eslint-disable-line
           inserts.push({table: 'workload_owner', id: workloadOwnerId})
           done()

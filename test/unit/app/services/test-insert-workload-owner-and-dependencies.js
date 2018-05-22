@@ -45,7 +45,7 @@ var expectedOffenderManager = new OffenderManager(undefined, caseSummary.omKey, 
 var expectedRegion = new Region(undefined, caseSummary.regionCode, caseSummary.regionDesc)
 var expectedLdu = new Ldu(undefined, regionId, caseSummary.lduCode, caseSummary.lduDesc)
 var expectedTeam = new Team(undefined, lduId, caseSummary.teamCode, caseSummary.teamDesc)
-var expectedWorkloadOwner = new WorkloadOwner(undefined, omId, contractedHours, teamId)
+var expectedWorkloadOwner = new WorkloadOwner(undefined, omId, undefined, teamId, contractedHours)
 
 describe('services/insert-workload-owner-and-dependencies', function () {
   beforeEach(function () {

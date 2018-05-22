@@ -63,8 +63,9 @@ module.exports = function (caseSummary) {
                 new WorkloadOwner(
                   undefined,
                   parseInt(offenderManagerId),
-                  parseInt(contractedHours),
-                  parseInt(teamId)
+                  undefined,
+                  parseInt(teamId),
+                  parseInt(contractedHours)
                 )
               )
             })
