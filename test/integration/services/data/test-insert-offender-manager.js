@@ -39,7 +39,123 @@ describe('app/services/data/insert-offender-manager', function () {
     })
   })
 
+  it('should update the grade of an existing offender manager', function (done) {
+    var key = '104FD'
+    var offenderManager
+    var newTypeId
+
+    knex('offender_manager_type').select('id').where('grade_code', 'PO')
+      .then(function (id) {
+        newTypeId = id[0].id
+        offenderManager = new OffenderManager(undefined, key, undefined, undefined, newTypeId, undefined)
+        return insertOffenderManager(offenderManager).then(function (id) {
+          offenderManagerId = id
+          return knex.table('offender_manager')
+            .where({'id': id})
+            .first()
+            .then(function (result) {
+              expect(result['id']).to.not.be.null // eslint-disable-line
+              expect(result['key']).to.eq(key) // eslint-disable-line
+              expect(result['forename']).to.be.null // eslint-disable-line
+              expect(result['surname']).to.be.null // eslint-disable-line
+              expect(result['type_id']).to.eq(newTypeId) // eslint-disable-line
+              expect(result['effective_to']).to.be.null // eslint-disable-line
+              done()
+            })
+        })
+      })
+  })
+
+  it('should update the forename of an existing offender manager', function (done) {
+    var key = '104FD'
+    var offenderManager
+    var newTypeId
+    var newForename = 'A.N'
+
+    knex('offender_manager_type').select('id').where('grade_code', 'PO')
+      .then(function (id) {
+        newTypeId = id[0].id
+        offenderManager = new OffenderManager(undefined, key, newForename, undefined, newTypeId, undefined)
+        return insertOffenderManager(offenderManager).then(function (id) {
+          offenderManagerId = id
+          return knex.table('offender_manager')
+            .where({'id': id})
+            .first()
+            .then(function (result) {
+              expect(result['id']).to.not.be.null // eslint-disable-line
+              expect(result['key']).to.eq(key) // eslint-disable-line
+              expect(result['forename']).to.eq(newForename) // eslint-disable-line
+              expect(result['surname']).to.be.null // eslint-disable-line
+              expect(result['type_id']).to.eq(newTypeId) // eslint-disable-line
+              expect(result['effective_to']).to.be.null // eslint-disable-line
+              done()
+            })
+        })
+      })
+  })
+
+  it('should update the surname of an existing offender manager', function (done) {
+    var key = '104FD'
+    var offenderManager
+    var newTypeId
+    var newForename = 'A.N'
+    var newSurname = 'OTHER'
+
+    knex('offender_manager_type').select('id').where('grade_code', 'PO')
+      .then(function (id) {
+        newTypeId = id[0].id
+        offenderManager = new OffenderManager(undefined, key, newForename, newSurname, newTypeId, undefined)
+        return insertOffenderManager(offenderManager).then(function (id) {
+          offenderManagerId = id
+          return knex.table('offender_manager')
+            .where({'id': id})
+            .first()
+            .then(function (result) {
+              expect(result['id']).to.not.be.null // eslint-disable-line
+              expect(result['key']).to.eq(key) // eslint-disable-line
+              expect(result['forename']).to.eq(newForename) // eslint-disable-line
+              expect(result['surname']).to.eq(newSurname) // eslint-disable-line
+              expect(result['type_id']).to.eq(newTypeId) // eslint-disable-line
+              expect(result['effective_to']).to.be.null // eslint-disable-line
+              done()
+            })
+        })
+      })
+  })
+
+  it('should update staff grade, forename and surname of an existing offender manager', function (done) {
+    var key = '104FD'
+    var offenderManager
+    var newTypeId
+    var newForename = 'JOE'
+    var newSurname = 'BLOGGS'
+
+    knex('offender_manager_type').select('id').where('grade_code', 'SPO')
+      .then(function (id) {
+        newTypeId = id[0].id
+        offenderManager = new OffenderManager(undefined, key, newForename, newSurname, newTypeId, undefined)
+        return insertOffenderManager(offenderManager).then(function (id) {
+          offenderManagerId = id
+          return knex.table('offender_manager')
+            .where({'id': id})
+            .first()
+            .then(function (result) {
+              expect(result['id']).to.not.be.null // eslint-disable-line
+              expect(result['key']).to.eq(key) // eslint-disable-line
+              expect(result['forename']).to.eq(newForename) // eslint-disable-line
+              expect(result['surname']).to.eq(newSurname) // eslint-disable-line
+              expect(result['type_id']).to.eq(newTypeId) // eslint-disable-line
+              expect(result['effective_to']).to.be.null // eslint-disable-line
+              done()
+            })
+        })
+      })
+  })
+
   after(function () {
     return knex('offender_manager').where('id', offenderManagerId).del()
+      .then(function () {
+        return knex('offender_manager_type').where('id', typeId).del()
+      })
   })
 })
