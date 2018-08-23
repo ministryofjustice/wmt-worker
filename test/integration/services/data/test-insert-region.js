@@ -7,7 +7,8 @@ describe('app/services/data/insert-region', function () {
   var regionId
   it('should insert a new region record', function (done) {
     var code = 'U'
-    var region = new Region(undefined, code)
+    var originalRegionName = 'REGION NAME'
+    var region = new Region(undefined, code, originalRegionName)
     insertRegion(region).then(function (id) {
       regionId = id
       return knex.table('region')
@@ -16,7 +17,25 @@ describe('app/services/data/insert-region', function () {
         .then(function (result) {
           expect(result['id']).to.not.be.null // eslint-disable-line
           expect(result['code']).to.eq(code) // eslint-disable-line
-          expect(result['description']).to.be.null // eslint-disable-line
+          expect(result['description']).to.eq(originalRegionName) // eslint-disable-line
+          done()
+        })
+    })
+  })
+
+  it('should update the name of an existing region', function (done) {
+    var code = 'U'
+    var regionName = 'TEST REGION NAME'
+    var region = new Region(undefined, code, regionName)
+    insertRegion(region).then(function (id) {
+      regionId = id
+      return knex.table('region')
+        .where({'id': regionId})
+        .first()
+        .then(function (result) {
+          expect(result['id']).to.eq(regionId[0]) // eslint-disable-line
+          expect(result['code']).to.eq(code) // eslint-disable-line
+          expect(result['description']).to.eq(regionName) // eslint-disable-line
           done()
         })
     })
