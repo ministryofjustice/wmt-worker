@@ -1,6 +1,7 @@
 const config = require('../../../config')
 const knex = require('../../../knex').appSchema
 const lduTable = `${config.DB_APP_SCHEMA}.ldu`
+const updateLDU = require('./update-ldu')
 
 module.exports = function (ldu) {
   var lduId
@@ -21,6 +22,14 @@ module.exports = function (ldu) {
           .insert(lduDbObject)
           .returning('id')
       } else {
+        // check if ldu name is still the same
+        // if it isn't, update
+        if (result['description'] !== lduDbObject.description) {
+          return updateLDU(lduDbObject)
+            .then(function (id) {
+              return id
+            })
+        }
         lduId = result['id']
       }
       return lduId

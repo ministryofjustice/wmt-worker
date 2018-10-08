@@ -1,6 +1,7 @@
 const config = require('../../../config')
 const knex = require('../../../knex').appSchema
 const teamTable = `${config.DB_APP_SCHEMA}.team`
+const updateTeam = require('./update-team')
 
 module.exports = function (team) {
   var teamId
@@ -21,6 +22,14 @@ module.exports = function (team) {
           .insert(teamDbObject)
           .returning('id')
       } else {
+        // check if team name is still the same
+        // if it isn't, update
+        if (result['description'] !== teamDbObject.description) {
+          return updateTeam(teamDbObject)
+            .then(function (id) {
+              return id
+            })
+        }
         teamId = result['id']
       }
       return teamId
