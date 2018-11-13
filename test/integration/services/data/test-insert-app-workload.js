@@ -61,7 +61,7 @@ describe('app/services/data/insert-app-workload', function () {
         'workload.community_last_16_weeks AS community_last_16_weeks',
         'workload.arms_community_cases AS arms_community_cases',
         'workload.arms_license_cases AS arms_license_cases', 'workload.staging_id AS staging_id',
-        'workload.workload_report_id AS workload_report_id','case_details.case_ref_no AS case_ref_no')
+        'workload.workload_report_id AS workload_report_id', 'case_details.case_ref_no AS case_ref_no')
         .then(function (result) {
           expect(result[0]).not.to.be.undefined // eslint-disable-line
           expect(result[0].total_cases).to.equal(2)
@@ -106,7 +106,7 @@ function buildTierCount () {
 function buildCaseDetails (location) {
   // row_type, case_ref_no, tier_code, team_code, om_grade_code, om_key, location
   var caseDetails = []
-  switch(location) {
+  switch (location) {
     case Locations.COMMUNITY:
       caseDetails = new CaseDetails('U', 'CN1234', 1, 'Team 1', 'C', '1001', location)
       break
