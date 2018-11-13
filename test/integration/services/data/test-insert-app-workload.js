@@ -49,23 +49,35 @@ describe('app/services/data/insert-app-workload', function () {
       workloadId = id
       inserts.push({table: 'workload', id: id})
       return knex('workload')
-        .where({'id': id})
-        .first()
+        .join('tiers', 'workload.id', 'tiers.workload_id')
+        .join('case_details', 'workload.id', 'case_details.workload_id')
+        .where({'workload.id': id})
+        .select('workload.total_cases AS total_cases', 'workload.total_t2a_cases AS total_t2a_cases',
+        'workload.monthly_sdrs AS monthly_sdrs', 'workload.sdr_due_next_30_days AS sdr_due_next_30_days',
+        'workload.sdr_conversions_last_30_days AS sdr_conversions_last_30_days',
+        'workload.paroms_completed_last_30_days AS paroms_completed_last_30_days',
+        'workload.paroms_due_next_30_days AS paroms_due_next_30_days',
+        'workload.license_last_16_weeks AS license_last_16_weeks',
+        'workload.community_last_16_weeks AS community_last_16_weeks',
+        'workload.arms_community_cases AS arms_community_cases',
+        'workload.arms_license_cases AS arms_license_cases', 'workload.staging_id AS staging_id',
+        'workload.workload_report_id AS workload_report_id','case_details.case_ref_no AS case_ref_no')
         .then(function (result) {
-          expect(result).not.to.be.undefined // eslint-disable-line
-          expect(result.total_cases).to.equal(2)
-          expect(result.total_t2a_cases).to.equal(1)
-          expect(result.monthly_sdrs).to.equal(3)
-          expect(result.sdr_due_next_30_days).to.equal(4)
-          expect(result.sdr_conversions_last_30_days).to.equal(5)
-          expect(result.paroms_completed_last_30_days).to.equal(6)
-          expect(result.paroms_due_next_30_days).to.equal(7)
-          expect(result.license_last_16_weeks).to.equal(9)
-          expect(result.community_last_16_weeks).to.equal(10)
-          expect(result.arms_community_cases).to.equal(11)
-          expect(result.arms_license_cases).to.equal(12)
-          expect(result.staging_id).to.equal(13)
-          expect(result.workload_report_id).to.equal(14)
+          expect(result[0]).not.to.be.undefined // eslint-disable-line
+          expect(result[0].total_cases).to.equal(2)
+          expect(result[0].total_t2a_cases).to.equal(1)
+          expect(result[0].monthly_sdrs).to.equal(3)
+          expect(result[0].sdr_due_next_30_days).to.equal(4)
+          expect(result[0].sdr_conversions_last_30_days).to.equal(5)
+          expect(result[0].paroms_completed_last_30_days).to.equal(6)
+          expect(result[0].paroms_due_next_30_days).to.equal(7)
+          expect(result[0].license_last_16_weeks).to.equal(9)
+          expect(result[0].community_last_16_weeks).to.equal(10)
+          expect(result[0].arms_community_cases).to.equal(11)
+          expect(result[0].arms_license_cases).to.equal(12)
+          expect(result[0].staging_id).to.equal(13)
+          expect(result[0].workload_report_id).to.equal(14)
+          expect(result[0].case_ref_no).to.equal('CN1234')
           done()
         })
     })
@@ -93,5 +105,17 @@ function buildTierCount () {
 
 function buildCaseDetails (location) {
   // row_type, case_ref_no, tier_code, team_code, om_grade_code, om_key, location
-  return new CaseDetails('U', 'CN1234', 1, 'Team 1', 'C', '1001', location)
+  var caseDetails = []
+  switch(location) {
+    case Locations.COMMUNITY:
+      caseDetails = new CaseDetails('U', 'CN1234', 1, 'Team 1', 'C', '1001', location)
+      break
+    case Locations.CUSTODY:
+      caseDetails = new CaseDetails('U', 'CN1234', '1', 'Team 1', 'C', '1001', location)
+      break
+    case Locations.LICENSE:
+      caseDetails = new CaseDetails('U', 'CN1234', '6', 'Team 1', 'C', '1001', location)
+      break
+  }
+  return caseDetails
 }
