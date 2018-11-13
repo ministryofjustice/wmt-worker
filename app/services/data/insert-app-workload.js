@@ -81,7 +81,8 @@ var insertTiers = function (tiers, t2aTiers, workloadId, location) {
 var insertCaseDetails = function (caseDetails, workloadId, location) {
   var caseDetailsToInsert = []
   caseDetails.forEach(function (caseDetail) {
-    if (caseDetail.tierCode.match(numericRegex) !== null) {
+    var tierCode = caseDetail.tierCode.toString()
+    if (tierCode.match(numericRegex) !== null) {
       var caseDetailToInsert = {
         workload_id: workloadId,
         tier_code: caseDetail.tierCode,
