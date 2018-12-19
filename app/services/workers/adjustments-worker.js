@@ -9,6 +9,7 @@ const logger = require('../log')
 
 const stagingAdjustmentsMapper = require('../staging-adjustments-mapper')
 const getAppAdjustmentsForBatch = require('../data/get-app-adjustments-for-batch')
+const getAppGsAdjustmentsForBatch = require('../data/get-app-gs-adjustments-for-batch')
 const updateAdjustmentEffectiveTo = require('../data/update-adjustment-effective-to')
 const insertAdjustment = require('../data/insert-adjustment')
 const updateStatus = require('../update-adjustment-reduction-status')
@@ -22,29 +23,33 @@ module.exports.execute = function (task) {
   .then(function () {
     logger.info('Retrieving open adjustments for workload owners with workloads\' staging ids ' + workloadStagingIdStart + ' - ' + workloadStagingIdEnd + ', for workload report ' + workloadReportId)
     return getAppAdjustmentsForBatch(adjustmentCategory.CMS, workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
-    .then(function (adjustments) {
-      return updateStatus.updateAdjustmentStatuses(adjustments)
-      .then(function () {
-        logger.info('Adjustment statuses updated')
-        var calculateWpAdditionalData = {
-          workloadBatch: task.additionalData,
-          operationType: operationTypes.INSERT
-        }
-
-        var calculateWorkloadPointsTask = new Task(
-          undefined,
-          submittingAgent.WORKER,
-          taskType.CALCULATE_WORKLOAD_POINTS,
-          calculateWpAdditionalData,
-          task.workloadReportId,
-          undefined,
-          undefined,
-          taskStatus.PENDING
-        )
-
-        return createNewTasks([calculateWorkloadPointsTask])
+    .then(function (cmsAdjustments) {
+      return getAppGsAdjustmentsForBatch(workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
+      .then(function (gsAdjustments) {
+        adjustments = cmsAdjustments.concat(gsAdjustments)
+        return updateStatus.updateAdjustmentStatuses(adjustments)
         .then(function () {
-          logger.info('Calculate Workload Task created')
+          logger.info('Adjustment statuses updated')
+          var calculateWpAdditionalData = {
+            workloadBatch: task.additionalData,
+            operationType: operationTypes.INSERT
+          }
+
+          var calculateWorkloadPointsTask = new Task(
+            undefined,
+            submittingAgent.WORKER,
+            taskType.CALCULATE_WORKLOAD_POINTS,
+            calculateWpAdditionalData,
+            task.workloadReportId,
+            undefined,
+            undefined,
+            taskStatus.PENDING
+          )
+
+          return createNewTasks([calculateWorkloadPointsTask])
+          .then(function () {
+            logger.info('Calculate Workload Task created')
+          })
         })
       })
     })

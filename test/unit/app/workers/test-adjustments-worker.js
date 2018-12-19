@@ -13,6 +13,7 @@ var updateStatus
 var createNewTasks
 var stagingAdjustmentsMapper
 var getAppAdjustments
+var getAppGsAdjustments
 var updateAdjustmentEffectiveTo
 var insertAdjustment
 var relativeFilePath = 'services/workers/adjustments-worker'
@@ -22,6 +23,13 @@ var activeAdjustment = {
   effectiveFrom: dateHelper.yesterday,
   effectiveTo: dateHelper.tomorrow,
   status: null
+}
+
+var activeAdjustmentToBeArchived = {
+  id: 5,
+  effectiveFrom: dateHelper.yesterday,
+  effectiveTo: dateHelper.yesterday,
+  status: adjustmentStatus.ACTIVE
 }
 
 var scheduledAdjustment = {
@@ -45,7 +53,7 @@ var existingActiveAdjustment = {
   status: adjustmentStatus.ACTIVE
 }
 
-var adjustments = [activeAdjustment, scheduledAdjustment, archivedAdjustment, existingActiveAdjustment]
+var adjustments = [activeAdjustment, activeAdjustmentToBeArchived, scheduledAdjustment, archivedAdjustment, existingActiveAdjustment]
 
 var existingContactId = 12
 var existingContactOmId = 31
@@ -119,6 +127,7 @@ describe(relativeFilePath, function () {
     }
     createNewTasks = sinon.stub().resolves()
     getAppAdjustments = sinon.stub()
+    getAppGsAdjustments = sinon.stub()
     updateAdjustmentEffectiveTo = sinon.stub().resolves()
     insertAdjustment = sinon.stub().resolves()
     stagingAdjustmentsMapper = {
@@ -132,6 +141,7 @@ describe(relativeFilePath, function () {
       '../data/create-tasks': createNewTasks,
       '../staging-adjustments-mapper': stagingAdjustmentsMapper,
       '../data/get-app-adjustments-for-batch': getAppAdjustments,
+      '../data/get-app-gs-adjustments-for-batch': getAppGsAdjustments,
       '../data/update-adjustment-effective-to': updateAdjustmentEffectiveTo,
       '../data/insert-adjustment': insertAdjustment
     })
@@ -141,11 +151,13 @@ describe(relativeFilePath, function () {
     stagingAdjustmentsMapper.mapCmsAdjustments.resolves([{id: 1}, {id: 2}, {id: 3}])
     stagingAdjustmentsMapper.mapGsAdjustments.resolves([])
     getAppAdjustments.resolves(adjustments)
+    getAppGsAdjustments.resolves(gsAdjustments)
 
     return adjustmentsWorker.execute(task).then(function () {
       expect(createNewTasks.called).to.be.equal(true)
       expect(stagingAdjustmentsMapper.mapCmsAdjustments.called).to.be.equal(true)
       expect(getAppAdjustments.called).to.be.equal(true)
+      expect(getAppGsAdjustments.called).to.be.equal(true)
       expect(updateAdjustmentEffectiveTo.called).to.be.equal(false)
       expect(insertAdjustment.called).to.be.equal(false)
     })
@@ -160,6 +172,7 @@ describe(relativeFilePath, function () {
     stagingAdjustmentsMapper.mapCmsAdjustments.resolves(cmsAdjustments)
     stagingAdjustmentsMapper.mapGsAdjustments.resolves([])
     getAppAdjustments.resolves(appAdjustments)
+    getAppGsAdjustments.resolves(gsAdjustments)
 
     return adjustmentsWorker.execute(task).then(function () {
       expect(createNewTasks.called).to.be.equal(true)
@@ -174,6 +187,7 @@ describe(relativeFilePath, function () {
     stagingAdjustmentsMapper.mapCmsAdjustments.resolves(cmsAdjustments)
     stagingAdjustmentsMapper.mapGsAdjustments.resolves([])
     getAppAdjustments.resolves([])
+    getAppGsAdjustments.resolves(gsAdjustments)
 
     return adjustmentsWorker.execute(task).then(function () {
       expect(createNewTasks.called).to.be.equal(true)
@@ -194,6 +208,7 @@ describe(relativeFilePath, function () {
     stagingAdjustmentsMapper.mapCmsAdjustments.resolves([])
     stagingAdjustmentsMapper.mapGsAdjustments.resolves([])
     getAppAdjustments.resolves(appAdjustments)
+    getAppGsAdjustments.resolves(gsAdjustments)
 
     return adjustmentsWorker.execute(task).then(function () {
       expect(createNewTasks.called).to.be.equal(true)
@@ -214,6 +229,7 @@ describe(relativeFilePath, function () {
     stagingAdjustmentsMapper.mapCmsAdjustments.resolves(cmsAdjustments)
     stagingAdjustmentsMapper.mapGsAdjustments.resolves([])
     getAppAdjustments.resolves(appAdjustments)
+    getAppGsAdjustments.resolves(gsAdjustments)
 
     return adjustmentsWorker.execute(task).then(function () {
       expect(createNewTasks.called).to.be.equal(true)
@@ -228,6 +244,7 @@ describe(relativeFilePath, function () {
     stagingAdjustmentsMapper.mapCmsAdjustments.resolves([])
     stagingAdjustmentsMapper.mapGsAdjustments.resolves(gsAdjustments)
     getAppAdjustments.resolves([])
+    getAppGsAdjustments.resolves(gsAdjustments)
 
     return adjustmentsWorker.execute(task).then(function () {
       expect(createNewTasks.called).to.be.equal(true)
@@ -247,6 +264,7 @@ describe(relativeFilePath, function () {
     stagingAdjustmentsMapper.mapCmsAdjustments.resolves([])
     stagingAdjustmentsMapper.mapGsAdjustments.resolves([])
     getAppAdjustments.resolves(appAdjustments)
+    getAppGsAdjustments.resolves(gsAdjustments)
 
     return adjustmentsWorker.execute(task).then(function () {
       expect(createNewTasks.called).to.be.equal(true)
@@ -268,6 +286,7 @@ describe(relativeFilePath, function () {
     stagingAdjustmentsMapper.mapCmsAdjustments.resolves(cmsAdjustments)
     stagingAdjustmentsMapper.mapGsAdjustments.resolves(gsAdjustments)
     getAppAdjustments.resolves(appAdjustments)
+    getAppGsAdjustments.resolves(gsAdjustments)
 
     return adjustmentsWorker.execute(task).then(function () {
       expect(createNewTasks.called).to.be.equal(true)
