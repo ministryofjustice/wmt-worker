@@ -26,7 +26,7 @@ module.exports.execute = function (task) {
     .then(function (cmsAdjustments) {
       return getAppGsAdjustmentsForBatch(workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
       .then(function (gsAdjustments) {
-        adjustments = cmsAdjustments.concat(gsAdjustments)
+        var adjustments = cmsAdjustments.concat(gsAdjustments)
         return updateStatus.updateAdjustmentStatuses(adjustments)
         .then(function () {
           logger.info('Adjustment statuses updated')
