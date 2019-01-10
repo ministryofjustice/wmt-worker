@@ -1,5 +1,6 @@
 const knex = require('../../../knex').appSchema
 const Locations = require('wmt-probation-rules').Locations
+const numericRegex = /^[0-9]*$/
 
 module.exports = function (workload, caseDetails) {
   workload.totalCommunityCases = workload.communityTiers.total
@@ -80,7 +81,8 @@ var insertTiers = function (tiers, t2aTiers, workloadId, location) {
 var insertCaseDetails = function (caseDetails, workloadId, location) {
   var caseDetailsToInsert = []
   caseDetails.forEach(function (caseDetail) {
-    if (typeof caseDetail.tier_code === 'number') {
+    var tierCode = caseDetail.tierCode.toString()
+    if (tierCode.match(numericRegex) !== null) {
       var caseDetailToInsert = {
         workload_id: workloadId,
         tier_code: caseDetail.tierCode,
