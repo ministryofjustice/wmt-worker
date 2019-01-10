@@ -2,6 +2,7 @@ const expect = require('chai').expect
 
 const adjustmentsHelper = require('../../../helpers/data/app-adjustments-helper')
 const getAdjustments = require('../../../../app/services/data/get-app-adjustments-for-batch')
+const getGsAdjustments = require('../../../../app/services/data/get-app-gs-adjustments-for-batch')
 const adjustmentCategory = require('../../../../app/constants/adjustment-category')
 const adjustmentStatus = require('../../../../app/constants/adjustment-status')
 
@@ -36,7 +37,7 @@ describe('services/data/get-app-adjustments-for-batch', function () {
   })
 
   it('should retrieve the GS adjustments in DB, for a given batch of active workload staging ids -> workload owners -> adjustments', function () {
-    return getAdjustments(adjustmentCategory.GS, startStagingId, endStagingId, workloadReportId)
+    return getGsAdjustments(startStagingId, endStagingId, workloadReportId)
     .then(function (adjustments) {
       var adjustmentIds = []
       adjustments.forEach(function (adjustment) {
@@ -46,6 +47,17 @@ describe('services/data/get-app-adjustments-for-batch', function () {
         expect(adjustment.status).to.be.equal(adjustmentStatus.ACTIVE)
       })
     })
+  })
+
+  it('should retrieve both CMS adjustments and GS adjustments in a combined array', function () {
+    return getAdjustments(adjustmentCategory.CMS, startStagingId, endStagingId, workloadReportId)
+      .then(function (cmsAdjustments) {
+        return getGsAdjustments(startStagingId, endStagingId, workloadReportId)
+          .then(function (gsAdjustments) {
+            var adjustments = cmsAdjustments.concat(gsAdjustments)
+            expect(adjustments.length).to.be.equal(3)
+          })
+      })
   })
 
   it('should return an empty array if there are no adjustments matching the query criteria', function () {
