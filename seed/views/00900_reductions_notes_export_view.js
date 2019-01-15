@@ -18,6 +18,7 @@ exports.seed = function (knex, promise) {
         , r.effective_to AS end_date
         , r.status AS reduction_status
         , r.notes AS additional_notes
+        , omt.grade_code AS grade_code
       FROM app.workload_owner wo
           JOIN app.team team ON wo.team_id = team.id
           JOIN app.ldu ldu ON team.ldu_id = ldu.id
@@ -26,6 +27,7 @@ exports.seed = function (knex, promise) {
           JOIN app.workload_points_calculations wpc ON wpc.workload_id = w.id
           JOIN app.workload_report wr ON wr.id = wpc.workload_report_id
           JOIN app.offender_manager om ON om.id = wo.offender_manager_id
+          JOIN app.offender_manager_type omt ON om.type_id = omt.id
           JOIN app.reductions r ON r.workload_owner_id = wo.id
           JOIN app.reduction_reason rr ON r.reduction_reason_id = rr.id
       WHERE wr.effective_from IS NOT NULL
