@@ -69,7 +69,7 @@ module.exports.expectedCmsAdjustments = [
     effectiveFrom: dateHelper.today,
     effectiveTo: dateHelper.thirtyDays,
     status: adjustmentStatus.ACTIVE,
-    crn: module.exports.stagingAdjustmentRows[0].crn
+    crn: module.exports.stagingAdjustmentRows[1].crn
   }
 ]
 
