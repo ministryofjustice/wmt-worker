@@ -15,7 +15,8 @@ module.exports.stagingAdjustmentRows = [
     contactStaffKey: 12,
     contactTeamKey: 13,
     omKey: 14,
-    omTeamKey: 15
+    omTeamKey: 15,
+    crn: 'Z6000000'
   }, {
     contactId: 321,
     contactCode: 'cba',
@@ -24,7 +25,8 @@ module.exports.stagingAdjustmentRows = [
     contactStaffKey: 21,
     contactTeamKey: 31,
     omKey: 41,
-    omTeamKey: 51
+    omTeamKey: 51,
+    crn: 'Z7000000'
   }
 ]
 
@@ -36,7 +38,8 @@ module.exports.expectedCmsAdjustments = [
     adjustmentReasonId: module.exports.adjustmentReason.id,
     effectiveFrom: dateHelper.today,
     effectiveTo: dateHelper.thirtyDays,
-    status: adjustmentStatus.ACTIVE
+    status: adjustmentStatus.ACTIVE,
+    crn: module.exports.stagingAdjustmentRows[0].crn
   },
   {
     contactId: module.exports.stagingAdjustmentRows[0].contactId,
@@ -45,7 +48,8 @@ module.exports.expectedCmsAdjustments = [
     adjustmentReasonId: module.exports.adjustmentReason.id,
     effectiveFrom: dateHelper.today,
     effectiveTo: dateHelper.thirtyDays,
-    status: adjustmentStatus.ACTIVE
+    status: adjustmentStatus.ACTIVE,
+    crn: module.exports.stagingAdjustmentRows[0].crn
   },
   {
     contactId: module.exports.stagingAdjustmentRows[1].contactId,
@@ -54,7 +58,8 @@ module.exports.expectedCmsAdjustments = [
     adjustmentReasonId: module.exports.adjustmentReason.id,
     effectiveFrom: dateHelper.today,
     effectiveTo: dateHelper.thirtyDays,
-    status: adjustmentStatus.ACTIVE
+    status: adjustmentStatus.ACTIVE,
+    crn: module.exports.stagingAdjustmentRows[1].crn
   },
   {
     contactId: module.exports.stagingAdjustmentRows[1].contactId,
@@ -63,7 +68,8 @@ module.exports.expectedCmsAdjustments = [
     adjustmentReasonId: module.exports.adjustmentReason.id,
     effectiveFrom: dateHelper.today,
     effectiveTo: dateHelper.thirtyDays,
-    status: adjustmentStatus.ACTIVE
+    status: adjustmentStatus.ACTIVE,
+    crn: module.exports.stagingAdjustmentRows[0].crn
   }
 ]
 
@@ -75,7 +81,8 @@ module.exports.expectedGsAdjustments = [
     adjustmentReasonId: module.exports.adjustmentReason.id,
     effectiveFrom: dateHelper.today,
     effectiveTo: dateHelper.thirtyDays,
-    status: adjustmentStatus.ACTIVE
+    status: adjustmentStatus.ACTIVE,
+    crn: module.exports.stagingAdjustmentRows[0].crn
   },
   {
     contactId: module.exports.stagingAdjustmentRows[1].contactId,
@@ -84,6 +91,7 @@ module.exports.expectedGsAdjustments = [
     adjustmentReasonId: module.exports.adjustmentReason.id,
     effectiveFrom: dateHelper.today,
     effectiveTo: dateHelper.thirtyDays,
-    status: adjustmentStatus.ACTIVE
+    status: adjustmentStatus.ACTIVE,
+    crn: module.exports.stagingAdjustmentRows[1].crn
   }
 ]
