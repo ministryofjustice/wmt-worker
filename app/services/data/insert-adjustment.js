@@ -10,7 +10,7 @@ module.exports = function (adjustment) {
     effective_to: adjustment.effectiveTo,
     status: adjustment.status,
     contact_id: adjustment.contactId,
-    crn: adjustment.crn
+    case_ref_no: adjustment.crn
   })
   .returning('id')
   .then(function (result) {
