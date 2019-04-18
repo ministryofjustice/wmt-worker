@@ -10,6 +10,7 @@ exports.seed = function (knex, promise) {
     , wpc.total_points AS total_points
     , wpc.contracted_hours AS contracted_hours
     , wpc.reduction_hours AS reduction_hours
+    , wpc.cms_adjustment_points AS cms_adjustment_points
     , t.id AS id
     , wo.id AS link_id
   FROM app.workload_owner wo

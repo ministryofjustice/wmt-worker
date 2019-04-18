@@ -9,6 +9,7 @@ exports.seed = function (knex, promise) {
     , SUM(wpc.total_points) AS total_points
     , SUM(wpc.contracted_hours) AS contracted_hours
     , SUM(wpc.reduction_hours) AS reduction_hours
+    , SUM(wpc.cms_adjustment_points) AS cms_adjustment_points
     , l.id AS id
     , t.id AS link_id
     , COUNT_BIG(*) AS count
