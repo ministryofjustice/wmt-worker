@@ -14,7 +14,9 @@ module.exports = function (omKey, teamCode) {
     return this.select(columns).from(`${config.DB_STG_SCHEMA}.flag_upw`).where(whereObject).unionAll(function () {
       return this.select(columns).from(`${config.DB_STG_SCHEMA}.flag_o_due`).where(whereObject).unionAll(function () {
         return this.select(columns).from(`${config.DB_STG_SCHEMA}.flag_priority`).where(whereObject).unionAll(function () {
-          return this.select(columns).from(`${config.DB_STG_SCHEMA}.wmt_extract_sa`).where(whereObject)
+          return this.select(columns).from(`${config.DB_STG_SCHEMA}.wmt_extract_sa`).where(whereObject).unionAll(function () {
+            return this.select(columns).from(`${config.DB_STG_SCHEMA}.suspended_lifers`).where(whereObject)
+          })
         })
       })
     })
