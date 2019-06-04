@@ -63,7 +63,7 @@ describe('Probation Rules map-workload', function () {
     expect(mappedWorkloads.custodyTiers.c2.suspendedLifers, 'C2 Custody Suspended Lifers total should equal 1').to.be.equal(1)
     expect(mappedWorkloads.licenseTiers.c1.suspendedLifers, 'C1 Licence Suspended Lifers total should equal 1').to.be.equal(2)
     expect(mappedWorkloads.licenseTiers.b2.suspendedLifers, 'B2 Licence Suspended Lifers total should equal 1').to.be.equal(1)
-    expect(mappedWorkloads.licenseTiers.b1.suspendedLifers, 'B2 Licence Suspended Lifers total should equal 3').to.be.equal(5)
+    expect(mappedWorkloads.licenseTiers.b1.suspendedLifers, 'B2 Licence Suspended Lifers total should equal 5').to.be.equal(5)
     expect(mappedWorkloads.licenseTiers.a.suspendedLifers, 'A Licence Suspended Lifers total should equal 3').to.be.equal(3)
   })
 })
