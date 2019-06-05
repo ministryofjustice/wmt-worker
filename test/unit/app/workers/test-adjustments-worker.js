@@ -69,7 +69,8 @@ var cmsAdjustments = [
     adjustmentReasonId: 1,
     effectiveFrom: 'testfrom',
     effetiveTo: 'testto',
-    status: adjustmentStatus.ACTIVE
+    status: adjustmentStatus.ACTIVE,
+    case_ref_no: 'CMSTEST1000'
   },
   {
     contactId: existingContactId,
@@ -78,7 +79,8 @@ var cmsAdjustments = [
     adjustmentReasonId: 1,
     effectiveFrom: 'testfrom',
     effetiveTo: 'testto',
-    status: adjustmentStatus.ACTIVE
+    status: adjustmentStatus.ACTIVE,
+    case_ref_no: 'CMSTEST2000'
   }
 ]
 
@@ -90,7 +92,8 @@ var gsAdjustments = [
     adjsutmentReasonId: 2,
     effectiveFrom: 'testfrom',
     effetiveTo: 'testto',
-    status: adjustmentStatus.ACTIVE
+    status: adjustmentStatus.ACTIVE,
+    case_ref_no: 'GSTEST1000'
   }
 ]
 
@@ -117,7 +120,8 @@ var adjustmentRow = {
   workloadOwnerId: existingContactOmId,
   effectiveFrom: dateHelper.yesterday,
   effectiveTo: dateHelper.dayAfterTomorrow,
-  status: adjustmentStatus.ACTIVE
+  status: adjustmentStatus.ACTIVE,
+  case_ref_no: 'ADJTEST1000'
 }
 
 describe(relativeFilePath, function () {

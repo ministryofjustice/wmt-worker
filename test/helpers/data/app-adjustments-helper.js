@@ -48,7 +48,8 @@ module.exports.getAdjustmentsForTest = function (adjustmentCategory, minWorkload
         adjustmentReasonId: adjustment.adjustmentReasonId,
         effectiveFrom: moment(adjustment.effectiveFrom).format('YYYY-MM-DDTHH:mm:ss'),
         effectiveTo: moment(adjustment.effectiveFrom).format('YYYY-MM-DDTHH:mm:ss'),
-        status: adjustment.status
+        status: adjustment.status,
+        case_ref_no: adjustment.case_ref_no
       })
     })
     return formattedResults
