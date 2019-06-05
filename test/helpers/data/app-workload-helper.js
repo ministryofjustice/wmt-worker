@@ -91,7 +91,8 @@ module.exports.insertDependencies = function (inserts) {
               t2a_unpaid_work_total: 1,
               t2a_total_cases: 10,
               suspended_total: 1,
-              location: locations[i]
+              location: locations[i],
+              suspended_lifer_total: 99
             })
           }
         }
