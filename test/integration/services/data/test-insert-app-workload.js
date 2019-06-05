@@ -7,6 +7,7 @@ const TierCounts = require('wmt-probation-rules').TierCounts
 const Locations = require('wmt-probation-rules').Locations
 const CaseDetails = require('wmt-probation-rules').CaseDetails
 const workloadOwnerHelper = require('../../../helpers/data/app-workload-owner-helper')
+const log = require('../../../../app/services/log')
 
 var inserts = []
 
@@ -70,6 +71,7 @@ describe('app/services/data/insert-app-workload', function () {
             .where('workload_id', id)
             .select()
             .then(function (tiers) {
+              log.info(tiers)
               var licenceTier6 = tiers.filter(t => t.location === Locations.LICENSE && t.tier_number === 6)
               expect(licenceTier6[0].suspended_lifer_total).to.equal(99)
               expect(result[0]).not.to.be.undefined // eslint-disable-line
