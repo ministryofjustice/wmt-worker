@@ -34,7 +34,8 @@ module.exports.mapCmsAdjustments = function (workloadStagingIdStart, workloadSta
                       adjustmentReasonId: adjustmentReason.id,
                       effectiveFrom: startDate,
                       effectiveTo: endDate,
-                      status: adjustmentStatus.ACTIVE
+                      status: adjustmentStatus.ACTIVE,
+                      crn: cmsRecord.crn
                     }
 
                     var omAdjustment = {
@@ -44,7 +45,8 @@ module.exports.mapCmsAdjustments = function (workloadStagingIdStart, workloadSta
                       adjustmentReasonId: adjustmentReason.id,
                       effectiveFrom: startDate,
                       effectiveTo: endDate,
-                      status: adjustmentStatus.ACTIVE
+                      status: adjustmentStatus.ACTIVE,
+                      crn: cmsRecord.crn
                     }
 
                     if (workloadOwnerIds.includes(contactAdjustment.workloadOwnerId)) {
@@ -96,7 +98,8 @@ module.exports.mapGsAdjustments = function (workloadStagingIdStart, workloadStag
                   adjustmentReasonId: adjustmentReason.id,
                   effectiveFrom: startDate,
                   effectiveTo: endDate,
-                  status: adjustmentStatus.ACTIVE
+                  status: adjustmentStatus.ACTIVE,
+                  crn: gsAdjustment.crn
                 }
                 if (workloadOwnerIds.includes(newGsAdjustment.workloadOwnerId)) {
                   gsAdjustments.push(newGsAdjustment)

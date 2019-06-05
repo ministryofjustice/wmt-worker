@@ -44,6 +44,9 @@ describe('app/services/data/insert-app-workload', function () {
     caseDetails.push(buildCaseDetails(Locations.COMMUNITY))
     caseDetails.push(buildCaseDetails(Locations.CUSTODY))
     caseDetails.push(buildCaseDetails(Locations.LICENSE))
+    caseDetails.push(buildCaseDetails(Locations.COMMUNITY, true))
+    caseDetails.push(buildCaseDetails(Locations.CUSTODY, true))
+    caseDetails.push(buildCaseDetails(Locations.LICENSE, true))
 
     insertAppWorkload(workload, caseDetails).then(function (id) {
       workloadId = id
@@ -63,22 +66,29 @@ describe('app/services/data/insert-app-workload', function () {
         'workload.arms_license_cases AS arms_license_cases', 'workload.staging_id AS staging_id',
         'workload.workload_report_id AS workload_report_id', 'case_details.case_ref_no AS case_ref_no')
         .then(function (result) {
-          expect(result[0]).not.to.be.undefined // eslint-disable-line
-          expect(result[0].total_cases).to.equal(2)
-          expect(result[0].total_t2a_cases).to.equal(1)
-          expect(result[0].monthly_sdrs).to.equal(3)
-          expect(result[0].sdr_due_next_30_days).to.equal(4)
-          expect(result[0].sdr_conversions_last_30_days).to.equal(5)
-          expect(result[0].paroms_completed_last_30_days).to.equal(6)
-          expect(result[0].paroms_due_next_30_days).to.equal(7)
-          expect(result[0].license_last_16_weeks).to.equal(9)
-          expect(result[0].community_last_16_weeks).to.equal(10)
-          expect(result[0].arms_community_cases).to.equal(11)
-          expect(result[0].arms_license_cases).to.equal(12)
-          expect(result[0].staging_id).to.equal(13)
-          expect(result[0].workload_report_id).to.equal(14)
-          expect(result[0].case_ref_no).to.equal('CN1234')
-          done()
+          return knex('tiers')
+            .where('workload_id', id)
+            .select()
+            .then(function (tiers) {
+              var licenceTier6 = tiers.filter(t => t.location === Locations.LICENSE && t.tier_number === 6)
+              expect(licenceTier6[0].suspended_lifer_total).to.equal(99)
+              expect(result[0]).not.to.be.undefined // eslint-disable-line
+              expect(result[0].total_cases).to.equal(2)
+              expect(result[0].total_t2a_cases).to.equal(1)
+              expect(result[0].monthly_sdrs).to.equal(3)
+              expect(result[0].sdr_due_next_30_days).to.equal(4)
+              expect(result[0].sdr_conversions_last_30_days).to.equal(5)
+              expect(result[0].paroms_completed_last_30_days).to.equal(6)
+              expect(result[0].paroms_due_next_30_days).to.equal(7)
+              expect(result[0].license_last_16_weeks).to.equal(9)
+              expect(result[0].community_last_16_weeks).to.equal(10)
+              expect(result[0].arms_community_cases).to.equal(11)
+              expect(result[0].arms_license_cases).to.equal(12)
+              expect(result[0].staging_id).to.equal(13)
+              expect(result[0].workload_report_id).to.equal(14)
+              expect(result[0].case_ref_no).to.equal('DTL123')
+              done()
+            })
         })
     })
   })
@@ -100,22 +110,36 @@ function buildTier (location) {
 }
 
 function buildTierCount () {
-  return new TierCounts(7, 1, 3, 2, 1)
+  return new TierCounts(7, 1, 3, 2, 1, 99)
 }
 
-function buildCaseDetails (location) {
+function buildCaseDetails (location, suspendedLifer = false) {
   // row_type, case_ref_no, tier_code, team_code, om_grade_code, om_key, location
   var caseDetails = []
-  switch (location) {
-    case Locations.COMMUNITY:
-      caseDetails = new CaseDetails('U', 'CN1234', 1, 'Team 1', 'C', '1001', location)
-      break
-    case Locations.CUSTODY:
-      caseDetails = new CaseDetails('U', 'CN1234', '1', 'Team 1', 'C', '1001', location)
-      break
-    case Locations.LICENSE:
-      caseDetails = new CaseDetails('U', 'CN1234', '6', 'Team 1', 'C', '1001', location)
-      break
+  if (suspendedLifer) {
+    switch (location) {
+      case Locations.COMMUNITY:
+        caseDetails = new CaseDetails('U', 'CN1234', 1, 'Team 1', 'C', '1001', location)
+        break
+      case Locations.CUSTODY:
+        caseDetails = new CaseDetails('U', 'CN1234', '1', 'Team 1', 'C', '1001', location)
+        break
+      case Locations.LICENSE:
+        caseDetails = new CaseDetails('U', 'CN1234', '6', 'Team 1', 'C', '1001', location)
+        break
+    }
+  } else {
+    switch (location) {
+      case Locations.COMMUNITY:
+        caseDetails = new CaseDetails('L', 'DTL123', 1, 'Team 1', 'D', '2001', location)
+        break
+      case Locations.CUSTODY:
+        caseDetails = new CaseDetails('L', 'DTL124', '1', 'Team 1', 'D', '2001', location)
+        break
+      case Locations.LICENSE:
+        caseDetails = new CaseDetails('L', 'DTL125', '6', 'Team 1', 'D', '2001', location)
+        break
+    }
   }
   return caseDetails
 }

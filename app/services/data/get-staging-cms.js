@@ -11,7 +11,8 @@ module.exports = function (workloadStagingIdStart, workloadStagingIdEnd) {
       'contact_staff_key AS contactStaffKey',
       'contact_team_key AS contactTeamKey',
       'om_key AS omKey',
-      'om_team_key AS omTeamKey'
+      'om_team_key AS omTeamKey',
+      'crn'
     )
   } else {
     return knex('cms')
@@ -23,7 +24,8 @@ module.exports = function (workloadStagingIdStart, workloadStagingIdEnd) {
       'contact_staff_key AS contactStaffKey',
       'contact_team_key AS contactTeamKey',
       'om_key AS omKey',
-      'om_team_key AS omTeamKey'
+      'om_team_key AS omTeamKey',
+      'crn'
     )
     .whereIn('om_key', function () {
       this.select('om_key')
