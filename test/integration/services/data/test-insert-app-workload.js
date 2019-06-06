@@ -49,6 +49,8 @@ describe('app/services/data/insert-app-workload', function () {
     caseDetails.push(buildCaseDetails(Locations.CUSTODY, true))
     caseDetails.push(buildCaseDetails(Locations.LICENSE, true))
 
+    log.info(workload)
+    log.info(caseDetails)
     insertAppWorkload(workload, caseDetails).then(function (id) {
       workloadId = id
       inserts.push({table: 'workload', id: id})
@@ -72,6 +74,10 @@ describe('app/services/data/insert-app-workload', function () {
             .select()
             .then(function (tiers) {
               log.info(tiers)
+              var currentTime = new Date().getTime()
+              log.info('Pausing execution')
+              while (currentTime + 60000 >= new Date().getTime()) {}
+              log.info('Continuing execution')
               var licenceTier6 = tiers.filter(t => t.location === Locations.LICENSE && t.tier_number === 6)
               expect(licenceTier6[0].suspended_lifer_total).to.equal(99)
               expect(result[0]).not.to.be.undefined // eslint-disable-line
