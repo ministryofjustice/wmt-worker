@@ -13,6 +13,7 @@ const getAppGsAdjustmentsForBatch = require('../data/get-app-gs-adjustments-for-
 const updateAdjustmentEffectiveTo = require('../data/update-adjustment-effective-to')
 const insertAdjustment = require('../data/insert-adjustment')
 const updateStatus = require('../update-adjustment-reduction-status')
+const updateAdjustmentCRN = require('../data/update-adjustment-crn')
 
 module.exports.execute = function (task) {
   var workloadStagingIdStart = task.additionalData.startingId
@@ -63,6 +64,7 @@ var processAdjustments = function (workloadStagingIdStart, workloadStagingIdEnd,
     .then(function (appAdjustments) {
       var updateAdjustmentsEffectiveTo = []
       var insertAdjustments = []
+      var updateAdjustmentCRNs = []
 
       var stgAdjustmentIds = []
       stgAdjustments.forEach(function (stgAdjustment) {
@@ -82,6 +84,15 @@ var processAdjustments = function (workloadStagingIdStart, workloadStagingIdEnd,
         if (!stgAdjustmentIds.includes(appAdjustmentId)) {
           // set date of this adjustment to today at 00.00 in order to set as archived in next stage of worker
           updateAdjustmentsEffectiveTo.push(updateAdjustmentEffectiveTo(appAdjustment.id, updateTime))
+        } else {
+          var updatedStgAdjustment = stgAdjustments.filter(stgAdjustment => stgAdjustment.contactId === appAdjustment.contactId && stgAdjustment.workloadOwnerId === appAdjustment.workloadOwnerId)
+          if (updatedStgAdjustment) {
+            if (updatedStgAdjustment.length > 0) {
+              logger.info(updatedStgAdjustment)
+              logger.info(appAdjustment)
+              updateAdjustmentCRNs.push(updateAdjustmentCRN(appAdjustment.id, updatedStgAdjustment[0].crn))
+            }
+          }
         }
       })
 
@@ -95,6 +106,9 @@ var processAdjustments = function (workloadStagingIdStart, workloadStagingIdEnd,
       return Promise.all(updateAdjustmentsEffectiveTo)
       .then(function () {
         return Promise.all(insertAdjustments)
+        .then(function () {
+          return Promise.all(updateAdjustmentCRNs)
+        })
       })
     })
   })
