@@ -85,11 +85,9 @@ var processAdjustments = function (workloadStagingIdStart, workloadStagingIdEnd,
           // set date of this adjustment to today at 00.00 in order to set as archived in next stage of worker
           updateAdjustmentsEffectiveTo.push(updateAdjustmentEffectiveTo(appAdjustment.id, updateTime))
         } else {
-          var updatedStgAdjustment = stgAdjustments.filter(stgAdjustment => stgAdjustment.contactId === appAdjustment.contactId && stgAdjustment.workloadOwnerId === appAdjustment.workloadOwnerId)
+          var updatedStgAdjustment = stgAdjustments.filter(stgAdjustment => String(stgAdjustment.contactId) === String(appAdjustment.contactId) && String(stgAdjustment.workloadOwnerId) === String(appAdjustment.workloadOwnerId))
           if (updatedStgAdjustment) {
             if (updatedStgAdjustment.length > 0) {
-              logger.info(updatedStgAdjustment)
-              logger.info(appAdjustment)
               updateAdjustmentCRNs.push(updateAdjustmentCRN(appAdjustment.id, updatedStgAdjustment[0].crn))
             }
           }
