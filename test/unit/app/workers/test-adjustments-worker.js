@@ -15,6 +15,7 @@ var stagingAdjustmentsMapper
 var getAppAdjustments
 var getAppGsAdjustments
 var updateAdjustmentEffectiveTo
+var updateAdjustmentCRN
 var insertAdjustment
 var relativeFilePath = 'services/workers/adjustments-worker'
 
@@ -93,7 +94,20 @@ var gsAdjustments = [
     effectiveFrom: 'testfrom',
     effetiveTo: 'testto',
     status: adjustmentStatus.ACTIVE,
-    case_ref_no: 'GSTEST1000'
+    case_ref_no: null
+  }
+]
+
+var stgGsAdjustments = [
+  {
+    contactId: gsContactId,
+    workloadOwnerId: existingOmId,
+    points: -6,
+    adjsutmentReasonId: 2,
+    effectiveFrom: 'testfrom',
+    effetiveTo: 'testto',
+    status: adjustmentStatus.ACTIVE,
+    crn: 'GSTEST1000'
   }
 ]
 
@@ -133,6 +147,7 @@ describe(relativeFilePath, function () {
     getAppAdjustments = sinon.stub()
     getAppGsAdjustments = sinon.stub()
     updateAdjustmentEffectiveTo = sinon.stub().resolves()
+    updateAdjustmentCRN = sinon.stub().resolves()
     insertAdjustment = sinon.stub().resolves()
     stagingAdjustmentsMapper = {
       mapCmsAdjustments: sinon.stub(),
@@ -147,7 +162,8 @@ describe(relativeFilePath, function () {
       '../data/get-app-adjustments-for-batch': getAppAdjustments,
       '../data/get-app-gs-adjustments-for-batch': getAppGsAdjustments,
       '../data/update-adjustment-effective-to': updateAdjustmentEffectiveTo,
-      '../data/insert-adjustment': insertAdjustment
+      '../data/insert-adjustment': insertAdjustment,
+      '../data/update-adjustment-crn': updateAdjustmentCRN
     })
   })
 
@@ -325,6 +341,26 @@ describe(relativeFilePath, function () {
     })
     .catch(function (err) {
       expect(err.message).to.eql('Test error')
+    })
+  })
+
+  it('should retrieve staging GS adjustments and update them in app when they exist in both the application and the extract', function () {
+    var appAdjustments = [
+      Object.assign({}, adjustmentRow, { id: 24, points: -6, contactId: gsContactId, workloadOwnerId: existingOmId, case_ref_no: null })
+    ]
+
+    stagingAdjustmentsMapper.mapCmsAdjustments.resolves([])
+    stagingAdjustmentsMapper.mapGsAdjustments.resolves(stgGsAdjustments)
+    getAppAdjustments.resolves(appAdjustments)
+    getAppGsAdjustments.resolves(gsAdjustments)
+
+    return adjustmentsWorker.execute(task).then(function () {
+      expect(createNewTasks.called).to.be.equal(true)
+      expect(stagingAdjustmentsMapper.mapCmsAdjustments.called).to.be.equal(true)
+      expect(stagingAdjustmentsMapper.mapGsAdjustments.called).to.be.equal(true)
+      expect(getAppAdjustments.called).to.be.equal(true)
+      expect(updateAdjustmentCRN.calledWith(appAdjustments[0].id, stgGsAdjustments[0].crn)).to.be.equal(true)
+      expect(insertAdjustment.called).to.be.equal(false)
     })
   })
 })

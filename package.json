@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node start.js",
     "unit-test": "standard && mocha --recursive -u exports test/unit/",
-    "integration-test": "mocha --recursive -u exports test/integration/ --timeout 120000",
+    "integration-test": "mocha --recursive -u exports test/integration/ --timeout 60000",
     "test-all": "yarn test && yarn test-integration",
     "test": "yarn unit-test && yarn integration-test",
     "create-views": "knex seed:run --env views",
