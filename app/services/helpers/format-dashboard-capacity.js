@@ -1,5 +1,5 @@
 module.exports = function (capacity) {
-  capacityArray = []
+  var capacityArray = []
   capacity.forEach(function (record) {
     capacityArray.push([
       record.regionName,
@@ -8,7 +8,7 @@ module.exports = function (capacity) {
       record.offenderManager,
       record.gradeCode,
       formatCapacityValue(record.capacityPercentage),
-      record.totalPoints,
+      record.availablePoints,
       record.remainingPoints,
       record.contractedHours,
       record.reductionHours,

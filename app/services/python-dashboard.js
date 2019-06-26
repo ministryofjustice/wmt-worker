@@ -4,7 +4,6 @@ const log = require('./log')
 const dateFormatter = require('./date-formatter')
 
 module.exports = function (reductions, capacity, formattedCaseloadData) {
-
   var python = PythonBridge()
   const datestamp = dateFormatter.now().format('YYYYMMDDHHmmss')
   var outputFilename = config.WMT_DASHBOARD_OUTPUT_FILE_PATH + 'dashboard_' + datestamp + '.xlsm'
@@ -42,7 +41,6 @@ module.exports = function (reductions, capacity, formattedCaseloadData) {
     workbook['capacity data'].sheet_state = 'hidden'
     workbook['reductions data'].sheet_state = 'hidden'`
 
-  
   return python`write_dashboard(${reductions}, ${capacity}, ${formattedCaseloadData}, ${config.WMT_DASHBOARD_TEMPLATE_FILE_PATH}, ${outputFilename}, ${config.WMT_DASHBOARD_OUTPUT_FILE_PATH}, ${config.WMT_DASHBOARD_PASSWORD})`
     .then(function () {
       log.info('Python has finished Generating the dashboard')

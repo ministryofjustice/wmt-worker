@@ -3,7 +3,6 @@ const caseloadHelper = require('./helpers/caseload-helper')
 const caseType = require('../constants/case-type')
 
 module.exports = function () {
-
   return getCaseload()
     .then(function (results) {
       var caseloadResults = parseCaseloadResults(results)

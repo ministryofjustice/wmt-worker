@@ -1,3 +1,3 @@
 module.exports = {
-  DASHBOARD: 'DASHBOARD',
+  DASHBOARD: 'DASHBOARD'
 }
