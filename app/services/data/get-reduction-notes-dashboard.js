@@ -16,7 +16,7 @@ module.exports = function () {
     'amount AS hours',
     'start_date AS startDate',
     'end_date AS endDate',
-    'reduction_status AS status',
+    'reduction_status AS status'
   ]
 
   return knex(table)
@@ -37,7 +37,7 @@ module.exports = function () {
           record.hours,
           record.startDate,
           record.endDate,
-          record.status,
+          record.status
         ])
       })
       return reductionsAsArray
