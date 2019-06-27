@@ -5,7 +5,8 @@ const dateFormatter = require('./date-formatter')
 
 module.exports = function (reductions, capacity, formattedCaseloadData) {
   const datestamp = dateFormatter.now().format('YYYYMMDDHHmmss')
-  var outputFilename = config.WMT_DASHBOARD_OUTPUT_FILE_PATH + 'dashboard_' + datestamp + '.xlsx'
+  var outputFilepathOnWorker = config.WMT_DASHBOARD_OUTPUT_FILE_PATH + 'dashboard_' + datestamp + '.xlsx'
+  var outputFilepathOnWeb = config.WMT_WEB_DASHBOARD_OUTPUT_FILE_PATH + 'dashboard_' + datestamp + '.xlsx'
   return XlsxPopulate.fromFileAsync(config.WMT_DASHBOARD_TEMPLATE_FILE_PATH)
     .then(workbook => {
       // Modify the workbook.
@@ -28,12 +29,12 @@ module.exports = function (reductions, capacity, formattedCaseloadData) {
       // reductionsWorkingsSheet.hidden('very')
       // clusterCodesSheet.hidden('very')
 
-      return workbook.toFileAsync(outputFilename)
+      return workbook.toFileAsync(outputFilepathOnWorker)
         .then(function () {
-          return outputFilename
+          return outputFilepathOnWeb
         })
         .catch(function (error) {
-          log.error('An error occurred while writing the dashboard to', outputFilename)
+          log.error('An error occurred while writing the dashboard to', outputFilepathOnWorker)
           log.error(error)
           throw (error)
         })
