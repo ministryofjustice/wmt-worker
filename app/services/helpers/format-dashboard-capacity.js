@@ -21,9 +21,9 @@ module.exports = function (capacity) {
 }
 
 var formatCapacityValue = function (capacity) {
-  return Math.round(capacity) + '%'
+  return (Math.round(capacity)) / 100
 }
 
 var formatCMSPercentage = function (cms) {
-  return cms.toFixed(1) + '%'
+  return (cms.toFixed(1)) / 100
 }
