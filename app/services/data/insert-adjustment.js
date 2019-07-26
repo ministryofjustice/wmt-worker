@@ -9,7 +9,8 @@ module.exports = function (adjustment) {
     effective_from: adjustment.effectiveFrom,
     effective_to: adjustment.effectiveTo,
     status: adjustment.status,
-    contact_id: adjustment.contactId
+    contact_id: adjustment.contactId,
+    case_ref_no: adjustment.crn
   })
   .returning('id')
   .then(function (result) {

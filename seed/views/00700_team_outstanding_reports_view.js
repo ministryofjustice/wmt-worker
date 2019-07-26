@@ -14,7 +14,8 @@ exports.seed = function (knex, Promise) {
       , SUM(tr.t2a_warrants_total) AS t2a_ow
       , SUM(tr.t2a_overdue_terminations_total) AS t2a_ot
       , SUM(tr.t2a_unpaid_work_total) AS t2a_upw
-      , SUM(tr.suspended_total) AS sl
+      , SUM(tr.suspended_total) AS sso
+      , SUM(tr.suspended_lifer_total) AS sl
       , COUNT_BIG(*) AS count
   FROM app.tiers tr
         JOIN app.workload w ON tr.workload_id = w.id
