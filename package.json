@@ -7,7 +7,7 @@
   "author": "Tom Swann",
   "license": "MIT",
   "scripts": {
-    "start": "node start.js",
+    "start": "node --max-old-space-size=4096 start.js",
     "unit-test": "standard && mocha --recursive -u exports test/unit/",
     "integration-test": "mocha --recursive -u exports test/integration/ --timeout 60000",
     "test-all": "yarn test && yarn test-integration",
@@ -54,8 +54,10 @@
     "knex": "^0.13.0",
     "lodash": "^4.17.4",
     "mssql": "3.3.0",
+    "python-bridge": "^1.1.0",
     "request": "^2.81.0",
     "request-promise": "^4.2.1",
-    "wmt-probation-rules": "ministryofjustice/wmt-probation-rules.git#v0.9.3"
+    "wmt-probation-rules": "ministryofjustice/wmt-probation-rules.git#v0.9.3",
+    "xlsx-populate": "^1.19.1"
   }
 }

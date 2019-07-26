@@ -1,0 +1,5 @@
+module.exports = {
+  CUSTODY: 'CUSTODY',
+  COMMUNITY: 'COMMUNITY',
+  LICENSE: 'LICENSE'
+}
