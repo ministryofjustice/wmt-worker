@@ -37,7 +37,11 @@ describe('app/services/data/insert-app-workload', function () {
         11, // ARMS Community Cases
         12, // ARMS License Cases
         13, // Staging ID
-        14  // Workload Report ID
+        14,  // Workload Report ID
+        buildTier(Locations.CUSTODY), // Custody Tiers
+        buildTier(Locations.COMMUNITY), // Community Tiers
+        buildTier(Locations.LICENSE), // License Tiers
+        18 // total filtered cases
     )
 
     var caseDetails = []
@@ -55,7 +59,8 @@ describe('app/services/data/insert-app-workload', function () {
         .join('tiers', 'workload.id', 'tiers.workload_id')
         .join('case_details', 'workload.id', 'case_details.workload_id')
         .where({'workload.id': id})
-        .select('workload.total_cases AS total_cases', 'workload.total_t2a_cases AS total_t2a_cases',
+        .select('workload.total_cases AS total_cases', 'workload.total_filtered_cases AS total_filtered_cases',
+        'workload.total_t2a_cases AS total_t2a_cases',
         'workload.monthly_sdrs AS monthly_sdrs', 'workload.sdr_due_next_30_days AS sdr_due_next_30_days',
         'workload.sdr_conversions_last_30_days AS sdr_conversions_last_30_days',
         'workload.paroms_completed_last_30_days AS paroms_completed_last_30_days',
@@ -74,6 +79,7 @@ describe('app/services/data/insert-app-workload', function () {
               expect(licenceTier6[0].suspended_lifer_total).to.equal(99)
               expect(result[0]).not.to.be.undefined // eslint-disable-line
               expect(result[0].total_cases).to.equal(2)
+              expect(result[0].total_filtered_cases).to.equal(18)
               expect(result[0].total_t2a_cases).to.equal(1)
               expect(result[0].monthly_sdrs).to.equal(3)
               expect(result[0].sdr_due_next_30_days).to.equal(4)

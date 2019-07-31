@@ -6,6 +6,9 @@ module.exports = function (workload, caseDetails) {
   workload.totalCommunityCases = workload.communityTiers.total
   workload.totalCustodyCases = workload.custodyTiers.total
   workload.totalLicenseCases = workload.licenseTiers.total
+  workload.totalFilteredCommunityCases = workload.filteredCommunityTiers.total
+  workload.totalFilteredCustodyCases = workload.filteredCustodyTiers.total
+  workload.totalFilteredLicenseCases = workload.filteredLicenseTiers.total
   workload.totalT2aCommunityCases = workload.t2aCommunityTiers.total
   workload.totalT2aCustodyCases = workload.t2aCustodyTiers.total
   workload.totalT2aLicenseCases = workload.t2aLicenseTiers.total
@@ -16,9 +19,9 @@ module.exports = function (workload, caseDetails) {
     .returning('id')
     .then(function (workloadId) {
       var promises = []
-      promises.push(insertTiers(workload.communityTiers, workload.t2aCommunityTiers, workloadId, Locations.COMMUNITY))
-      promises.push(insertTiers(workload.custodyTiers, workload.t2aCustodyTiers, workloadId, Locations.CUSTODY))
-      promises.push(insertTiers(workload.licenseTiers, workload.t2aLicenseTiers, workloadId, Locations.LICENSE))
+      promises.push(insertTiers(workload.communityTiers, workload.filteredCommunityTiers, workload.t2aCommunityTiers, workloadId, Locations.COMMUNITY))
+      promises.push(insertTiers(workload.custodyTiers, workload.filteredCustodyTiers, workload.t2aCustodyTiers, workloadId, Locations.CUSTODY))
+      promises.push(insertTiers(workload.licenseTiers, workload.filteredLicenseTiers, workload.t2aLicenseTiers, workloadId, Locations.LICENSE))
       var communityCaseDetails = caseDetails.filter((caseDetail) => { return caseDetail.location.toUpperCase() === Locations.COMMUNITY })
       var custodyCaseDetails = caseDetails.filter((caseDetail) => { return caseDetail.location.toUpperCase() === Locations.CUSTODY })
       var licenseCaseDetails = caseDetails.filter((caseDetail) => { return caseDetail.location.toUpperCase() === Locations.LICENSE })
@@ -32,6 +35,7 @@ module.exports = function (workload, caseDetails) {
 const aliases = {
   workloadOwnerId: 'workload_owner_id',
   totalCases: 'total_cases',
+  totalFilteredCases: 'total_filtered_cases',
   totalT2aCases: 'total_t2a_cases',
   monthlySdrs: 'monthly_sdrs',
   sdrsDueNext30Days: 'sdr_due_next_30_days',
@@ -41,6 +45,9 @@ const aliases = {
   totalCommunityCases: 'total_community_cases',
   totalCustodyCases: 'total_custody_cases',
   totalLicenseCases: 'total_license_cases',
+  totalFilteredCommunityCases: 'total_filtered_community_cases',
+  totalFilteredCustodyCases: 'total_filtered_custody_cases',
+  totalFilteredLicenseCases: 'total_filtered_license_cases',
   totalT2aCommunityCases: 'total_t2a_community_cases',
   totalT2aCustodyCases: 'total_t2a_custody_cases',
   totalT2aLicenseCases: 'total_t2a_license_cases',
@@ -52,13 +59,15 @@ const aliases = {
   workloadReportId: 'workload_report_id'
 }
 
-var insertTiers = function (tiers, t2aTiers, workloadId, location) {
+var insertTiers = function (tiers, filteredTiers, t2aTiers, workloadId, location) {
   var tiersToInsert = []
   var tiersInNumberOrder = tiers.getTiersAsList().reverse()
+  var filteredTiersInNumberOrder = filteredTiers.getTiersAsList().reverse()
   var t2aTiersInNumberOrder = t2aTiers.getTiersAsList().reverse()
   for (var i = 0; i < tiersInNumberOrder.length; i++) {
     var currentTier = tiersInNumberOrder[i]
     var currentT2aTier = t2aTiersInNumberOrder[i]
+    var currentFilteredTier = filteredTiersInNumberOrder[i]
     var tierToInsert = {
       workload_id: workloadId,
       tier_number: i,
@@ -68,6 +77,7 @@ var insertTiers = function (tiers, t2aTiers, workloadId, location) {
       suspended_total: currentTier.suspended,
       suspended_lifer_total: currentTier.suspendedLifers,
       total_cases: currentTier.total,
+      total_filtered_cases: currentFilteredTier.total,
       t2a_overdue_terminations_total: currentT2aTier.overdueTermination,
       t2a_warrants_total: currentT2aTier.warrants,
       t2a_unpaid_work_total: currentT2aTier.unpaidWork,
