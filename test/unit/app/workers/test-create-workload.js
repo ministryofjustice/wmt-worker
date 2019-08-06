@@ -43,7 +43,7 @@ var nextTask = new Task(
   task.workloadReportId,
   undefined,
   undefined,
-  taskStatus.PENDING
+  taskStatus.AWAITING_DUPLICATE_CHECK
   )
 
 describe('services/workers/create-workload', function () {
