@@ -1,7 +1,7 @@
 const knex = require('../../../knex').appSchema
 
-module.exports = function (workload_ids) {
+module.exports = function (workloadIds) {
   return knex('workload')
-    .whereIn('workload.id', workload_ids)
+    .whereIn('workload.id', workloadIds)
     .del()
 }

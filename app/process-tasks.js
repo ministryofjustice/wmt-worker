@@ -84,7 +84,7 @@ function executeWorkerForTaskType (worker, task) {
                 .then(function (duplicatesResults) {
                   if (duplicatesResults.length > 0) {
                     duplicatesResults.forEach(function (result) {
-                      deleteTasks.push(deleteDuplicateTask(result.additional_data, triggerableTasks[task.type], task.workloadReportId, result.theCount))
+                      deleteTasks.push(deleteDuplicateTask(result.additionalData, triggerableTasks[task.type], task.workloadReportId, result.theCount))
                     })
                     Promise.all(deleteTasks).then(function () {
                       return setTasksToPending(triggerableTasks[task.type], task.workloadReportId)
