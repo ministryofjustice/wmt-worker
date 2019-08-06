@@ -38,7 +38,7 @@ module.exports.execute = function (task) {
                 workloadReportId,
                 undefined,
                 undefined,
-                taskStatus.PENDING
+                taskStatus.AWAITING_DUPLICATE_CHECK
                 )
       return createNewTasks([reductionsWorkerTask])
       .then(function () {

@@ -4,6 +4,7 @@ const log = require('./services/log')
 const taskStatus = require('./constants/task-status')
 const workloadReportStatus = require('./constants/workload-report-status')
 const taskType = require('./constants/task-type')
+const triggerableTasks = require('./constants/triggerable-tasks')
 const getPendingTasksAndMarkInProgress = require('./services/data/get-pending-tasks-and-mark-in-progress')
 const updateWorkloadReportStatus = require('./services/data/update-workload-report-with-status')
 const countTaskStatuses = require('./services/task-status-counter')
@@ -14,6 +15,9 @@ const closePreviousWorkloadReport = require('./services/close-previous-workload-
 const updateWorkloadReportEffectiveTo = require('./services/data/update-workload-report-effective-to')
 const operationTypes = require('./constants/calculation-tasks-operation-type')
 const getTaskInProgressCount = require('./services/data/get-tasks-inprogress-count')
+const checkForDuplicateTasks = require('./services/data/check-for-duplicate-tasks')
+const setTasksToPending = require('./services/data/set-tasks-to-pending')
+const deleteDuplicateTask = require('./services/data/delete-duplicate-task')
 
 module.exports = function () {
   var batchSize = parseInt(config.ASYNC_WORKER_BATCH_SIZE, 10)
@@ -68,6 +72,28 @@ function executeWorkerForTaskType (worker, task) {
                   return callWebRefreshEndpoint()
                 })
               })
+            }
+          })
+        } else if (Object.keys(triggerableTasks).includes(task.type)) {
+          var deleteTasks = []
+          return countTaskStatuses(task)
+          .then(function (totals) {
+            if (totals.numPending === 0 && totals.numInProgress === 0 && totals.numFailed === 0) {
+              // check for any duplicate tasks and remove if necessary
+              checkForDuplicateTasks(triggerableTasks[task.type], task.workloadReportId)
+                .then(function (duplicatesResults) {
+                  if (duplicatesResults.length > 0) {
+                    duplicatesResults.forEach(function (result) {
+                      deleteTasks.push(deleteDuplicateTask(result.additional_data, triggerableTasks[task.type], task.workloadReportId, result.theCount))
+                    })
+                    Promise.all(deleteTasks).then(function () {
+                      return setTasksToPending(triggerableTasks[task.type], task.workloadReportId)
+                    })
+                  } else {
+                    return setTasksToPending(triggerableTasks[task.type], task.workloadReportId)
+                  }
+                })
+              // Set Mapped tasks to pending
             }
           })
         } else if (task.type === taskType.CALCULATE_WORKLOAD_POINTS && task.additionalData.operationType === operationTypes.UPDATE) {

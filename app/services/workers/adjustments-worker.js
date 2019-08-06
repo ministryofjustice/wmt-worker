@@ -44,7 +44,7 @@ module.exports.execute = function (task) {
             task.workloadReportId,
             undefined,
             undefined,
-            taskStatus.PENDING
+            taskStatus.AWAITING_DUPLICATE_CHECK
           )
 
           return createNewTasks([calculateWorkloadPointsTask])
