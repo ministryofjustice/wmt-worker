@@ -46,6 +46,7 @@ var createTaskObjects = function (ids, workloadReportId, batchSize) {
       additionalData,
       workloadReportId,
       undefined,
+      undefined,
       taskStatus.PENDING
     )
     tasks.push(taskToWrite)

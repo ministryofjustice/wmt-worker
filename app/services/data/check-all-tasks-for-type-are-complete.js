@@ -7,7 +7,7 @@ module.exports = function (taskType, workloadReportId) {
     .where('workload_report_id', workloadReportId)
     .andWhere('type', taskType)
     .unionAll(function () {
-      knex('tasks')
+      this.from('tasks')
       .count('* AS theCount')
       .where('workload_report_id', workloadReportId)
       .andWhere('type', taskType)
