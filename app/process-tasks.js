@@ -18,6 +18,7 @@ const getTaskInProgressCount = require('./services/data/get-tasks-inprogress-cou
 const checkForDuplicateTasks = require('./services/data/check-for-duplicate-tasks')
 const setTasksToPending = require('./services/data/set-tasks-to-pending')
 const deleteDuplicateTask = require('./services/data/delete-duplicate-task')
+const checkAllTasksForTypeAreComplete = require('./services/data/check-all-tasks-for-type-are-complete')
 
 module.exports = function () {
   var batchSize = parseInt(config.ASYNC_WORKER_BATCH_SIZE, 10)
@@ -76,9 +77,9 @@ function executeWorkerForTaskType (worker, task) {
           })
         } else if (Object.keys(triggerableTasks).includes(task.type)) {
           var deleteTasks = []
-          return countTaskStatuses(task)
-          .then(function (totals) {
-            if (totals.numPending === 0 && totals.numInProgress === 0 && totals.numFailed === 0) {
+          return checkAllTasksForTypeAreComplete(task.type, task.workloadReportId)
+          .then(function (result) {
+            if (result) {
               // check for any duplicate tasks and remove if necessary
               checkForDuplicateTasks(triggerableTasks[task.type], task.workloadReportId)
                 .then(function (duplicatesResults) {

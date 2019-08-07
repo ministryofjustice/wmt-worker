@@ -7,6 +7,6 @@ module.exports = function (taskType, workloadReportId) {
   return knex(tasksTable)
     .update('status', taskStatus.PENDING)
     .where('type', taskType)
-    .andwhere('workload_report_id', workloadReportId)
-    .andwhere('status', taskStatus.AWAITING_DUPLICATE_CHECK)
+    .andWhere('workload_report_id', workloadReportId)
+    .andWhere('status', taskStatus.AWAITING_DUPLICATE_CHECK)
 }
