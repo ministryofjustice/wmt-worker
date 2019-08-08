@@ -1,10 +1,21 @@
 const knex = require('../../../knex').appSchema
 
 module.exports = function (additionalData, thisTaskType, workloadReportId, limit) {
-  return knex('task')
+  return knex('tasks')
+    .select('id')
     .where('additional_data', additionalData)
     .andWhere('workload_report_id', workloadReportId)
     .andWhere('type', thisTaskType)
     .limit(limit - 1)
-    .del()
+    .then(function (results) {
+      var ids = []
+      if (results) {
+        results.forEach(function (result) {
+          ids.push(result['id'])
+        })
+      }
+      return knex('tasks')
+        .whereIn('id', ids)
+        .del()
+    })
 }
