@@ -10,7 +10,7 @@ module.exports = function (tasks) {
       additional_data: JSON.stringify(task.additionalData),
       workload_report_id: task.workloadReportId,
       date_created: task.dateCreated,
-      status: TaskStatus.PENDING
+      status: task.status ? task.status : TaskStatus.PENDING // default value is the status the incoming task otherwise it's pending
     }
     dbTasks.push(dbTask)
   })
