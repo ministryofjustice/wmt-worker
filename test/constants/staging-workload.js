@@ -1,6 +1,6 @@
 module.exports = [{
-  staging_id: '1', 
-  trust: 'NPS', 
+  staging_id: '1',
+  trust: 'NPS',
   region_desc: 'Test Region',
   region_code: 'TR0001',
   ldu_desc: 'Test LDU',

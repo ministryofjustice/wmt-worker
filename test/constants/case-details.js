@@ -1,6 +1,5 @@
 const CaseDetails = require('wmt-probation-rules').CaseDetails
 
-
 module.exports = [
   new CaseDetails('W', 'CASEREF9000', '6', 'TEAM001', 'PO', 'OM9000', 'LICENSE'),
   new CaseDetails('L', 'CASEREF9001', '5', 'TEAM001', 'PO', 'OM9000', 'COMMUNITY'),

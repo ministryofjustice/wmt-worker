@@ -26,7 +26,7 @@ describe('services/parse-staging-workload', function () {
   })
 
   it('should build an OMWorkload object with the correct case totals', function () {
-    return parseStagingWorkload([1,2]).then(function (omWorkload) {
+    return parseStagingWorkload([1, 2]).then(function (omWorkload) {
       // This needs extended to test the other case totals for the other tiers
       var filteredCommunityTiers = omWorkload[0].casesSummary.filteredCommunityTiers
       expect(filteredCommunityTiers.location).to.be.eql(locations.COMMUNITY)
