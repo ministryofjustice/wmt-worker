@@ -57,7 +57,7 @@ describe('services/workers/create-workload', function () {
 
     createWorkload = proxyquire('../../../../app/services/workers/create-workload', {
       '../log': { info: function (message) {}, error: function (message) {} },
-      '../data/parse-staging-workload': parseStagingWorkload,
+      '../parse-staging-workload': parseStagingWorkload,
       '../insert-workload-owner-and-dependencies': insertWorkloadOwnerAndDependencies,
       '../data/insert-app-workload': insertWorkload,
       'wmt-probation-rules': probationRulesStub,
