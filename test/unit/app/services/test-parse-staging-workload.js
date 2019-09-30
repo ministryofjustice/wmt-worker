@@ -18,7 +18,7 @@ describe('services/parse-staging-workload', function () {
     getArmsTotals = sinon.stub().resolves(armsTotals)
     getStagingCaseDetails = sinon.stub().resolves(caseDetails)
 
-    parseStagingWorkload = proxyquire('../../../../../app/services/parse-staging-workload', {
+    parseStagingWorkload = proxyquire('../../../../app/services/parse-staging-workload', {
       './data/get-staging-workload': getStagingWorkload,
       './data/get-arms-totals': getArmsTotals,
       './data/get-staging-case-details': getStagingCaseDetails
