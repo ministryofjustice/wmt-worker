@@ -55,11 +55,13 @@ module.exports = function (initialId, maxId, batchSize, workloadReportId) {
           }
           if (tempWorkloads[index] === undefined) {
             tempWorkloads[index] = {
+              // WMT0160: Increase Size of Community Array to 11
               COMMUNITY: new Array(8),
               LICENSE: new Array(8),
               CUSTODY: new Array(8)
             }
             tempWorkloads[index].T2A = {
+              // WMT0160: Increase Size of Community Array to 11
               COMMUNITY: new Array(8),
               LICENSE: new Array(8),
               CUSTODY: new Array(8)
@@ -116,9 +118,11 @@ module.exports = function (initialId, maxId, batchSize, workloadReportId) {
               tempWorkload.paromsCompletedLast30Days,
               tempWorkload.paromsDueNext30Days,
               new Tiers(Locations.CUSTODY, ...tempWorkload[Locations.CUSTODY], tempWorkload.totalCustodyCases),
+              // WMT0160: Use new community tiers object
               new Tiers(Locations.COMMUNITY, ...tempWorkload[Locations.COMMUNITY], tempWorkload.totalCommunityCases),
               new Tiers(Locations.LICENSE, ...tempWorkload[Locations.LICENSE], tempWorkload.totalLicenseCases),
               new Tiers(Locations.CUSTODY, ...tempWorkload.T2A[Locations.CUSTODY], tempWorkload.totalT2aCustodyCases),
+              // WMT0160: Use new community tiers object
               new Tiers(Locations.COMMUNITY, ...tempWorkload.T2A[Locations.COMMUNITY], tempWorkload.totalT2aCommunityCases),
               new Tiers(Locations.LICENSE, ...tempWorkload.T2A[Locations.LICENSE], tempWorkload.totalT2aLicenseCases),
               tempWorkload.licenseCasesLast16Weeks,

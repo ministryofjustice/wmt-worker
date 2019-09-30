@@ -10,6 +10,7 @@ const getArmsTotals = require('../data/get-arms-totals')
 const Promise = require('bluebird').Promise
 
 module.exports = function (range) {
+  // WMT0160: Update SQL statement to SELECT Comm E, F and G tiers
   var omWorkloads = []
   return knex('wmt_extract').whereBetween('wmt_extract.id', range)
     .leftJoin('t2a', function () {
@@ -55,6 +56,7 @@ module.exports = function (range) {
       if (results !== 'undefined' && results.length > 0) {
         return Promise.each(results, function (result) {
           return getArmsTotals(result['om_key'], result['team_code']).then(function (armsCases) {
+            // WMT0160: Update this module to handle Community Tiers - Import new CommunityTiers class
             var communityTiers = new Tiers(
               locations.COMMUNITY,
               result['commtier0'],
@@ -103,6 +105,7 @@ module.exports = function (range) {
               result['t2a_commtiera']
             )
 
+            // WMT0160: Update this module to handle Community Tiers - Import new CommunityTiers class
             var t2aLicenseTiers = new Tiers(
               locations.LICENSE,
               result['t2a_licencetier0'],
