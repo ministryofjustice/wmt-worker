@@ -7,7 +7,7 @@ exports.seed = function (knex, promise) {
     , l.id AS link_id
     , l.description AS name
     , omt.grade_code
-    , SUM(w.total_cases) AS total_cases
+    , SUM(w.total_filtered_cases) AS total_cases
     , SUM(w.total_t2a_cases) AS total_t2a_cases
     , SUM(w.monthly_sdrs) AS monthly_sdrs
     , SUM(w.sdr_conversions_last_30_days) AS sdr_conversions_last_30_days

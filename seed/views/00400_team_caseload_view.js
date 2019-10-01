@@ -9,15 +9,15 @@ exports.seed = function (knex, Promise) {
     , om.surname
     , omt.grade_code
     , tr.location
-    , SUM(CASE WHEN tr.tier_number = 0 THEN tr.total_cases ELSE 0 END) AS untiered
-    , SUM(CASE WHEN tr.tier_number = 1 THEN tr.total_cases ELSE 0 END) AS d2
-    , SUM(CASE WHEN tr.tier_number = 2 THEN tr.total_cases ELSE 0 END) AS d1
-    , SUM(CASE WHEN tr.tier_number = 3 THEN tr.total_cases ELSE 0 END) AS c2
-    , SUM(CASE WHEN tr.tier_number = 4 THEN tr.total_cases ELSE 0 END) AS c1
-    , SUM(CASE WHEN tr.tier_number = 5 THEN tr.total_cases ELSE 0 END) AS b2
-    , SUM(CASE WHEN tr.tier_number = 6 THEN tr.total_cases ELSE 0 END) AS b1
-    , SUM(CASE WHEN tr.tier_number = 7 THEN tr.total_cases ELSE 0 END) AS a
-    , SUM(tr.total_cases) AS total_cases
+    , SUM(CASE WHEN tr.tier_number = 0 THEN tr.total_filtered_cases ELSE 0 END) AS untiered
+    , SUM(CASE WHEN tr.tier_number = 1 THEN tr.total_filtered_cases ELSE 0 END) AS d2
+    , SUM(CASE WHEN tr.tier_number = 2 THEN tr.total_filtered_cases ELSE 0 END) AS d1
+    , SUM(CASE WHEN tr.tier_number = 3 THEN tr.total_filtered_cases ELSE 0 END) AS c2
+    , SUM(CASE WHEN tr.tier_number = 4 THEN tr.total_filtered_cases ELSE 0 END) AS c1
+    , SUM(CASE WHEN tr.tier_number = 5 THEN tr.total_filtered_cases ELSE 0 END) AS b2
+    , SUM(CASE WHEN tr.tier_number = 6 THEN tr.total_filtered_cases ELSE 0 END) AS b1
+    , SUM(CASE WHEN tr.tier_number = 7 THEN tr.total_filtered_cases ELSE 0 END) AS a
+    , SUM(tr.total_filtered_cases) AS total_cases
     , COUNT_BIG(*) AS count
   FROM app.tiers tr
       JOIN app.workload w ON tr.workload_id = w.id

@@ -5,7 +5,7 @@ exports.seed = function (knex, promise) {
   SELECT
       CONCAT(om.forename, ' ', om.surname) AS name
     , om_type.grade_code AS grade_code
-    , w.total_cases AS total_cases
+    , w.total_filtered_cases AS total_cases
     , wpc.available_points AS available_points
     , wpc.total_points AS total_points
     , wpc.contracted_hours AS contracted_hours
