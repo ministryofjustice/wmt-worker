@@ -148,7 +148,7 @@ module.exports = function (range) {
               armsCases.license,
               filteredCommunityTiers,
               filteredLicenseTiers,
-              filteredCustodyTiers,
+              filteredCustodyTiers
             )
 
             var courtReport = new CourtReport(

@@ -12,7 +12,7 @@ var createNewTasks
 
 var task = {
   additionalData: {
-    batchSize: 1,
+    batchSize: 1
   },
   workloadReportId: 5
 }

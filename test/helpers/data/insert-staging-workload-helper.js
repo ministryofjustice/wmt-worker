@@ -42,7 +42,7 @@ module.exports = function () {
       suspendedLifers.forEach(function (record) {
         inserts.push(insertToStagingTable('suspended_lifers', record))
       })
-      return Promise.all(inserts).then(function () { return stagingId})
+      return Promise.all(inserts).then(function () { return stagingId })
     })
 }
 
