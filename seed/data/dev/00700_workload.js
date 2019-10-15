@@ -3,6 +3,7 @@ var tableName = 'workload'
 const workloadRow = {
   workload_owner_id: 1,
   total_cases: 69,
+  total_filtered_cases: 50,
   total_t2a_cases: 59,
   monthly_sdrs: 1,
   sdr_due_next_30_days: 2,
