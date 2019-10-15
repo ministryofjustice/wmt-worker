@@ -50,6 +50,6 @@ exports.seed = function (knex, Promise) {
       // partTwoWorkloads = workloadsToInsert.slice(oneQuarterValue, twoQuarterValue)
       // partThreeWorkloads = workloadsToInsert.slice(twoQuarterValue, threeQuarterValue)
       // partFourWorkloads = workloadsToInsert.slice(threeQuarterValue, workloadsToInsert.length)
-      return knex.batchInsert('workload', workloadsToInsert, 1000)
+      return knex.batchInsert('workload', workloadsToInsert, 100)
     })
 }

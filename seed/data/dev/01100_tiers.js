@@ -60,6 +60,6 @@ exports.seed = function (knex, Promise) {
       // var partFifteen = insertData.slice(splitSize * 14, splitSize * 15)
       // var partSixteen = insertData.slice(splitSize * 15, insertData.length)
 
-      return knex.batchInsert(tableName, insertData, 1000)
+      return knex.batchInsert(tableName, insertData, 100)
     })
 }
