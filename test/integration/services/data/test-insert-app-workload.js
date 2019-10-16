@@ -95,7 +95,6 @@ describe('app/services/data/insert-app-workload', function () {
             expect(result[0].staging_id).to.equal(13)
             expect(result[0].workload_report_id).to.equal(14)
             expect(result[0].case_ref_no).to.equal('DTL123')
-            done()
           })
       })
   })
