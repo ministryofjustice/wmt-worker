@@ -8,7 +8,7 @@ exports.seed = function (knex, Promise) {
           , om.forename
           , om.surname
           , omt.grade_code
-          , w.total_cases
+          , w.total_filtered_cases AS total_cases
           , w.total_t2a_cases
           , w.monthly_sdrs
           , w.sdr_conversions_last_30_days

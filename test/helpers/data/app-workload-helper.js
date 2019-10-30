@@ -89,7 +89,7 @@ module.exports.insertDependencies = function (inserts) {
               overdue_terminations_total: 1,
               warrants_total: 1,
               unpaid_work_total: 1,
-              total_cases: 10,
+              total_cases: j + i,
               t2a_overdue_terminations_total: 1,
               t2a_warrants_total: 1,
               t2a_unpaid_work_total: 1,
@@ -97,7 +97,7 @@ module.exports.insertDependencies = function (inserts) {
               suspended_total: 1,
               location: locations[i],
               suspended_lifer_total: 99,
-              total_filtered_cases: 8
+              total_filtered_cases: Math.max(0, j + i - 1)
             })
           }
         }

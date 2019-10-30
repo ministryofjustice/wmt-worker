@@ -6,7 +6,7 @@ const Task = require('../domain/task')
 const taskType = require('../../constants/task-type')
 const taskStatus = require('../../constants/task-status')
 const submittingAgent = require('../../constants/task-submitting-agent')
-const getStagingWorkload = require('../data/get-staging-workload')
+const parseStagingWorkload = require('../parse-staging-workload')
 const insertWorkloadOwnerAndDependencies = require('../insert-workload-owner-and-dependencies')
 const insertWorkload = require('../data/insert-app-workload')
 const createNewTasks = require('../data/create-tasks')
@@ -17,7 +17,7 @@ module.exports.execute = function (task) {
   var endingStagingId = startingStagingId + (workloadBatchSize - 1)
   var workloadReportId = task.workloadReportId
 
-  return getStagingWorkload([startingStagingId, endingStagingId]).then(function (stagingWorkloads) {
+  return parseStagingWorkload([startingStagingId, endingStagingId]).then(function (stagingWorkloads) {
     return Promise.each(stagingWorkloads, function (stagingWorkload) {
       var caseSummary = stagingWorkload.casesSummary
       if (caseSummary.omKey !== null) {
