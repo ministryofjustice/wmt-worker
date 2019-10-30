@@ -17,5 +17,6 @@ module.exports = function (category, workloadStagingIdStart, workloadStagingIdEn
       'adjustments.adjustment_reason_id AS adjustmentReasonId',
       'adjustments.effective_from AS effectiveFrom',
       'adjustments.effective_to AS effectiveTo',
-      'adjustments.status AS status')
+      'adjustments.status AS status',
+      'adjustments.case_ref_no AS case_ref_no')
 }

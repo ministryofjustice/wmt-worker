@@ -15,10 +15,14 @@ module.exports = function (initialId, maxId, batchSize, workloadReportId) {
               'workload.staging_id',
               'workload.workload_owner_id',
               'workload.total_cases',
+              'workload.total_filtered_cases',
               'workload.total_t2a_cases',
               'workload.total_custody_cases',
               'workload.total_community_cases',
               'workload.total_license_cases',
+              'workload.total_filtered_custody_cases',
+              'workload.total_filtered_community_cases',
+              'workload.total_filtered_license_cases',
               'workload.total_t2a_custody_cases',
               'workload.total_t2a_community_cases',
               'workload.total_t2a_license_cases',
@@ -32,6 +36,7 @@ module.exports = function (initialId, maxId, batchSize, workloadReportId) {
               'workload.arms_license_cases',
               'workload.community_last_16_weeks',
               'tiers.total_cases as tiers_total_cases',
+              'tiers.total_filtered_cases as tiers_total_filtered_cases',
               'tiers.warrants_total',
               'tiers.unpaid_work_total',
               'tiers.overdue_terminations_total',
@@ -40,6 +45,7 @@ module.exports = function (initialId, maxId, batchSize, workloadReportId) {
               'tiers.t2a_unpaid_work_total',
               'tiers.t2a_overdue_terminations_total',
               'tiers.suspended_total',
+              'tiers.suspended_lifer_total',
               'tiers.location',
               'tiers.tier_number'
               )
@@ -66,6 +72,11 @@ module.exports = function (initialId, maxId, batchSize, workloadReportId) {
               LICENSE: new Array(8),
               CUSTODY: new Array(8)
             }
+            tempWorkloads[index].filtered = {
+              COMMUNITY: new Array(8),
+              LICENSE: new Array(8),
+              CUSTODY: new Array(8)
+            }
             tempWorkloads[index].id = row.id
             tempWorkloads[index].stagingId = row.staging_id
             tempWorkloads[index].workloadReportId = workloadReportId
@@ -74,6 +85,10 @@ module.exports = function (initialId, maxId, batchSize, workloadReportId) {
             tempWorkloads[index].totalCustodyCases = row.total_custody_cases
             tempWorkloads[index].totalCommunityCases = row.total_community_cases
             tempWorkloads[index].totalLicenseCases = row.total_license_cases
+            tempWorkloads[index].totalFilteredCases = row.total_filtered_cases
+            tempWorkloads[index].totalFilteredCustodyCases = row.total_filtered_custody_cases
+            tempWorkloads[index].totalFilteredCommunityCases = row.total_filtered_community_cases
+            tempWorkloads[index].totalFilteredLicenseCases = row.total_filtered_license_cases
             tempWorkloads[index].totalT2aCases = row.total_t2a_cases
             tempWorkloads[index].totalT2aCustodyCases = row.total_t2a_custody_cases
             tempWorkloads[index].totalT2aCommunityCases = row.total_t2a_community_cases
@@ -94,14 +109,24 @@ module.exports = function (initialId, maxId, batchSize, workloadReportId) {
                           row.warrants_total,
                           row.unpaid_work_total,
                           row.overdue_terminations_total,
-                          row.suspended_total, false)
+                          row.suspended_total,
+                          row.suspended_lifer_total, false)
+
+          tempWorkloads[index].filtered[row.location][row.tier_number] = new TierCounts(
+                          row.tiers_total_filtered_cases,
+                          row.warrants_total,
+                          row.unpaid_work_total,
+                          row.overdue_terminations_total,
+                          row.suspended_total,
+                          row.suspended_lifer_total, false)
 
           tempWorkloads[index].T2A[row.location][row.tier_number] = new TierCounts(
                             row.t2a_tiers_total_cases,
                             row.t2a_warrants_total,
                             row.t2a_unpaid_work_total,
                             row.t2a_overdue_terminations_total,
-                            row.suspended_total, true)
+                            row.suspended_total,
+                            row.suspended_lifer_total, true)
         })
 
         var workloads = []
@@ -128,7 +153,11 @@ module.exports = function (initialId, maxId, batchSize, workloadReportId) {
               tempWorkload.armsCommunityCases,
               tempWorkload.armsLicenseCases,
               tempWorkload.stagingId,
-              tempWorkload.workloadReportId
+              tempWorkload.workloadReportId,
+              new Tiers(Locations.COMMUNITY, ...tempWorkload.filtered[Locations.COMMUNITY], tempWorkload.totalFilteredCommunityCases),
+              new Tiers(Locations.CUSTODY, ...tempWorkload.filtered[Locations.CUSTODY], tempWorkload.totalFilteredCustodyCases),
+              new Tiers(Locations.LICENSE, ...tempWorkload.filtered[Locations.LICENSE], tempWorkload.totalFilteredLicenseCases),
+              tempWorkload.totalFilteredCases
             )
             }
           )

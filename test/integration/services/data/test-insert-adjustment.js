@@ -23,7 +23,8 @@ const cmsAdjustmentToInsert = {
   effectiveFrom: effectiveFrom,
   effectiveTo: effectiveTo,
   status: adjustmentStatus.ACTIVE,
-  contactId: 4
+  contactId: 4,
+  crn: 'CMSTEST1000'
 }
 
 const gsAdjustmentToInsert = {
@@ -33,7 +34,8 @@ const gsAdjustmentToInsert = {
   effectiveFrom: effectiveFrom,
   effectiveTo: effectiveTo,
   status: adjustmentStatus.ACTIVE,
-  contactId: 12
+  contactId: 12,
+  crn: 'GSTEST1000'
 }
 
 describe('app/services/data/insert-adjustment', function () {
@@ -65,9 +67,18 @@ describe('app/services/data/insert-adjustment', function () {
           adjustmentReasonId: cmsAdjustmentToInsert.adjustmentReasonId,
           effectiveFrom: moment(effectiveFrom).format('YYYY-MM-DDTHH:mm:ss'),
           effectiveTo: moment(effectiveTo).format('YYYY-MM-DDTHH:mm:ss'),
-          status: cmsAdjustmentToInsert.status
+          status: cmsAdjustmentToInsert.status,
+          case_ref_no: cmsAdjustmentToInsert.crn
         }
-        expect(adjustments).to.contain(expected)
+        expect(adjustments[0].id).to.equal(expected.id)
+        expect(adjustments[0].workloadOwnerId).to.equal(expected.workloadOwnerId)
+        expect(adjustments[0].contactId).to.equal(expected.contactId)
+        expect(adjustments[0].points).to.equal(expected.points)
+        expect(adjustments[0].adjustmentReasonId).to.equal(expected.adjustmentReasonId)
+        expect(adjustments[0].effectiveFrom).to.equal(expected.effectiveFrom)
+        expect(adjustments[0].effectiveTo).to.equal(expected.effectiveTo)
+        expect(adjustments[0].status).to.equal(expected.status)
+        expect(adjustments[0].case_ref_no).to.equal(expected.case_ref_no)
       })
     })
   })
@@ -88,7 +99,8 @@ describe('app/services/data/insert-adjustment', function () {
           adjustmentReasonId: gsAdjustmentToInsert.adjustmentReasonId,
           effectiveFrom: moment(effectiveFrom).format('YYYY-MM-DDTHH:mm:ss'),
           effectiveTo: moment(effectiveTo).format('YYYY-MM-DDTHH:mm:ss'),
-          status: gsAdjustmentToInsert.status
+          status: gsAdjustmentToInsert.status,
+          case_ref_no: gsAdjustmentToInsert.crn
         }
         expect(adjustments).to.contain(expected)
       })

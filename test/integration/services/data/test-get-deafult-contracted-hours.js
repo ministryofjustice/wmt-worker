@@ -57,5 +57,13 @@ describe('services/data/get-default-contracted-hours', function () {
       expect(hours).to.equal(0)
       done()
     })
+
+    it('should retrieve 0 contracted hours as the default contracted hours for any grade that is Null', function (done) {
+      var grade = null
+      getDefaultContractedHours(grade).then(function (hours) {
+        expect(hours).to.equal(0)
+        done()
+      })
+    })
   })
 })

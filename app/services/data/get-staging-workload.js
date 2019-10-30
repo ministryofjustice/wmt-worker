@@ -13,6 +13,10 @@ module.exports = function (range) {
   // WMT0160: Update SQL statement to SELECT Comm E, F and G tiers
   var omWorkloads = []
   return knex('wmt_extract').whereBetween('wmt_extract.id', range)
+    .leftJoin('wmt_extract_filtered', function () {
+      this.on('wmt_extract.om_key', 'wmt_extract_filtered.om_key')
+        .andOn('wmt_extract.team_code', 'wmt_extract_filtered.team_code')
+    })
     .leftJoin('t2a', function () {
       this.on('wmt_extract.om_key', 't2a.om_key')
         .andOn('wmt_extract.team_code', 't2a.team_code')
@@ -37,7 +41,24 @@ module.exports = function (range) {
     'wmt_extract.licencetierb1', 'wmt_extract.licencetiera', 'wmt_extract.custtier0',
     'wmt_extract.custtierd2', 'wmt_extract.custtierd1', 'wmt_extract.custtierc2',
     'wmt_extract.custtierc1', 'wmt_extract.custtierb2', 'wmt_extract.custtierb1',
-    'wmt_extract.custtiera', 't2a.commtier0 AS t2a_commtier0  ', 't2a.commtierd2 AS t2a_commtierd2',
+    'wmt_extract.custtiera', 'wmt_extract_filtered.id AS filtered_staging_id',
+    'wmt_extract_filtered.comIn1st16Weeks AS filtered_comIn1st16Weeks',
+    'wmt_extract_filtered.licIn1st16Weeks AS filtered_licIn1st16Weeks',
+    'wmt_extract_filtered.datestamp AS filtered_datestamp',
+    'wmt_extract_filtered.commtier0 AS filtered_commtier0',
+    'wmt_extract_filtered.commtierd2 AS filtered_commtierd2',
+    'wmt_extract_filtered.commtierd1 AS filtered_commtierd1', 'wmt_extract_filtered.commtierc2 AS filtered_commtierc2',
+    'wmt_extract_filtered.commtierc1 AS filtered_commtierc1', 'wmt_extract_filtered.commtierb2 AS filtered_commtierb2',
+    'wmt_extract_filtered.commtierb1 AS filtered_commtierb1', 'wmt_extract_filtered.commtiera AS filtered_commtiera',
+    'wmt_extract_filtered.licencetier0 AS filtered_licencetier0', 'wmt_extract_filtered.licencetierd2 AS filtered_licencetierd2',
+    'wmt_extract_filtered.licencetierd1 AS filtered_licencetierd1', 'wmt_extract_filtered.licencetierc2 AS filtered_licencetierc2',
+    'wmt_extract_filtered.licencetierc1 AS filtered_licencetierc1', 'wmt_extract_filtered.licencetierb2 AS filtered_licencetierb2',
+    'wmt_extract_filtered.licencetierb1 AS filtered_licencetierb1', 'wmt_extract_filtered.licencetiera AS filtered_licencetiera',
+    'wmt_extract_filtered.custtier0 AS filtered_custtier0', 'wmt_extract_filtered.custtierd2 AS filtered_custtierd2',
+    'wmt_extract_filtered.custtierd1 AS filtered_custtierd1', 'wmt_extract_filtered.custtierc2 AS filtered_custtierc2',
+    'wmt_extract_filtered.custtierc1 AS filtered_custtierc1', 'wmt_extract_filtered.custtierb2 AS filtered_custtierb2',
+    'wmt_extract_filtered.custtierb1 AS filtered_custtierb1', 'wmt_extract_filtered.custtiera AS filtered_custtiera',
+    't2a.commtier0 AS t2a_commtier0', 't2a.commtierd2 AS t2a_commtierd2',
     't2a.commtierd1 AS t2a_commtierd1', 't2a.commtierc2 AS t2a_commtierc2',
     't2a.commtierc1 AS t2a_commtierc1', 't2a.commtierb2 AS t2a_commtierb2',
     't2a.commtierb1 AS t2a_commtierb1', 't2a.commtiera AS t2a_commtiera',
@@ -68,6 +89,18 @@ module.exports = function (range) {
               result['commtiera']
             )
 
+            var filteredCommunityTiers = new Tiers(
+              locations.COMMUNITY,
+              result['filtered_commtier0'],
+              result['filtered_commtierd2'],
+              result['filtered_commtierd1'],
+              result['filtered_commtierc2'],
+              result['filtered_commtierc1'],
+              result['filtered_commtierb2'],
+              result['filtered_commtierb1'],
+              result['filtered_commtiera']
+            )
+
             var licenseTiers = new Tiers(
               locations.LICENSE,
               result['licencetier0'],
@@ -80,6 +113,18 @@ module.exports = function (range) {
               result['licencetiera']
             )
 
+            var filteredLicenseTiers = new Tiers(
+              locations.LICENSE,
+              result['filtered_licencetier0'],
+              result['filtered_licencetierd2'],
+              result['filtered_licencetierd1'],
+              result['filtered_licencetierc2'],
+              result['filtered_licencetierc1'],
+              result['filtered_licencetierb2'],
+              result['filtered_licencetierb1'],
+              result['filtered_licencetiera']
+            )
+
             var custodyTiers = new Tiers(
               locations.CUSTODY,
               result['custtier0'],
@@ -90,6 +135,18 @@ module.exports = function (range) {
               result['custtierb2'],
               result['custtierb1'],
               result['custtiera']
+            )
+
+            var filteredCustodyTiers = new Tiers(
+              locations.CUSTODY,
+              result['filtered_custtier0'],
+              result['filtered_custtierd2'],
+              result['filtered_custtierd1'],
+              result['filtered_custtierc2'],
+              result['filtered_custtierc1'],
+              result['filtered_custtierb2'],
+              result['filtered_custtierb1'],
+              result['filtered_custtiera']
             )
 
             var t2aCommunityTiers = new Tiers(
@@ -149,7 +206,10 @@ module.exports = function (range) {
               result['comIn1st16Weeks'],
               result['licIn1st16Weeks'],
               armsCases.community,
-              armsCases.license
+              armsCases.license,
+              filteredCommunityTiers,
+              filteredLicenseTiers,
+              filteredCustodyTiers,
             )
 
             var courtReport = new CourtReport(
