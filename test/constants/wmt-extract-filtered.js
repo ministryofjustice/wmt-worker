@@ -42,5 +42,14 @@ module.exports = {
   comin1st16weeks: '29',
   licin1st16weeks: '30',
   datestamp: '31',
-  vcrn_count: '32'
+  vcrn_count: '32',
+  commtiere: '33',
+  commtierf: '34',
+  commtierg: '35',
+  custtiere: '36',
+  custtierf: '37',
+  custtierg: '38',
+  licencetiere: '39',
+  licencetierf: '40',
+  licencetierg: '41'
 }

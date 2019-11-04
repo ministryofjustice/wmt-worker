@@ -25,7 +25,10 @@ module.exports = function (range) {
               result['commtierc1'],
               result['commtierb2'],
               result['commtierb1'],
-              result['commtiera']
+              result['commtiera'],
+              result['commtiere'],
+              result['commtierf'],
+              result['commtierg']
             )
 
             var filteredCommunityTiers = new Tiers(
@@ -37,7 +40,10 @@ module.exports = function (range) {
               result['filtered_commtierc1'],
               result['filtered_commtierb2'],
               result['filtered_commtierb1'],
-              result['filtered_commtiera']
+              result['filtered_commtiera'],
+              result['filtered_commtiere'],
+              result['filtered_commtierf'],
+              result['filtered_commtierg']
             )
 
             var licenseTiers = new Tiers(
@@ -49,7 +55,10 @@ module.exports = function (range) {
               result['licencetierc1'],
               result['licencetierb2'],
               result['licencetierb1'],
-              result['licencetiera']
+              result['licencetiera'],
+              result['licencetiere'],
+              result['licencetierf'],
+              result['licencetierg']
             )
 
             var filteredLicenseTiers = new Tiers(
@@ -61,7 +70,10 @@ module.exports = function (range) {
               result['filtered_licencetierc1'],
               result['filtered_licencetierb2'],
               result['filtered_licencetierb1'],
-              result['filtered_licencetiera']
+              result['filtered_licencetiera'],
+              result['filtered_licencetiere'],
+              result['filtered_licencetierf'],
+              result['filtered_licencetierg']
             )
 
             var custodyTiers = new Tiers(
@@ -73,7 +85,10 @@ module.exports = function (range) {
               result['custtierc1'],
               result['custtierb2'],
               result['custtierb1'],
-              result['custtiera']
+              result['custtiera'],
+              result['custtiere'],
+              result['custtierf'],
+              result['custtierg']
             )
 
             var filteredCustodyTiers = new Tiers(
@@ -85,7 +100,10 @@ module.exports = function (range) {
               result['filtered_custtierc1'],
               result['filtered_custtierb2'],
               result['filtered_custtierb1'],
-              result['filtered_custtiera']
+              result['filtered_custtiera'],
+              result['filtered_custtiere'],
+              result['filtered_custtierf'],
+              result['filtered_custtierg']
             )
 
             var t2aCommunityTiers = new Tiers(
@@ -97,7 +115,10 @@ module.exports = function (range) {
               result['t2a_commtierc1'],
               result['t2a_commtierb2'],
               result['t2a_commtierb1'],
-              result['t2a_commtiera']
+              result['t2a_commtiera'],
+              result['t2a_commtiere'],
+              result['t2a_commtierf'],
+              result['t2a_commtierg']
             )
 
             var t2aLicenseTiers = new Tiers(
@@ -109,7 +130,10 @@ module.exports = function (range) {
               result['t2a_licencetierc1'],
               result['t2a_licencetierb2'],
               result['t2a_licencetierb1'],
-              result['t2a_licencetiera']
+              result['t2a_licencetiera'],
+              result['t2a_licencetiere'],
+              result['t2a_licencetierf'],
+              result['t2a_licencetierg']
             )
 
             var t2aCustodyTiers = new Tiers(
@@ -121,7 +145,10 @@ module.exports = function (range) {
               result['t2a_custtierc1'],
               result['t2a_custtierb2'],
               result['t2a_custtierb1'],
-              result['t2a_custtiera']
+              result['t2a_custtiera'],
+              result['t2a_custtiere'],
+              result['t2a_custtierf'],
+              result['t2a_custtierg']
             )
 
             var casesSummary = new CasesSummary(

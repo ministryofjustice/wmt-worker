@@ -33,7 +33,7 @@ const WORKLOAD_POINTS_BREAKDOWN = {
 const GS_POINTS = -10
 
 var calculateWorkloadPoints
-var getWorkloadsStub
+var parseWorkloadsStub
 var probationRulesStub
 var getPointsConfigurationStub
 var getOffenderManagerTypeIdStub
@@ -48,7 +48,7 @@ var checkForDuplicateCalculation
 
 describe('services/workers/calculate-workload-points', function () {
   beforeEach(function () {
-    getWorkloadsStub = sinon.stub()
+    parseWorkloadsStub = sinon.stub()
     getAppReductions = sinon.stub()
     getAdjustmentPoints = sinon.stub()
 
@@ -79,7 +79,7 @@ describe('services/workers/calculate-workload-points', function () {
 
     calculateWorkloadPoints = proxyquire('../../../../app/services/workers/calculate-workload-points', {
       '../log': { info: function (message) {}, error: function (message) {} },
-      '../data/get-app-workloads': getWorkloadsStub,
+      '../parse-app-workloads': parseWorkloadsStub,
       '../data/get-app-reduction-hours': getAppReductions,
       '../data/get-workload-points-configuration': getPointsConfigurationStub,
       '../data/get-offender-manager-type-id': getOffenderManagerTypeIdStub,
@@ -90,7 +90,7 @@ describe('services/workers/calculate-workload-points', function () {
       '../data/get-adjustment-points': getAdjustmentPoints,
       '../data/check-for-duplicate-calculation': checkForDuplicateCalculation
     })
-    getWorkloadsStub.resolves([{values: workloads, id: WORKLOAD_ID}])
+    parseWorkloadsStub.resolves([{values: workloads, id: WORKLOAD_ID}])
     getPointsConfigurationStub.resolves({values: pointsHelper.getCaseTypeWeightings(), id: WORKLOAD_ID})
     getAppReductions.resolves(REDUCTION_HOURS)
     getContractedHours.resolves(CONTRACTED_HOURS)
@@ -104,7 +104,7 @@ describe('services/workers/calculate-workload-points', function () {
     checkForDuplicateCalculation.resolves(undefined)
     getAdjustmentPoints.resolves(0)
     return calculateWorkloadPoints.execute(task).then(function () {
-      expect(getWorkloadsStub.calledWith(WORKLOAD_ID, MAX_ID, BATCH_SIZE)).to.equal(true)
+      expect(parseWorkloadsStub.calledWith(WORKLOAD_ID, MAX_ID, BATCH_SIZE)).to.equal(true)
     })
   })
 
@@ -120,7 +120,7 @@ describe('services/workers/calculate-workload-points', function () {
     getAdjustmentPoints.resolves(0)
     var batchSize = 1
     return calculateWorkloadPoints.execute(task).then(function () {
-      expect(getWorkloadsStub.calledWith(WORKLOAD_ID, WORKLOAD_ID, batchSize)).to.equal(true)
+      expect(parseWorkloadsStub.calledWith(WORKLOAD_ID, WORKLOAD_ID, batchSize)).to.equal(true)
     })
   })
 

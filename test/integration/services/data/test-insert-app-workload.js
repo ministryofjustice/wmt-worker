@@ -57,7 +57,7 @@ describe('app/services/data/insert-app-workload', function () {
   })
 
   it('should insert a new workload record', function (done) {
-    return knex('workload')
+    knex('workload')
       .join('tiers', 'workload.id', 'tiers.workload_id')
       .join('case_details', 'workload.id', 'case_details.workload_id')
       .where({'workload.id': workloadId})
@@ -73,10 +73,12 @@ describe('app/services/data/insert-app-workload', function () {
       'workload.arms_license_cases AS arms_license_cases', 'workload.staging_id AS staging_id',
       'workload.workload_report_id AS workload_report_id', 'case_details.case_ref_no AS case_ref_no')
       .then(function (result) {
-        return knex('tiers')
+        console.log('In here 1')
+        knex('tiers')
           .where('workload_id', workloadId)
           .select()
           .then(function (tiers) {
+            console.log('In here 2')
             var licenceTier6 = tiers.filter(t => t.location === Locations.LICENSE && t.tier_number === 6)
             expect(licenceTier6[0].suspended_lifer_total).to.equal(99)
             expect(result[0]).not.to.be.undefined // eslint-disable-line
@@ -94,6 +96,7 @@ describe('app/services/data/insert-app-workload', function () {
             expect(result[0].arms_license_cases).to.equal(12)
             expect(result[0].staging_id).to.equal(13)
             expect(result[0].workload_report_id).to.equal(14)
+            done()
           })
       })
   })
@@ -181,20 +184,22 @@ describe('app/services/data/insert-app-workload', function () {
 
 function buildTier (location) {
   return new Tiers(location,
-        buildTierCount(), buildTierCount(), buildTierCount(),
-        buildTierCount(), buildTierCount(), buildTierCount(),
-        buildTierCount(), buildTierCount(), 80)
+        buildTierCount(0), buildTierCount(1), buildTierCount(2),
+        buildTierCount(3), buildTierCount(4), buildTierCount(5),
+        buildTierCount(6), buildTierCount(7), buildTierCount(8),
+        buildTierCount(9), buildTierCount(10), 80)
 }
 
 function buildFilteredTier (location, extra = 0) {
   return new Tiers(location,
-    new TierCounts(0 + extra, 1, 3, 2, 1, 99), new TierCounts(1 + extra, 1, 3, 2, 1, 99), new TierCounts(2 + extra, 1, 3, 2, 1, 99),
-    new TierCounts(3 + extra, 1, 3, 2, 1, 99), new TierCounts(4 + extra, 1, 3, 2, 1, 99), new TierCounts(5 + extra, 1, 3, 2, 1, 99),
-    new TierCounts(6 + extra, 1, 3, 2, 1, 99), new TierCounts(7 + extra, 1, 3, 2, 1, 99), 80)
+    new TierCounts(0 + extra, 1, 3, 2, 1, 99, 0), new TierCounts(1 + extra, 1, 3, 2, 1, 99, 1), new TierCounts(2 + extra, 1, 3, 2, 1, 99, 2),
+    new TierCounts(3 + extra, 1, 3, 2, 1, 99, 3), new TierCounts(4 + extra, 1, 3, 2, 1, 99, 4), new TierCounts(5 + extra, 1, 3, 2, 1, 99, 5),
+    new TierCounts(6 + extra, 1, 3, 2, 1, 99, 6), new TierCounts(7 + extra, 1, 3, 2, 1, 99, 7), new TierCounts(8 + extra, 1, 3, 2, 1, 99, 8),
+    new TierCounts(9 + extra, 1, 3, 2, 1, 99, 9), new TierCounts(10 + extra, 1, 3, 2, 1, 99, 10), 80)
 }
 
-function buildTierCount () {
-  return new TierCounts(7, 1, 3, 2, 1, 99)
+function buildTierCount (tierCode) {
+  return new TierCounts(7, 1, 3, 2, 1, 99, tierCode)
 }
 
 function buildCaseDetails (location, suspendedLifer = false) {

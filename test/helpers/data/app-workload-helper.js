@@ -82,7 +82,7 @@ module.exports.insertDependencies = function (inserts) {
       ids.forEach((id) => {
         inserts.push({table: 'workload', id: id})
         for (var i = 0; i < 3; i++) {
-          for (var j = 0; j < 8; j++) {
+          for (var j = 0; j < 11; j++) {
             cases.push({
               workload_id: id,
               tier_number: j,

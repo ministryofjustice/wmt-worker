@@ -70,7 +70,7 @@ var insertTiers = function (tiers, filteredTiers, t2aTiers, workloadId, location
     var currentFilteredTier = filteredTiersInNumberOrder[i]
     var tierToInsert = {
       workload_id: workloadId,
-      tier_number: i,
+      tier_number: currentTier.tierCode,
       overdue_terminations_total: currentTier.overdueTermination,
       warrants_total: currentTier.warrants,
       unpaid_work_total: currentTier.unpaidWork,

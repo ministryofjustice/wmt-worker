@@ -61,7 +61,16 @@ module.exports.getWorkloadPoints = function () {
       paroms_enabled: 1,
       parom: 31,
       is_t2a: false,
-      default_contracted_hours_spo: 0
+      default_contracted_hours_spo: 0,
+      comm_tier_8: 100,
+      comm_tier_9: 101,
+      comm_tier_10: 102,
+      cust_tier_8: 103,
+      cust_tier_9: 104,
+      cust_tier_10: 105,
+      lic_tier_8: 106,
+      lic_tier_9: 107,
+      lic_tier_10: 108
     },
     {
       comm_tier_1: 5,
@@ -100,7 +109,16 @@ module.exports.getWorkloadPoints = function () {
       paroms_enabled: 0,
       parom: 0,
       is_t2a: true,
-      default_contracted_hours_spo: 0
+      default_contracted_hours_spo: 0,
+      comm_tier_8: 80,
+      comm_tier_9: 81,
+      comm_tier_10: 82,
+      cust_tier_8: 83,
+      cust_tier_9: 84,
+      cust_tier_10: 85,
+      lic_tier_8: 86,
+      lic_tier_9: 87,
+      lic_tier_10: 88
     }
   ]
 }
