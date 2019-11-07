@@ -14,7 +14,7 @@ exports.seed = function (knex, promise) {
     , r.description AS region_name
     , wpc.available_points AS available_points
     , wpc.total_points AS total_points
-    , w.total_filtered_cases AS total_cases
+    , (w.total_filtered_cases + w.total_t2a_cases) AS total_cases
     , wpc.contracted_hours AS contracted_hours
     , wpc.reduction_hours AS reduction_hours
     , wpc.cms_adjustment_points AS cms_adjustment_points
