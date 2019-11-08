@@ -3,7 +3,7 @@ const logger = require('../log')
 const calculateWorkloadPoints = require('wmt-probation-rules').calculateWorkloadPoints
 const calculateNominalTarget = require('wmt-probation-rules').calculateNominalTarget
 const calculateAvailablePoints = require('wmt-probation-rules').calculateAvailablePoints
-const getAppWorkloads = require('../data/get-app-workloads')
+const parseAppWorkloads = require('../parse-app-workloads')
 const insertWorkloadPointsCalculations = require('../data/insert-workload-points-calculation')
 const updateWorkloadPointsCalculations = require('../data/update-workload-points-calculation')
 const getWorkloadPointsConfiguration = require('../data/get-workload-points-configuration')
@@ -39,7 +39,7 @@ module.exports.execute = function (task) {
   isT2a = true
   var t2aPointsConfigurationPromise = getWorkloadPointsConfiguration(isT2a)
 
-  return getAppWorkloads(startingStagingId, maxStagingId, batchSize, reportId).then(function (workloads) {
+  return parseAppWorkloads(startingStagingId, maxStagingId, batchSize, reportId).then(function (workloads) {
     return Promise.each(workloads, function (workloadResult) {
       var workload = workloadResult.values
       var workloadId = workloadResult.id

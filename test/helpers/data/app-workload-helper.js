@@ -82,14 +82,14 @@ module.exports.insertDependencies = function (inserts) {
       ids.forEach((id) => {
         inserts.push({table: 'workload', id: id})
         for (var i = 0; i < 3; i++) {
-          for (var j = 0; j < 8; j++) {
+          for (var j = 0; j < 11; j++) {
             cases.push({
               workload_id: id,
               tier_number: j,
               overdue_terminations_total: 1,
               warrants_total: 1,
               unpaid_work_total: 1,
-              total_cases: 10,
+              total_cases: j + i,
               t2a_overdue_terminations_total: 1,
               t2a_warrants_total: 1,
               t2a_unpaid_work_total: 1,
@@ -97,7 +97,7 @@ module.exports.insertDependencies = function (inserts) {
               suspended_total: 1,
               location: locations[i],
               suspended_lifer_total: 99,
-              total_filtered_cases: 8
+              total_filtered_cases: Math.max(0, j + i - 1)
             })
           }
         }

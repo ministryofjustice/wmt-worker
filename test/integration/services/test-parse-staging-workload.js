@@ -1,9 +1,9 @@
 const expect = require('chai').expect
-const getStagingWorkload = require('../../../../app/services/data/get-staging-workload')
-const workloadHelper = require('../../../helpers/data/staging-workload-helper')
-const caseDetailsHelper = require('../../../helpers/data/staging-case-details-helper')
+const parseStagingWorkload = require('../../../app/services/parse-staging-workload')
+const workloadHelper = require('../../helpers/data/staging-workload-helper')
+const caseDetailsHelper = require('../../helpers/data/staging-case-details-helper')
 
-describe('services/data/get-staging-workload', function () {
+describe('services/parse-staging-workload', function () {
   const testOmKey = (Math.random() * 1000).toString()
   const courtReport = workloadHelper.getTestCourtReport(testOmKey)
   const institutionReport = workloadHelper.getTestInstitutionalReport(testOmKey)
@@ -52,7 +52,7 @@ describe('services/data/get-staging-workload', function () {
     caseSummaryReport.armsCommunityCases = 3
     caseSummaryReport.armsLicenseCases = 2
 
-    return getStagingWorkload([firstId, lastId])
+    return parseStagingWorkload([firstId, lastId])
     .then(function (omWorkload) {
       expect(omWorkload.length).to.be.equal(1)
       expect(omWorkload[0].casesSummary).to.deep.eq(caseSummaryReport)

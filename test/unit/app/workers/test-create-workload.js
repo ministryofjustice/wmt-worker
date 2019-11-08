@@ -9,7 +9,7 @@ const taskStatus = require('../../../../app/constants/task-status')
 const submittingAgent = require('../../../../app/constants/task-submitting-agent')
 
 var createWorkload
-var getStagingWorkload
+var parseStagingWorkload
 var insertWorkloadOwnerAndDependencies
 var insertWorkload
 var createNewTasks
@@ -48,7 +48,7 @@ var nextTask = new Task(
 
 describe('services/workers/create-workload', function () {
   beforeEach(function () {
-    getStagingWorkload = sinon.stub()
+    parseStagingWorkload = sinon.stub()
     insertWorkloadOwnerAndDependencies = sinon.stub()
     insertWorkload = sinon.stub()
     probationRulesStub = {}
@@ -57,7 +57,7 @@ describe('services/workers/create-workload', function () {
 
     createWorkload = proxyquire('../../../../app/services/workers/create-workload', {
       '../log': { info: function (message) {}, error: function (message) {} },
-      '../data/get-staging-workload': getStagingWorkload,
+      '../parse-staging-workload': parseStagingWorkload,
       '../insert-workload-owner-and-dependencies': insertWorkloadOwnerAndDependencies,
       '../data/insert-app-workload': insertWorkload,
       'wmt-probation-rules': probationRulesStub,
@@ -66,7 +66,7 @@ describe('services/workers/create-workload', function () {
   })
 
   it('should call on services', function () {
-    getStagingWorkload.resolves(stagingWorkload)
+    parseStagingWorkload.resolves(stagingWorkload)
     insertWorkloadOwnerAndDependencies.resolves(workloadOwnerId)
     insertWorkload.resolves(workloadId)
     createNewTasks.resolves()
@@ -74,7 +74,7 @@ describe('services/workers/create-workload', function () {
 
     return createWorkload.execute(task)
     .then(function (result) {
-      expect(getStagingWorkload.calledWith([task.additionalData.startingId, endingStagingId])).to.be.equal(true)
+      expect(parseStagingWorkload.calledWith([task.additionalData.startingId, endingStagingId])).to.be.equal(true)
       expect(insertWorkloadOwnerAndDependencies.calledWith(stagingWorkload[0].casesSummary)).to.be.equal(true)
       expect(insertWorkload.calledWith(appWorkload, stagingWorkload[0].caseDetails)).to.be.equal(true)
       expect(createNewTasks.calledWith([nextTask])).to.be.eql(true)
