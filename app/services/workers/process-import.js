@@ -7,6 +7,7 @@ const Batch = require('../domain/batch')
 const getCourtReportsWithNoWorkloads = require('../data/get-staging-court-reports-with-no-workloads')
 const replaceCourtReporters = require('../data/replace-staging-court-reporters')
 const getWmtExtractIdRange = require('../data/get-wmt-extract-id-range')
+const getOmicTeamsIdRange = require('../data/get-omic-teams-id-range')
 const getCourtReportersIdRange = require('../data/get-court-reporters-id-range')
 const createNewTasks = require('../data/create-tasks')
 const insertWorkloadReport = require('../data/insert-workload-report')
@@ -30,6 +31,9 @@ module.exports.execute = function (task) {
   })
   .then(function (tasks) {
     return createAndGetWorkloadTaskObjects(tasks, batchSize, workloadReportId)
+  })
+  .then(function (tasks) {
+    return createAndGetOmicTaskObjects(tasks, batchSize, workloadReportId)
   })
   .then(function (tasks) {
     if (tasks.length > 0) {
@@ -67,6 +71,18 @@ var createAndGetWorkloadTaskObjects = function (tasks, batchSize, workloadReport
 
     if (workloadTasksRequired > 0) {
       return createTaskObjects(tasks, taskType.CREATE_WORKLOAD, batchSize, idRange, workloadReportId)
+    }
+    return tasks
+  })
+}
+
+var createAndGetOmicTaskObjects = function (tasks, batchSize, workloadReportId) {
+  return getOmicTeamsIdRange().then(function (idRange) {
+    var numberOfRecordsToProcess = idRange.lastId - idRange.firstId
+    var omicTasksRequired = Math.ceil(numberOfRecordsToProcess / batchSize)
+
+    if (omicTasksRequired > 0) {
+      return createTaskObjects(tasks, taskType.CREATE_OMIC_WORKLOAD, batchSize, idRange, workloadReportId)
     }
     return tasks
   })
