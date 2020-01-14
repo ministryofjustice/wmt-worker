@@ -22,7 +22,8 @@ module.exports = function (batchSize) {
             result.workload_report_id,
             result.date_created,
             result.date_processed,
-            taskStatus.INPROGRESS))
+            taskStatus.INPROGRESS,
+            result.date_started))
         }
       } else {
         return []
