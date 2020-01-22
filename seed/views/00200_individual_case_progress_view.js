@@ -7,7 +7,7 @@ exports.seed = function (knex, Promise) {
     , om.surname
     , w.community_last_16_weeks AS community_last_16_weeks
     , w.license_last_16_weeks AS license_last_16_weeks
-    , w.total_cases AS total_cases
+    , w.total_filtered_cases AS total_cases
     , SUM(tr.warrants_total) AS warrants_total
     , SUM(tr.overdue_terminations_total) AS overdue_terminations_total
     , SUM(tr.unpaid_work_total) AS unpaid_work_total
@@ -27,7 +27,7 @@ exports.seed = function (knex, Promise) {
     , wo.id
     , w.community_last_16_weeks
     , w.license_last_16_weeks
-    , w.total_cases;`
+    , w.total_filtered_cases;`
 
   var index = `CREATE UNIQUE CLUSTERED INDEX idx_individual_case_progress_view
   ON app.individual_case_progress_view (id)`

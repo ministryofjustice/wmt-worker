@@ -3,6 +3,7 @@ var tableName = 'workload'
 const workloadRow = {
   workload_owner_id: 1,
   total_cases: 69,
+  total_filtered_cases: 50,
   total_t2a_cases: 59,
   monthly_sdrs: 1,
   sdr_due_next_30_days: 2,
@@ -23,10 +24,10 @@ const workloadRow = {
 
 exports.seed = function (knex, Promise) {
   // Deletes ALL existing entries
-  var partOneWorkloads = []
-  var partTwoWorkloads = []
-  var partThreeWorkloads = []
-  var partFourWorkloads = []
+  // var partOneWorkloads = []
+  // var partTwoWorkloads = []
+  // var partThreeWorkloads = []
+  // var partFourWorkloads = []
   return knex(tableName).del()
     .then(function () {
       return knex('workload_owner').join('team', 'workload_owner.team_id', 'team.id')
@@ -42,22 +43,13 @@ exports.seed = function (knex, Promise) {
         }
       }
       // Need to split the array into 4 as one query caused an error with too many parameters in one request (2100)
-      var oneQuarterValue = workloadsToInsert.length / 4
-      var twoQuarterValue = oneQuarterValue * 2
-      var threeQuarterValue = oneQuarterValue * 3
-      partOneWorkloads = workloadsToInsert.slice(0, oneQuarterValue)
-      partTwoWorkloads = workloadsToInsert.slice(oneQuarterValue, twoQuarterValue)
-      partThreeWorkloads = workloadsToInsert.slice(twoQuarterValue, threeQuarterValue)
-      partFourWorkloads = workloadsToInsert.slice(threeQuarterValue, workloadsToInsert.length)
-      return knex('workload').insert(partOneWorkloads)
-        .then(function (results) {
-          return knex('workload').insert(partTwoWorkloads)
-            .then(function (results) {
-              return knex('workload').insert(partThreeWorkloads)
-                .then(function (results) {
-                  return knex('workload').insert(partFourWorkloads)
-                })
-            })
-        })
+      // var oneQuarterValue = workloadsToInsert.length / 4
+      // var twoQuarterValue = oneQuarterValue * 2
+      // var threeQuarterValue = oneQuarterValue * 3
+      // partOneWorkloads = workloadsToInsert.slice(0, oneQuarterValue)
+      // partTwoWorkloads = workloadsToInsert.slice(oneQuarterValue, twoQuarterValue)
+      // partThreeWorkloads = workloadsToInsert.slice(twoQuarterValue, threeQuarterValue)
+      // partFourWorkloads = workloadsToInsert.slice(threeQuarterValue, workloadsToInsert.length)
+      return knex.batchInsert('workload', workloadsToInsert, 100)
     })
 }

@@ -6,12 +6,12 @@ module.exports = function (results) {
     results.forEach(function (result) {
       result.remainingPoints = result.availablePoints - result.totalPoints
       result.capacityPercentage = calculatePercentage(result.totalPoints, result.availablePoints)
-      result.cmsPercentage = calculatePercentage(result.cmsAdjustmentPoints, result.totalPoints)
+      result.cmsPercentage = calculatePercentage(result.cmsAdjustmentPoints, result.availablePoints)
     })
     totalsToReturn = results
   } else {
     var capacityPercentage = calculatePercentage(results.totalPoints, results.availablePoints)
-    var cmsPercentage = calculatePercentage(results.cmsAdjustmentPoints, results.totalPoints)
+    var cmsPercentage = calculatePercentage(results.cmsAdjustmentPoints, results.availablePoints)
     totalsToReturn = Object.assign({}, results, {capacity: capacityPercentage, cmsPercentage: cmsPercentage})
   }
   return totalsToReturn

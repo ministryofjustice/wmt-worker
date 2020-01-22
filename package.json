@@ -57,7 +57,7 @@
     "python-bridge": "^1.1.0",
     "request": "^2.81.0",
     "request-promise": "^4.2.1",
-    "wmt-probation-rules": "ministryofjustice/wmt-probation-rules.git#v0.9.7",
+    "wmt-probation-rules": "ministryofjustice/wmt-probation-rules.git#v0.9.9",
     "xlsx-populate": "^1.19.1"
   }
 }
