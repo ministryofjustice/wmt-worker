@@ -9,6 +9,7 @@ module.exports = function (workloadOwnerId) {
     .join('offender_manager', 'workload_owner.offender_manager_id', 'offender_manager.id')
     .join('offender_manager_type', 'offender_manager.type_id', 'offender_manager_type.id')
     .select('workload.id AS workload_id')
+    .whereNotNull('workload_report.effective_from')
     .whereNull('workload_report.effective_to')
     .andWhere('workload_owner.id', workloadOwnerId)
 }
