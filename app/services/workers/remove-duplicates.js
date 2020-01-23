@@ -1,19 +1,23 @@
 const logger = require('../log')
-const checkForDuplicates = require('../data/check-for-duplicates')
+const checkForDuplicateWorkloads = require('../data/check-for-duplicate-workloads')
+const checkForDuplicateCourtReports = require('../data/check-for-duplicate-court-reports')
 // const getDuplicateWorkloadPointsCalculationsId = require('../data/get-duplicate-workload-points-calculations-id')
 const getDuplicateWorkloadIds = require('../data/get-duplicate-workload-ids')
+const getDuplicateCourtReportIds = require('../data/get-duplicate-court-report-ids')
 const deleteTiersForWorkloadIds = require('../data/delete-tiers-for-workload-ids')
 const deleteCaseDetailsForWorkloadIds = require('../data/delete-case-details-for-workload-ids')
 const deleteWorkloadPointsCalculationsForWorkloadIds = require('../data/delete-workload-points-calculations-for-workload-ids')
 const deleteWorkloadsForIds = require('../data/delete-workloads-for-ids')
+const deleteCourtReportsCalculationsForCourtReportIds = require('../data/delete-court-reports-calculations-for-court-report-ids')
+const deleteCourtReportsForIds = require('../data/delete-court-reports-for-ids')
 const enableIndexing = require('../data/enable-indexing')
 const Promise = require('bluebird').Promise
 
 module.exports.execute = function (task) {
-  return checkForDuplicates()
-    .then(function (results) {
-      return Promise.each(results, function (result) {
-        return getDuplicateWorkloadIds(result.link_id)
+  return checkForDuplicateWorkloads()
+    .then(function (duplicateWorkloads) {
+      return Promise.each(duplicateWorkloads, function (duplicateWorkload) {
+        return getDuplicateWorkloadIds(duplicateWorkload.link_id)
         .then(function (workloadIds) {
           var workloadIdsToRemove = []
           if (workloadIds.length > 1) {
@@ -26,7 +30,7 @@ module.exports.execute = function (task) {
               return deleteCaseDetailsForWorkloadIds(workloadIdsToRemove).then(function () {
                 return deleteWorkloadPointsCalculationsForWorkloadIds(workloadIdsToRemove).then(function () {
                   return deleteWorkloadsForIds(workloadIdsToRemove).then(function () {
-                    logger.info('REMOVE-DUPLICATES - Duplicates Removed')
+                    logger.info('REMOVE-DUPLICATES - Duplicate Workload Removed')
                   })
                 })
               })
@@ -34,6 +38,29 @@ module.exports.execute = function (task) {
           }
         })
       })
+    })
+    .then(function () {
+      return checkForDuplicateCourtReports()
+        .then(function (duplicateCourtReports) {
+          return Promise.each(duplicateCourtReports, function (duplicateCourtReport) {
+            return getDuplicateCourtReportIds(duplicateCourtReport.id)
+              .then(function (courtReportIds) {
+                var courtReportIdsToRemove = []
+                if (courtReportIds.length > 1) {
+                  courtReportIds.forEach(function (courtReportId) {
+                    courtReportIdsToRemove.push(courtReportId.court_reports_id)
+                  })
+                  courtReportIdsToRemove = courtReportIdsToRemove.sort()
+                  courtReportIdsToRemove = courtReportIdsToRemove.slice(1)
+                  return deleteCourtReportsCalculationsForCourtReportIds(courtReportIdsToRemove).then(function () {
+                    return deleteCourtReportsForIds(courtReportIdsToRemove).then(function () {
+                      logger.info('REMOVE-DUPLICATES - Duplicate Court Report Removed')
+                    })
+                  })
+                }
+              })
+          })
+        })
     })
     .then(function () {
       logger.info('REMOVE-DUPLICATES - Enabling Indexing')
