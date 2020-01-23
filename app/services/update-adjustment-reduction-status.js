@@ -18,15 +18,12 @@ module.exports.updateReductionStatuses = function (reductions) {
 
 module.exports.updateAdjustmentStatuses = function (adjustments) {
   var statusMap = buildStatusMap(adjustments)
-  var chunkSize = 2000
+
   var updateAdjustmentsPromises = []
   for (var [status, ids] of statusMap) {
     if (ids.length > 0) {
-      for (var i = 0; i < ids.length; i += chunkSize) {
-        var idsChunk = ids.slice(i, Math.min(i + chunkSize, ids.length))
-        logger.info('Updating status to ' + status + ' for adjustments with id in ' + idsChunk + '.')
-        updateAdjustmentsPromises.push(updateAdjustmentStatusByIds(idsChunk, status))
-      }
+      logger.info('Updating status to ' + status + ' for adjustments with id in ' + ids + '.')
+      updateAdjustmentsPromises.push(updateAdjustmentStatusByIds(ids, status))
     }
   }
   return Promise.all(updateAdjustmentsPromises)
