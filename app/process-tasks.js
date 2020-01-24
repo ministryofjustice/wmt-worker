@@ -19,6 +19,9 @@ const checkForDuplicateTasks = require('./services/data/check-for-duplicate-task
 const setTasksToPending = require('./services/data/set-tasks-to-pending')
 const deleteDuplicateTask = require('./services/data/delete-duplicate-task')
 const checkAllTasksForTypeAreComplete = require('./services/data/check-all-tasks-for-type-are-complete')
+const Task = require('./services/domain/task')
+const createNewTasks = require('./services/data/create-tasks')
+const submittingAgent = require('./constants/task-submitting-agent')
 
 module.exports = function () {
   var batchSize = parseInt(config.ASYNC_WORKER_BATCH_SIZE, 10)
@@ -69,6 +72,19 @@ function executeWorkerForTaskType (worker, task) {
               return closePreviousWorkloadReport(task.workloadReportId)
               .then(function (previousWorkloadReportId) {
                 return updateWorkloadReportStatus(previousWorkloadReportId, workloadReportStatus.COMPLETE)
+                .then(function () {
+                  var removeDuplicatesTask = new Task(
+                    undefined,
+                    submittingAgent.WORKER,
+                    taskType.REMOVE_DUPLICATES,
+                    undefined,
+                    task.workloadReportId,
+                    undefined,
+                    undefined,
+                    taskStatus.PENDING
+                  )
+                  return createNewTasks([removeDuplicatesTask])
+                })
                 .then((result) => {
                   return callWebRefreshEndpoint()
                 })
