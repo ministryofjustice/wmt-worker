@@ -29,7 +29,7 @@ describe(relativeFilePath, function () {
     getCourtReportsWithNoWorkloads = sinon.stub().resolves(courtReporters)
     replaceStagingCourtReporters = sinon.stub()
     createNewTasksStub = sinon.stub().resolves()
-    disableIndexingStub = sinon.stub().resolves()
+    disableIndexingStub = sinon.stub()
     processImport = proxyquire('../../../../app/' + relativeFilePath, {
       '../log': { info: function (message) { } },
       '../data/get-staging-court-reports-with-no-workloads': getCourtReportsWithNoWorkloads,
@@ -40,6 +40,7 @@ describe(relativeFilePath, function () {
       '../data/insert-workload-report': insertWorkloadReportStub,
       '../data/disable-indexing': disableIndexingStub
     })
+    disableIndexingStub.resolves()
   })
 
   it('should insert a new workload report', function () {
