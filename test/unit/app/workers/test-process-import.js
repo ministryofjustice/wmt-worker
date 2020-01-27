@@ -14,6 +14,7 @@ var getCourtReportersRange
 var getWmtExtractRange
 var insertWorkloadReportStub
 var replaceStagingCourtReporters
+var disableIndexingStub
 
 const firstId = 1
 const lastId = 100
@@ -28,6 +29,7 @@ describe(relativeFilePath, function () {
     getCourtReportsWithNoWorkloads = sinon.stub().resolves(courtReporters)
     replaceStagingCourtReporters = sinon.stub()
     createNewTasksStub = sinon.stub().resolves()
+    disableIndexingStub = sinon.stub().resolves()
     processImport = proxyquire('../../../../app/' + relativeFilePath, {
       '../log': { info: function (message) { } },
       '../data/get-staging-court-reports-with-no-workloads': getCourtReportsWithNoWorkloads,
@@ -35,7 +37,8 @@ describe(relativeFilePath, function () {
       '../data/replace-staging-court-reporters': replaceStagingCourtReporters,
       '../data/get-wmt-extract-id-range': getWmtExtractRange,
       '../data/create-tasks': createNewTasksStub,
-      '../data/insert-workload-report': insertWorkloadReportStub
+      '../data/insert-workload-report': insertWorkloadReportStub,
+      '../data/disable-indexing': disableIndexingStub
     })
   })
 
