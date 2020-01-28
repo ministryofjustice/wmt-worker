@@ -18,6 +18,7 @@ var callWebRefreshEndpoint
 var closePreviousWorkloadReport
 var updateWorkloadReportEffectiveTo
 var getTaskInProgressCount
+var createTasks
 const batchSize = 3
 
 describe('process-tasks', function () {
@@ -31,6 +32,7 @@ describe('process-tasks', function () {
     closePreviousWorkloadReport = sinon.stub()
     updateWorkloadReportEffectiveTo = sinon.stub()
     getTaskInProgressCount = sinon.stub()
+    createTasks = sinon.stub()
 
     processTasks = proxyquire('../../../app/process-tasks', {
       '../config': { ASYNC_WORKER_BATCH_SIZE: batchSize },
@@ -43,7 +45,8 @@ describe('process-tasks', function () {
       './services/refresh-web-org-hierarchy': callWebRefreshEndpoint,
       './services/close-previous-workload-report': closePreviousWorkloadReport,
       './services/data/update-workload-report-effective-to': updateWorkloadReportEffectiveTo,
-      './services/data/get-tasks-inprogress-count': getTaskInProgressCount
+      './services/data/get-tasks-inprogress-count': getTaskInProgressCount,
+      './services/data/create-tasks': createTasks
     })
     done()
   })
@@ -71,6 +74,7 @@ describe('process-tasks', function () {
   })
 
   it('should update workload report as complete and refresh web hierarchy when there are no pending, inprogress or failed tasks', function () {
+    createTasks.resolves()
     getTaskInProgressCount.resolves([{theCount: 0}])
     getPendingTasksAndMarkInProgress.resolves([
       {id: 1, workloadReportId: 1, type: 'task1'},

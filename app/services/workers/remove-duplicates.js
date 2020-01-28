@@ -25,12 +25,13 @@ module.exports.execute = function (task) {
               workloadIdsToRemove.push(workloadId.workload_id)
             })
             workloadIdsToRemove = workloadIdsToRemove.sort()
+            var workloadIdNotRemoved = workloadIdsToRemove[0]
             workloadIdsToRemove = workloadIdsToRemove.slice(1)
             return deleteTiersForWorkloadIds(workloadIdsToRemove).then(function () {
               return deleteCaseDetailsForWorkloadIds(workloadIdsToRemove).then(function () {
                 return deleteWorkloadPointsCalculationsForWorkloadIds(workloadIdsToRemove).then(function () {
                   return deleteWorkloadsForIds(workloadIdsToRemove).then(function () {
-                    logger.info('REMOVE-DUPLICATES - Duplicate Workload Removed')
+                    logger.info('REMOVE-DUPLICATES - Duplicate Workload Removed', 'Duplicate of ' + workloadIdNotRemoved + ' removed.', 'Removed ' + workloadIdsToRemove)
                   })
                 })
               })
@@ -51,10 +52,11 @@ module.exports.execute = function (task) {
                     courtReportIdsToRemove.push(courtReportId.court_reports_id)
                   })
                   courtReportIdsToRemove = courtReportIdsToRemove.sort()
+                  var courtReportIdNotRemoved = courtReportIdsToRemove[0]
                   courtReportIdsToRemove = courtReportIdsToRemove.slice(1)
                   return deleteCourtReportsCalculationsForCourtReportIds(courtReportIdsToRemove).then(function () {
                     return deleteCourtReportsForIds(courtReportIdsToRemove).then(function () {
-                      logger.info('REMOVE-DUPLICATES - Duplicate Court Report Removed')
+                      logger.info('REMOVE-DUPLICATES - Duplicate Court Report Removed', 'Duplicate of ' + courtReportIdNotRemoved + ' removed.', 'Removed ' + courtReportIdsToRemove)
                     })
                   })
                 }
