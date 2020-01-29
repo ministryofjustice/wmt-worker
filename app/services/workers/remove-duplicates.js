@@ -12,6 +12,11 @@ const deleteCourtReportsCalculationsForCourtReportIds = require('../data/delete-
 const deleteCourtReportsForIds = require('../data/delete-court-reports-for-ids')
 const enableIndexing = require('../data/enable-indexing')
 const Promise = require('bluebird').Promise
+const Task = require('../domain/task')
+const createNewTasks = require('../data/create-tasks')
+const submittingAgent = require('../../constants/task-submitting-agent')
+const taskType = require('../../constants/task-type')
+const taskStatus = require('../../constants/task-status')
 
 module.exports.execute = function (task) {
   return checkForDuplicateWorkloads()
@@ -70,6 +75,17 @@ module.exports.execute = function (task) {
     })
     .then(function () {
       logger.info('REMOVE-DUPLICATES - Indexing Enabled')
+      var checkForMissingDivisionsTask = new Task(
+        undefined,
+        submittingAgent.WORKER,
+        taskType.CHECK_FOR_MISSING_DIVISIONS,
+        undefined,
+        task.workloadReportId,
+        undefined,
+        undefined,
+        taskStatus.PENDING
+      )
+      return createNewTasks([checkForMissingDivisionsTask])
     })
     .catch(function (error) {
       logger.error('REMOVE-DUPLICATES - An error occurred removing duplicates')
