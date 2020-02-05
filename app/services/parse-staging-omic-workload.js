@@ -31,49 +31,20 @@ module.exports = function (range) {
               result['commtierg']
             )
 
-            var filteredCommunityTiers = new Tiers(
-              locations.COMMUNITY,
-              result['filtered_commtier0'],
-              result['filtered_commtierd2'],
-              result['filtered_commtierd1'],
-              result['filtered_commtierc2'],
-              result['filtered_commtierc1'],
-              result['filtered_commtierb2'],
-              result['filtered_commtierb1'],
-              result['filtered_commtiera'],
-              result['filtered_commtiere'],
-              result['filtered_commtierf'],
-              result['filtered_commtierg']
-            )
-
+            // duplicate custody cases to calculate projected points when on licence
             var licenseTiers = new Tiers(
               locations.LICENSE,
-              result['licencetier0'],
-              result['licencetierd2'],
-              result['licencetierd1'],
-              result['licencetierc2'],
-              result['licencetierc1'],
-              result['licencetierb2'],
-              result['licencetierb1'],
-              result['licencetiera'],
-              result['licencetiere'],
-              result['licencetierf'],
-              result['licencetierg']
-            )
-
-            var filteredLicenseTiers = new Tiers(
-              locations.LICENSE,
-              result['filtered_licencetier0'],
-              result['filtered_licencetierd2'],
-              result['filtered_licencetierd1'],
-              result['filtered_licencetierc2'],
-              result['filtered_licencetierc1'],
-              result['filtered_licencetierb2'],
-              result['filtered_licencetierb1'],
-              result['filtered_licencetiera'],
-              result['filtered_licencetiere'],
-              result['filtered_licencetierf'],
-              result['filtered_licencetierg']
+              result['custtier0'],
+              result['custtierd2'],
+              result['custtierd1'],
+              result['custtierc2'],
+              result['custtierc1'],
+              result['custtierb2'],
+              result['custtierb1'],
+              result['custtiera'],
+              result['custtiere'],
+              result['custtierf'],
+              result['custtierg']
             )
 
             var custodyTiers = new Tiers(
@@ -91,21 +62,6 @@ module.exports = function (range) {
               result['custtierg']
             )
 
-            var filteredCustodyTiers = new Tiers(
-              locations.CUSTODY,
-              result['filtered_custtier0'],
-              result['filtered_custtierd2'],
-              result['filtered_custtierd1'],
-              result['filtered_custtierc2'],
-              result['filtered_custtierc1'],
-              result['filtered_custtierb2'],
-              result['filtered_custtierb1'],
-              result['filtered_custtiera'],
-              result['filtered_custtiere'],
-              result['filtered_custtierf'],
-              result['filtered_custtierg']
-            )
-
             var t2aCommunityTiers = new Tiers(
               locations.COMMUNITY,
               result['t2a_commtier0'],
@@ -121,19 +77,20 @@ module.exports = function (range) {
               result['t2a_commtierg']
             )
 
+            // duplicate custody cases to calculate projected points when on licence
             var t2aLicenseTiers = new Tiers(
               locations.LICENSE,
-              result['t2a_licencetier0'],
-              result['t2a_licencetierd2'],
-              result['t2a_licencetierd1'],
-              result['t2a_licencetierc2'],
-              result['t2a_licencetierc1'],
-              result['t2a_licencetierb2'],
-              result['t2a_licencetierb1'],
-              result['t2a_licencetiera'],
-              result['t2a_licencetiere'],
-              result['t2a_licencetierf'],
-              result['t2a_licencetierg']
+              result['t2a_custtier0'],
+              result['t2a_custtierd2'],
+              result['t2a_custtierd1'],
+              result['t2a_custtierc2'],
+              result['t2a_custtierc1'],
+              result['t2a_custtierb2'],
+              result['t2a_custtierb1'],
+              result['t2a_custtiera'],
+              result['t2a_custtiere'],
+              result['t2a_custtierf'],
+              result['t2a_custtierg']
             )
 
             var t2aCustodyTiers = new Tiers(
@@ -173,9 +130,9 @@ module.exports = function (range) {
               result['licIn1st16Weeks'],
               armsCases.community,
               armsCases.license,
-              filteredCommunityTiers,
-              filteredLicenseTiers,
-              filteredCustodyTiers
+              communityTiers,
+              licenseTiers,
+              custodyTiers
             )
 
             var courtReport = new CourtReport(
