@@ -1,5 +1,5 @@
 class Task {
-  constructor (taskId, agent, taskType, additionalData, workloadReportId, dateCreated, dateProcessed, status) {
+  constructor (taskId, agent, taskType, additionalData, workloadReportId, dateCreated, dateProcessed, status, dateStarted) {
     this.id = taskId
     this.submittingAgent = agent
     this.type = taskType
@@ -8,6 +8,7 @@ class Task {
     this.dateCreated = dateCreated
     this.dateProcessed = dateProcessed
     this.status = status
+    this.dateStarted = dateStarted
   }
 }
 

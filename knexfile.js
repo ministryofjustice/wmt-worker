@@ -49,6 +49,23 @@ module.exports = {
     },
     acquireConnectionTimeout: 150000
   },
+  indexing: {
+    client: 'mssql',
+    connection: Object.assign({}, defaultConnection, {
+      user: config.MIGRATION_APP_DATABASE_USERNAME,
+      password: config.MIGRATION_APP_DATABASE_PASSWORD,
+      options: {
+        encrypt: true,
+        requestTimeout: 500000
+      }
+    }),
+    debug: false,
+    pool: {
+      min: 0,
+      max: 300
+    },
+    acquireConnectionTimeout: 500000
+  },
   dev: {
     client: 'mssql',
     connection: Object.assign({}, defaultConnection, {
