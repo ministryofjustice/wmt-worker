@@ -8,7 +8,7 @@ const taskStatus = require('../../constants/task-status')
 const submittingAgent = require('../../constants/task-submitting-agent')
 const parseStagingOmicWorkload = require('../parse-staging-omic-workload')
 const insertWorkloadOwnerAndDependencies = require('../insert-workload-owner-and-dependencies')
-const insertWorkload = require('../data/insert-app-workload')
+const insertOmicWorkload = require('../data/insert-app-omic-workload')
 const createNewTasks = require('../data/create-tasks')
 
 module.exports.execute = function (task) {
@@ -25,24 +25,24 @@ module.exports.execute = function (task) {
         .then(function (workloadOwnerId) {
           var workloadToInsert = mapWorkload(stagingWorkload, parseInt(workloadOwnerId), parseInt(workloadReportId))
           var caseDetails = stagingWorkload.caseDetails
-          return insertWorkload(workloadToInsert, caseDetails)
+          return insertOmicWorkload(workloadToInsert, caseDetails)
         })
       }
     })
     .then(function () {
-      var reductionsWorkerTask = new Task(
+      var calculateOmicWorkloadPointsTask = new Task(
                 undefined,
                 submittingAgent.WORKER,
-                taskType.PROCESS_REDUCTIONS,
+                taskType.CALCULATE_OMIC_WORKLOAD_POINTS,
                 task.additionalData,
                 workloadReportId,
                 undefined,
                 undefined,
                 taskStatus.AWAITING_DUPLICATE_CHECK
                 )
-      return createNewTasks([reductionsWorkerTask])
+      return createNewTasks([calculateOmicWorkloadPointsTask])
       .then(function () {
-        logger.info('Reduction Worker Task created')
+        logger.info('Calculate OMIC Workload Points Task Created')
       })
     })
   })
