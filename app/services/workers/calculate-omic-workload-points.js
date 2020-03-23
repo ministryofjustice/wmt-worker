@@ -1,6 +1,6 @@
 var Promise = require('bluebird').Promise
 const logger = require('../log')
-const calculateWorkloadPoints = require('wmt-probation-rules').calculateWorkloadPoints
+const calculateOmicWorkloadPoints = require('wmt-probation-rules').calculateOmicWorkloadPoints
 const calculateNominalTarget = require('wmt-probation-rules').calculateNominalTarget
 const calculateAvailablePoints = require('wmt-probation-rules').calculateAvailablePoints
 const parseOmicAppWorkloads = require('../parse-omic-app-workloads')
@@ -41,13 +41,13 @@ module.exports.execute = function (task) {
       var workloadId = workloadResult.id
       var getOffenderManagerTypePromise = getOffenderManagerTypeId(workload.workloadOwnerId)
       var getContractedHoursPromise = getContractedHours(workload.workloadOwnerId)
+      var reductions = 0
 
       return pointsConfigurationPromise.then(function (pointsConfiguration) {
         var caseTypeWeightings = pointsConfiguration.values
         return t2aPointsConfigurationPromise.then(function (t2aPointsConfiguration) {
           var t2aCaseTypeWeightings = t2aPointsConfiguration.values
-          var workloadPointsBreakdown = calculateWorkloadPoints(workload, caseTypeWeightings, t2aCaseTypeWeightings)
-          var totalPoints = workloadPointsBreakdown.total
+          var workloadPointsBreakdown = calculateOmicWorkloadPoints(workload, caseTypeWeightings, t2aCaseTypeWeightings)
           return getContractedHoursPromise.then(function (contractedHours) {
             return getOffenderManagerTypePromise.then(function (offenderManagerTypeId) {
               var nominalTarget = calculateNominalTarget(offenderManagerTypeId, caseTypeWeightings.pointsConfiguration.defaultNominalTargets)
@@ -72,16 +72,13 @@ module.exports.execute = function (task) {
                               t2aPointsConfiguration.id,
                               workloadId,
                               workloadPointsBreakdown.custodyTierPoints,
-                              workloadPointsBreakdown.licenseTierPoints,
+                              workloadPointsBreakdown.projectedLicenseTierPoints,
                               workloadPointsBreakdown.sdrPoints,
                               workloadPointsBreakdown.sdrConversionPoints,
                               workloadPointsBreakdown.paromsPoints,
                               nominalTarget,
                               availablePoints,
                               contractedHours,
-                              reductions,
-                              cmsAdjustments,
-                              gsAdjustments,
                               armsTotalCases)
 
                     case operationTypes.UPDATE:
@@ -90,16 +87,14 @@ module.exports.execute = function (task) {
                               pointsConfiguration.id,
                               t2aPointsConfiguration.id,
                               workloadId,
-                              totalPoints,
+                              workloadPointsBreakdown.custodyTierPoints,
+                              workloadPointsBreakdown.projectedLicenseTierPoints,
                               workloadPointsBreakdown.sdrPoints,
                               workloadPointsBreakdown.sdrConversionPoints,
                               workloadPointsBreakdown.paromsPoints,
                               nominalTarget,
                               availablePoints,
                               contractedHours,
-                              reductions,
-                              cmsAdjustments,
-                              gsAdjustments,
                               armsTotalCases)
                     default:
                       throw new Error('Operation type of ' + operationType + ' is not valid. Should be ' + operationTypes.INSERT + ' or ' + operationTypes.UPDATE)
