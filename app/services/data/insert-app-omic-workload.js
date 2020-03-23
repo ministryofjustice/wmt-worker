@@ -69,7 +69,7 @@ var insertTiers = function (tiers, filteredTiers, t2aTiers, workloadId, location
     var currentT2aTier = t2aTiersInNumberOrder[i]
     var currentFilteredTier = filteredTiersInNumberOrder[i]
     var tierToInsert = {
-      workload_id: workloadId,
+      omic_workload_id: workloadId,
       tier_number: currentTier.tierCode,
       overdue_terminations_total: currentTier.overdueTermination,
       warrants_total: currentTier.warrants,
@@ -95,7 +95,7 @@ var insertCaseDetails = function (caseDetails, workloadId, location) {
     var tierCode = caseDetail.tierCode.toString()
     if (tierCode.match(numericRegex) !== null) {
       var caseDetailToInsert = {
-        workload_id: workloadId,
+        omic_workload_id: workloadId,
         tier_code: caseDetail.tierCode,
         row_type: caseDetail.rowType,
         case_ref_no: caseDetail.caseRefNo,

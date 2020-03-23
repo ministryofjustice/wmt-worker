@@ -31,20 +31,19 @@ module.exports = function (range) {
               result['commtierg']
             )
 
-            // duplicate custody cases to calculate projected points when on licence
             var licenseTiers = new Tiers(
               locations.LICENSE,
-              result['custtier0'],
-              result['custtierd2'],
-              result['custtierd1'],
-              result['custtierc2'],
-              result['custtierc1'],
-              result['custtierb2'],
-              result['custtierb1'],
-              result['custtiera'],
-              result['custtiere'],
-              result['custtierf'],
-              result['custtierg']
+              result['licencetier0'],
+              result['licencetierd2'],
+              result['licencetierd1'],
+              result['licencetierc2'],
+              result['licencetierc1'],
+              result['licencetierb2'],
+              result['licencetierb1'],
+              result['licencetiera'],
+              result['licencetiere'],
+              result['licencetierf'],
+              result['licencetierg']
             )
 
             var custodyTiers = new Tiers(
@@ -77,20 +76,19 @@ module.exports = function (range) {
               result['t2a_commtierg']
             )
 
-            // duplicate custody cases to calculate projected points when on licence
             var t2aLicenseTiers = new Tiers(
               locations.LICENSE,
-              result['t2a_custtier0'],
-              result['t2a_custtierd2'],
-              result['t2a_custtierd1'],
-              result['t2a_custtierc2'],
-              result['t2a_custtierc1'],
-              result['t2a_custtierb2'],
-              result['t2a_custtierb1'],
-              result['t2a_custtiera'],
-              result['t2a_custtiere'],
-              result['t2a_custtierf'],
-              result['t2a_custtierg']
+              result['t2a_licencetier0'],
+              result['t2a_licencetierd2'],
+              result['t2a_licencetierd1'],
+              result['t2a_licencetierc2'],
+              result['t2a_licencetierc1'],
+              result['t2a_licencetierb2'],
+              result['t2a_licencetierb1'],
+              result['t2a_licencetiera'],
+              result['t2a_licencetiere'],
+              result['t2a_licencetierf'],
+              result['t2a_licencetierg']
             )
 
             var t2aCustodyTiers = new Tiers(
