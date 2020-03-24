@@ -86,7 +86,7 @@ describe(relativeFilePath, function () {
 
     return processImport.execute({}).then(function () {
       var createdTasks = createNewTasksStub.getCall(0).args[0]
-      expect(createdTasks.length).to.equal(8)
+      expect(createdTasks.length).to.equal(12)
       for (var i = 1; i < createdTasks.length / 2; i++) {
         expect(createdTasks[i].type).to.equal(taskType.CREATE_COURT_REPORTS)
       }
@@ -102,7 +102,7 @@ describe(relativeFilePath, function () {
 
     return processImport.execute({}).then(function () {
       var createdTasks = createNewTasksStub.getCall(0).args[0]
-      expect(createdTasks.length).to.equal(4)
+      expect(createdTasks.length).to.equal(8)
       for (var i = 1; i < createdTasks.length - 1; i++) {
         expect(createdTasks[i].type).to.equal(taskType.CREATE_WORKLOAD)
       }
@@ -112,6 +112,7 @@ describe(relativeFilePath, function () {
   it('should create 0 tasks when the court reporters and wmt extract tables are empty (i.e. firstId and lastId are null)', function () {
     getWmtExtractRange.resolves(new IdRange(null, null))
     getCourtReportersRange.resolves(new IdRange(null, null))
+    getOmicTeamsIdRange.resolves(new IdRange(null, null))
     disableIndexingStub.resolves()
 
     return processImport.execute({}).then(function () {
