@@ -87,12 +87,12 @@ describe(relativeFilePath, function () {
     return processImport.execute({}).then(function () {
       var createdTasks = createNewTasksStub.getCall(0).args[0]
       expect(createdTasks.length).to.equal(12)
-      for (var i = 1; i < createdTasks.length / 2; i++) {
-        expect(createdTasks[i].type).to.equal(taskType.CREATE_COURT_REPORTS)
-      }
-      for (i = createdTasks.length / 2; i < createdTasks.length - 1; i++) {
-        expect(createdTasks[i].type).to.equal(taskType.CREATE_WORKLOAD)
-      }
+      var filteredTasks = createdTasks.filter(createdTask => createdTask.type === taskType.CREATE_COURT_REPORTS)
+      expect(filteredTasks.length).to.equal(4)
+      var filteredTasks = createdTasks.filter(createdTask => createdTask.type === taskType.CREATE_WORKLOAD)
+      expect(filteredTasks.length).to.equal(4)
+      var filteredTasks = createdTasks.filter(createdTask => createdTask.type === taskType.CREATE_OMIC_WORKLOAD)
+      expect(filteredTasks.length).to.equal(4)
     })
   })
 
@@ -103,9 +103,12 @@ describe(relativeFilePath, function () {
     return processImport.execute({}).then(function () {
       var createdTasks = createNewTasksStub.getCall(0).args[0]
       expect(createdTasks.length).to.equal(8)
-      for (var i = 1; i < createdTasks.length - 1; i++) {
-        expect(createdTasks[i].type).to.equal(taskType.CREATE_WORKLOAD)
-      }
+      var filteredTasks = createdTasks.filter(createdTask => createdTask.type === taskType.CREATE_COURT_REPORTS)
+      expect(filteredTasks.length).to.equal(0)
+      var filteredTasks = createdTasks.filter(createdTask => createdTask.type === taskType.CREATE_WORKLOAD)
+      expect(filteredTasks.length).to.equal(4)
+      var filteredTasks = createdTasks.filter(createdTask => createdTask.type === taskType.CREATE_OMIC_WORKLOAD)
+      expect(filteredTasks.length).to.equal(4)
     })
   })
 
