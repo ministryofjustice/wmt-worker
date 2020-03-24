@@ -10,6 +10,7 @@ const parseStagingOmicWorkload = require('../parse-staging-omic-workload')
 const insertWorkloadOwnerAndDependencies = require('../insert-workload-owner-and-dependencies')
 const insertOmicWorkload = require('../data/insert-app-omic-workload')
 const createNewTasks = require('../data/create-tasks')
+const operationTypes = require('../../constants/calculation-tasks-operation-type')
 
 module.exports.execute = function (task) {
   var workloadBatchSize = task.additionalData.batchSize
@@ -30,11 +31,15 @@ module.exports.execute = function (task) {
       }
     })
     .then(function () {
+      var calculateOmicWpAdditionalData = {
+        workloadBatch: task.additionalData,
+        operationType: operationTypes.INSERT
+      }
       var calculateOmicWorkloadPointsTask = new Task(
                 undefined,
                 submittingAgent.WORKER,
                 taskType.CALCULATE_OMIC_WORKLOAD_POINTS,
-                task.additionalData,
+                calculateOmicWpAdditionalData,
                 workloadReportId,
                 undefined,
                 undefined,
