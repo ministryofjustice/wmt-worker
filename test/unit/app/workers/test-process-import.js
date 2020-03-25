@@ -15,6 +15,7 @@ var getWmtExtractRange
 var insertWorkloadReportStub
 var replaceStagingCourtReporters
 var disableIndexingStub
+var getOmicTeamsIdRange
 
 const firstId = 1
 const lastId = 100
@@ -30,6 +31,7 @@ describe(relativeFilePath, function () {
     replaceStagingCourtReporters = sinon.stub()
     createNewTasksStub = sinon.stub().resolves()
     disableIndexingStub = sinon.stub()
+    getOmicTeamsIdRange = sinon.stub().resolves(new IdRange(firstId, lastId))
     processImport = proxyquire('../../../../app/' + relativeFilePath, {
       '../log': { info: function (message) { } },
       '../data/get-staging-court-reports-with-no-workloads': getCourtReportsWithNoWorkloads,
@@ -38,7 +40,8 @@ describe(relativeFilePath, function () {
       '../data/get-wmt-extract-id-range': getWmtExtractRange,
       '../data/create-tasks': createNewTasksStub,
       '../data/insert-workload-report': insertWorkloadReportStub,
-      '../data/disable-indexing': disableIndexingStub
+      '../data/disable-indexing': disableIndexingStub,
+      '../data/get-omic-teams-id-range': getOmicTeamsIdRange
     })
   })
 
@@ -83,13 +86,13 @@ describe(relativeFilePath, function () {
 
     return processImport.execute({}).then(function () {
       var createdTasks = createNewTasksStub.getCall(0).args[0]
-      expect(createdTasks.length).to.equal(8)
-      for (var i = 1; i < createdTasks.length / 2; i++) {
-        expect(createdTasks[i].type).to.equal(taskType.CREATE_COURT_REPORTS)
-      }
-      for (i = createdTasks.length / 2; i < createdTasks.length - 1; i++) {
-        expect(createdTasks[i].type).to.equal(taskType.CREATE_WORKLOAD)
-      }
+      expect(createdTasks.length).to.equal(12)
+      var filteredTasks = createdTasks.filter(createdTask => createdTask.type === taskType.CREATE_COURT_REPORTS)
+      expect(filteredTasks.length).to.equal(4)
+      filteredTasks = createdTasks.filter(createdTask => createdTask.type === taskType.CREATE_WORKLOAD)
+      expect(filteredTasks.length).to.equal(4)
+      filteredTasks = createdTasks.filter(createdTask => createdTask.type === taskType.CREATE_OMIC_WORKLOAD)
+      expect(filteredTasks.length).to.equal(4)
     })
   })
 
@@ -99,16 +102,20 @@ describe(relativeFilePath, function () {
 
     return processImport.execute({}).then(function () {
       var createdTasks = createNewTasksStub.getCall(0).args[0]
-      expect(createdTasks.length).to.equal(4)
-      for (var i = 1; i < createdTasks.length - 1; i++) {
-        expect(createdTasks[i].type).to.equal(taskType.CREATE_WORKLOAD)
-      }
+      expect(createdTasks.length).to.equal(8)
+      var filteredTasks = createdTasks.filter(createdTask => createdTask.type === taskType.CREATE_COURT_REPORTS)
+      expect(filteredTasks.length).to.equal(0)
+      filteredTasks = createdTasks.filter(createdTask => createdTask.type === taskType.CREATE_WORKLOAD)
+      expect(filteredTasks.length).to.equal(4)
+      filteredTasks = createdTasks.filter(createdTask => createdTask.type === taskType.CREATE_OMIC_WORKLOAD)
+      expect(filteredTasks.length).to.equal(4)
     })
   })
 
   it('should create 0 tasks when the court reporters and wmt extract tables are empty (i.e. firstId and lastId are null)', function () {
     getWmtExtractRange.resolves(new IdRange(null, null))
     getCourtReportersRange.resolves(new IdRange(null, null))
+    getOmicTeamsIdRange.resolves(new IdRange(null, null))
     disableIndexingStub.resolves()
 
     return processImport.execute({}).then(function () {
