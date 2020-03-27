@@ -12,7 +12,7 @@ module.exports = function (initialId, maxId, batchSize, workloadReportId) {
       workloadResults.forEach(function (row) {
         var index
         if (batchSize > 1) {
-          index = row.id - initialId
+          index = row.staging_id - initialId
         } else {
           index = 0
         }

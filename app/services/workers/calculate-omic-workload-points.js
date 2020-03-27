@@ -10,7 +10,7 @@ const getWorkloadPointsConfiguration = require('../data/get-workload-points-conf
 const getOffenderManagerTypeId = require('../data/get-offender-manager-type-id')
 const getContractedHours = require('../data/get-contracted-hours')
 const operationTypes = require('../../constants/calculation-tasks-operation-type')
-const checkForDuplicateCalculation = require('../data/check-for-duplicate-calculation')
+const checkForDuplicateOmicCalculation = require('../data/check-for-duplicate-omic-calculation')
 
 module.exports.execute = function (task) {
   var startingStagingId = task.additionalData.workloadBatch.startingId
@@ -57,7 +57,7 @@ module.exports.execute = function (task) {
                 availablePoints = 0
               }
               var armsTotalCases = workload.armsCommunityCases + workload.armsLicenseCases
-              return checkForDuplicateCalculation(reportId, workloadId)
+              return checkForDuplicateOmicCalculation(reportId, workloadId)
                 .then(function (result) {
                   // check if calculation already exists when the operatioType is INSERT
                   // no need to do this change anything if the operationType is UPDATE
