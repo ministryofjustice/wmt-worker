@@ -24,7 +24,7 @@ module.exports = function (team) {
       } else {
         // check if team name is still the same
         // if it isn't, update
-        if (result['description'] !== teamDbObject.description) {
+        if (result['description'] !== teamDbObject.description || result['ldu_id'] !== teamDbObject.ldu_id) {
           return updateTeam(teamDbObject)
             .then(function (id) {
               return id
