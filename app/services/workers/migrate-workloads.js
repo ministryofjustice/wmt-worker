@@ -41,7 +41,7 @@ module.exports.execute = function (task) {
     .then(function () {
       return disableIndexing()
     })
-    .then (function () {
+    .then(function () {
       logger.info('Indexing disabled')
       return Promise.each(oldAndNewCombined, function (onc) {
         return updateWorkloadWorkloadOwnerId(onc.old, onc.new)

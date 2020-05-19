@@ -4,10 +4,10 @@ module.exports = function (teamIds) {
   var columns = [
     'om.forename',
     'om.surname',
-    't.description AS teamName', 
+    't.description AS teamName',
     't.id AS teamId',
-    'om.key AS omKey', 
-    't.code as teamKey', 
+    'om.key AS omKey',
+    't.code as teamKey',
     'wo.id as woId'
   ]
   return knex('workload_owner AS wo')
