@@ -86,7 +86,7 @@ module.exports.getCaseloadTotalSummary = function (caseloads) {
   Used to create the bottom most row in the table
 */
 module.exports.calculateTotalsRow = function (caseloads) {
-  var totals = {a: 0, b1: 0, b2: 0, c1: 0, c2: 0, d1: 0, d2: 0, untiered: 0, overall: 0}
+  var totals = {a: 0, b1: 0, b2: 0, c1: 0, c2: 0, d1: 0, d2: 0, e: 0, f: 0, g: 0, untiered: 0, overall: 0}
   caseloads.forEach(function (val, key) {
     totals.a += val.a
     totals.b1 += val.b1
@@ -95,6 +95,9 @@ module.exports.calculateTotalsRow = function (caseloads) {
     totals.c2 += val.c2
     totals.d1 += val.d1
     totals.d2 += val.d2
+    totals.e += val.e
+    totals.f += val.f
+    totals.g += val.g
     totals.untiered += val.untiered
     totals.overall += val.totalCases
   })
@@ -157,6 +160,9 @@ var transform = function (caseloadTotalsByGrade, calculatePercentage = false, is
           c2: percentageCalculator.calculatePercentage(teamGradeRecords[record].c2, caseloadTotalsByTeam[team].c2),
           d1: percentageCalculator.calculatePercentage(teamGradeRecords[record].d1, caseloadTotalsByTeam[team].d1),
           d2: percentageCalculator.calculatePercentage(teamGradeRecords[record].d2, caseloadTotalsByTeam[team].d2),
+          e: percentageCalculator.calculatePercentage(teamGradeRecords[record].e, caseloadTotalsByTeam[team].e),
+          f: percentageCalculator.calculatePercentage(teamGradeRecords[record].f, caseloadTotalsByTeam[team].f),
+          g: percentageCalculator.calculatePercentage(teamGradeRecords[record].g, caseloadTotalsByTeam[team].g),
           untiered: percentageCalculator.calculatePercentage(teamGradeRecords[record].untiered, caseloadTotalsByTeam[team].untiered),
           totalCases: percentageCalculator.calculatePercentage(teamGradeRecords[record].totalCases, caseloadTotalsByTeam[team].totalCases)
         }
@@ -173,6 +179,9 @@ var transform = function (caseloadTotalsByGrade, calculatePercentage = false, is
           c2: teamGradeRecords[record].c2,
           d1: teamGradeRecords[record].d1,
           d2: teamGradeRecords[record].d2,
+          e: teamGradeRecords[record].e,
+          f: teamGradeRecords[record].f,
+          g: teamGradeRecords[record].g,
           untiered: teamGradeRecords[record].untiered,
           totalCases: teamGradeRecords[record].totalCases
         }
@@ -194,6 +203,9 @@ var transform = function (caseloadTotalsByGrade, calculatePercentage = false, is
       gradeTotals[key].c2 = gradeTotals[key].c2 / gradeTotals[key].numberOfType
       gradeTotals[key].d1 = gradeTotals[key].d1 / gradeTotals[key].numberOfType
       gradeTotals[key].d2 = gradeTotals[key].d2 / gradeTotals[key].numberOfType
+      gradeTotals[key].e = gradeTotals[key].e / gradeTotals[key].numberOfType
+      gradeTotals[key].f = gradeTotals[key].f / gradeTotals[key].numberOfType
+      gradeTotals[key].g = gradeTotals[key].g / gradeTotals[key].numberOfType
       gradeTotals[key].untiered = gradeTotals[key].untiered / gradeTotals[key].numberOfType
       gradeTotals[key].totalCases = gradeTotals[key].totalCases / gradeTotals[key].numberOfType
     }
@@ -219,6 +231,9 @@ var addGradeTotals = function (gradeTotals, newGradeRecord) {
     gradeTotals[newGradeRecord.grade].c2 += newGradeRecord.c2
     gradeTotals[newGradeRecord.grade].d1 += newGradeRecord.d1
     gradeTotals[newGradeRecord.grade].d2 += newGradeRecord.d2
+    gradeTotals[newGradeRecord.grade].e += newGradeRecord.e
+    gradeTotals[newGradeRecord.grade].f += newGradeRecord.f
+    gradeTotals[newGradeRecord.grade].g += newGradeRecord.g
     gradeTotals[newGradeRecord.grade].untiered += newGradeRecord.untiered
     gradeTotals[newGradeRecord.grade].totalCases += newGradeRecord.totalCases
     gradeTotals[newGradeRecord.grade].numberOfType++
@@ -244,6 +259,9 @@ var groupCaseload = function (caseloads, splitByGrade = false) {
     } else {
       var existingValue = linkIdToCaseloadMap.get(key)
       existingValue.untiered += caseloads[idx].untiered
+      existingValue.g += caseloads[idx].g
+      existingValue.f += caseloads[idx].f
+      existingValue.e += caseloads[idx].e
       existingValue.d2 += caseloads[idx].d2
       existingValue.d1 += caseloads[idx].d1
       existingValue.c2 += caseloads[idx].c2
@@ -270,6 +288,9 @@ var groupOverallCaseloadByGrade = function (caseloads) {
     } else {
       var existingValue = linkIdToCaseloadMap.get(key)
       existingValue.untiered += caseloads[idx].untiered
+      existingValue.g += caseloads[idx].g
+      existingValue.f += caseloads[idx].f
+      existingValue.e += caseloads[idx].e
       existingValue.d2 += caseloads[idx].d2
       existingValue.d1 += caseloads[idx].d1
       existingValue.c2 += caseloads[idx].c2
@@ -285,7 +306,7 @@ var groupOverallCaseloadByGrade = function (caseloads) {
 }
 
 var totalWholeCaseload = function (caseloads) {
-  var tierTotals = {a: 0, b1: 0, b2: 0, c1: 0, c2: 0, d1: 0, d2: 0, untiered: 0, totalCases: 0}
+  var tierTotals = {a: 0, b1: 0, b2: 0, c1: 0, c2: 0, d1: 0, d2: 0, e: 0, f: 0, g: 0, untiered: 0, totalCases: 0}
   if (caseloads.length > 0) {
     caseloads.forEach(function (caseload) {
       tierTotals['a'] += caseload.a
@@ -295,6 +316,9 @@ var totalWholeCaseload = function (caseloads) {
       tierTotals['c2'] += caseload.c2
       tierTotals['d1'] += caseload.d1
       tierTotals['d2'] += caseload.d2
+      tierTotals['e'] += caseload.e
+      tierTotals['f'] += caseload.f
+      tierTotals['g'] += caseload.g
       tierTotals['untiered'] += caseload.untiered
       tierTotals['totalCases'] += caseload.totalCases
     })
@@ -311,6 +335,9 @@ var calculateOverallPercentages = function (overallTotals, overallGradeTotals) {
     linkIdToCaseloadMap.set(key, newValue)
     var existingValue = linkIdToCaseloadMap.get(key)
     existingValue.untiered = percentageCalculator.calculatePercentage(existingValue.untiered, overallTotals.untiered)
+    existingValue.g = percentageCalculator.calculatePercentage(existingValue.g, overallTotals.g)
+    existingValue.f = percentageCalculator.calculatePercentage(existingValue.f, overallTotals.f)
+    existingValue.e = percentageCalculator.calculatePercentage(existingValue.e, overallTotals.e)
     existingValue.d2 = percentageCalculator.calculatePercentage(existingValue.d2, overallTotals.d2)
     existingValue.d1 = percentageCalculator.calculatePercentage(existingValue.d1, overallTotals.d1)
     existingValue.c2 = percentageCalculator.calculatePercentage(existingValue.c2, overallTotals.c2)

@@ -13,19 +13,22 @@ var formatCase = function (ldus, sentenceType) {
     ldu.grades.forEach(function (grade) {
       var thisCase = Object.assign({}, grade)
       thisCaseArray.push([
-        regionName,
-        sentenceType,
-        lduName,
-        thisCase.grade,
-        thisCase.a,
-        thisCase.b1,
-        thisCase.b2,
-        thisCase.c1,
-        thisCase.c2,
-        thisCase.d1,
-        thisCase.d2,
-        thisCase.untiered,
-        thisCase.totalCases
+        regionName, // Column A
+        sentenceType, // Column B
+        lduName, // Column C
+        thisCase.grade, // Column D
+        thisCase.a, // Column E
+        thisCase.b1, // Column F
+        thisCase.b2, // Column G
+        thisCase.c1, // Column H
+        thisCase.c2, // Column I
+        thisCase.d1, // Column J
+        thisCase.d2, // Column K
+        thisCase.e, // Column L
+        thisCase.f, // Column M
+        thisCase.g, // Column N
+        thisCase.untiered, // Column O
+        thisCase.totalCases // Column P
       ])
     })
   })

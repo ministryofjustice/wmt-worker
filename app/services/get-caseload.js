@@ -77,6 +77,9 @@ var replaceIncorrectPercentageAverages = function (originalPercentageTotals, cor
     originalPercentageTotals[key].c2 = correctPercentages[key].c2
     originalPercentageTotals[key].d1 = correctPercentages[key].d1
     originalPercentageTotals[key].d2 = correctPercentages[key].d2
+    originalPercentageTotals[key].e = correctPercentages[key].e
+    originalPercentageTotals[key].f = correctPercentages[key].f
+    originalPercentageTotals[key].g = correctPercentages[key].g
     originalPercentageTotals[key].untiered = correctPercentages[key].untiered
     originalPercentageTotals[key].totalCases = correctPercentages[key].totalCases
   })

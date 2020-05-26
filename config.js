@@ -38,7 +38,7 @@ module.exports = {
   IP_ADDRESSES: process.env.WMT_WORKER_APP_IP_ADDRESSES || 'http://localhost:3000',
 
   // Dashboard
-  WMT_DASHBOARD_TEMPLATE_FILE_PATH: process.env.WMT_DASHBOARD_TEMPLATE_FILE_PATH || '/usr/src/app/wmt-worker/app/services/dashboard_template.xlsx',
+  WMT_DASHBOARD_TEMPLATE_FILE_PATH: process.env.WMT_DASHBOARD_TEMPLATE_FILE_PATH || '/usr/src/app/wmt-worker/app/services/dashboard_template.xlsm',
   WMT_DASHBOARD_OUTPUT_FILE_PATH: process.env.WMT_DASHBOARD_OUTPUT_FILE_PATH || '/usr/src/app/wmt-etl/data/dashboard/',
   WMT_WEB_DASHBOARD_OUTPUT_FILE_PATH: process.env.WMT_WEB_DASHBOARD_OUTPUT_FILE_PATH || '/data/dashboard/',
   WMT_DASHBOARD_PASSWORD: process.env.WMT_DASHBOARD_PASSWORD,

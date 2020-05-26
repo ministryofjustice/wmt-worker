@@ -5,8 +5,9 @@ const dateFormatter = require('./date-formatter')
 
 module.exports = function (reductions, capacity, formattedCaseloadData) {
   const datestamp = dateFormatter.now().format('YYYYMMDDHHmmss')
-  var outputFilepathOnWorker = config.WMT_DASHBOARD_OUTPUT_FILE_PATH + 'dashboard_' + datestamp + '.xlsx'
-  var outputFilepathOnWeb = config.WMT_WEB_DASHBOARD_OUTPUT_FILE_PATH + 'dashboard_' + datestamp + '.xlsx'
+  var outputFilepathOnWorker = config.WMT_DASHBOARD_OUTPUT_FILE_PATH + 'dashboard_' + datestamp + '.xlsm'
+  var outputFilepathOnWeb = config.WMT_WEB_DASHBOARD_OUTPUT_FILE_PATH + 'dashboard_' + datestamp + '.xlsm'
+
   return XlsxPopulate.fromFileAsync(config.WMT_DASHBOARD_TEMPLATE_FILE_PATH)
     .then(workbook => {
       // Modify the workbook.
@@ -15,19 +16,19 @@ module.exports = function (reductions, capacity, formattedCaseloadData) {
       var caseloadSheet = workbook.sheet('caseload data')
       // var capacityButtonsSheet = workbook.sheet('Capacity Buttons')
       // var reductionsButtonsSheet = workbook.sheet('Reductions Buttons')
-      // var reductionsWorkingsSheet = workbook.sheet('reductions workings')
-      // var clusterCodesSheet = workbook.sheet('cluster codes')
+      var reductionsWorkingsSheet = workbook.sheet('reductions workings')
+      var clusterCodesSheet = workbook.sheet('cluster codes')
       populateSheet(reductions, reductionsSheet)
       populateSheet(formattedCaseloadData, caseloadSheet)
       populateSheet(capacity, capacitySheet)
 
-      // reductionsSheet.hidden('very')
-      // capacitySheet.hidden('very')
-      // caseloadSheet.hidden('very')
+      reductionsSheet.hidden('very')
+      capacitySheet.hidden('very')
+      caseloadSheet.hidden('very')
       // capacityButtonsSheet.hidden('very')
       // reductionsButtonsSheet.hidden('very')
-      // reductionsWorkingsSheet.hidden('very')
-      // clusterCodesSheet.hidden('very')
+      reductionsWorkingsSheet.hidden('very')
+      clusterCodesSheet.hidden('very')
 
       return workbook.toFileAsync(outputFilepathOnWorker)
         .then(function () {
