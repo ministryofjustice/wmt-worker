@@ -17,15 +17,12 @@ module.exports.execute = function (task) {
       return Promise.each(newWorkloadOwners, function (workloadOwner) {
         return getOldWorkloadOwnerIds(workloadOwner.teamId, workloadOwner.forename, workloadOwner.surname, workloadOwner.teamName)
         .then(function (oldWorkload) {
-          if (oldWorkload.length > 1) {
-            duplicateWorkloads.push({old: [oldWorkload[0].woId, oldWorkload[1].woId], new: workloadOwner.woId})
-          } else {
-            oldAndNewCombined.push({old: oldWorkload[0].woId, new: workloadOwner.woId})
-          }
-          var omIds = []
-          omIds.push(oldWorkload[0].omId)
-          if (oldWorkload.length > 1) {
-            omIds.push(oldWorkload[1].omId)
+          if (oldWorkload) {
+            if (oldWorkload.length > 1) {
+              duplicateWorkloads.push({old: [oldWorkload[0].woId, oldWorkload[1].woId], new: workloadOwner.woId})
+            } else {
+              oldAndNewCombined.push({old: oldWorkload[0].woId, new: workloadOwner.woId})
+            }
           }
         })
       })
