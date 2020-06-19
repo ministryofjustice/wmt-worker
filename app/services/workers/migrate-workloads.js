@@ -11,8 +11,8 @@ var duplicateWorkloads = []
 var oldAndNewCombined = []
 
 module.exports.execute = function (task) {
-  var teamIds = task.additionalData.teamIds
-  return getNewWorkloadOwnerIds(teamIds)
+  var regionIds = task.additionalData.regionIds
+  return getNewWorkloadOwnerIds(regionIds)
     .then(function (newWorkloadOwners) {
       return Promise.each(newWorkloadOwners, function (workloadOwner) {
         return getOldWorkloadOwnerIds(workloadOwner.teamId, workloadOwner.forename, workloadOwner.surname, workloadOwner.teamName)
