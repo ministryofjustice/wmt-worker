@@ -9,9 +9,11 @@ const updateWorkloadWorkloadOwnerId = require('../data/update-workload-workload-
 const Promise = require('bluebird').Promise
 var duplicateWorkloads = []
 var oldAndNewCombined = []
+var recalculateWorkloadPoints = require('../data/recalculate-workload-points')
 
 module.exports.execute = function (task) {
   var regionIds = task.additionalData.regionIds
+  var reportId = task.workloadReportId
   return getNewWorkloadOwnerIds(regionIds)
     .then(function (newWorkloadOwners) {
       return Promise.each(newWorkloadOwners, function (workloadOwner) {
@@ -43,6 +45,9 @@ module.exports.execute = function (task) {
       return Promise.each(oldAndNewCombined, function (onc) {
         return updateWorkloadWorkloadOwnerId(onc.old, onc.new)
       })
+    })
+    .then(function () {
+      return recalculateWorkloadPoints(reportId)
     })
     .then(function () {
       return enableIndexing()
