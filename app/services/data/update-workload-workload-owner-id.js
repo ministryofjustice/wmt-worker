@@ -1,5 +1,4 @@
 const knex = require('../../../knex').appSchema
-const taskTypes = require('../../constants/task-type')
 
 module.exports = function (oldWorkloadOwnerId, newWorkloadOwnerId) {
   return knex('workload')

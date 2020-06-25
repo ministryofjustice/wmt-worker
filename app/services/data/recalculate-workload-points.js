@@ -1,6 +1,7 @@
 const knex = require('../../../knex').appSchema
 const taskStatus = require('../../constants/task-status')
 const dateFormatter = require('../date-formatter')
+const taskTypes = require('../../constants/task-type')
 
 module.exports = function (reportId) {
   var columns = [
