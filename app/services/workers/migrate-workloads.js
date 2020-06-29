@@ -22,7 +22,7 @@ module.exports.execute = function (task) {
           if (oldWorkload) {
             if (oldWorkload.length > 1) {
               duplicateWorkloads.push({old: [oldWorkload[0].woId, oldWorkload[1].woId], new: workloadOwner.woId})
-            } else {
+            } else if (oldWorkload.length === 1) {
               oldAndNewCombined.push({old: oldWorkload[0].woId, new: workloadOwner.woId})
             }
           }
@@ -33,7 +33,9 @@ module.exports.execute = function (task) {
       return Promise.each(duplicateWorkloads, function (duplicateWorkload) {
         return getMostRecentlyUsedWorkloadOwnerId(duplicateWorkload.old)
           .then(function (w) {
-            oldAndNewCombined.push({old: w.workload_owner_id, new: duplicateWorkload.new})
+            if (w) {
+              oldAndNewCombined.push({old: w.workload_owner_id, new: duplicateWorkload.new})
+            }
           })
       })
     })
@@ -43,7 +45,7 @@ module.exports.execute = function (task) {
     .then(function () {
       logger.info('Indexing disabled')
       return Promise.each(oldAndNewCombined, function (onc) {
-        return updateWorkloadWorkloadOwnerId(onc.old, onc.new)
+        return updateWorkloadWorkloadOwnerId(onc.old, onc.new, reportId)
       })
     })
     .then(function () {

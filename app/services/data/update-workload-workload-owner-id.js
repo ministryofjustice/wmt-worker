@@ -1,8 +1,9 @@
 const knex = require('../../../knex').appSchema
 
-module.exports = function (oldWorkloadOwnerId, newWorkloadOwnerId) {
+module.exports = function (oldWorkloadOwnerId, newWorkloadOwnerId, reportId) {
   return knex('workload')
     .where('workload_owner_id', oldWorkloadOwnerId)
+    .whereNot('workload_report_id', reportId)
     .update({
       workload_owner_id: newWorkloadOwnerId
     })
