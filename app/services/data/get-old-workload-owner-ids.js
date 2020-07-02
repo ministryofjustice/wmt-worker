@@ -5,8 +5,10 @@ module.exports = function (teamId, forename, surname, teamName) {
     'om.id AS omId',
     'wo.id as woId',
     't.id AS tId',
-    'om.key AS omKey'
+    'om.key AS omKey',
+    'wo.contracted_hours AS contractedHours'
   ]
+
   return knex('workload_owner AS wo')
     .join('offender_manager AS om', 'wo.offender_manager_id', 'om.id')
     .join('team AS t', 'wo.team_id', 't.id')

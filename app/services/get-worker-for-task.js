@@ -12,6 +12,7 @@ var generateDashboard = require('./workers/generate-dashboard')
 var removeDuplicates = require('./workers/remove-duplicates')
 var checkForMissingDivisions = require('./workers/check-for-missing-divisions')
 var migrateWorkloads = require('./workers/migrate-workloads')
+var migrateContractedHours = require('./workers/migrate-contracted-hours')
 
 // ALL WORKERS SHOULD HAVE A METHOD `execute(task)` that returns a Promise
 module.exports = function (taskType) {
@@ -29,6 +30,7 @@ module.exports = function (taskType) {
     case taskTypes.REMOVE_DUPLICATES: return removeDuplicates
     case taskTypes.CHECK_FOR_MISSING_DIVISIONS: return checkForMissingDivisions
     case taskTypes.MIGRATE_WORKLOADS: return migrateWorkloads
+    case taskTypes.MIGRATE_CONTRACTED_HOURS: return migrateContractedHours
   }
 
   return null

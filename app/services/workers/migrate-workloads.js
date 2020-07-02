@@ -13,6 +13,7 @@ var recalculateWorkloadPoints = require('../data/recalculate-workload-points')
 
 module.exports.execute = function (task) {
   var regionIds = task.additionalData.regionIds
+  var maximumWorkloadReportId = task.additionalData.maximumWorkloadReportId
   var reportId = task.workloadReportId
   return getNewWorkloadOwnerIds(regionIds)
     .then(function (newWorkloadOwners) {
@@ -34,7 +35,7 @@ module.exports.execute = function (task) {
         return getMostRecentlyUsedWorkloadOwnerId(duplicateWorkload.old)
           .then(function (w) {
             if (w) {
-              oldAndNewCombined.push({old: w.workload_owner_id, new: duplicateWorkload.new})
+              oldAndNewCombined.push({old: w.workloadOwnerId, new: duplicateWorkload.new})
             }
           })
       })
@@ -45,7 +46,7 @@ module.exports.execute = function (task) {
     .then(function () {
       logger.info('Indexing disabled')
       return Promise.each(oldAndNewCombined, function (onc) {
-        return updateWorkloadWorkloadOwnerId(onc.old, onc.new, reportId)
+        return updateWorkloadWorkloadOwnerId(onc.old, onc.new, maximumWorkloadReportId)
       })
     })
     .then(function () {
