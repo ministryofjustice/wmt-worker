@@ -2,7 +2,7 @@ const knex = require('../../../knex').appSchema
 const Promise = require('bluebird')
 
 module.exports = function (contactId) {
-  return  knex.schema.raw('SELECT count(*) AS theCount, contact_id AS contactId, workload_owner_id AS workloadOwnerId, points FROM app.adjustments WHERE contact_id = ' + contactId + ' GROUP BY contact_id, workload_owner_id, points HAVING count(*) > 1')
+  return knex.schema.raw('SELECT count(*) AS theCount, contact_id AS contactId, workload_owner_id AS workloadOwnerId, points FROM app.adjustments WHERE contact_id = ' + contactId + ' GROUP BY contact_id, workload_owner_id, points HAVING count(*) > 1')
     .then(function (results) {
       return Promise.each(results, function (result) {
         var count = 0
