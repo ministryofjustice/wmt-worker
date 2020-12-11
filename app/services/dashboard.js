@@ -13,11 +13,11 @@ module.exports = function () {
     .then(function (reductionsArray) {
       return getFullOverview()
         .then(function (results) {
-          var capacity = calculateOverviewValues(results)
-          var capacityArray = formatDashboardCapacity(capacity)
+          const capacity = calculateOverviewValues(results)
+          const capacityArray = formatDashboardCapacity(capacity)
           return getCaseload()
             .then(function (caseloadData) {
-              var caseloadArray = formatDashboardCaseload(caseloadData)
+              const caseloadArray = formatDashboardCaseload(caseloadData)
               return nodeDashboard(reductionsArray, capacityArray, caseloadArray)
                 .then(function (filepath) {
                   return insertFile(filepath, fileTypes.DASHBOARD)

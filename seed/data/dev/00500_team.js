@@ -1,11 +1,11 @@
-var tableName = 'team'
+const tableName = 'team'
 
 exports.seed = function (knex, Promise) {
   // Deletes ALL existing entries
   return knex(tableName).del()
     .return(knex('ldu').select('id').limit(3))
     .then(function (results) {
-      var lduIds = results
+      const lduIds = results
       // Inserts seed entries
       return knex(tableName).insert([
         { description: 'Team 1', ldu_id: lduIds[0].id },

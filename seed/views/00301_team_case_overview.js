@@ -1,5 +1,5 @@
 exports.seed = function (knex, promise) {
-  var view = `CREATE VIEW app.team_case_overview
+  const view = `CREATE VIEW app.team_case_overview
   WITH SCHEMABINDING
   AS
   SELECT
@@ -23,7 +23,7 @@ exports.seed = function (knex, promise) {
   WHERE wr.effective_from IS NOT NULL
     AND wr.effective_to IS NULL;`
 
-  var index = `CREATE UNIQUE CLUSTERED INDEX idx_team_case_overview
+  const index = `CREATE UNIQUE CLUSTERED INDEX idx_team_case_overview
   ON app.team_case_overview (link_id)`
 
   return knex.schema

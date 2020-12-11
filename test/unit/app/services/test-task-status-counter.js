@@ -1,30 +1,30 @@
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
-require('sinon-bluebird')
+
 const taskStatus = require('../../../../app/constants/task-status')
 const taskType = require('../../../../app/constants/task-type')
 
-var getTasks
-var updateWorkloadReportStatus
-var callWebRefreshEndpoint
-var taskStatusCounter
+let getTasks
+let updateWorkloadReportStatus
+let callWebRefreshEndpoint
+let taskStatusCounter
 
-var defaultTask = { id: 1, workload_report_id: 1, status: taskStatus.COMPLETE }
+const defaultTask = { id: 1, workload_report_id: 1, status: taskStatus.COMPLETE }
 
-var currentTask = Object.assign({}, defaultTask, { type: taskType.PROCESS_IMPORT })
+const currentTask = Object.assign({}, defaultTask, { type: taskType.PROCESS_IMPORT })
 
-var taskList = [
+const taskList = [
   defaultTask,
-  Object.assign({}, defaultTask, {id: 2}),
-  Object.assign({}, defaultTask, {id: 3, status: taskStatus.INPROGRESS}),
-  Object.assign({}, defaultTask, {id: 4, status: taskStatus.FAILED})
+  Object.assign({}, defaultTask, { id: 2 }),
+  Object.assign({}, defaultTask, { id: 3, status: taskStatus.INPROGRESS }),
+  Object.assign({}, defaultTask, { id: 4, status: taskStatus.FAILED })
 ]
 
-var completedTaskList = [
+const completedTaskList = [
   defaultTask,
-  Object.assign({}, defaultTask, {id: 2}),
-  Object.assign({}, defaultTask, {id: 3})
+  Object.assign({}, defaultTask, { id: 2 }),
+  Object.assign({}, defaultTask, { id: 3 })
 ]
 
 describe('services/task-counter', function () {

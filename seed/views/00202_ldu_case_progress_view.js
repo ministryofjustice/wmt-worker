@@ -1,5 +1,5 @@
 exports.seed = function (knex, Promise) {
-  var sql = `CREATE VIEW app.ldu_case_progress_view
+  const sql = `CREATE VIEW app.ldu_case_progress_view
   WITH SCHEMABINDING
   AS
   SELECT

@@ -1,9 +1,9 @@
 const knex = require('../../../knex').appSchema
 
 module.exports = function () {
-  var table = 'region_caseload_view'
+  const table = 'region_caseload_view'
 
-  var selectList = [
+  const selectList = [
     'name',
     'link_id AS linkId',
     'grade_code AS grade',
@@ -20,7 +20,7 @@ module.exports = function () {
     'a'
   ]
 
-  var noExpandHint = ' WITH (NOEXPAND)'
+  const noExpandHint = ' WITH (NOEXPAND)'
 
   return knex.schema.raw('SELECT ' + selectList.join(', ') +
       ' FROM ' + table +

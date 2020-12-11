@@ -1,8 +1,8 @@
 const knex = require('../../../knex').appSchema
-var Promise = require('bluebird').Promise
+const Promise = require('bluebird').Promise
 
 module.exports.insertDependencies = function (inserts) {
-  var workloadPoints = module.exports.getWorkloadPoints()
+  const workloadPoints = module.exports.getWorkloadPoints()
   return knex('workload_points').returning('id').insert(workloadPoints)
     .then(function (ids) {
       ids.forEach((id) => {

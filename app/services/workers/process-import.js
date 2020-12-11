@@ -18,44 +18,44 @@ const disableIndexing = require('../data/disable-indexing')
 
 module.exports.execute = function (task) {
   const batchSize = parseInt(config.ASYNC_WORKER_BATCH_SIZE, 10)
-  var tasks = []
-  var workloadReportId
+  const tasks = []
+  let workloadReportId
 
   return disableIndexing()
-  .then(function () {
-    return insertWorkloadReport()
-  })
-  .then(function (insertedWorkloadReportId) {
-    workloadReportId = insertedWorkloadReportId
-    return populateStagingCourtReporters()
-  })
-  .then(function () {
-    return createAndGetCourtReportsTaskObjects(tasks, batchSize, workloadReportId)
-  })
-  .then(function (tasks) {
-    return createAndGetWorkloadTaskObjects(tasks, batchSize, workloadReportId)
-  })
-  .then(function (tasks) {
-    if (tasks.length > 0) {
-      return createNewTasks(tasks)
-      .then(function () {
-        logger.info('Tasks created')
-      })
-    }
-  })
+    .then(function () {
+      return insertWorkloadReport()
+    })
+    .then(function (insertedWorkloadReportId) {
+      workloadReportId = insertedWorkloadReportId
+      return populateStagingCourtReporters()
+    })
+    .then(function () {
+      return createAndGetCourtReportsTaskObjects(tasks, batchSize, workloadReportId)
+    })
+    .then(function (tasks) {
+      return createAndGetWorkloadTaskObjects(tasks, batchSize, workloadReportId)
+    })
+    .then(function (tasks) {
+      if (tasks.length > 0) {
+        return createNewTasks(tasks)
+          .then(function () {
+            logger.info('Tasks created')
+          })
+      }
+    })
 }
 
-var populateStagingCourtReporters = function () {
+const populateStagingCourtReporters = function () {
   return getCourtReportsWithNoWorkloads()
-  .then(function (courtReports) {
-    return replaceCourtReporters(courtReports)
-  })
+    .then(function (courtReports) {
+      return replaceCourtReporters(courtReports)
+    })
 }
 
-var createAndGetCourtReportsTaskObjects = function (tasks, batchSize, workloadReportId) {
+const createAndGetCourtReportsTaskObjects = function (tasks, batchSize, workloadReportId) {
   return getCourtReportersIdRange().then(function (idRange) {
-    var numberOfRecordsToProcess = idRange.lastId - idRange.firstId
-    var courtReportsTasksRequired = Math.ceil(numberOfRecordsToProcess / batchSize)
+    const numberOfRecordsToProcess = idRange.lastId - idRange.firstId
+    const courtReportsTasksRequired = Math.ceil(numberOfRecordsToProcess / batchSize)
 
     if (courtReportsTasksRequired > 0) {
       return createTaskObjects(tasks, taskType.CREATE_COURT_REPORTS, batchSize, idRange, workloadReportId)
@@ -64,10 +64,10 @@ var createAndGetCourtReportsTaskObjects = function (tasks, batchSize, workloadRe
   })
 }
 
-var createAndGetWorkloadTaskObjects = function (tasks, batchSize, workloadReportId) {
+const createAndGetWorkloadTaskObjects = function (tasks, batchSize, workloadReportId) {
   return getWmtExtractIdRange().then(function (idRange) {
-    var numberOfRecordsToProcess = idRange.lastId - idRange.firstId
-    var workloadTasksRequired = Math.ceil(numberOfRecordsToProcess / batchSize)
+    const numberOfRecordsToProcess = idRange.lastId - idRange.firstId
+    const workloadTasksRequired = Math.ceil(numberOfRecordsToProcess / batchSize)
 
     if (workloadTasksRequired > 0) {
       return createTaskObjects(tasks, taskType.CREATE_WORKLOAD, batchSize, idRange, workloadReportId)
@@ -76,16 +76,16 @@ var createAndGetWorkloadTaskObjects = function (tasks, batchSize, workloadReport
   })
 }
 
-var createTaskObjects = function (tasks, taskTypeToCreate, batchSize, idRange, workloadReportId) {
-  var numberOfRecordsToProcess = idRange.lastId - idRange.firstId
-  var tasksRequired = Math.ceil(numberOfRecordsToProcess / batchSize)
+const createTaskObjects = function (tasks, taskTypeToCreate, batchSize, idRange, workloadReportId) {
+  const numberOfRecordsToProcess = idRange.lastId - idRange.firstId
+  const tasksRequired = Math.ceil(numberOfRecordsToProcess / batchSize)
 
   logger.info('Creating ' + tasksRequired + ' ' + taskTypeToCreate + ' tasks')
 
-  var nextId = idRange.firstId
-  for (var i = 0; i < tasksRequired; i++) {
-    var additionalData = new Batch(nextId, batchSize)
-    var taskToWrite = new Task(
+  let nextId = idRange.firstId
+  for (let i = 0; i < tasksRequired; i++) {
+    const additionalData = new Batch(nextId, batchSize)
+    const taskToWrite = new Task(
       undefined,
       submittingAgent.WORKER,
       taskTypeToCreate,

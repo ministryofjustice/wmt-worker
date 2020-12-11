@@ -1,5 +1,5 @@
-var tableName = 'user_role'
-var users = []
+const tableName = 'user_role'
+let users = []
 exports.seed = function (knex, Promise) {
   // Deletes ALL existing entries
   return knex(tableName).del()

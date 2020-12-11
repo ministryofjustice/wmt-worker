@@ -15,8 +15,8 @@ module.exports = function () {
         })
         .andWhere('workload_report_id', function () {
           this.select('id').from('app.workload_report')
-          .limit(1)
-          .orderBy('id', 'desc')
+            .limit(1)
+            .orderBy('id', 'desc')
         })
     })
 }

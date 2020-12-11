@@ -12,10 +12,10 @@ const aliases = {
   tierCode: 'tier_code'
 }
 
-const warrantsTableName = `flag_warr_4_n`
-const overdueTerminationsTableName = `flag_o_due`
-const unpaidWorkTableName = `flag_upw`
-const priorityTableName = `flag_priority`
+const warrantsTableName = 'flag_warr_4_n'
+const overdueTerminationsTableName = 'flag_o_due'
+const unpaidWorkTableName = 'flag_upw'
+const priorityTableName = 'flag_priority'
 
 // Create a test CaseDetails object, mapping properties to column names
 const testCaseDetails = mapForInsert(getTestCaseDetails(getGeneratedCaseRefNo(), '12345', 'community'))
@@ -25,7 +25,7 @@ module.exports.insertWarrant = function (inserts) {
     .insert(testCaseDetails)
     .returning('id')
     .then(function (id) {
-      inserts.push({table: warrantsTableName, id: id})
+      inserts.push({ table: warrantsTableName, id: id })
       return inserts
     })
 }
@@ -35,7 +35,7 @@ module.exports.insertUnpaidWork = function (inserts) {
     .insert(testCaseDetails)
     .returning('id')
     .then(function (id) {
-      inserts.push({table: unpaidWorkTableName, id: id})
+      inserts.push({ table: unpaidWorkTableName, id: id })
       return inserts
     })
 }
@@ -45,7 +45,7 @@ module.exports.insertOverdueTermination = function (inserts) {
     .insert(testCaseDetails)
     .returning('id')
     .then(function (id) {
-      inserts.push({table: overdueTerminationsTableName, id: id})
+      inserts.push({ table: overdueTerminationsTableName, id: id })
       return inserts
     })
 }
@@ -55,7 +55,7 @@ module.exports.insertPriority = function (inserts) {
     .insert(testCaseDetails)
     .returning('id')
     .then(function (id) {
-      inserts.push({table: priorityTableName, id: id})
+      inserts.push({ table: priorityTableName, id: id })
       return inserts
     })
 }
@@ -76,13 +76,13 @@ function getTestCaseDetails (caseRefNo, omKey, location) {
 }
 
 function getGeneratedCaseRefNo () {
-  var refno = Math.floor(Math.random() * 90000) + 10000
+  const refno = Math.floor(Math.random() * 90000) + 10000
   return `REF-${refno}`
 }
 
 function mapForInsert (caseDetails) {
-  var row = {}
-  for (let key in caseDetails) {
+  const row = {}
+  for (const key in caseDetails) {
     row[aliases[key]] = caseDetails[key]
   }
   return row

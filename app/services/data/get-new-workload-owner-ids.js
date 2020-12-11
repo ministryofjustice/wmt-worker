@@ -1,7 +1,7 @@
 const knex = require('../../../knex').appSchema
 
 module.exports = function (regionIds) {
-  var columns = [
+  const columns = [
     'om.forename',
     'om.surname',
     't.description AS teamName',

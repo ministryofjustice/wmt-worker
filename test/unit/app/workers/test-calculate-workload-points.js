@@ -1,7 +1,7 @@
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
-require('sinon-bluebird')
+
 const pointsHelper = require('wmt-probation-rules').pointsHelper
 
 const Batch = require('../../../../app/services/domain/batch')
@@ -32,19 +32,19 @@ const WORKLOAD_POINTS_BREAKDOWN = {
 }
 const GS_POINTS = -10
 
-var calculateWorkloadPoints
-var parseWorkloadsStub
-var probationRulesStub
-var getPointsConfigurationStub
-var getOffenderManagerTypeIdStub
-var insertWorkloadPointsCalculationsStub
-var updateWorkloadPointsCalculationsStub
-var getAppReductions
-var getAdjustmentPoints
-var getContractedHours
-var task
-var workloads
-var checkForDuplicateCalculation
+let calculateWorkloadPoints
+let parseWorkloadsStub
+let probationRulesStub
+let getPointsConfigurationStub
+let getOffenderManagerTypeIdStub
+let insertWorkloadPointsCalculationsStub
+let updateWorkloadPointsCalculationsStub
+let getAppReductions
+let getAdjustmentPoints
+let getContractedHours
+let task
+let workloads
+let checkForDuplicateCalculation
 
 describe('services/workers/calculate-workload-points', function () {
   beforeEach(function () {
@@ -90,8 +90,8 @@ describe('services/workers/calculate-workload-points', function () {
       '../data/get-adjustment-points': getAdjustmentPoints,
       '../data/check-for-duplicate-calculation': checkForDuplicateCalculation
     })
-    parseWorkloadsStub.resolves([{values: workloads, id: WORKLOAD_ID}])
-    getPointsConfigurationStub.resolves({values: pointsHelper.getCaseTypeWeightings(), id: WORKLOAD_ID})
+    parseWorkloadsStub.resolves([{ values: workloads, id: WORKLOAD_ID }])
+    getPointsConfigurationStub.resolves({ values: pointsHelper.getCaseTypeWeightings(), id: WORKLOAD_ID })
     getAppReductions.resolves(REDUCTION_HOURS)
     getContractedHours.resolves(CONTRACTED_HOURS)
     probationRulesStub.calculateWorkloadPoints.returns(WORKLOAD_POINTS_BREAKDOWN)
@@ -115,10 +115,11 @@ describe('services/workers/calculate-workload-points', function () {
       additionalData: {
         workloadBatch: new Batch(WORKLOAD_ID, 1),
         operationType: operationTypes.INSERT
-      }}
+      }
+    }
     checkForDuplicateCalculation.resolves(undefined)
     getAdjustmentPoints.resolves(0)
-    var batchSize = 1
+    const batchSize = 1
     return calculateWorkloadPoints.execute(task).then(function () {
       expect(parseWorkloadsStub.calledWith(WORKLOAD_ID, WORKLOAD_ID, batchSize)).to.equal(true)
     })
@@ -137,7 +138,7 @@ describe('services/workers/calculate-workload-points', function () {
     getAdjustmentPoints.withArgs(undefined, adjustmentCategory.CMS).resolves(CMS_POINTS_POSITIVE)
     getAdjustmentPoints.withArgs(undefined, adjustmentCategory.GS).resolves(0)
 
-    var expectedTotalPoints = (WORKLOAD_POINTS + CMS_POINTS_POSITIVE)
+    const expectedTotalPoints = (WORKLOAD_POINTS + CMS_POINTS_POSITIVE)
 
     return calculateWorkloadPoints.execute(task).then(function () {
       expect(
@@ -152,7 +153,7 @@ describe('services/workers/calculate-workload-points', function () {
     getAdjustmentPoints.withArgs(undefined, adjustmentCategory.CMS).resolves(CMS_POINTS_NEGATIVE)
     getAdjustmentPoints.withArgs(undefined, adjustmentCategory.GS).resolves(0)
 
-    var expectedTotalPoints = (WORKLOAD_POINTS + CMS_POINTS_NEGATIVE)
+    const expectedTotalPoints = (WORKLOAD_POINTS + CMS_POINTS_NEGATIVE)
 
     return calculateWorkloadPoints.execute(task).then(function () {
       expect(
@@ -167,7 +168,7 @@ describe('services/workers/calculate-workload-points', function () {
     getAdjustmentPoints.withArgs(undefined, adjustmentCategory.CMS).resolves(0)
     getAdjustmentPoints.withArgs(undefined, adjustmentCategory.GS).resolves(GS_POINTS)
 
-    var expectedTotalPoints = (WORKLOAD_POINTS + GS_POINTS)
+    const expectedTotalPoints = (WORKLOAD_POINTS + GS_POINTS)
 
     return calculateWorkloadPoints.execute(task).then(function () {
       expect(
@@ -191,7 +192,7 @@ describe('services/workers/calculate-workload-points', function () {
       }
     }
 
-    var expectedTotalPoints = (WORKLOAD_POINTS + GS_POINTS)
+    const expectedTotalPoints = (WORKLOAD_POINTS + GS_POINTS)
 
     return calculateWorkloadPoints.execute(task).then(function () {
       expect(

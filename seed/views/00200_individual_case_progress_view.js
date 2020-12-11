@@ -1,5 +1,5 @@
 exports.seed = function (knex, Promise) {
-  var view = `CREATE VIEW app.individual_case_progress_view
+  const view = `CREATE VIEW app.individual_case_progress_view
   WITH SCHEMABINDING
   AS
   SELECT 
@@ -29,7 +29,7 @@ exports.seed = function (knex, Promise) {
     , w.license_last_16_weeks
     , w.total_filtered_cases;`
 
-  var index = `CREATE UNIQUE CLUSTERED INDEX idx_individual_case_progress_view
+  const index = `CREATE UNIQUE CLUSTERED INDEX idx_individual_case_progress_view
   ON app.individual_case_progress_view (id)`
 
   return knex.schema

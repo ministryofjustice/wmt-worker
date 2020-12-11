@@ -6,6 +6,6 @@ module.exports = function (ldu) {
   return knex(lduTable)
     .update('description', ldu.description)
     .update('region_id', ldu.region_id)
-    .where({'code': ldu.code})
+    .where({ code: ldu.code })
     .returning('id')
 }

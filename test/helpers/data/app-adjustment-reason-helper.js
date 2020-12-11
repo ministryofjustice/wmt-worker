@@ -1,21 +1,21 @@
 const knex = require('../../../knex').appSchema
-var Promise = require('bluebird').Promise
+const Promise = require('bluebird').Promise
 
 const testAdjustmentReason = {
   contact_description: 'Test Reason',
   contact_code: 'TST',
   category_id: 1
 }
-var inserts = []
+const inserts = []
 
 module.exports.insertDependencies = function (workloadOwnerId) {
   return knex('adjustment_reason')
-  .insert(testAdjustmentReason)
-  .returning('id')
-  .then(function (id) {
-    inserts.push({ table: 'adjustment_reason', id: id[0] })
-    return inserts
-  })
+    .insert(testAdjustmentReason)
+    .returning('id')
+    .then(function (id) {
+      inserts.push({ table: 'adjustment_reason', id: id[0] })
+      return inserts
+    })
 }
 
 module.exports.removeDependencies = function (inserts) {

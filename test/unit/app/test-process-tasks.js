@@ -3,22 +3,22 @@ const Promise = require('bluebird')
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
-require('sinon-bluebird')
+
 const taskStatus = require('../../../app/constants/task-status')
 const workloadReportStatus = require('../../../app/constants/workload-report-status')
 const operationTypes = require('../../../app/constants/calculation-tasks-operation-type')
 
-var processTasks
-var getPendingTasksAndMarkInProgress
-var updateWorkload
-var taskStatusCounter
-var completeTaskWithStatus
-var getWorkerForTask
-var callWebRefreshEndpoint
-var closePreviousWorkloadReport
-var updateWorkloadReportEffectiveTo
-var getTaskInProgressCount
-var createTasks
+let processTasks
+let getPendingTasksAndMarkInProgress
+let updateWorkload
+let taskStatusCounter
+let completeTaskWithStatus
+let getWorkerForTask
+let callWebRefreshEndpoint
+let closePreviousWorkloadReport
+let updateWorkloadReportEffectiveTo
+let getTaskInProgressCount
+let createTasks
 const batchSize = 3
 
 describe('process-tasks', function () {
@@ -52,8 +52,8 @@ describe('process-tasks', function () {
   })
 
   it('should get pending tasks and call worker to execute', function () {
-    getTaskInProgressCount.resolves([{theCount: 0}])
-    getPendingTasksAndMarkInProgress.resolves([{id: 1, type: 'task1'}, {id: 2, type: 'task2'}])
+    getTaskInProgressCount.resolves([{ theCount: 0 }])
+    getPendingTasksAndMarkInProgress.resolves([{ id: 1, type: 'task1' }, { id: 2, type: 'task2' }])
     updateWorkload.resolves({})
     closePreviousWorkloadReport.resolves()
     getWorkerForTask.returns({
@@ -61,7 +61,8 @@ describe('process-tasks', function () {
         return new Promise(function (resolve) {
           resolve('Done!')
         })
-      }})
+      }
+    })
     completeTaskWithStatus.resolves({})
 
     return processTasks().then(function () {
@@ -75,17 +76,18 @@ describe('process-tasks', function () {
 
   it('should update workload report as complete and refresh web hierarchy when there are no pending, inprogress or failed tasks', function () {
     createTasks.resolves()
-    getTaskInProgressCount.resolves([{theCount: 0}])
+    getTaskInProgressCount.resolves([{ theCount: 0 }])
     getPendingTasksAndMarkInProgress.resolves([
-      {id: 1, workloadReportId: 1, type: 'task1'},
-      {id: 2, workloadReportId: 3, type: 'CALCULATE-WORKLOAD-POINTS', additionalData: { operationType: operationTypes.INSERT }}
+      { id: 1, workloadReportId: 1, type: 'task1' },
+      { id: 2, workloadReportId: 3, type: 'CALCULATE-WORKLOAD-POINTS', additionalData: { operationType: operationTypes.INSERT } }
     ])
     getWorkerForTask.returns({
       execute: function () {
         return new Promise(function (resolve) {
           resolve('Done!')
         })
-      }})
+      }
+    })
     completeTaskWithStatus.resolves({})
     taskStatusCounter.resolves({
       numPending: 0,
@@ -110,7 +112,7 @@ describe('process-tasks', function () {
   })
 
   it('should not update workload report as complete and refresh web hierarchy when there are pending, inprogress or failed tasks', function () {
-    getTaskInProgressCount.resolves([{theCount: 0}])
+    getTaskInProgressCount.resolves([{ theCount: 0 }])
     getPendingTasksAndMarkInProgress.resolves([
       { id: 2, workloadReportId: 2, type: 'CALCULATE-WORKLOAD-POINTS', additionalData: { operationType: operationTypes.INSERT } }
     ])
@@ -119,7 +121,8 @@ describe('process-tasks', function () {
         return new Promise(function (resolve) {
           resolve('Done!')
         })
-      }})
+      }
+    })
     completeTaskWithStatus.resolves({})
     taskStatusCounter.resolves({
       numPending: 1,
@@ -139,14 +142,15 @@ describe('process-tasks', function () {
   })
 
   it('should mark tasks as failed when worker execution fails', function () {
-    getTaskInProgressCount.resolves([{theCount: 0}])
-    getPendingTasksAndMarkInProgress.resolves([{id: 1, type: 'task1'}, {id: 2, type: 'task2'}])
+    getTaskInProgressCount.resolves([{ theCount: 0 }])
+    getPendingTasksAndMarkInProgress.resolves([{ id: 1, type: 'task1' }, { id: 2, type: 'task2' }])
     getWorkerForTask.returns({
       execute: function () {
         return new Promise(function (resolve, reject) {
           reject(Error('Fail'))
         })
-      }})
+      }
+    })
     completeTaskWithStatus.resolves({})
 
     return processTasks().then(function () {
@@ -159,7 +163,7 @@ describe('process-tasks', function () {
   })
 
   it('should mark tasks as failed and update WR when worker execution fails for calculate workload points tasks', function () {
-    getTaskInProgressCount.resolves([{theCount: 0}])
+    getTaskInProgressCount.resolves([{ theCount: 0 }])
     getPendingTasksAndMarkInProgress.resolves([
       { id: 1, workloadReportId: 1, type: 'task1' },
       { id: 2, workloadReportId: 2, type: 'CALCULATE-WORKLOAD-POINTS', additionalData: { operationType: operationTypes.INSERT } }
@@ -169,7 +173,8 @@ describe('process-tasks', function () {
         return new Promise(function (resolve, reject) {
           reject(Error('Fail'))
         })
-      }})
+      }
+    })
     updateWorkloadReportEffectiveTo.resolves()
     completeTaskWithStatus.resolves({})
 
@@ -186,7 +191,7 @@ describe('process-tasks', function () {
   })
 
   it('should not update the workload report but should refresh the hierarchy for UPDATE CALCULATE-WORKLOAD-POINTS tasks', function () {
-    getTaskInProgressCount.resolves([{theCount: 0}])
+    getTaskInProgressCount.resolves([{ theCount: 0 }])
     getPendingTasksAndMarkInProgress.resolves([
       { id: 2, workloadReportId: 2, type: 'CALCULATE-WORKLOAD-POINTS', additionalData: { operationType: operationTypes.UPDATE } }
     ])
@@ -195,7 +200,8 @@ describe('process-tasks', function () {
         return new Promise(function (resolve) {
           resolve('Done!')
         })
-      }})
+      }
+    })
     completeTaskWithStatus.resolves({})
 
     return processTasks().then(function () {

@@ -8,20 +8,20 @@ const warrants = require('../../constants/flag-warr-4-n')
 const suspendedSentenceOrders = require('../../constants/wmt-extract-sa')
 const suspendedLifers = require('../../constants/suspended-lifers')
 const deleteStagingRecords = require('./delete-staging-records')
-var inserts = []
-var stagingId
+const inserts = []
+let stagingId
 
 module.exports = function () {
   return deleteStagingRecords()
     .then(function () {
       return knex('wmt_extract')
-      .insert(wmtExtract)
-      .returning('id')
-      .then(function (id) {
-        stagingId = id
-        return knex('wmt_extract_filtered')
-          .insert(wmtExtractFiltered)
-      })
+        .insert(wmtExtract)
+        .returning('id')
+        .then(function (id) {
+          stagingId = id
+          return knex('wmt_extract_filtered')
+            .insert(wmtExtractFiltered)
+        })
     })
     .then(function () {
       overdue.forEach(function (record) {
@@ -46,6 +46,6 @@ module.exports = function () {
     })
 }
 
-var insertToStagingTable = function (table, data) {
+const insertToStagingTable = function (table, data) {
   return knex(table).insert(data)
 }

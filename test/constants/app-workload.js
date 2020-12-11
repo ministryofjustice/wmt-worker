@@ -35,8 +35,10 @@ module.exports = [{
   suspended_total: 1,
   suspended_lifer_total: 1,
   location: 'COMMUNITY',
-  tier_number: 0 },
-{ id: 55012,
+  tier_number: 0
+},
+{
+  id: 55012,
   staging_id: 2201,
   workload_owner_id: 26906,
   total_cases: 754,
@@ -72,8 +74,10 @@ module.exports = [{
   suspended_total: 1,
   suspended_lifer_total: 1,
   location: 'COMMUNITY',
-  tier_number: 1 },
-{ id: 55012,
+  tier_number: 1
+},
+{
+  id: 55012,
   staging_id: 2201,
   workload_owner_id: 26906,
   total_cases: 754,
@@ -109,8 +113,10 @@ module.exports = [{
   suspended_total: 1,
   suspended_lifer_total: 1,
   location: 'COMMUNITY',
-  tier_number: 2 },
-{ id: 55012,
+  tier_number: 2
+},
+{
+  id: 55012,
   staging_id: 2201,
   workload_owner_id: 26906,
   total_cases: 754,
@@ -146,8 +152,10 @@ module.exports = [{
   suspended_total: 1,
   suspended_lifer_total: 1,
   location: 'COMMUNITY',
-  tier_number: 3 },
-{ id: 55012,
+  tier_number: 3
+},
+{
+  id: 55012,
   staging_id: 2201,
   workload_owner_id: 26906,
   total_cases: 754,
@@ -183,8 +191,10 @@ module.exports = [{
   suspended_total: 1,
   suspended_lifer_total: 1,
   location: 'COMMUNITY',
-  tier_number: 4 },
-{ id: 55012,
+  tier_number: 4
+},
+{
+  id: 55012,
   staging_id: 2201,
   workload_owner_id: 26906,
   total_cases: 754,
@@ -220,8 +230,10 @@ module.exports = [{
   suspended_total: 1,
   suspended_lifer_total: 1,
   location: 'COMMUNITY',
-  tier_number: 5 },
-{ id: 55012,
+  tier_number: 5
+},
+{
+  id: 55012,
   staging_id: 2201,
   workload_owner_id: 26906,
   total_cases: 754,
@@ -257,8 +269,10 @@ module.exports = [{
   suspended_total: 1,
   suspended_lifer_total: 1,
   location: 'COMMUNITY',
-  tier_number: 6 },
-{ id: 55012,
+  tier_number: 6
+},
+{
+  id: 55012,
   staging_id: 2201,
   workload_owner_id: 26906,
   total_cases: 754,
@@ -294,8 +308,10 @@ module.exports = [{
   suspended_total: 1,
   suspended_lifer_total: 1,
   location: 'COMMUNITY',
-  tier_number: 7 },
-{ id: 55012,
+  tier_number: 7
+},
+{
+  id: 55012,
   staging_id: 2201,
   workload_owner_id: 26906,
   total_cases: 754,
@@ -331,8 +347,10 @@ module.exports = [{
   suspended_total: 0,
   suspended_lifer_total: 0,
   location: 'COMMUNITY',
-  tier_number: 8 },
-{ id: 55012,
+  tier_number: 8
+},
+{
+  id: 55012,
   staging_id: 2201,
   workload_owner_id: 26906,
   total_cases: 754,
@@ -368,8 +386,10 @@ module.exports = [{
   suspended_total: 0,
   suspended_lifer_total: 0,
   location: 'COMMUNITY',
-  tier_number: 9 },
-{ id: 55012,
+  tier_number: 9
+},
+{
+  id: 55012,
   staging_id: 2201,
   workload_owner_id: 26906,
   total_cases: 754,
@@ -405,8 +425,10 @@ module.exports = [{
   suspended_total: 0,
   suspended_lifer_total: 0,
   location: 'COMMUNITY',
-  tier_number: 10 },
-{ id: 55012,
+  tier_number: 10
+},
+{
+  id: 55012,
   staging_id: 2201,
   workload_owner_id: 26906,
   total_cases: 754,
@@ -442,8 +464,10 @@ module.exports = [{
   suspended_total: 1,
   suspended_lifer_total: 1,
   location: 'CUSTODY',
-  tier_number: 0 },
-{ id: 55012,
+  tier_number: 0
+},
+{
+  id: 55012,
   staging_id: 2201,
   workload_owner_id: 26906,
   total_cases: 754,
@@ -479,8 +503,10 @@ module.exports = [{
   suspended_total: 1,
   suspended_lifer_total: 1,
   location: 'CUSTODY',
-  tier_number: 1 },
-{ id: 55012,
+  tier_number: 1
+},
+{
+  id: 55012,
   staging_id: 2201,
   workload_owner_id: 26906,
   total_cases: 754,
@@ -516,8 +542,10 @@ module.exports = [{
   suspended_total: 1,
   suspended_lifer_total: 1,
   location: 'CUSTODY',
-  tier_number: 2 },
-{ id: 55012,
+  tier_number: 2
+},
+{
+  id: 55012,
   staging_id: 2201,
   workload_owner_id: 26906,
   total_cases: 754,
@@ -553,8 +581,10 @@ module.exports = [{
   suspended_total: 1,
   suspended_lifer_total: 1,
   location: 'CUSTODY',
-  tier_number: 3 },
-{ id: 55012,
+  tier_number: 3
+},
+{
+  id: 55012,
   staging_id: 2201,
   workload_owner_id: 26906,
   total_cases: 754,
@@ -590,8 +620,10 @@ module.exports = [{
   suspended_total: 1,
   suspended_lifer_total: 1,
   location: 'CUSTODY',
-  tier_number: 4 },
-{ id: 55012,
+  tier_number: 4
+},
+{
+  id: 55012,
   staging_id: 2201,
   workload_owner_id: 26906,
   total_cases: 754,
@@ -627,8 +659,10 @@ module.exports = [{
   suspended_total: 1,
   suspended_lifer_total: 1,
   location: 'CUSTODY',
-  tier_number: 5 },
-{ id: 55012,
+  tier_number: 5
+},
+{
+  id: 55012,
   staging_id: 2201,
   workload_owner_id: 26906,
   total_cases: 754,
@@ -664,8 +698,10 @@ module.exports = [{
   suspended_total: 1,
   suspended_lifer_total: 1,
   location: 'CUSTODY',
-  tier_number: 6 },
-{ id: 55012,
+  tier_number: 6
+},
+{
+  id: 55012,
   staging_id: 2201,
   workload_owner_id: 26906,
   total_cases: 754,
@@ -701,8 +737,10 @@ module.exports = [{
   suspended_total: 1,
   suspended_lifer_total: 1,
   location: 'CUSTODY',
-  tier_number: 7 },
-{ id: 55012,
+  tier_number: 7
+},
+{
+  id: 55012,
   staging_id: 2201,
   workload_owner_id: 26906,
   total_cases: 754,
@@ -738,8 +776,10 @@ module.exports = [{
   suspended_total: 0,
   suspended_lifer_total: 0,
   location: 'CUSTODY',
-  tier_number: 8 },
-{ id: 55012,
+  tier_number: 8
+},
+{
+  id: 55012,
   staging_id: 2201,
   workload_owner_id: 26906,
   total_cases: 754,
@@ -775,8 +815,10 @@ module.exports = [{
   suspended_total: 0,
   suspended_lifer_total: 0,
   location: 'CUSTODY',
-  tier_number: 9 },
-{ id: 55012,
+  tier_number: 9
+},
+{
+  id: 55012,
   staging_id: 2201,
   workload_owner_id: 26906,
   total_cases: 754,
@@ -812,8 +854,10 @@ module.exports = [{
   suspended_total: 0,
   suspended_lifer_total: 0,
   location: 'CUSTODY',
-  tier_number: 10 },
-{ id: 55012,
+  tier_number: 10
+},
+{
+  id: 55012,
   staging_id: 2201,
   workload_owner_id: 26906,
   total_cases: 754,
@@ -849,8 +893,10 @@ module.exports = [{
   suspended_total: 1,
   suspended_lifer_total: 1,
   location: 'LICENSE',
-  tier_number: 0 },
-{ id: 55012,
+  tier_number: 0
+},
+{
+  id: 55012,
   staging_id: 2201,
   workload_owner_id: 26906,
   total_cases: 754,
@@ -886,8 +932,10 @@ module.exports = [{
   suspended_total: 1,
   suspended_lifer_total: 1,
   location: 'LICENSE',
-  tier_number: 1 },
-{ id: 55012,
+  tier_number: 1
+},
+{
+  id: 55012,
   staging_id: 2201,
   workload_owner_id: 26906,
   total_cases: 754,
@@ -923,8 +971,10 @@ module.exports = [{
   suspended_total: 1,
   suspended_lifer_total: 1,
   location: 'LICENSE',
-  tier_number: 2 },
-{ id: 55012,
+  tier_number: 2
+},
+{
+  id: 55012,
   staging_id: 2201,
   workload_owner_id: 26906,
   total_cases: 754,
@@ -960,8 +1010,10 @@ module.exports = [{
   suspended_total: 1,
   suspended_lifer_total: 1,
   location: 'LICENSE',
-  tier_number: 3 },
-{ id: 55012,
+  tier_number: 3
+},
+{
+  id: 55012,
   staging_id: 2201,
   workload_owner_id: 26906,
   total_cases: 754,
@@ -997,8 +1049,10 @@ module.exports = [{
   suspended_total: 1,
   suspended_lifer_total: 1,
   location: 'LICENSE',
-  tier_number: 4 },
-{ id: 55012,
+  tier_number: 4
+},
+{
+  id: 55012,
   staging_id: 2201,
   workload_owner_id: 26906,
   total_cases: 754,
@@ -1034,8 +1088,10 @@ module.exports = [{
   suspended_total: 1,
   suspended_lifer_total: 1,
   location: 'LICENSE',
-  tier_number: 5 },
-{ id: 55012,
+  tier_number: 5
+},
+{
+  id: 55012,
   staging_id: 2201,
   workload_owner_id: 26906,
   total_cases: 754,
@@ -1071,8 +1127,10 @@ module.exports = [{
   suspended_total: 1,
   suspended_lifer_total: 1,
   location: 'LICENSE',
-  tier_number: 6 },
-{ id: 55012,
+  tier_number: 6
+},
+{
+  id: 55012,
   staging_id: 2201,
   workload_owner_id: 26906,
   total_cases: 754,
@@ -1108,8 +1166,10 @@ module.exports = [{
   suspended_total: 1,
   suspended_lifer_total: 1,
   location: 'LICENSE',
-  tier_number: 7 },
-{ id: 55012,
+  tier_number: 7
+},
+{
+  id: 55012,
   staging_id: 2201,
   workload_owner_id: 26906,
   total_cases: 754,
@@ -1145,8 +1205,10 @@ module.exports = [{
   suspended_total: 0,
   suspended_lifer_total: 0,
   location: 'LICENSE',
-  tier_number: 8 },
-{ id: 55012,
+  tier_number: 8
+},
+{
+  id: 55012,
   staging_id: 2201,
   workload_owner_id: 26906,
   total_cases: 754,
@@ -1182,8 +1244,10 @@ module.exports = [{
   suspended_total: 0,
   suspended_lifer_total: 0,
   location: 'LICENSE',
-  tier_number: 9 },
-{ id: 55012,
+  tier_number: 9
+},
+{
+  id: 55012,
   staging_id: 2201,
   workload_owner_id: 26906,
   total_cases: 754,

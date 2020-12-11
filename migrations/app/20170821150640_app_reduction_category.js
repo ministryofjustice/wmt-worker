@@ -5,10 +5,10 @@ exports.up = function (knex, Promise) {
     table.increments('id')
     table.string('category')
   })
-  .catch(function (error) {
-    logger.error(error)
-    throw error
-  })
+    .catch(function (error) {
+      logger.error(error)
+      throw error
+    })
 }
 
 exports.down = function (knex, Promise) {

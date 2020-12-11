@@ -1,20 +1,20 @@
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
-require('sinon-bluebird')
+
 const expect = require('chai').expect
 
 const IdRange = require('../../../../app/services/domain/id-range')
 const taskType = require('../../../../app/constants/task-type')
 
-var processImport
-var createNewTasksStub
-var relativeFilePath = 'services/workers/process-import'
-var getCourtReportsWithNoWorkloads
-var getCourtReportersRange
-var getWmtExtractRange
-var insertWorkloadReportStub
-var replaceStagingCourtReporters
-var disableIndexingStub
+let processImport
+let createNewTasksStub
+const relativeFilePath = 'services/workers/process-import'
+let getCourtReportsWithNoWorkloads
+let getCourtReportersRange
+let getWmtExtractRange
+let insertWorkloadReportStub
+let replaceStagingCourtReporters
+let disableIndexingStub
 
 const firstId = 1
 const lastId = 100
@@ -82,12 +82,12 @@ describe(relativeFilePath, function () {
     disableIndexingStub.resolves()
 
     return processImport.execute({}).then(function () {
-      var createdTasks = createNewTasksStub.getCall(0).args[0]
+      const createdTasks = createNewTasksStub.getCall(0).args[0]
       expect(createdTasks.length).to.equal(8)
-      for (var i = 1; i < createdTasks.length / 2; i++) {
+      for (let i = 1; i < createdTasks.length / 2; i++) {
         expect(createdTasks[i].type).to.equal(taskType.CREATE_COURT_REPORTS)
       }
-      for (i = createdTasks.length / 2; i < createdTasks.length - 1; i++) {
+      for (let i = createdTasks.length / 2; i < createdTasks.length - 1; i++) {
         expect(createdTasks[i].type).to.equal(taskType.CREATE_WORKLOAD)
       }
     })
@@ -98,9 +98,9 @@ describe(relativeFilePath, function () {
     disableIndexingStub.resolves()
 
     return processImport.execute({}).then(function () {
-      var createdTasks = createNewTasksStub.getCall(0).args[0]
+      const createdTasks = createNewTasksStub.getCall(0).args[0]
       expect(createdTasks.length).to.equal(4)
-      for (var i = 1; i < createdTasks.length - 1; i++) {
+      for (let i = 1; i < createdTasks.length - 1; i++) {
         expect(createdTasks[i].type).to.equal(taskType.CREATE_WORKLOAD)
       }
     })
@@ -120,7 +120,7 @@ describe(relativeFilePath, function () {
     disableIndexingStub.resolves()
 
     return processImport.execute({}).then(function () {
-      var tasksCreated = createNewTasksStub.getCall(0).args[0]
+      const tasksCreated = createNewTasksStub.getCall(0).args[0]
       tasksCreated.forEach(function (task) {
         expect(task.workloadReportId).to.equal(workloadReportId)
       })
