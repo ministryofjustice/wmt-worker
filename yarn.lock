@@ -106,12 +106,12 @@
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
 
 "@types/node@*":
-  version "14.14.12"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.12.tgz#0b1d86f8c40141091285dea02e4940df73bba43f"
+  version "14.14.13"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.13.tgz#9e425079799322113ae8477297ae6ef51b8e0cdf"
 
 "@types/node@^12.12.17":
-  version "12.19.8"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.19.8.tgz#efd6d1a90525519fc608c9db16c8a78f7693a978"
+  version "12.19.9"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.19.9.tgz#990ad687ad8b26ef6dcc34a4f69c33d40c95b679"
 
 "@types/node@^8.0.47":
   version "8.10.66"
@@ -596,9 +596,9 @@ combined-stream@^1.0.6, combined-stream@~1.0.6:
   dependencies:
     delayed-stream "~1.0.0"
 
-commander@^5.1.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-5.1.0.tgz#46abbd1652f8e059bddaef99bbdcb2ad9cf179ae"
+commander@^6.2.0:
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-6.2.1.tgz#0792eb682dfbc325999bb2b84fddddba110ac73c"
 
 component-emitter@^1.2.1:
   version "1.3.0"
@@ -666,15 +666,15 @@ date-utils@*:
   version "1.2.21"
   resolved "https://registry.yarnpkg.com/date-utils/-/date-utils-1.2.21.tgz#61fb16cdc1274b3c9acaaffe9fc69df8720a2b64"
 
-debug@4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-4.1.1.tgz#3b72260255109c6b589cee050f1d516139664791"
-  dependencies:
-    ms "^2.1.1"
-
 debug@4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/debug/-/debug-4.2.0.tgz#7f150f93920e94c58f5574c2fd01a3110effe7f1"
+  dependencies:
+    ms "2.1.2"
+
+debug@4.3.1, debug@^4, debug@^4.0.1, debug@^4.1.1:
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.1.tgz#f0d229c505e0c6d8c49ac553d1b13dc183f6b2ee"
   dependencies:
     ms "2.1.2"
 
@@ -695,12 +695,6 @@ debug@^3.2.6:
   resolved "https://registry.yarnpkg.com/debug/-/debug-3.2.7.tgz#72580b7e9145fb39b6676f9c5e5fb100b934179a"
   dependencies:
     ms "^2.1.1"
-
-debug@^4, debug@^4.0.1, debug@^4.1.1:
-  version "4.3.1"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.1.tgz#f0d229c505e0c6d8c49ac553d1b13dc183f6b2ee"
-  dependencies:
-    ms "2.1.2"
 
 decamelize@^1.2.0:
   version "1.2.0"
@@ -1377,10 +1371,10 @@ glob@^6.0.1:
     path-is-absolute "^1.0.0"
 
 global-dirs@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/global-dirs/-/global-dirs-2.0.1.tgz#acdf3bb6685bcd55cb35e8a052266569e9469201"
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/global-dirs/-/global-dirs-2.1.0.tgz#e9046a49c806ff04d6c1825e196c8f0091e8df4d"
   dependencies:
-    ini "^1.3.5"
+    ini "1.3.7"
 
 global-modules@^1.0.0:
   version "1.0.0"
@@ -1564,9 +1558,13 @@ inherits@2, inherits@^2.0.3, inherits@~2.0.3:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/inherits/-/inherits-2.0.4.tgz#0fa2c64f932917c3433a0ded55363aae37416b7c"
 
-ini@^1.3.4, ini@^1.3.5, ini@~1.3.0:
+ini@1.3.7:
   version "1.3.7"
   resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.7.tgz#a09363e1911972ea16d7a8851005d84cf09a9a84"
+
+ini@^1.3.4, ini@~1.3.0:
+  version "1.3.8"
+  resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.8.tgz#a29da425b48806f34767a4efce397269af28432c"
 
 internal-slot@^1.0.2:
   version "1.0.2"
@@ -1929,18 +1927,18 @@ kind-of@^6.0.0, kind-of@^6.0.2:
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-6.0.3.tgz#07c05034a6c349fa06e24fa35aa76db4580ce4dd"
 
 knex@^0.21.12:
-  version "0.21.12"
-  resolved "https://registry.yarnpkg.com/knex/-/knex-0.21.12.tgz#961bdb484311eb853030f6f49bd5bf9eca89dc51"
+  version "0.21.13"
+  resolved "https://registry.yarnpkg.com/knex/-/knex-0.21.13.tgz#5738db52d041d38f8bd9ab15d64f4a8ebb1e97c4"
   dependencies:
     colorette "1.2.1"
-    commander "^5.1.0"
-    debug "4.1.1"
+    commander "^6.2.0"
+    debug "4.3.1"
     esm "^3.2.25"
     getopts "2.2.5"
     interpret "^2.2.0"
     liftoff "3.1.0"
     lodash "^4.17.20"
-    pg-connection-string "2.3.0"
+    pg-connection-string "2.4.0"
     tarn "^3.0.1"
     tildify "2.0.0"
     v8flags "^3.2.0"
@@ -2538,9 +2536,9 @@ performance-now@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
 
-pg-connection-string@2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/pg-connection-string/-/pg-connection-string-2.3.0.tgz#c13fcb84c298d0bfa9ba12b40dd6c23d946f55d6"
+pg-connection-string@2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/pg-connection-string/-/pg-connection-string-2.4.0.tgz#c979922eb47832999a204da5dbe1ebf2341b6a10"
 
 picomatch@^2.0.4, picomatch@^2.2.1:
   version "2.2.2"
@@ -3449,9 +3447,9 @@ widest-line@^3.1.0:
   dependencies:
     string-width "^4.0.0"
 
-wmt-probation-rules@ministryofjustice/wmt-probation-rules.git#v0.9.9:
-  version "0.9.9"
-  resolved "https://codeload.github.com/ministryofjustice/wmt-probation-rules/tar.gz/fe625d187e69c92685716ee6c0ef1c76204cac2b"
+wmt-probation-rules@ministryofjustice/wmt-probation-rules.git#v1.0.0:
+  version "1.0.0"
+  resolved "https://codeload.github.com/ministryofjustice/wmt-probation-rules/tar.gz/c4019eac79a9a9b1ae6ee9fdd8384ec7e8818a3c"
   dependencies:
     lodash "^4.17.4"
     moment "^2.19.2"
