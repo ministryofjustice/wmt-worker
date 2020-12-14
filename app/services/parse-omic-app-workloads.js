@@ -7,10 +7,10 @@ const Locations = require('wmt-probation-rules').Locations
 module.exports = function (initialId, maxId, batchSize, workloadReportId) {
   return getOmicAppWorkloads(initialId, maxId, workloadReportId)
     .then(function (workloadResults) {
-      var tempWorkloads = new Array(batchSize)
+      const tempWorkloads = new Array(batchSize)
 
       workloadResults.forEach(function (row) {
-        var index
+        let index
         if (batchSize > 1) {
           index = row.staging_id - initialId
         } else {
@@ -62,63 +62,64 @@ module.exports = function (initialId, maxId, batchSize, workloadReportId) {
         }
 
         tempWorkloads[index][row.location][row.tier_number] = new TierCounts(
-                        row.tiers_total_cases,
-                        row.warrants_total,
-                        row.unpaid_work_total,
-                        row.overdue_terminations_total,
-                        row.suspended_total,
-                        row.suspended_lifer_total,
-                        row.tier_number, false)
+          row.tiers_total_cases,
+          row.warrants_total,
+          row.unpaid_work_total,
+          row.overdue_terminations_total,
+          row.suspended_total,
+          row.suspended_lifer_total,
+          row.tier_number, false)
 
         tempWorkloads[index].filtered[row.location][row.tier_number] = new TierCounts(
-                        row.tiers_total_filtered_cases,
-                        row.warrants_total,
-                        row.unpaid_work_total,
-                        row.overdue_terminations_total,
-                        row.suspended_total,
-                        row.suspended_lifer_total,
-                        row.tier_number, false)
+          row.tiers_total_filtered_cases,
+          row.warrants_total,
+          row.unpaid_work_total,
+          row.overdue_terminations_total,
+          row.suspended_total,
+          row.suspended_lifer_total,
+          row.tier_number, false)
 
         tempWorkloads[index].T2A[row.location][row.tier_number] = new TierCounts(
-                          row.t2a_tiers_total_cases,
-                          row.t2a_warrants_total,
-                          row.t2a_unpaid_work_total,
-                          row.t2a_overdue_terminations_total,
-                          row.suspended_total,
-                          row.suspended_lifer_total,
-                          row.tier_number, true)
+          row.t2a_tiers_total_cases,
+          row.t2a_warrants_total,
+          row.t2a_unpaid_work_total,
+          row.t2a_overdue_terminations_total,
+          row.suspended_total,
+          row.suspended_lifer_total,
+          row.tier_number, true)
       })
 
-      var workloads = []
+      const workloads = []
       tempWorkloads.forEach(function (tempWorkload) {
         workloads.push(
-          { id: tempWorkload.id,
+          {
+            id: tempWorkload.id,
             values: new Workload(
-            tempWorkload.workloadOwnerId,
-            tempWorkload.totalCases,
-            tempWorkload.totalT2aCases,
-            tempWorkload.monthlySdrs,
-            tempWorkload.sdrsDueNext30Days,
-            tempWorkload.sdrConversionsLast30Days,
-            tempWorkload.paromsCompletedLast30Days,
-            tempWorkload.paromsDueNext30Days,
-            new Tiers(Locations.CUSTODY, ...tempWorkload[Locations.CUSTODY], tempWorkload.totalCustodyCases),
-            new Tiers(Locations.COMMUNITY, ...tempWorkload[Locations.COMMUNITY], tempWorkload.totalCommunityCases),
-            new Tiers(Locations.LICENSE, ...tempWorkload[Locations.LICENSE], tempWorkload.totalLicenseCases),
-            new Tiers(Locations.CUSTODY, ...tempWorkload.T2A[Locations.CUSTODY], tempWorkload.totalT2aCustodyCases),
-            new Tiers(Locations.COMMUNITY, ...tempWorkload.T2A[Locations.COMMUNITY], tempWorkload.totalT2aCommunityCases),
-            new Tiers(Locations.LICENSE, ...tempWorkload.T2A[Locations.LICENSE], tempWorkload.totalT2aLicenseCases),
-            tempWorkload.licenseCasesLast16Weeks,
-            tempWorkload.communityCasesLast16Weeks,
-            tempWorkload.armsCommunityCases,
-            tempWorkload.armsLicenseCases,
-            tempWorkload.stagingId,
-            tempWorkload.workloadReportId,
-            new Tiers(Locations.COMMUNITY, ...tempWorkload.filtered[Locations.COMMUNITY], tempWorkload.totalFilteredCommunityCases),
-            new Tiers(Locations.CUSTODY, ...tempWorkload.filtered[Locations.CUSTODY], tempWorkload.totalFilteredCustodyCases),
-            new Tiers(Locations.LICENSE, ...tempWorkload.filtered[Locations.LICENSE], tempWorkload.totalFilteredLicenseCases),
-            tempWorkload.totalFilteredCases
-          )
+              tempWorkload.workloadOwnerId,
+              tempWorkload.totalCases,
+              tempWorkload.totalT2aCases,
+              tempWorkload.monthlySdrs,
+              tempWorkload.sdrsDueNext30Days,
+              tempWorkload.sdrConversionsLast30Days,
+              tempWorkload.paromsCompletedLast30Days,
+              tempWorkload.paromsDueNext30Days,
+              new Tiers(Locations.CUSTODY, ...tempWorkload[Locations.CUSTODY], tempWorkload.totalCustodyCases),
+              new Tiers(Locations.COMMUNITY, ...tempWorkload[Locations.COMMUNITY], tempWorkload.totalCommunityCases),
+              new Tiers(Locations.LICENSE, ...tempWorkload[Locations.LICENSE], tempWorkload.totalLicenseCases),
+              new Tiers(Locations.CUSTODY, ...tempWorkload.T2A[Locations.CUSTODY], tempWorkload.totalT2aCustodyCases),
+              new Tiers(Locations.COMMUNITY, ...tempWorkload.T2A[Locations.COMMUNITY], tempWorkload.totalT2aCommunityCases),
+              new Tiers(Locations.LICENSE, ...tempWorkload.T2A[Locations.LICENSE], tempWorkload.totalT2aLicenseCases),
+              tempWorkload.licenseCasesLast16Weeks,
+              tempWorkload.communityCasesLast16Weeks,
+              tempWorkload.armsCommunityCases,
+              tempWorkload.armsLicenseCases,
+              tempWorkload.stagingId,
+              tempWorkload.workloadReportId,
+              new Tiers(Locations.COMMUNITY, ...tempWorkload.filtered[Locations.COMMUNITY], tempWorkload.totalFilteredCommunityCases),
+              new Tiers(Locations.CUSTODY, ...tempWorkload.filtered[Locations.CUSTODY], tempWorkload.totalFilteredCustodyCases),
+              new Tiers(Locations.LICENSE, ...tempWorkload.filtered[Locations.LICENSE], tempWorkload.totalFilteredLicenseCases),
+              tempWorkload.totalFilteredCases
+            )
           }
         )
       })

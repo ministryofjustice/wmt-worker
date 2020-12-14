@@ -1,5 +1,5 @@
 exports.seed = function (knex, promise) {
-  var view = `CREATE VIEW app.omic_region_case_overview
+  const view = `CREATE VIEW app.omic_region_case_overview
   WITH SCHEMABINDING
   AS
   SELECT
@@ -21,7 +21,7 @@ exports.seed = function (knex, promise) {
     AND wr.effective_to IS NULL
   GROUP BY l.id, l.description, r.id;`
 
-  var index = `CREATE UNIQUE CLUSTERED INDEX idx_omic_region_case_overview ON app.omic_region_case_overview (link_id)`
+  const index = 'CREATE UNIQUE CLUSTERED INDEX idx_omic_region_case_overview ON app.omic_region_case_overview (link_id)'
 
   return knex.schema
     .raw('DROP VIEW IF EXISTS app.omic_region_case_overview;')

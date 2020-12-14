@@ -23,30 +23,30 @@ module.exports.execute = function (task) {
   let workloadReportId
 
   return disableIndexing()
-  .then(function () {
-    return insertWorkloadReport()
-  })
-  .then(function (insertedWorkloadReportId) {
-    workloadReportId = insertedWorkloadReportId
-    return populateStagingCourtReporters()
-  })
-  .then(function () {
-    return createAndGetCourtReportsTaskObjects(tasks, batchSize, workloadReportId)
-  })
-  .then(function (tasks) {
-    return createAndGetWorkloadTaskObjects(tasks, batchSize, workloadReportId)
-  })
-  .then(function (tasks) {
-    return createAndGetOmicTaskObjects(tasks, batchSize, workloadReportId)
-  })
-  .then(function (tasks) {
-    if (tasks.length > 0) {
-      return createNewTasks(tasks)
-      .then(function () {
-        logger.info('Tasks created')
-      })
-    }
-  })
+    .then(function () {
+      return insertWorkloadReport()
+    })
+    .then(function (insertedWorkloadReportId) {
+      workloadReportId = insertedWorkloadReportId
+      return populateStagingCourtReporters()
+    })
+    .then(function () {
+      return createAndGetCourtReportsTaskObjects(tasks, batchSize, workloadReportId)
+    })
+    .then(function (tasks) {
+      return createAndGetWorkloadTaskObjects(tasks, batchSize, workloadReportId)
+    })
+    .then(function (tasks) {
+      return createAndGetOmicTaskObjects(tasks, batchSize, workloadReportId)
+    })
+    .then(function (tasks) {
+      if (tasks.length > 0) {
+        return createNewTasks(tasks)
+          .then(function () {
+            logger.info('Tasks created')
+          })
+      }
+    })
 }
 
 const populateStagingCourtReporters = function () {
