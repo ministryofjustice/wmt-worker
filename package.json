@@ -51,7 +51,7 @@
     "bunyan": "^1.8.9",
     "bunyan-prettystream": "^0.1.3",
     "cron": "^1.2.1",
-    "knex": "^0.13.0",
+    "knex": "^0.19.5",
     "lodash": "^4.17.4",
     "mssql": "3.3.0",
     "python-bridge": "^1.1.0",
