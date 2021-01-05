@@ -1,35 +1,35 @@
 const knex = require('../../../knex').stagingSchema
 
 module.exports = function (range) {
-  return knex('omic_wmt_extract').whereBetween('omic_wmt_extract.id', range)
+  return knex('omic_teams').whereBetween('omic_teams.id', range)
     .leftJoin('t2a', function () {
-      this.on('omic_wmt_extract.om_key', 't2a.om_key')
-        .andOn('omic_wmt_extract.team_code', 't2a.team_code')
+      this.on('omic_teams.om_key', 't2a.om_key')
+        .andOn('omic_teams.team_code', 't2a.team_code')
     })
     .leftJoin('court_reports', function () {
-      this.on('court_reports.om_key', 'omic_wmt_extract.om_key')
-        .andOn('court_reports.team_code', 'omic_wmt_extract.team_code')
+      this.on('court_reports.om_key', 'omic_teams.om_key')
+        .andOn('court_reports.team_code', 'omic_teams.team_code')
     })
     .leftJoin('inst_reports', function () {
-      this.on('inst_reports.om_key', 'omic_wmt_extract.om_key')
-        .andOn('inst_reports.team_code', 'omic_wmt_extract.team_code')
+      this.on('inst_reports.om_key', 'omic_teams.om_key')
+        .andOn('inst_reports.team_code', 'omic_teams.team_code')
     })
-    .select('omic_wmt_extract.id AS staging_id', 'omic_wmt_extract.trust', 'omic_wmt_extract.region_desc', 'omic_wmt_extract.region_code',
-    'omic_wmt_extract.ldu_desc', 'omic_wmt_extract.ldu_code', 'omic_wmt_extract.team_desc', 'omic_wmt_extract.team_code',
-    'omic_wmt_extract.om_surname', 'omic_wmt_extract.om_forename', 'omic_wmt_extract.om_grade_code',
-    'omic_wmt_extract.om_key', 'omic_wmt_extract.comIn1st16Weeks', 'omic_wmt_extract.licIn1st16Weeks',
-    'omic_wmt_extract.datestamp', 'omic_wmt_extract.commtier0', 'omic_wmt_extract.commtierg',
-    'omic_wmt_extract.commtierf', 'omic_wmt_extract.commtiere', 'omic_wmt_extract.commtierd2',
-    'omic_wmt_extract.commtierd1', 'omic_wmt_extract.commtierc2', 'omic_wmt_extract.commtierc1',
-    'omic_wmt_extract.commtierb2', 'omic_wmt_extract.commtierb1', 'omic_wmt_extract.commtiera',
-    'omic_wmt_extract.licencetier0', 'omic_wmt_extract.licencetierg', 'omic_wmt_extract.licencetierf',
-    'omic_wmt_extract.licencetiere', 'omic_wmt_extract.licencetierd2', 'omic_wmt_extract.licencetierd1',
-    'omic_wmt_extract.licencetierc2', 'omic_wmt_extract.licencetierc1', 'omic_wmt_extract.licencetierb2',
-    'omic_wmt_extract.licencetierb1', 'omic_wmt_extract.licencetiera', 'omic_wmt_extract.custtier0',
-    'omic_wmt_extract.custtierg', 'omic_wmt_extract.custtierf', 'omic_wmt_extract.custtiere',
-    'omic_wmt_extract.custtierd2', 'omic_wmt_extract.custtierd1', 'omic_wmt_extract.custtierc2',
-    'omic_wmt_extract.custtierc1', 'omic_wmt_extract.custtierb2', 'omic_wmt_extract.custtierb1',
-    'omic_wmt_extract.custtiera',
+    .select('omic_teams.id AS staging_id', 'omic_teams.trust', 'omic_teams.region_desc', 'omic_teams.region_code',
+    'omic_teams.ldu_desc', 'omic_teams.ldu_code', 'omic_teams.team_desc', 'omic_teams.team_code',
+    'omic_teams.om_surname', 'omic_teams.om_forename', 'omic_teams.om_grade_code',
+    'omic_teams.om_key', 'omic_teams.comIn1st16Weeks', 'omic_teams.licIn1st16Weeks',
+    'omic_teams.datestamp', 'omic_teams.commtier0', 'omic_teams.commtierg',
+    'omic_teams.commtierf', 'omic_teams.commtiere', 'omic_teams.commtierd2',
+    'omic_teams.commtierd1', 'omic_teams.commtierc2', 'omic_teams.commtierc1',
+    'omic_teams.commtierb2', 'omic_teams.commtierb1', 'omic_teams.commtiera',
+    'omic_teams.licencetier0', 'omic_teams.licencetierg', 'omic_teams.licencetierf',
+    'omic_teams.licencetiere', 'omic_teams.licencetierd2', 'omic_teams.licencetierd1',
+    'omic_teams.licencetierc2', 'omic_teams.licencetierc1', 'omic_teams.licencetierb2',
+    'omic_teams.licencetierb1', 'omic_teams.licencetiera', 'omic_teams.custtier0',
+    'omic_teams.custtierg', 'omic_teams.custtierf', 'omic_teams.custtiere',
+    'omic_teams.custtierd2', 'omic_teams.custtierd1', 'omic_teams.custtierc2',
+    'omic_teams.custtierc1', 'omic_teams.custtierb2', 'omic_teams.custtierb1',
+    'omic_teams.custtiera',
     't2a.commtier0 AS t2a_commtier0', 't2a.commtierg AS t2a_commtierg', 't2a.commtierf AS t2a_commtierf',
     't2a.commtiere AS t2a_commtiere', 't2a.commtierd2 AS t2a_commtierd2',
     't2a.commtierd1 AS t2a_commtierd1', 't2a.commtierc2 AS t2a_commtierc2',
