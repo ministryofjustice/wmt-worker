@@ -9,8 +9,9 @@ describe('app/services/insert-workload-owner-and-dependencies', function () {
   var omForename
   var omSurname
   var regionCode
+  var secondRegionCode
   var regionDesc
-  var lduCode
+  var secondLduCode
   var lduDesc
   var teamCode
   var teamDesc
@@ -20,6 +21,7 @@ describe('app/services/insert-workload-owner-and-dependencies', function () {
   var regionId
   var lduId
   var workloadOwnerId
+  var lduCode
 
   it('should insert a new offender manager record', function (done) {
     omGradeCode = 'D'
@@ -150,6 +152,72 @@ describe('app/services/insert-workload-owner-and-dependencies', function () {
     })
   })
 
+  it('should move a team to a different ldu cluster and move an ldu cluster to a different region', function (done) {
+    omGradeCode = 'D'
+    omKey = 'N63D897'
+    omForename = 'INTEGRATION NEW'
+    omSurname = 'TEST NEW'
+    secondRegionCode = 'N62'
+    regionDesc = 'NPS INTEGRATION TEST NEW'
+    secondLduCode = 'N62ALL'
+    lduDesc = 'ALL NPS INTEGRATION TEST NEW'
+    teamCode = 'N63959'
+    teamDesc = 'NPS TEAM INTEGRATION TEST NEW'
+    contractedHours = 37
+
+    var caseSummary = new CasesSummary(null, regionDesc, secondRegionCode, lduDesc, secondLduCode, teamDesc, teamCode, omSurname, omForename, omGradeCode, omKey)
+
+    insertWorkloadOwnerAndDependencies(caseSummary).then(function () {
+      return knex.table('offender_manager')
+        .where({'key': omKey})
+        .first()
+        .then(function (omRecord) {
+          expect(omRecord['id']).to.eq(offenderManagerId)
+          expect(omRecord['key']).to.eq(omKey)
+          expect(omRecord['forename']).to.eq(omForename)
+          expect(omRecord['surname']).to.eq(omSurname)
+          return knex.table('region')
+            .where('code', secondRegionCode)
+            .first()
+            .then(function (regionRecord) {
+              expect(regionRecord['id']).to.not.eq(regionId)
+              expect(regionRecord['code']).to.eq(secondRegionCode)
+              expect(regionRecord['description']).to.eq(regionDesc)
+              return knex.table('ldu')
+                .where('code', secondLduCode)
+                .first()
+                .then(function (lduRecord) {
+                  expect(lduRecord['id']).to.not.eq(lduId)
+                  expect(lduRecord['region_id']).to.eq(regionRecord['id'])
+                  expect(lduRecord['region_id']).to.not.eq(regionId)
+                  expect(lduRecord['code']).to.eq(secondLduCode)
+                  expect(lduRecord['description']).to.eq(lduDesc)
+                  return knex.table('team')
+                    .where('code', teamCode)
+                    .first()
+                    .then(function (teamRecord) {
+                      expect(teamRecord['id']).to.eq(teamId)
+                      expect(teamRecord['ldu_id']).to.eq(lduRecord['id'])
+                      expect(teamRecord['ldu_id']).to.not.eq(lduId)
+                      expect(teamRecord['code']).to.eq(teamCode)
+                      expect(teamRecord['description']).to.eq(teamDesc)
+                      return knex.table('workload_owner')
+                        .where('offender_manager_id', omRecord['id'])
+                        .first()
+                        .then(function (woRecord) {
+                          expect(woRecord['id']).to.eq(workloadOwnerId)
+                          expect(woRecord['offender_manager_id']).to.eq(omRecord['id'])
+                          expect(woRecord['contracted_hours']).to.eq(contractedHours)
+                          expect(woRecord['team_id']).to.eq(teamRecord['id'])
+                          done()
+                        })
+                    })
+                })
+            })
+        })
+    })
+  })
+
   after(function () {
     return knex('workload_owner').where('offender_manager_id', offenderManagerId).del()
       .then(function () {
@@ -160,6 +228,12 @@ describe('app/services/insert-workload-owner-and-dependencies', function () {
             return knex('ldu').where('code', lduCode).del()
             .then(function () {
               return knex('region').where('code', regionCode).del()
+              .then(function () {
+                return knex('ldu').where('code', secondLduCode).del()
+                .then(function () {
+                  return knex('region').where('code', secondRegionCode).del()
+                })
+              })
             })
           })
         })

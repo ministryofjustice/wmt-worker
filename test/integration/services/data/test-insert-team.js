@@ -14,7 +14,11 @@ describe('app/services/data/insert-team', function () {
     teamHelper.addDependenciesForTeam()
       .then(function (insertedFields) {
         inserts = insertedFields
-        done()
+        teamHelper.addDependenciesForTeam()
+        .then(function (insertedFields2) {
+          inserts = inserts.concat(insertedFields2)
+          done()
+        })
       })
   })
 
@@ -43,6 +47,25 @@ describe('app/services/data/insert-team', function () {
   it('should update the name of an existing team', function () {
     var code = 'U'
     var lduId = inserts.filter((item) => item.table === 'ldu')[0].id
+    var newTeamName = 'TEAM 1 TEST'
+    var team = new Team(undefined, lduId, code, newTeamName)
+    return insertTeam(team).then(function (teamId) {
+      return knex.table('team')
+        .where({'id': teamId})
+        .first()
+        .then(function (result) {
+          expect(result['id']).to.eq(teamUniqueIdentifier) // eslint-disable-line
+          expect(result['ldu_id']).to.eq(lduId) // eslint-disable-line
+          expect(result['code']).to.eq(code) // eslint-disable-line
+          expect(result['description']).to.eq(newTeamName) // eslint-disable-line
+          expect(result['effective_to']).to.be.null // eslint-disable-line
+        })
+    })
+  })
+
+  it('should update the LDU ID of an existing team', function () {
+    var code = 'U'
+    var lduId = inserts.filter((item) => item.table === 'ldu')[1].id
     var newTeamName = 'TEAM 1 TEST'
     var team = new Team(undefined, lduId, code, newTeamName)
     return insertTeam(team).then(function (teamId) {

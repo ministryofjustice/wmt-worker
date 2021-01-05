@@ -11,6 +11,9 @@ var createTasksForMissing = require('./workers/create-tasks-for-missing')
 var generateDashboard = require('./workers/generate-dashboard')
 var removeDuplicates = require('./workers/remove-duplicates')
 var checkForMissingDivisions = require('./workers/check-for-missing-divisions')
+var migrateWorkloads = require('./workers/migrate-workloads')
+var migrateContractedHours = require('./workers/migrate-contracted-hours')
+var removeDuplicateCMS = require('./workers/remove-duplicate-cms')
 var createOmicWorkload = require('./workers/create-omic-workload')
 var calculateOmicWorkloadPoints = require('./workers/calculate-omic-workload-points')
 
@@ -28,7 +31,10 @@ module.exports = function (taskType) {
     case taskTypes.CREATE_TASKS_FOR_MISSING: return createTasksForMissing
     case taskTypes.GENERATE_DASHBOARD: return generateDashboard
     case taskTypes.REMOVE_DUPLICATES: return removeDuplicates
+    case taskTypes.REMOVE_DUPLICATE_CMS: return removeDuplicateCMS
     case taskTypes.CHECK_FOR_MISSING_DIVISIONS: return checkForMissingDivisions
+    case taskTypes.MIGRATE_WORKLOADS: return migrateWorkloads
+    case taskTypes.MIGRATE_CONTRACTED_HOURS: return migrateContractedHours
     case taskTypes.CREATE_OMIC_WORKLOAD: return createOmicWorkload
     case taskTypes.CALCULATE_OMIC_WORKLOAD_POINTS: return calculateOmicWorkloadPoints
   }

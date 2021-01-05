@@ -24,7 +24,7 @@ module.exports = function (ldu) {
       } else {
         // check if ldu name is still the same
         // if it isn't, update
-        if (result['description'] !== lduDbObject.description) {
+        if (result['description'] !== lduDbObject.description || result['region_id'] !== lduDbObject.region_id) {
           return updateLDU(lduDbObject)
             .then(function (id) {
               return id

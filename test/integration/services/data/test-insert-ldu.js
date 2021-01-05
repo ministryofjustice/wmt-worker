@@ -14,11 +14,15 @@ describe('app/services/data/insert-ldu', function () {
     lduHelper.addDependenciesForLdu()
       .then(function (insertedFields) {
         inserts = insertedFields
-        done()
+        lduHelper.addDependenciesForLdu()
+        .then(function (insertedFields2) {
+          inserts = inserts.concat(insertedFields2)
+          done()
+        })
       })
   })
 
-  it('should insert a new ldu record', function (done) {
+  it('should insert a new LDU record', function (done) {
     var code = 'U'
     var regionId = inserts.filter((item) => item.table === 'region')[0].id
     var originalLDUName = 'LDU NAME'
@@ -39,7 +43,7 @@ describe('app/services/data/insert-ldu', function () {
     })
   })
 
-  it('should update an existing ldu record', function (done) {
+  it('should update the name of an existing LDU record', function (done) {
     var code = 'U'
     var regionId = inserts.filter((item) => item.table === 'region')[0].id
     var newLDUName = 'TEST LDU NAME'
@@ -50,6 +54,25 @@ describe('app/services/data/insert-ldu', function () {
         .first()
         .then(function (result) {
           expect(result['id']).to.eq(lduUniqueIdentifier) // eslint-disable-line
+          expect(result['code']).to.eq(code) // eslint-disable-line
+          expect(result['description']).to.eq(newLDUName) // eslint-disable-line
+          done()
+        })
+    })
+  })
+
+  it('should update the Region ID of an existing LDU record', function (done) {
+    var code = 'U'
+    var regionId = inserts.filter((item) => item.table === 'region')[1].id
+    var newLDUName = 'TEST LDU NAME'
+    var ldu = new Ldu(undefined, regionId, code, newLDUName)
+    insertLdu(ldu).then(function (lduId) {
+      return knex.table('ldu')
+        .where({'id': lduId})
+        .first()
+        .then(function (result) {
+          expect(result['id']).to.eq(lduUniqueIdentifier) // eslint-disable-line
+          expect(result['region_id']).to.eq(regionId)
           expect(result['code']).to.eq(code) // eslint-disable-line
           expect(result['description']).to.eq(newLDUName) // eslint-disable-line
           done()
