@@ -17,7 +17,7 @@ const task = {
   workloadReportId: 5
 }
 
-describe('services/workers/create-workload', function () {
+describe('services/workers/create-omic-workload', function () {
   beforeEach(function () {
     createNewTasks = sinon.stub()
 

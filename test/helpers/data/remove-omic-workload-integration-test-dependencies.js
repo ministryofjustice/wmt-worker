@@ -9,7 +9,7 @@ const omIds = []
 const lduIds = []
 const regionIds = []
 module.exports = function () {
-  return knexStaging('omic_wmt_extract').select('id')
+  return knexStaging('omic_teams').select('id')
     .then(function (stagingIdsReturned) {
       stagingIdsReturned.forEach(function (id) {
         stagingIds.push(id.id)

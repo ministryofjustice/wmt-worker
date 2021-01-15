@@ -1,7 +1,7 @@
 const knex = require('../../../knex').stagingSchema
 
 module.exports = function () {
-  return knex('omic_wmt_extract').del()
+  return knex('omic_teams').del()
     .then(function () { return knex('flag_o_due').del() })
     .then(function () { return knex('flag_priority').del() })
     .then(function () { return knex('flag_upw').del() })

@@ -6,12 +6,12 @@ let stagingId
 module.exports = function () {
   return deleteStagingOmicRecords()
     .then(function () {
-      return knex('omic_wmt_extract')
-        .insert(omicWmtExtract)
-        .returning('id')
-        .then(function (id) {
-          stagingId = id
-          return stagingId
-        })
+      return knex('omic_teams')
+      .insert(omicWmtExtract)
+      .returning('id')
+      .then(function (id) {
+        stagingId = id
+        return stagingId
+      })
     })
 }
