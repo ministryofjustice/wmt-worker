@@ -3,7 +3,9 @@ const tableName = 'team'
 exports.seed = function (knex, Promise) {
   // Deletes ALL existing entries
   return knex(tableName).del()
-    .return(knex('ldu').select('id').limit(3))
+    .then(function () {
+      return knex('ldu').select('id').limit(3)
+    })
     .then(function (results) {
       const lduIds = results
       // Inserts seed entries

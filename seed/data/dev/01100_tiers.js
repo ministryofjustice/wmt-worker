@@ -5,7 +5,9 @@ const insertData = []
 exports.seed = function (knex, Promise) {
   // Deletes ALL existing entries
   return knex(tableName).del()
-    .return(knex('workload').select('id'))
+    .then(function () {
+      return knex('workload').select('id')
+    })
     .then(function (workloads) {
       workloads.forEach(function (workload) {
         insertData.push(

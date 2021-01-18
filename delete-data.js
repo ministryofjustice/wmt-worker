@@ -9,7 +9,9 @@ const seedDataFileNames = glob.sync('./seed/data/' + dataDirectory + '/[0...9]*.
 const databaseTableNames = seedDataFileNames.sort().reverse()
   .map((fileName) => fileName.substring(fileName.lastIndexOf('/') + 7, fileName.lastIndexOf('.')))
 
-Promise.each(databaseTableNames, (tableName) =>
-  knex(tableName).del().return()
-)
-  .finally(() => knex.destroy())
+Promise.each(databaseTableNames, function (tableName) {
+  return knex(tableName).del()
+})
+  .finally(function () {
+    return knex.destroy()
+  })
