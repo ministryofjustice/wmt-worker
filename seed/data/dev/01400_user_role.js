@@ -4,7 +4,7 @@ exports.seed = function (knex, Promise) {
   // Deletes ALL existing entries
   return knex(tableName).del()
     .then(function () {
-      return knex('users').select('id').limit(4)
+      return knex('users').select('id').limit(6)
     })
     .then(function (result) {
       users = result

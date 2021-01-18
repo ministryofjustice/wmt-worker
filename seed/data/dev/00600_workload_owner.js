@@ -4,7 +4,9 @@ exports.seed = function (knex, Promise) {
   // Deletes ALL existing entries
   let teamIds
   return knex(tableName).del()
-    .return(knex('team').select('id').limit(4))
+    .then(function () {
+      return knex('team').select('id').limit(4)
+    })
     .then(function (results) {
       teamIds = results
       return knex('offender_manager').select('id')

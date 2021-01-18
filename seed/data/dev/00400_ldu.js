@@ -4,7 +4,9 @@ exports.seed = function (knex, Promise) {
   // Deletes ALL existing entries
   let regionIds
   return knex(tableName).del()
-    .return(knex('region').select('id').limit(3))
+    .then(function () {
+      return knex('region').select('id').limit(3)
+    })
     .then(function (results) {
       regionIds = results
       // Inserts seed entries
