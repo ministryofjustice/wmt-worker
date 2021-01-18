@@ -1,7 +1,6 @@
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
-require('sinon-bluebird')
 
 const insertStagingOmicWorkload = require('../../../helpers/data/insert-staging-omic-workload-helper')
 const removeDependencies = require('../../../helpers/data/remove-omic-workload-integration-test-dependencies')
