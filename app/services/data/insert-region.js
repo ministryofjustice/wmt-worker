@@ -4,8 +4,8 @@ const regionTable = `${config.DB_APP_SCHEMA}.region`
 const updateRegion = require('./update-region')
 
 module.exports = function (region) {
-  var regionDbObject = {}
-  var regionId
+  const regionDbObject = {}
+  let regionId
 
   regionDbObject.code = region.code
   regionDbObject.description = region.description
@@ -21,13 +21,13 @@ module.exports = function (region) {
       } else {
         // check if region name is still the same
         // if it isn't, update
-        if (result['description'] !== regionDbObject.description) {
+        if (result.description !== regionDbObject.description) {
           return updateRegion(regionDbObject)
             .then(function (id) {
               return id
             })
         }
-        regionId = result['id']
+        regionId = result.id
       }
       return regionId
     })

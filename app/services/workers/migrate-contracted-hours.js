@@ -5,26 +5,26 @@ const getMostRecentlyUsedWorkloadOwnerId = require('../data/get-most-recently-us
 
 const updateContractedHours = require('../data/update-contracted-hours')
 const Promise = require('bluebird').Promise
-var duplicateWorkloads = []
-var oldAndNewCombined = []
-var recalculateWorkloadPoints = require('../data/recalculate-workload-points')
+const duplicateWorkloads = []
+const oldAndNewCombined = []
+const recalculateWorkloadPoints = require('../data/recalculate-workload-points')
 
 module.exports.execute = function (task) {
-  var regionIds = task.additionalData.regionIds
-  var reportId = task.workloadReportId
+  const regionIds = task.additionalData.regionIds
+  const reportId = task.workloadReportId
   return getNewWorkloadOwnerIds(regionIds)
     .then(function (newWorkloadOwners) {
       return Promise.each(newWorkloadOwners, function (workloadOwner) {
         return getOldWorkloadOwnerIds(workloadOwner.teamId, workloadOwner.forename, workloadOwner.surname, workloadOwner.teamName)
-        .then(function (oldWorkload) {
-          if (oldWorkload) {
-            if (oldWorkload.length > 1) {
-              duplicateWorkloads.push({old: [oldWorkload[0].woId, oldWorkload[1].woId], new: workloadOwner.woId})
-            } else if (oldWorkload.length === 1) {
-              oldAndNewCombined.push({old: oldWorkload[0].woId, new: workloadOwner.woId, contractedHours: oldWorkload[0].contractedHours, cameFromDuplicate: false})
+          .then(function (oldWorkload) {
+            if (oldWorkload) {
+              if (oldWorkload.length > 1) {
+                duplicateWorkloads.push({ old: [oldWorkload[0].woId, oldWorkload[1].woId], new: workloadOwner.woId })
+              } else if (oldWorkload.length === 1) {
+                oldAndNewCombined.push({ old: oldWorkload[0].woId, new: workloadOwner.woId, contractedHours: oldWorkload[0].contractedHours, cameFromDuplicate: false })
+              }
             }
-          }
-        })
+          })
       })
     })
     .then(function () {
@@ -32,7 +32,7 @@ module.exports.execute = function (task) {
         return getMostRecentlyUsedWorkloadOwnerId(duplicateWorkload.old)
           .then(function (w) {
             if (w) {
-              oldAndNewCombined.push({old: w.workloadOwnerId, new: duplicateWorkload.new, contractedHours: w.contractedHours, cameFromDuplicate: true})
+              oldAndNewCombined.push({ old: w.workloadOwnerId, new: duplicateWorkload.new, contractedHours: w.contractedHours, cameFromDuplicate: true })
             }
           })
       })

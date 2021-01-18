@@ -1,4 +1,4 @@
-var tableName = 'offender_manager_type'
+const tableName = 'offender_manager_type'
 exports.seed = function (knex, Promise) {
   // Deletes ALL existing entries
   return knex(tableName).del()

@@ -7,6 +7,6 @@ module.exports = function (offenderManager) {
     .update('type_id', offenderManager.type_id)
     .update('forename', offenderManager.forename)
     .update('surname', offenderManager.surname)
-    .where({'key': offenderManager.key})
+    .where({ key: offenderManager.key })
     .returning('id')
 }

@@ -1,10 +1,10 @@
 const knex = require('../../../knex').appSchema
-var Promise = require('bluebird').Promise
+const Promise = require('bluebird').Promise
 
 module.exports.addDependenciesForLdu = function () {
-  var inserts = []
+  const inserts = []
 
-  var promise = knex('region').returning('id').insert({})
+  const promise = knex('region').returning('id').insert({})
     .then(function (ids) {
       inserts.push({ table: 'region', id: ids[0] })
       return inserts

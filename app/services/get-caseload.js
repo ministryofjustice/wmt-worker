@@ -5,42 +5,42 @@ const caseType = require('../constants/case-type')
 module.exports = function () {
   return getCaseload()
     .then(function (results) {
-      var caseloadResults = parseCaseloadResults(results)
+      const caseloadResults = parseCaseloadResults(results)
       return {
         caseloadDetails: caseloadResults
       }
     })
 }
 
-var parseCaseloadResults = function (results) {
+const parseCaseloadResults = function (results) {
   // Overall cases
-  var allTotals = caseloadHelper.totalAllCases(results)
-  var caseloadGroupedByGrade = caseloadHelper.groupCaseloadByGrade(results)
-  var overallPercentages = caseloadHelper.calculateOverallPercentages(allTotals, caseloadGroupedByGrade)
+  const allTotals = caseloadHelper.totalAllCases(results)
+  const caseloadGroupedByGrade = caseloadHelper.groupCaseloadByGrade(results)
+  const overallPercentages = caseloadHelper.calculateOverallPercentages(allTotals, caseloadGroupedByGrade)
 
-  var overallResults = caseloadHelper.getCaseloadTierTotalsByTeamByGrade(results)
-  var overallSummary = caseloadHelper.getCaseloadSummaryTotalsByTeam(results)
+  let overallResults = caseloadHelper.getCaseloadTierTotalsByTeamByGrade(results)
+  const overallSummary = caseloadHelper.getCaseloadSummaryTotalsByTeam(results)
   // Custody cases
-  var custodyResults = caseloadHelper.getCaseloadByType(results, caseType.CUSTODY)
-  var custodySummary = caseloadHelper.getCaseloadTotalSummary(custodyResults)
+  let custodyResults = caseloadHelper.getCaseloadByType(results, caseType.CUSTODY)
+  const custodySummary = caseloadHelper.getCaseloadTotalSummary(custodyResults)
   // Community cases
-  var communityResults = caseloadHelper.getCaseloadByType(results, caseType.COMMUNITY)
-  var communitySummary = caseloadHelper.getCaseloadTotalSummary(communityResults)
+  let communityResults = caseloadHelper.getCaseloadByType(results, caseType.COMMUNITY)
+  const communitySummary = caseloadHelper.getCaseloadTotalSummary(communityResults)
   // License cases
-  var licenseResults = caseloadHelper.getCaseloadByType(results, caseType.LICENSE)
-  var licenseSummary = caseloadHelper.getCaseloadTotalSummary(licenseResults)
+  let licenseResults = caseloadHelper.getCaseloadByType(results, caseType.LICENSE)
+  const licenseSummary = caseloadHelper.getCaseloadTotalSummary(licenseResults)
 
-  var custodyTotals = caseloadHelper.totalAllCases(custodyResults)
-  var custodyGroupedByGrade = caseloadHelper.groupCaseloadByGrade(custodyResults)
-  var custodyPercentages = caseloadHelper.calculateOverallPercentages(custodyTotals, custodyGroupedByGrade)
+  const custodyTotals = caseloadHelper.totalAllCases(custodyResults)
+  const custodyGroupedByGrade = caseloadHelper.groupCaseloadByGrade(custodyResults)
+  const custodyPercentages = caseloadHelper.calculateOverallPercentages(custodyTotals, custodyGroupedByGrade)
 
-  var communityTotals = caseloadHelper.totalAllCases(communityResults)
-  var communityGroupedByGrade = caseloadHelper.groupCaseloadByGrade(communityResults)
-  var communityPercentages = caseloadHelper.calculateOverallPercentages(communityTotals, communityGroupedByGrade)
+  const communityTotals = caseloadHelper.totalAllCases(communityResults)
+  const communityGroupedByGrade = caseloadHelper.groupCaseloadByGrade(communityResults)
+  const communityPercentages = caseloadHelper.calculateOverallPercentages(communityTotals, communityGroupedByGrade)
 
-  var licenseTotals = caseloadHelper.totalAllCases(licenseResults)
-  var licenseGroupedByGrade = caseloadHelper.groupCaseloadByGrade(licenseResults)
-  var licensePercentages = caseloadHelper.calculateOverallPercentages(licenseTotals, licenseGroupedByGrade)
+  const licenseTotals = caseloadHelper.totalAllCases(licenseResults)
+  const licenseGroupedByGrade = caseloadHelper.groupCaseloadByGrade(licenseResults)
+  const licensePercentages = caseloadHelper.calculateOverallPercentages(licenseTotals, licenseGroupedByGrade)
 
   overallResults = caseloadHelper.calculateTeamTierPercentages(overallResults)
   replaceIncorrectPercentageAverages(overallResults.percentageTotals, overallPercentages)
@@ -54,7 +54,7 @@ var parseCaseloadResults = function (results) {
   licenseResults = caseloadHelper.aggregateTeamTierTotals(licenseResults)
   replaceIncorrectPercentageAverages(licenseResults.percentageTotals, licensePercentages)
 
-  var caseloadResults = {
+  const caseloadResults = {
     overallCaseloadDetails: overallResults,
     communityCaseloadDetails: communityResults,
     custodyCaseloadDetails: custodyResults,
@@ -67,8 +67,8 @@ var parseCaseloadResults = function (results) {
   return caseloadResults
 }
 
-var replaceIncorrectPercentageAverages = function (originalPercentageTotals, correctPercentages) {
-  var keys = Object.keys(originalPercentageTotals)
+const replaceIncorrectPercentageAverages = function (originalPercentageTotals, correctPercentages) {
+  const keys = Object.keys(originalPercentageTotals)
   keys.forEach(function (key) {
     originalPercentageTotals[key].a = correctPercentages[key].a
     originalPercentageTotals[key].b1 = correctPercentages[key].b1

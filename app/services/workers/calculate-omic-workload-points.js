@@ -1,4 +1,4 @@
-var Promise = require('bluebird').Promise
+const Promise = require('bluebird').Promise
 const logger = require('../log')
 const calculateOmicWorkloadPoints = require('wmt-probation-rules').calculateOmicWorkloadPoints
 const calculateNominalTarget = require('wmt-probation-rules').calculateNominalTarget
@@ -13,12 +13,12 @@ const operationTypes = require('../../constants/calculation-tasks-operation-type
 const checkForDuplicateOmicCalculation = require('../data/check-for-duplicate-omic-calculation')
 
 module.exports.execute = function (task) {
-  var startingStagingId = task.additionalData.workloadBatch.startingId
-  var batchSize = task.additionalData.workloadBatch.batchSize
-  var reportId = task.workloadReportId
-  var operationType = task.additionalData.operationType
-  var maxStagingId = startingStagingId + batchSize - 1
-  var message
+  const startingStagingId = task.additionalData.workloadBatch.startingId
+  const batchSize = task.additionalData.workloadBatch.batchSize
+  const reportId = task.workloadReportId
+  let operationType = task.additionalData.operationType
+  const maxStagingId = startingStagingId + batchSize - 1
+  let message
 
   if (batchSize <= 0) {
     logger.error('Batchsize must be greater than 0')
@@ -30,33 +30,33 @@ module.exports.execute = function (task) {
   }
   logger.info(message)
 
-  var isT2a = false
-  var pointsConfigurationPromise = getWorkloadPointsConfiguration(isT2a)
+  let isT2a = false
+  const pointsConfigurationPromise = getWorkloadPointsConfiguration(isT2a)
   isT2a = true
-  var t2aPointsConfigurationPromise = getWorkloadPointsConfiguration(isT2a)
+  const t2aPointsConfigurationPromise = getWorkloadPointsConfiguration(isT2a)
 
   return parseOmicAppWorkloads(startingStagingId, maxStagingId, batchSize, reportId).then(function (workloads) {
     return Promise.each(workloads, function (workloadResult) {
-      var workload = workloadResult.values
-      var workloadId = workloadResult.id
-      var getOffenderManagerTypePromise = getOffenderManagerTypeId(workload.workloadOwnerId)
-      var getContractedHoursPromise = getContractedHours(workload.workloadOwnerId)
-      var reductions = 0
+      const workload = workloadResult.values
+      const workloadId = workloadResult.id
+      const getOffenderManagerTypePromise = getOffenderManagerTypeId(workload.workloadOwnerId)
+      const getContractedHoursPromise = getContractedHours(workload.workloadOwnerId)
+      const reductions = 0
 
       return pointsConfigurationPromise.then(function (pointsConfiguration) {
-        var caseTypeWeightings = pointsConfiguration.values
+        const caseTypeWeightings = pointsConfiguration.values
         return t2aPointsConfigurationPromise.then(function (t2aPointsConfiguration) {
-          var t2aCaseTypeWeightings = t2aPointsConfiguration.values
-          var workloadPointsBreakdown = calculateOmicWorkloadPoints(workload, caseTypeWeightings, t2aCaseTypeWeightings)
+          const t2aCaseTypeWeightings = t2aPointsConfiguration.values
+          const workloadPointsBreakdown = calculateOmicWorkloadPoints(workload, caseTypeWeightings, t2aCaseTypeWeightings)
           return getContractedHoursPromise.then(function (contractedHours) {
             return getOffenderManagerTypePromise.then(function (offenderManagerTypeId) {
-              var nominalTarget = calculateNominalTarget(offenderManagerTypeId, caseTypeWeightings.pointsConfiguration.defaultNominalTargets)
-              var availablePoints = calculateAvailablePoints(nominalTarget, offenderManagerTypeId, contractedHours,
+              const nominalTarget = calculateNominalTarget(offenderManagerTypeId, caseTypeWeightings.pointsConfiguration.defaultNominalTargets)
+              let availablePoints = calculateAvailablePoints(nominalTarget, offenderManagerTypeId, contractedHours,
                 reductions, caseTypeWeightings.pointsConfiguration.defaultContractedHours)
               if (availablePoints === null) {
                 availablePoints = 0
               }
-              var armsTotalCases = workload.armsCommunityCases + workload.armsLicenseCases
+              const armsTotalCases = workload.armsCommunityCases + workload.armsLicenseCases
               return checkForDuplicateOmicCalculation(reportId, workloadId)
                 .then(function (result) {
                   // check if calculation already exists when the operatioType is INSERT
@@ -67,35 +67,35 @@ module.exports.execute = function (task) {
                   switch (operationType) {
                     case operationTypes.INSERT:
                       return insertOmicWorkloadPointsCalculations(
-                              reportId,
-                              pointsConfiguration.id,
-                              t2aPointsConfiguration.id,
-                              workloadId,
-                              workloadPointsBreakdown.custodyTierPoints,
-                              workloadPointsBreakdown.projectedLicenseTierPoints,
-                              workloadPointsBreakdown.sdrPoints,
-                              workloadPointsBreakdown.sdrConversionPoints,
-                              workloadPointsBreakdown.paromsPoints,
-                              nominalTarget,
-                              availablePoints,
-                              contractedHours,
-                              armsTotalCases)
+                        reportId,
+                        pointsConfiguration.id,
+                        t2aPointsConfiguration.id,
+                        workloadId,
+                        workloadPointsBreakdown.custodyTierPoints,
+                        workloadPointsBreakdown.projectedLicenseTierPoints,
+                        workloadPointsBreakdown.sdrPoints,
+                        workloadPointsBreakdown.sdrConversionPoints,
+                        workloadPointsBreakdown.paromsPoints,
+                        nominalTarget,
+                        availablePoints,
+                        contractedHours,
+                        armsTotalCases)
 
                     case operationTypes.UPDATE:
                       return updateOmicWorkloadPointsCalculations(
-                              reportId,
-                              pointsConfiguration.id,
-                              t2aPointsConfiguration.id,
-                              workloadId,
-                              workloadPointsBreakdown.custodyTierPoints,
-                              workloadPointsBreakdown.projectedLicenseTierPoints,
-                              workloadPointsBreakdown.sdrPoints,
-                              workloadPointsBreakdown.sdrConversionPoints,
-                              workloadPointsBreakdown.paromsPoints,
-                              nominalTarget,
-                              availablePoints,
-                              contractedHours,
-                              armsTotalCases)
+                        reportId,
+                        pointsConfiguration.id,
+                        t2aPointsConfiguration.id,
+                        workloadId,
+                        workloadPointsBreakdown.custodyTierPoints,
+                        workloadPointsBreakdown.projectedLicenseTierPoints,
+                        workloadPointsBreakdown.sdrPoints,
+                        workloadPointsBreakdown.sdrConversionPoints,
+                        workloadPointsBreakdown.paromsPoints,
+                        nominalTarget,
+                        availablePoints,
+                        contractedHours,
+                        armsTotalCases)
                     default:
                       throw new Error('Operation type of ' + operationType + ' is not valid. Should be ' + operationTypes.INSERT + ' or ' + operationTypes.UPDATE)
                   }

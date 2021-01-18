@@ -13,8 +13,8 @@ const submittingAgent = require('../../constants/task-submitting-agent')
 
 module.exports.execute = function (task) {
   const batchSize = 1
-  var tasks = []
-  var workloadReportId
+  let tasks = []
+  let workloadReportId
 
   return getMostRecentWorkloadReport()
     .then(function (id) {
@@ -35,11 +35,11 @@ module.exports.execute = function (task) {
     })
 }
 
-var createTaskObjects = function (ids, workloadReportId, batchSize) {
-  var tasks = []
+const createTaskObjects = function (ids, workloadReportId, batchSize) {
+  const tasks = []
   ids.forEach(function (id) {
-    var additionalData = new Batch(id.id, batchSize)
-    var taskToWrite = new Task(
+    const additionalData = new Batch(id.id, batchSize)
+    const taskToWrite = new Task(
       undefined,
       submittingAgent.WORKER,
       taskType.CREATE_WORKLOAD,

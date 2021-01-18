@@ -1,5 +1,5 @@
 exports.up = function (knex, promise) {
-  var sql = 'ALTER TABLE app.workload ADD total_t2a_cases INT NOT NULL CONSTRAINT workload_total_t2a_cases_default DEFAULT 0;'
+  let sql = 'ALTER TABLE app.workload ADD total_t2a_cases INT NOT NULL CONSTRAINT workload_total_t2a_cases_default DEFAULT 0;'
   sql += 'ALTER TABLE app.workload ADD total_t2a_community_cases INT NOT NULL CONSTRAINT workload_total_t2a_community_cases_default DEFAULT 0;'
   sql += 'ALTER TABLE app.workload ADD total_t2a_custody_cases INT NOT NULL CONSTRAINT workload_total_t2a_custody_cases_default DEFAULT 0;'
   sql += 'ALTER TABLE app.workload ADD total_t2a_license_cases INT NOT NULL CONSTRAINT workload_total_t2a_license_cases_default DEFAULT 0;'
@@ -9,7 +9,7 @@ exports.up = function (knex, promise) {
 }
 
 exports.down = function (knex, Promise) {
-  var sql = 'ALTER TABLE app.workload DROP CONSTRAINT workload_total_t2a_cases_default;'
+  let sql = 'ALTER TABLE app.workload DROP CONSTRAINT workload_total_t2a_cases_default;'
   sql += 'ALTER TABLE app.workload DROP CONSTRAINT workload_total_t2a_community_cases_default;'
   sql += 'ALTER TABLE app.workload DROP CONSTRAINT workload_total_t2a_custody_cases_default;'
   sql += 'ALTER TABLE app.workload DROP CONSTRAINT workload_total_t2a_license_cases_default;'

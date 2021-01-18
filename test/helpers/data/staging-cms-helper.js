@@ -1,14 +1,14 @@
 const knex = require('../../../knex').stagingSchema
-var Promise = require('bluebird').Promise
+const Promise = require('bluebird').Promise
 
-var inserts = []
+const inserts = []
 
 module.exports.insertDependencies = function (cmsRecords) {
   return knex('cms')
     .insert(cmsRecords)
     .returning('id')
     .then(function (id) {
-      inserts.push({table: 'cms', id: id[0]})
+      inserts.push({ table: 'cms', id: id[0] })
       return inserts
     })
 }

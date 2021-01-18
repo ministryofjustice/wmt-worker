@@ -1,6 +1,6 @@
 const locations = require('wmt-probation-rules').Locations
-var tableName = 'tiers'
-var insertData = []
+const tableName = 'tiers'
+const insertData = []
 
 exports.seed = function (knex, Promise) {
   // Deletes ALL existing entries

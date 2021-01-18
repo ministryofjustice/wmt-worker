@@ -4,9 +4,9 @@ const lduTable = `${config.DB_APP_SCHEMA}.ldu`
 const updateLDU = require('./update-ldu')
 
 module.exports = function (ldu) {
-  var lduId
+  let lduId
 
-  var lduDbObject = {}
+  const lduDbObject = {}
   lduDbObject.region_id = ldu.regionId
   lduDbObject.code = ldu.code
   lduDbObject.description = ldu.description
@@ -24,13 +24,13 @@ module.exports = function (ldu) {
       } else {
         // check if ldu name is still the same
         // if it isn't, update
-        if (result['description'] !== lduDbObject.description || result['region_id'] !== lduDbObject.region_id) {
+        if (result.description !== lduDbObject.description || result.region_id !== lduDbObject.region_id) {
           return updateLDU(lduDbObject)
             .then(function (id) {
               return id
             })
         }
-        lduId = result['id']
+        lduId = result.id
       }
       return lduId
     })

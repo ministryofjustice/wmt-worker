@@ -1,9 +1,9 @@
-var tableName = 'workload_points_calculations'
+const tableName = 'workload_points_calculations'
 
 exports.seed = function (knex, Promise) {
-  var existingReportIds
-  var currentPointsId
-  var currentT2aPointsId
+  let existingReportIds
+  let currentPointsId
+  let currentT2aPointsId
   // Deletes ALL existing entries
   return knex(tableName).del()
     .then(function () {
@@ -25,16 +25,16 @@ exports.seed = function (knex, Promise) {
         .groupBy('workload_owner.id')
     })
     .then(function (workloadIds) {
-      var effectiveFromDate = new Date()
+      const effectiveFromDate = new Date()
       effectiveFromDate.setDate(effectiveFromDate.getDate() - 365)
       // Inserts seed entries
 
-      var workloadPointsCalculationsToInsert = []
+      const workloadPointsCalculationsToInsert = []
 
-      for (var wr = 0; wr < existingReportIds.length; wr++) {
-        for (var w = 0; w < workloadIds.length; w++) {
-          var reportId = existingReportIds[wr]
-          var workloadId = workloadIds[w]
+      for (let wr = 0; wr < existingReportIds.length; wr++) {
+        for (let w = 0; w < workloadIds.length; w++) {
+          const reportId = existingReportIds[wr]
+          const workloadId = workloadIds[w]
 
           workloadPointsCalculationsToInsert.push({
             workload_id: workloadId.id,
@@ -55,9 +55,9 @@ exports.seed = function (knex, Promise) {
         }
       }
 
-      var splitValue = workloadPointsCalculationsToInsert.length / 2
-      var partOneWpcs = workloadPointsCalculationsToInsert.slice(0, splitValue)
-      var partTwoWpcs = workloadPointsCalculationsToInsert.slice(splitValue, workloadPointsCalculationsToInsert.length)
+      const splitValue = workloadPointsCalculationsToInsert.length / 2
+      const partOneWpcs = workloadPointsCalculationsToInsert.slice(0, splitValue)
+      const partTwoWpcs = workloadPointsCalculationsToInsert.slice(splitValue, workloadPointsCalculationsToInsert.length)
       return knex('workload_points_calculations').insert(partOneWpcs)
         .then(function (results) {
           return knex('workload_points_calculations').insert(partTwoWpcs)

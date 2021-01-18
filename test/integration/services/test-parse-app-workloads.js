@@ -5,8 +5,8 @@ const parseAppWorkloads = require('../../../app/services/parse-app-workloads')
 
 const Workload = require('wmt-probation-rules').Workload
 
-var inserts = []
-var initialWorkloadStagingId
+let inserts = []
+let initialWorkloadStagingId
 
 describe('services/parse-app-workloads', function () {
   before(function (done) {
@@ -19,16 +19,16 @@ describe('services/parse-app-workloads', function () {
   })
 
   it('should retrieve all the workloads with staging ids within a given range', function (done) {
-    var batchSize = 2
-    var maxStagingId = initialWorkloadStagingId + batchSize - 1
-    var workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
-    var workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
+    const batchSize = 2
+    const maxStagingId = initialWorkloadStagingId + batchSize - 1
+    const workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
+    const workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
 
     parseAppWorkloads(initialWorkloadStagingId, maxStagingId, batchSize, workloadReportId)
       .then(function (queryResults) {
         expect(queryResults.length).to.equal(batchSize)
 
-        var firstWorkload = queryResults[0].values
+        const firstWorkload = queryResults[0].values
         expect(firstWorkload).to.be.an.instanceof(Workload)
         expect(firstWorkload.workloadOwnerId).to.equal(workloadOwnerId)
         expect(firstWorkload.totalCases).to.equal(20)
@@ -49,23 +49,23 @@ describe('services/parse-app-workloads', function () {
         expect(firstWorkload.armsCommunityCases).to.equal(11)
         expect(firstWorkload.armsLicenseCases).to.equal(12)
 
-        var secondWorkload = queryResults[1].values
+        const secondWorkload = queryResults[1].values
         expect(secondWorkload.totalCases).to.equal(30)
         done()
       })
   })
 
   it('should retrieve a workload for a given staging id with a batchSize of 1', function (done) {
-    var batchSize = 1
-    var maxStagingId = initialWorkloadStagingId
-    var workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
-    var workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
+    const batchSize = 1
+    const maxStagingId = initialWorkloadStagingId
+    const workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
+    const workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
 
     parseAppWorkloads(initialWorkloadStagingId, maxStagingId, batchSize, workloadReportId)
       .then(function (queryResults) {
         expect(queryResults.length).to.equal(batchSize)
 
-        var firstWorkload = queryResults[0].values
+        const firstWorkload = queryResults[0].values
         expect(firstWorkload).to.be.an.instanceof(Workload)
         expect(firstWorkload.workloadOwnerId).to.equal(workloadOwnerId)
         expect(firstWorkload.totalCases).to.equal(20)

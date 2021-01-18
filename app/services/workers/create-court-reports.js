@@ -12,41 +12,41 @@ const insertCourtReports = require('../data/insert-app-court-reports')
 const createNewTasks = require('../data/create-tasks')
 
 module.exports.execute = function (task) {
-  var batchSize = task.additionalData.batchSize
-  var startingStagingId = task.additionalData.startingId
-  var endingStagingId = startingStagingId + (batchSize - 1)
-  var workloadReportId = task.workloadReportId
+  const batchSize = task.additionalData.batchSize
+  const startingStagingId = task.additionalData.startingId
+  const endingStagingId = startingStagingId + (batchSize - 1)
+  const workloadReportId = task.workloadReportId
 
   return getStgCourtReporters([startingStagingId, endingStagingId])
-  .then(function (stagingCourtReports) {
-    return Promise.each(stagingCourtReports, function (stagingCourtReport) {
-      var caseSummary = stagingCourtReport.casesSummary
-      if (caseSummary.omKey !== null) {
-        return insertWorkloadOwnerAndDependencies(caseSummary)
-        .then(function (workloadOwnerId) {
-          var courtReportToInsert = mapCourtReports(stagingCourtReport, parseInt(workloadOwnerId), parseInt(workloadReportId))
-          return insertCourtReports(courtReportToInsert)
-          .then(function (insertedId) {
-            logger.info('Court Report with id ' + insertedId + ' added')
-          })
-        })
-      }
-    })
-    .then(function () {
-      var reductionsWorkerTask = new Task(
-                undefined,
-                submittingAgent.WORKER,
-                taskType.PROCESS_REDUCTIONS_COURT_REPORTERS,
-                task.additionalData,
-                workloadReportId,
-                undefined,
-                undefined,
-                taskStatus.AWAITING_DUPLICATE_CHECK
-                )
-      return createNewTasks([reductionsWorkerTask])
-      .then(function () {
-        logger.info('Court Reporters Reduction Worker Task created')
+    .then(function (stagingCourtReports) {
+      return Promise.each(stagingCourtReports, function (stagingCourtReport) {
+        const caseSummary = stagingCourtReport.casesSummary
+        if (caseSummary.omKey !== null) {
+          return insertWorkloadOwnerAndDependencies(caseSummary)
+            .then(function (workloadOwnerId) {
+              const courtReportToInsert = mapCourtReports(stagingCourtReport, parseInt(workloadOwnerId), parseInt(workloadReportId))
+              return insertCourtReports(courtReportToInsert)
+                .then(function (insertedId) {
+                  logger.info('Court Report with id ' + insertedId + ' added')
+                })
+            })
+        }
       })
+        .then(function () {
+          const reductionsWorkerTask = new Task(
+            undefined,
+            submittingAgent.WORKER,
+            taskType.PROCESS_REDUCTIONS_COURT_REPORTERS,
+            task.additionalData,
+            workloadReportId,
+            undefined,
+            undefined,
+            taskStatus.AWAITING_DUPLICATE_CHECK
+          )
+          return createNewTasks([reductionsWorkerTask])
+            .then(function () {
+              logger.info('Court Reporters Reduction Worker Task created')
+            })
+        })
     })
-  })
 }

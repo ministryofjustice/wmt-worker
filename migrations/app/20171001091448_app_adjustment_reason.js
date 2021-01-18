@@ -8,10 +8,10 @@ exports.up = function (knex, Promise) {
     table.integer('category_id').unsigned().notNullable().references('adjustment_category.id')
     table.integer('points')
   })
-  .catch(function (error) {
-    logger.error(error)
-    throw error
-  })
+    .catch(function (error) {
+      logger.error(error)
+      throw error
+    })
 }
 
 exports.down = function (knex, Promise) {

@@ -1,4 +1,4 @@
-var Promise = require('bluebird').Promise
+const Promise = require('bluebird').Promise
 const logger = require('../log')
 const getAppCourtReports = require('../data/get-app-court-reports')
 const insertCourtReportsCalculations = require('../data/insert-court-reports-calculation')
@@ -9,12 +9,12 @@ const getContractedHours = require('../data/get-contracted-hours')
 const operationTypes = require('../../constants/calculation-tasks-operation-type')
 
 module.exports.execute = function (task) {
-  var startingStagingId = task.additionalData.workloadBatch.startingId
-  var batchSize = task.additionalData.workloadBatch.batchSize
-  var reportId = task.workloadReportId
-  var operationType = task.additionalData.operationType
-  var maxStagingId = startingStagingId + batchSize - 1
-  var message
+  const startingStagingId = task.additionalData.workloadBatch.startingId
+  const batchSize = task.additionalData.workloadBatch.batchSize
+  const reportId = task.workloadReportId
+  const operationType = task.additionalData.operationType
+  const maxStagingId = startingStagingId + batchSize - 1
+  let message
 
   if (batchSize <= 0) {
     logger.error('Batchsize must be greater than 0')
@@ -27,48 +27,48 @@ module.exports.execute = function (task) {
   logger.info(message)
 
   return getAppCourtReports(startingStagingId, maxStagingId, reportId)
-  .then(function (courtReports) {
-    return Promise.each(courtReports, function (courtReport) {
-      var workloadOwnerId = courtReport.workloadOwnerId
-      var courtReportsId = courtReport.id
+    .then(function (courtReports) {
+      return Promise.each(courtReports, function (courtReport) {
+        const workloadOwnerId = courtReport.workloadOwnerId
+        const courtReportsId = courtReport.id
 
-      return getWorkloadPointsConfiguration()
-      .then(function (pointsConfiguration) {
-        return getAppReductions(workloadOwnerId)
-        .then(function (reductions) {
-          return getContractedHours(workloadOwnerId)
-          .then(function (contractedHours) {
-            switch (operationType) {
-              case operationTypes.INSERT:
-                return insertCourtReportsCalculations(
-                  {
-                    workloadReportId: reportId,
-                    workloadPointsId: pointsConfiguration.id,
-                    courtReportsId: courtReportsId,
-                    contractedHours: contractedHours,
-                    reductionHours: reductions
-                  }
-                )
-              case operationTypes.UPDATE:
-                return updateCourtReportsCalculations(
-                  {
-                    workloadReportId: reportId,
-                    workloadPointsId: pointsConfiguration.id,
-                    courtReportsId: courtReportsId,
-                    contractedHours: contractedHours,
-                    reductionHours: reductions
-                  }
-                )
-              default:
-                throw new Error('Operation type of ' + operationType + ' is not valid. Should be ' + operationTypes.INSERT + ' or ' + operationTypes.UPDATE)
-            }
+        return getWorkloadPointsConfiguration()
+          .then(function (pointsConfiguration) {
+            return getAppReductions(workloadOwnerId)
+              .then(function (reductions) {
+                return getContractedHours(workloadOwnerId)
+                  .then(function (contractedHours) {
+                    switch (operationType) {
+                      case operationTypes.INSERT:
+                        return insertCourtReportsCalculations(
+                          {
+                            workloadReportId: reportId,
+                            workloadPointsId: pointsConfiguration.id,
+                            courtReportsId: courtReportsId,
+                            contractedHours: contractedHours,
+                            reductionHours: reductions
+                          }
+                        )
+                      case operationTypes.UPDATE:
+                        return updateCourtReportsCalculations(
+                          {
+                            workloadReportId: reportId,
+                            workloadPointsId: pointsConfiguration.id,
+                            courtReportsId: courtReportsId,
+                            contractedHours: contractedHours,
+                            reductionHours: reductions
+                          }
+                        )
+                      default:
+                        throw new Error('Operation type of ' + operationType + ' is not valid. Should be ' + operationTypes.INSERT + ' or ' + operationTypes.UPDATE)
+                    }
+                  })
+              })
           })
-        })
       })
+    }).catch(function (error) {
+      logger.error('Unable to retrieve court-reports with staging ids ' + startingStagingId + ' - ' + maxStagingId + ', for workload report ' + reportId)
+      logger.error(error)
+      throw (error)
     })
-  }).catch(function (error) {
-    logger.error('Unable to retrieve court-reports with staging ids ' + startingStagingId + ' - ' + maxStagingId + ', for workload report ' + reportId)
-    logger.error(error)
-    throw (error)
-  })
 }

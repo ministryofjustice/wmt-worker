@@ -4,7 +4,7 @@ const log = require('./log')
 const Promise = require('bluebird').Promise
 
 module.exports = function () {
-  var ipAddressesArray = []
+  let ipAddressesArray = []
   if (ipAddresses !== undefined) {
     ipAddressesArray = ipAddresses.split(',')
   }

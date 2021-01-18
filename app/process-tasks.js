@@ -24,7 +24,7 @@ const createNewTasks = require('./services/data/create-tasks')
 const submittingAgent = require('./constants/task-submitting-agent')
 
 module.exports = function () {
-  var batchSize = parseInt(config.ASYNC_WORKER_BATCH_SIZE, 10)
+  const batchSize = parseInt(config.ASYNC_WORKER_BATCH_SIZE, 10)
   // Check if in progress count === 0
   return getTaskInProgressCount()
     .then(function (count) {
@@ -42,10 +42,10 @@ function processTasks (batchSize) {
       log.info(`found ${tasks.length} tasks`)
       if (tasks.length === 0) { return }
 
-      var promiseArray = []
+      const promiseArray = []
 
-      for (var task of tasks) {
-        var worker = getWorkerForTask(task.type)
+      for (const task of tasks) {
+        const worker = getWorkerForTask(task.type)
 
         if (worker) {
           promiseArray.push(executeWorkerForTaskType(worker, task))
@@ -64,63 +64,63 @@ function executeWorkerForTaskType (worker, task) {
   return worker.execute(task)
     .then(function () {
       return completeTaskWithStatus(task.id, taskStatus.COMPLETE)
-      .then(function () {
-        if (task.type === taskType.CALCULATE_WORKLOAD_POINTS && task.additionalData.operationType === operationTypes.INSERT) {
-          return countTaskStatuses(task)
-          .then(function (totals) {
-            if (totals.numPending === 0 && totals.numInProgress === 0 && totals.numFailed === 0) {
-              return closePreviousWorkloadReport(task.workloadReportId)
-              .then(function (previousWorkloadReportId) {
-                return updateWorkloadReportStatus(previousWorkloadReportId, workloadReportStatus.COMPLETE)
-                .then(function () {
-                  var removeDuplicatesTask = new Task(
-                    undefined,
-                    submittingAgent.WORKER,
-                    taskType.REMOVE_DUPLICATES,
-                    undefined,
-                    task.workloadReportId,
-                    undefined,
-                    undefined,
-                    taskStatus.PENDING
-                  )
-                  return createNewTasks([removeDuplicatesTask])
-                })
-                .then((result) => {
-                  return callWebRefreshEndpoint()
-                })
+        .then(function () {
+          if (task.type === taskType.CALCULATE_WORKLOAD_POINTS && task.additionalData.operationType === operationTypes.INSERT) {
+            return countTaskStatuses(task)
+              .then(function (totals) {
+                if (totals.numPending === 0 && totals.numInProgress === 0 && totals.numFailed === 0) {
+                  return closePreviousWorkloadReport(task.workloadReportId)
+                    .then(function (previousWorkloadReportId) {
+                      return updateWorkloadReportStatus(previousWorkloadReportId, workloadReportStatus.COMPLETE)
+                        .then(function () {
+                          const removeDuplicatesTask = new Task(
+                            undefined,
+                            submittingAgent.WORKER,
+                            taskType.REMOVE_DUPLICATES,
+                            undefined,
+                            task.workloadReportId,
+                            undefined,
+                            undefined,
+                            taskStatus.PENDING
+                          )
+                          return createNewTasks([removeDuplicatesTask])
+                        })
+                        .then((result) => {
+                          return callWebRefreshEndpoint()
+                        })
+                    })
+                }
               })
-            }
-          })
-        } else if (Object.keys(triggerableTasks).includes(task.type)) {
-          var deleteTasks = []
-          return checkAllTasksForTypeAreComplete(task.type, task.workloadReportId)
-          .then(function (result) {
-            if (result) {
-              // check for any duplicate tasks and remove if necessary
-              checkForDuplicateTasks(triggerableTasks[task.type], task.workloadReportId)
-                .then(function (duplicatesResults) {
-                  if (duplicatesResults.length > 0) {
-                    duplicatesResults.forEach(function (result) {
-                      deleteTasks.push(deleteDuplicateTask(result.additionalData, triggerableTasks[task.type], task.workloadReportId, result.theCount))
+          } else if (Object.keys(triggerableTasks).includes(task.type)) {
+            const deleteTasks = []
+            return checkAllTasksForTypeAreComplete(task.type, task.workloadReportId)
+              .then(function (result) {
+                if (result) {
+                  // check for any duplicate tasks and remove if necessary
+                  checkForDuplicateTasks(triggerableTasks[task.type], task.workloadReportId)
+                    .then(function (duplicatesResults) {
+                      if (duplicatesResults.length > 0) {
+                        duplicatesResults.forEach(function (result) {
+                          deleteTasks.push(deleteDuplicateTask(result.additionalData, triggerableTasks[task.type], task.workloadReportId, result.theCount))
+                        })
+                        Promise.all(deleteTasks).then(function () {
+                          return setTasksToPending(triggerableTasks[task.type], task.workloadReportId)
+                        })
+                      } else {
+                        return setTasksToPending(triggerableTasks[task.type], task.workloadReportId)
+                      }
                     })
-                    Promise.all(deleteTasks).then(function () {
-                      return setTasksToPending(triggerableTasks[task.type], task.workloadReportId)
-                    })
-                  } else {
-                    return setTasksToPending(triggerableTasks[task.type], task.workloadReportId)
-                  }
-                })
-              // Set Mapped tasks to pending
-            }
-          })
-        } else if (task.type === taskType.CALCULATE_WORKLOAD_POINTS && task.additionalData.operationType === operationTypes.UPDATE) {
-          return callWebRefreshEndpoint()
-        }
-        log.info(`completed task: ${task.id}-${task.type}`)
-      })
+                  // Set Mapped tasks to pending
+                }
+              })
+          } else if (task.type === taskType.CALCULATE_WORKLOAD_POINTS && task.additionalData.operationType === operationTypes.UPDATE) {
+            return callWebRefreshEndpoint()
+          }
+          log.info(`completed task: ${task.id}-${task.type}`)
+        })
     }).catch(function (error) {
       log.error(`error running task: ${task.id}-${task.type}, error: ${error}`)
-      log.error({error: error})
+      log.error({ error: error })
       if (task.type === taskType.CALCULATE_WORKLOAD_POINTS) {
         updateWorkloadReportStatus(task.workloadReportId, workloadReportStatus.FAILED)
         updateWorkloadReportEffectiveTo(task.workloadReportId, new Date())

@@ -1,24 +1,23 @@
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
-require('sinon-bluebird')
 
 const Task = require('../../../../app/services/domain/task')
 const taskType = require('../../../../app/constants/task-type')
 const taskStatus = require('../../../../app/constants/task-status')
 const submittingAgent = require('../../../../app/constants/task-submitting-agent')
 
-var createCourtReports
-var getStagingCourtReporters
-var insertWorkloadOwnerAndDependencies
-var insertCourtReports
-var createNewTasks
-var probationRulesStub
+let createCourtReports
+let getStagingCourtReporters
+let insertWorkloadOwnerAndDependencies
+let insertCourtReports
+let createNewTasks
+let probationRulesStub
 
-var workloadOwnerId = 1
-var courtReportsId = 2
+const workloadOwnerId = 1
+const courtReportsId = 2
 
-var task = {
+const task = {
   additionalData: {
     batchSize: 3,
     startingId: 4
@@ -26,8 +25,8 @@ var task = {
   workloadReportId: 5
 }
 
-var endingStagingId = task.additionalData.startingId + (task.additionalData.batchSize - 1)
-var stagingCourtReports = [
+const endingStagingId = task.additionalData.startingId + (task.additionalData.batchSize - 1)
+const stagingCourtReports = [
   {
     casesSummary: {
       omKey: 'TestOmKey',
@@ -36,9 +35,9 @@ var stagingCourtReports = [
     }
   }
 ]
-var appCourtReports = 'This is a fake app court reports'
+const appCourtReports = 'This is a fake app court reports'
 
-var nextTask = new Task(
+const nextTask = new Task(
   undefined,
   submittingAgent.WORKER,
   taskType.PROCESS_REDUCTIONS_COURT_REPORTERS,
@@ -76,12 +75,12 @@ describe('services/workers/create-court-reports', function () {
     probationRulesStub.mapCourtReports.returns(appCourtReports)
 
     return createCourtReports.execute(task)
-    .then(function (result) {
-      expect(getStagingCourtReporters.calledWith([task.additionalData.startingId, endingStagingId])).to.be.equal(true)
-      expect(insertWorkloadOwnerAndDependencies.calledWith(stagingCourtReports[0].casesSummary)).to.be.equal(true)
-      expect(insertCourtReports.calledWith(appCourtReports)).to.be.equal(true)
-      expect(probationRulesStub.mapCourtReports.calledWith(stagingCourtReports, workloadOwnerId, task.workloadReportId))
-      expect(createNewTasks.calledWith([nextTask])).to.be.eql(true)
-    })
+      .then(function (result) {
+        expect(getStagingCourtReporters.calledWith([task.additionalData.startingId, endingStagingId])).to.be.equal(true)
+        expect(insertWorkloadOwnerAndDependencies.calledWith(stagingCourtReports[0].casesSummary)).to.be.equal(true)
+        expect(insertCourtReports.calledWith(appCourtReports)).to.be.equal(true)
+        expect(probationRulesStub.mapCourtReports.calledWith(stagingCourtReports, workloadOwnerId, task.workloadReportId))
+        expect(createNewTasks.calledWith([nextTask])).to.be.eql(true)
+      })
   })
 })

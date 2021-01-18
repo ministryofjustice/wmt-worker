@@ -6,11 +6,11 @@ const moment = require('moment')
 const timeThreshold = require('../../../constants/time-threshold')
 
 describe('app/services/data/insert-offender-manager', function () {
-  var offenderManagerId
+  let offenderManagerId
 
-  var typeId
+  let typeId
   before(function (done) {
-    knex('offender_manager_type').returning('id').insert({description: 'test'})
+    knex('offender_manager_type').returning('id').insert({ description: 'test' })
       .then(function (id) {
         typeId = id[0]
         done()
@@ -18,13 +18,13 @@ describe('app/services/data/insert-offender-manager', function () {
   })
 
   it('should insert a new offender manager record', function (done) {
-    var key = '104FD'
-    var offenderManager = new OffenderManager(undefined, key, undefined, undefined, typeId, undefined)
+    const key = '104FD'
+    const offenderManager = new OffenderManager(undefined, key, undefined, undefined, typeId, undefined)
 
     insertOffenderManager(offenderManager).then(function (id) {
       offenderManagerId = id
       return knex.table('offender_manager')
-        .where({'id': id})
+        .where({ id: id })
         .first()
         .then(function (result) {
           expect(result['id']).to.not.be.null // eslint-disable-line
@@ -40,9 +40,9 @@ describe('app/services/data/insert-offender-manager', function () {
   })
 
   it('should update the grade of an existing offender manager', function (done) {
-    var key = '104FD'
-    var offenderManager
-    var newTypeId
+    const key = '104FD'
+    let offenderManager
+    let newTypeId
 
     knex('offender_manager_type').select('id').where('grade_code', 'PO')
       .then(function (id) {
@@ -51,7 +51,7 @@ describe('app/services/data/insert-offender-manager', function () {
         return insertOffenderManager(offenderManager).then(function (id) {
           offenderManagerId = id
           return knex.table('offender_manager')
-            .where({'id': id})
+            .where({ id: id })
             .first()
             .then(function (result) {
               expect(result['id']).to.not.be.null // eslint-disable-line
@@ -67,10 +67,10 @@ describe('app/services/data/insert-offender-manager', function () {
   })
 
   it('should update the forename of an existing offender manager', function (done) {
-    var key = '104FD'
-    var offenderManager
-    var newTypeId
-    var newForename = 'A.N'
+    const key = '104FD'
+    let offenderManager
+    let newTypeId
+    const newForename = 'A.N'
 
     knex('offender_manager_type').select('id').where('grade_code', 'PO')
       .then(function (id) {
@@ -79,7 +79,7 @@ describe('app/services/data/insert-offender-manager', function () {
         return insertOffenderManager(offenderManager).then(function (id) {
           offenderManagerId = id
           return knex.table('offender_manager')
-            .where({'id': id})
+            .where({ id: id })
             .first()
             .then(function (result) {
               expect(result['id']).to.not.be.null // eslint-disable-line
@@ -95,11 +95,11 @@ describe('app/services/data/insert-offender-manager', function () {
   })
 
   it('should update the surname of an existing offender manager', function (done) {
-    var key = '104FD'
-    var offenderManager
-    var newTypeId
-    var newForename = 'A.N'
-    var newSurname = 'OTHER'
+    const key = '104FD'
+    let offenderManager
+    let newTypeId
+    const newForename = 'A.N'
+    const newSurname = 'OTHER'
 
     knex('offender_manager_type').select('id').where('grade_code', 'PO')
       .then(function (id) {
@@ -108,7 +108,7 @@ describe('app/services/data/insert-offender-manager', function () {
         return insertOffenderManager(offenderManager).then(function (id) {
           offenderManagerId = id
           return knex.table('offender_manager')
-            .where({'id': id})
+            .where({ id: id })
             .first()
             .then(function (result) {
               expect(result['id']).to.not.be.null // eslint-disable-line
@@ -124,11 +124,11 @@ describe('app/services/data/insert-offender-manager', function () {
   })
 
   it('should update staff grade, forename and surname of an existing offender manager', function (done) {
-    var key = '104FD'
-    var offenderManager
-    var newTypeId
-    var newForename = 'JOE'
-    var newSurname = 'BLOGGS'
+    const key = '104FD'
+    let offenderManager
+    let newTypeId
+    const newForename = 'JOE'
+    const newSurname = 'BLOGGS'
 
     knex('offender_manager_type').select('id').where('grade_code', 'SPO')
       .then(function (id) {
@@ -137,7 +137,7 @@ describe('app/services/data/insert-offender-manager', function () {
         return insertOffenderManager(offenderManager).then(function (id) {
           offenderManagerId = id
           return knex.table('offender_manager')
-            .where({'id': id})
+            .where({ id: id })
             .first()
             .then(function (result) {
               expect(result['id']).to.not.be.null // eslint-disable-line

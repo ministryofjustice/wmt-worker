@@ -23,26 +23,26 @@ module.exports.execute = function (task) {
     .then(function (duplicateWorkloads) {
       return Promise.each(duplicateWorkloads, function (duplicateWorkload) {
         return getDuplicateWorkloadIds(duplicateWorkload.link_id)
-        .then(function (workloadIds) {
-          var workloadIdsToRemove = []
-          if (workloadIds.length > 1) {
-            workloadIds.forEach(function (workloadId) {
-              workloadIdsToRemove.push(workloadId.workload_id)
-            })
-            workloadIdsToRemove = workloadIdsToRemove.sort()
-            var workloadIdNotRemoved = workloadIdsToRemove[0]
-            workloadIdsToRemove = workloadIdsToRemove.slice(1)
-            return deleteTiersForWorkloadIds(workloadIdsToRemove).then(function () {
-              return deleteCaseDetailsForWorkloadIds(workloadIdsToRemove).then(function () {
-                return deleteWorkloadPointsCalculationsForWorkloadIds(workloadIdsToRemove).then(function () {
-                  return deleteWorkloadsForIds(workloadIdsToRemove).then(function () {
-                    logger.info('REMOVE-DUPLICATES - Duplicate Workload Removed', 'Duplicate of ' + workloadIdNotRemoved + ' removed.', 'Removed ' + workloadIdsToRemove)
+          .then(function (workloadIds) {
+            let workloadIdsToRemove = []
+            if (workloadIds.length > 1) {
+              workloadIds.forEach(function (workloadId) {
+                workloadIdsToRemove.push(workloadId.workload_id)
+              })
+              workloadIdsToRemove = workloadIdsToRemove.sort()
+              const workloadIdNotRemoved = workloadIdsToRemove[0]
+              workloadIdsToRemove = workloadIdsToRemove.slice(1)
+              return deleteTiersForWorkloadIds(workloadIdsToRemove).then(function () {
+                return deleteCaseDetailsForWorkloadIds(workloadIdsToRemove).then(function () {
+                  return deleteWorkloadPointsCalculationsForWorkloadIds(workloadIdsToRemove).then(function () {
+                    return deleteWorkloadsForIds(workloadIdsToRemove).then(function () {
+                      logger.info('REMOVE-DUPLICATES - Duplicate Workload Removed', 'Duplicate of ' + workloadIdNotRemoved + ' removed.', 'Removed ' + workloadIdsToRemove)
+                    })
                   })
                 })
               })
-            })
-          }
-        })
+            }
+          })
       })
     })
     .then(function () {
@@ -51,13 +51,13 @@ module.exports.execute = function (task) {
           return Promise.each(duplicateCourtReports, function (duplicateCourtReport) {
             return getDuplicateCourtReportIds(duplicateCourtReport.id)
               .then(function (courtReportIds) {
-                var courtReportIdsToRemove = []
+                let courtReportIdsToRemove = []
                 if (courtReportIds.length > 1) {
                   courtReportIds.forEach(function (courtReportId) {
                     courtReportIdsToRemove.push(courtReportId.court_reports_id)
                   })
                   courtReportIdsToRemove = courtReportIdsToRemove.sort()
-                  var courtReportIdNotRemoved = courtReportIdsToRemove[0]
+                  const courtReportIdNotRemoved = courtReportIdsToRemove[0]
                   courtReportIdsToRemove = courtReportIdsToRemove.slice(1)
                   return deleteCourtReportsCalculationsForCourtReportIds(courtReportIdsToRemove).then(function () {
                     return deleteCourtReportsForIds(courtReportIdsToRemove).then(function () {
@@ -75,7 +75,7 @@ module.exports.execute = function (task) {
     })
     .then(function () {
       logger.info('REMOVE-DUPLICATES - Indexing Enabled')
-      var checkForMissingDivisionsTask = new Task(
+      const checkForMissingDivisionsTask = new Task(
         undefined,
         submittingAgent.WORKER,
         taskType.CHECK_FOR_MISSING_DIVISIONS,

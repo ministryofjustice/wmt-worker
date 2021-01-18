@@ -1,5 +1,5 @@
-var tableName = 'user_role'
-var users = []
+const tableName = 'user_role'
+let users = []
 exports.seed = function (knex, Promise) {
   // Deletes ALL existing entries
   return knex(tableName).del()
@@ -15,7 +15,10 @@ exports.seed = function (knex, Promise) {
       return knex(tableName).insert([
         { user_id: users[0].id, role_id: roles[0].id, last_updated: new Date(), last_updated_by: users[2].id },
         { user_id: users[1].id, role_id: roles[1].id, last_updated: new Date(), last_updated_by: users[1].id },
-        { user_id: users[2].id, role_id: roles[2].id, last_updated: new Date(), last_updated_by: users[0].id }
+        { user_id: users[2].id, role_id: roles[2].id, last_updated: new Date(), last_updated_by: users[0].id },
+        { user_id: users[3].id, role_id: roles[0].id, last_updated: new Date(), last_updated_by: users[2].id },
+        { user_id: users[4].id, role_id: roles[1].id, last_updated: new Date(), last_updated_by: users[1].id },
+        { user_id: users[5].id, role_id: roles[2].id, last_updated: new Date(), last_updated_by: users[0].id }
       ])
     })
 }

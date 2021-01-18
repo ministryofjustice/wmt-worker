@@ -1,4 +1,4 @@
-var tableName = 'case_details'
+const tableName = 'case_details'
 
 const caseDetailsRow = {
   workload_id: 1,
@@ -17,9 +17,10 @@ exports.seed = function (knex, Promise) {
       return knex('workload').select('id')
     })
     .then(function (workloadIds) {
-      var i = 1
-      for (var idx = 0; idx < workloadIds.length; idx++, i++) {
-        var caseDetailsToInsert = []
+      let i = 1
+      let caseDetailsToInsert
+      for (let idx = 0; idx < workloadIds.length; idx++, i++) {
+        caseDetailsToInsert = []
         caseDetailsToInsert.push(Object.assign({}, caseDetailsRow, { workload_id: workloadIds[idx].id, tier_code: i % 7 }))
         caseDetailsToInsert.push(Object.assign({}, caseDetailsRow, { workload_id: workloadIds[idx].id, tier_code: i % 7, row_type: 'O' }))
       }

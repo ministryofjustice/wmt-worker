@@ -4,16 +4,16 @@ const taskType = require('../../../../app/constants/task-type')
 
 describe('services/domain/task', function () {
   it('should construct a task domain object', function (done) {
-    var id = 101
-    var agent = 'wmt-web'
-    var type = taskType.CALCULATE_WORKLOAD_POINTS
-    var additionalData = 'additional data'
-    var workloadReportId = 25
-    var dateCreated = new Date(1980, 1, 2)
-    var dateProcessed = new Date(1980, 1, 3)
-    var status = 'PENDING'
+    const id = 101
+    const agent = 'wmt-web'
+    const type = taskType.CALCULATE_WORKLOAD_POINTS
+    const additionalData = 'additional data'
+    const workloadReportId = 25
+    const dateCreated = new Date(1980, 1, 2)
+    const dateProcessed = new Date(1980, 1, 3)
+    const status = 'PENDING'
 
-    var task = new Task(id, agent, type, additionalData, workloadReportId, dateCreated, dateProcessed, status)
+    const task = new Task(id, agent, type, additionalData, workloadReportId, dateCreated, dateProcessed, status)
 
     expect(task.id).to.equal(id)
     expect(task.submittingAgent).to.equal(agent)

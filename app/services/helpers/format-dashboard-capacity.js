@@ -1,5 +1,5 @@
 module.exports = function (capacity) {
-  var capacityArray = []
+  const capacityArray = []
   capacity.forEach(function (record) {
     capacityArray.push([
       record.regionName,
@@ -20,10 +20,10 @@ module.exports = function (capacity) {
   return capacityArray
 }
 
-var formatCapacityValue = function (capacity) {
+const formatCapacityValue = function (capacity) {
   return (Math.round(capacity)) / 100
 }
 
-var formatCMSPercentage = function (cms) {
+const formatCMSPercentage = function (cms) {
   return (cms.toFixed(1)) / 100
 }

@@ -1,15 +1,15 @@
 const knex = require('../../../knex').appSchema
 const lduHelper = require('./app-ldu-helper')
-var Promise = require('bluebird').Promise
+const Promise = require('bluebird').Promise
 
 module.exports.addDependenciesForTeam = function () {
-  var inserts = []
+  let inserts = []
 
-  var promise = lduHelper.addDependenciesForLdu()
+  const promise = lduHelper.addDependenciesForLdu()
     .then(function (idsArray) {
       inserts = idsArray
-      var regionId = inserts.filter((item) => item.table === 'region')[0].id
-      return knex('ldu').returning('id').insert({region_id: regionId})
+      const regionId = inserts.filter((item) => item.table === 'region')[0].id
+      return knex('ldu').returning('id').insert({ region_id: regionId })
     }).then(function (ids) {
       inserts.push({ table: 'ldu', id: ids[0] })
       return inserts
