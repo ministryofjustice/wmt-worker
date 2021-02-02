@@ -1,5 +1,5 @@
 exports.seed = function (knex, promise) {
-  var view = `CREATE VIEW app.ldu_case_overview
+  const view = `CREATE VIEW app.ldu_case_overview
   WITH SCHEMABINDING
   AS
   SELECT
@@ -23,7 +23,7 @@ exports.seed = function (knex, promise) {
     AND wr.effective_to IS NULL
   GROUP BY t.id, t.description, l.id;`
 
-  var index = `CREATE UNIQUE CLUSTERED INDEX idx_ldu_case_overview
+  const index = `CREATE UNIQUE CLUSTERED INDEX idx_ldu_case_overview
   ON app.ldu_case_overview (link_id)`
 
   return knex.schema

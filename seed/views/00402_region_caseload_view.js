@@ -1,5 +1,5 @@
 exports.seed = function (knex, Promise) {
-  var view = `CREATE VIEW app.region_caseload_view
+  const view = `CREATE VIEW app.region_caseload_view
   WITH SCHEMABINDING
   AS
   SELECT
@@ -34,12 +34,12 @@ exports.seed = function (knex, Promise) {
       AND wr.effective_to IS NULL
   GROUP BY l.region_id, l.id, l.description, omt.grade_code, tr.location;`
 
-  var index = `CREATE UNIQUE CLUSTERED INDEX idx_region_caseload_view
+  const index = `CREATE UNIQUE CLUSTERED INDEX idx_region_caseload_view
   ON app.region_caseload_view (link_id, location, grade_code)`
 
   return knex.schema
-      .raw('DROP VIEW IF EXISTS app.region_caseload_view;')
-      .raw('SET ARITHABORT ON')
-      .raw(view)
-      .raw(index)
+    .raw('DROP VIEW IF EXISTS app.region_caseload_view;')
+    .raw('SET ARITHABORT ON')
+    .raw(view)
+    .raw(index)
 }

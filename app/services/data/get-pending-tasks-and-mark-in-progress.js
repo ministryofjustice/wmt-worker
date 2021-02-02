@@ -9,10 +9,10 @@ module.exports = function (batchSize) {
     .orderBy('date_created', 'asc')
     .limit(batchSize)
     .then(function (results) {
-      var tasks = []
-      var ids = []
+      const tasks = []
+      const ids = []
       if (results !== 'undefined' && results.length > 0) {
-        for (var result of results) {
+        for (const result of results) {
           ids.push(result.id)
           tasks.push(new Task(
             result.id,

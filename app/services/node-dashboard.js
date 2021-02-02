@@ -5,14 +5,14 @@ const dateFormatter = require('./date-formatter')
 
 module.exports = function (reductions, capacity, formattedCaseloadData) {
   const datestamp = dateFormatter.now().format('YYYYMMDDHHmmss')
-  var outputFilepathOnWorker = config.WMT_DASHBOARD_OUTPUT_FILE_PATH + 'dashboard_' + datestamp + '.xlsx'
-  var outputFilepathOnWeb = config.WMT_WEB_DASHBOARD_OUTPUT_FILE_PATH + 'dashboard_' + datestamp + '.xlsx'
+  const outputFilepathOnWorker = config.WMT_DASHBOARD_OUTPUT_FILE_PATH + 'dashboard_' + datestamp + '.xlsx'
+  const outputFilepathOnWeb = config.WMT_WEB_DASHBOARD_OUTPUT_FILE_PATH + 'dashboard_' + datestamp + '.xlsx'
   return XlsxPopulate.fromFileAsync(config.WMT_DASHBOARD_TEMPLATE_FILE_PATH)
     .then(workbook => {
       // Modify the workbook.
-      var reductionsSheet = workbook.sheet('reductions data')
-      var capacitySheet = workbook.sheet('capacity data')
-      var caseloadSheet = workbook.sheet('caseload data')
+      const reductionsSheet = workbook.sheet('reductions data')
+      const capacitySheet = workbook.sheet('capacity data')
+      const caseloadSheet = workbook.sheet('caseload data')
       // var capacityButtonsSheet = workbook.sheet('Capacity Buttons')
       // var reductionsButtonsSheet = workbook.sheet('Reductions Buttons')
       // var reductionsWorkingsSheet = workbook.sheet('reductions workings')
@@ -46,6 +46,6 @@ module.exports = function (reductions, capacity, formattedCaseloadData) {
     })
 }
 
-var populateSheet = function (data, sheet) {
+const populateSheet = function (data, sheet) {
   sheet.cell('A2').value(data)
 }

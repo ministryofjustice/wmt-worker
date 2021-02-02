@@ -1,16 +1,16 @@
 const knex = require('../../../knex').appSchema
 const Locations = require('wmt-probation-rules').Locations
-var Promise = require('bluebird').Promise
+const Promise = require('bluebird').Promise
 
 module.exports.insertDependencies = function (inserts) {
-  var promise = knex('workload_report').returning('id').insert({})
+  const promise = knex('workload_report').returning('id').insert({})
     .then(function (ids) {
-      inserts.push({table: 'workload_report', id: ids[0]})
-      return knex('offender_manager_type').returning('id').insert({description: 'test'})
+      inserts.push({ table: 'workload_report', id: ids[0] })
+      return knex('offender_manager_type').returning('id').insert({ description: 'test' })
     })
     .then(function (ids) {
       inserts.push({ table: 'offender_manager_type', id: ids[0] })
-      return knex('offender_manager').returning('id').insert({type_id: ids[0]})
+      return knex('offender_manager').returning('id').insert({ type_id: ids[0] })
     })
     .then(function (ids) {
       inserts.push({ table: 'offender_manager', id: ids[0] })
@@ -18,19 +18,19 @@ module.exports.insertDependencies = function (inserts) {
     })
     .then(function (ids) {
       inserts.push({ table: 'region', id: ids[0] })
-      return knex('ldu').returning('id').insert({region_id: ids[0]})
+      return knex('ldu').returning('id').insert({ region_id: ids[0] })
     })
     .then(function (ids) {
       inserts.push({ table: 'ldu', id: ids[0] })
-      return knex('team').returning('id').insert({ldu_id: ids[0]})
+      return knex('team').returning('id').insert({ ldu_id: ids[0] })
     })
     .then(function (ids) {
-      inserts.push({table: 'team', id: ids[0]})
+      inserts.push({ table: 'team', id: ids[0] })
 
-      var offenderManagers = inserts.filter((item) => item.table === 'offender_manager')
-      var defaultWorkloadOwner = { team_id: inserts.filter((item) => item.table === 'team')[0].id, contracted_hours: 40, offender_manager_id: offenderManagers[0].id }
+      const offenderManagers = inserts.filter((item) => item.table === 'offender_manager')
+      const defaultWorkloadOwner = { team_id: inserts.filter((item) => item.table === 'team')[0].id, contracted_hours: 40, offender_manager_id: offenderManagers[0].id }
 
-      var workloadOwners = [
+      const workloadOwners = [
         defaultWorkloadOwner,
         defaultWorkloadOwner,
         defaultWorkloadOwner
@@ -40,10 +40,10 @@ module.exports.insertDependencies = function (inserts) {
     })
     .then(function (ids) {
       ids.forEach((id) => {
-        inserts.push({table: 'workload_owner', id: id})
+        inserts.push({ table: 'workload_owner', id: id })
       })
 
-      var defaultWorkload = {
+      const defaultWorkload = {
         total_cases: 8,
         total_filtered_cases: 7,
         total_custody_cases: 1,
@@ -68,7 +68,7 @@ module.exports.insertDependencies = function (inserts) {
         workload_report_id: inserts.filter((item) => item.table === 'workload_report')[0].id
       }
 
-      var workloads = [
+      const workloads = [
         Object.assign({}, defaultWorkload, { total_cases: 20, total_filtered_cases: 19, total_t2a_cases: 10, staging_id: 1, workload_owner_id: ids[0] }),
         Object.assign({}, defaultWorkload, { total_cases: 30, total_filtered_cases: 29, total_t2a_cases: 15, staging_id: 2, workload_owner_id: ids[1] }),
         Object.assign({}, defaultWorkload, { total_cases: 30, total_filtered_cases: 17, total_t2a_cases: 20, staging_id: 3, workload_owner_id: ids[2] })
@@ -77,12 +77,12 @@ module.exports.insertDependencies = function (inserts) {
       return knex('workload').returning('id').insert(workloads)
     })
     .then(function (ids) {
-      var locations = [Locations.COMMUNITY, Locations.CUSTODY, Locations.LICENSE]
-      var cases = []
+      const locations = [Locations.COMMUNITY, Locations.CUSTODY, Locations.LICENSE]
+      const cases = []
       ids.forEach((id) => {
-        inserts.push({table: 'workload', id: id})
-        for (var i = 0; i < 3; i++) {
-          for (var j = 0; j < 11; j++) {
+        inserts.push({ table: 'workload', id: id })
+        for (let i = 0; i < 3; i++) {
+          for (let j = 0; j < 11; j++) {
             cases.push({
               workload_id: id,
               tier_number: j,
@@ -106,7 +106,7 @@ module.exports.insertDependencies = function (inserts) {
     })
     .then(function (ids) {
       ids.forEach((id) => {
-        inserts.push({table: 'tiers', id: id})
+        inserts.push({ table: 'tiers', id: id })
       })
       return inserts
     }).catch((error) => {
@@ -119,13 +119,13 @@ module.exports.insertDependencies = function (inserts) {
 
 module.exports.removeDependencies = function (inserts) {
   inserts = inserts.reverse()
-  var groupedDeletions = [{table: inserts[0].table, id: [inserts[0].id]}]
+  const groupedDeletions = [{ table: inserts[0].table, id: [inserts[0].id] }]
 
-  for (var i = 1; i < inserts.length; i++) {
+  for (let i = 1; i < inserts.length; i++) {
     if (inserts[i].table === groupedDeletions[groupedDeletions.length - 1].table) {
       groupedDeletions[groupedDeletions.length - 1].id.push(inserts[i].id)
     } else {
-      groupedDeletions.push({table: inserts[i].table, id: [inserts[i].id]})
+      groupedDeletions.push({ table: inserts[i].table, id: [inserts[i].id] })
     }
   }
 

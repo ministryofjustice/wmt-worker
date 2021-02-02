@@ -1,8 +1,8 @@
 const knexConfig = require('../../../knexfile').staging
 const knex = require('knex')(knexConfig)
-var Promise = require('bluebird').Promise
+const Promise = require('bluebird').Promise
 
-var inserts = []
+const inserts = []
 
 module.exports.gsRecords = [
   {

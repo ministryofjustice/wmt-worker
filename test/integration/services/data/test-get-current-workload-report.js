@@ -3,7 +3,7 @@ const expect = require('chai').expect
 const helper = require('../../../helpers/data/app-workload-report-helper')
 const getOpenWorkloadReports = require('../../../../app/services/data/get-open-workload-reports')
 
-var inserts = []
+let inserts = []
 
 describe('services/data/get-open-workload-reports', function () {
   before(function (done) {
@@ -16,15 +16,15 @@ describe('services/data/get-open-workload-reports', function () {
 
   it('should retrieve any current workload reports', function () {
     return getOpenWorkloadReports()
-    .then(function (queryResults) {
-      var ids = []
-      queryResults.forEach(function (record) {
-        ids.push(record.id)
-      })
+      .then(function (queryResults) {
+        const ids = []
+        queryResults.forEach(function (record) {
+          ids.push(record.id)
+        })
 
-      expect(queryResults.length).to.greaterThan(0)
-      expect(ids).to.contain(inserts.filter((item) => item.table === 'workload_report')[0].id)
-    })
+        expect(queryResults.length).to.greaterThan(0)
+        expect(ids).to.contain(inserts.filter((item) => item.table === 'workload_report')[0].id)
+      })
   })
 
   after(function (done) {

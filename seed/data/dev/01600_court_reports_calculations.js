@@ -1,9 +1,9 @@
-var tableName = 'court_reports_calculations'
+const tableName = 'court_reports_calculations'
 
 exports.seed = function (knex, Promise) {
-  var existingCrReportIds
-  var currentCrPointsId
-    // Deletes ALL existing entries
+  let existingCrReportIds
+  let currentCrPointsId
+  // Deletes ALL existing entries
   return knex(tableName).del()
     .then(function () {
       return knex('workload_report').select('id')
@@ -20,16 +20,16 @@ exports.seed = function (knex, Promise) {
         .groupBy('workload_owner.id')
     })
     .then(function (crWorkloadIds) {
-      var effectiveFromDate = new Date()
+      const effectiveFromDate = new Date()
       effectiveFromDate.setDate(effectiveFromDate.getDate() - 365)
-        // Inserts seed entries
+      // Inserts seed entries
 
-      var crWorkloadPointsCalculationsToInsert = []
+      const crWorkloadPointsCalculationsToInsert = []
 
-      for (var wr = 0; wr < existingCrReportIds.length; wr++) {
-        for (var w = 0; w < crWorkloadIds.length; w++) {
-          var crReportId = existingCrReportIds[wr]
-          var crWorkloadId = crWorkloadIds[w]
+      for (let wr = 0; wr < existingCrReportIds.length; wr++) {
+        for (let w = 0; w < crWorkloadIds.length; w++) {
+          const crReportId = existingCrReportIds[wr]
+          const crWorkloadId = crWorkloadIds[w]
 
           crWorkloadPointsCalculationsToInsert.push({
             court_reports_id: crWorkloadId.id,

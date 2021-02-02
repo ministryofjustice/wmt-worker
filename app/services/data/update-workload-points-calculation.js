@@ -3,7 +3,7 @@ const knex = require('../../../knex').appSchema
 module.exports = function (workloadReportId, workloadPointsId, t2aWorkloadPointsId, workloadId, totalPoints, sdrPoints, sdrPointsConversion,
   paromsPoints, nominalTarget, availablePoints, contractedHours, reductionHours, cmsAdjustmentPoints, gsAdjustmentPoints,
   armsTotalCases) {
-  return knex(`workload_points_calculations`)
+  return knex('workload_points_calculations')
     .where('workload_report_id', workloadReportId)
     .where('workload_id', workloadId)
     .update({

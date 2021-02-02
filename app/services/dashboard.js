@@ -4,7 +4,6 @@ const calculateOverviewValues = require('./helpers/calculate-overview-values')
 const getCaseload = require('../services/get-caseload')
 const formatDashboardCaseload = require('./helpers/format-dashboard-caseload')
 const formatDashboardCapacity = require('./helpers/format-dashboard-capacity')
-// const pythonDashboard = require('./python-dashboard')
 const nodeDashboard = require('./node-dashboard')
 const insertFile = require('./data/insert-file')
 const fileTypes = require('../constants/file-types')
@@ -14,11 +13,11 @@ module.exports = function () {
     .then(function (reductionsArray) {
       return getFullOverview()
         .then(function (results) {
-          var capacity = calculateOverviewValues(results)
-          var capacityArray = formatDashboardCapacity(capacity)
+          const capacity = calculateOverviewValues(results)
+          const capacityArray = formatDashboardCapacity(capacity)
           return getCaseload()
             .then(function (caseloadData) {
-              var caseloadArray = formatDashboardCaseload(caseloadData)
+              const caseloadArray = formatDashboardCaseload(caseloadData)
               return nodeDashboard(reductionsArray, capacityArray, caseloadArray)
                 .then(function (filepath) {
                   return insertFile(filepath, fileTypes.DASHBOARD)

@@ -1,24 +1,23 @@
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
-require('sinon-bluebird')
 
 const Task = require('../../../../app/services/domain/task')
 const taskType = require('../../../../app/constants/task-type')
 const taskStatus = require('../../../../app/constants/task-status')
 const submittingAgent = require('../../../../app/constants/task-submitting-agent')
 
-var createWorkload
-var parseStagingWorkload
-var insertWorkloadOwnerAndDependencies
-var insertWorkload
-var createNewTasks
-var probationRulesStub
+let createWorkload
+let parseStagingWorkload
+let insertWorkloadOwnerAndDependencies
+let insertWorkload
+let createNewTasks
+let probationRulesStub
 
-var workloadOwnerId = 1
-var workloadId = 2
+const workloadOwnerId = 1
+const workloadId = 2
 
-var task = {
+const task = {
   additionalData: {
     batchSize: 3,
     startingId: 4
@@ -26,16 +25,16 @@ var task = {
   workloadReportId: 5
 }
 
-var endingStagingId = task.additionalData.startingId + (task.additionalData.batchSize - 1)
-var stagingWorkload = [
+const endingStagingId = task.additionalData.startingId + (task.additionalData.batchSize - 1)
+const stagingWorkload = [
   {
     casesSummary: 'This is a fake summary',
     caseDetails: 'This is a fake caseDetails'
   }
 ]
-var appWorkload = 'This is a fake app workload'
+const appWorkload = 'This is a fake app workload'
 
-var nextTask = new Task(
+const nextTask = new Task(
   undefined,
   submittingAgent.WORKER,
   taskType.PROCESS_REDUCTIONS,
@@ -44,7 +43,7 @@ var nextTask = new Task(
   undefined,
   undefined,
   taskStatus.AWAITING_DUPLICATE_CHECK
-  )
+)
 
 describe('services/workers/create-workload', function () {
   beforeEach(function () {
@@ -73,11 +72,11 @@ describe('services/workers/create-workload', function () {
     probationRulesStub.mapWorkload.returns(appWorkload)
 
     return createWorkload.execute(task)
-    .then(function (result) {
-      expect(parseStagingWorkload.calledWith([task.additionalData.startingId, endingStagingId])).to.be.equal(true)
-      expect(insertWorkloadOwnerAndDependencies.calledWith(stagingWorkload[0].casesSummary)).to.be.equal(true)
-      expect(insertWorkload.calledWith(appWorkload, stagingWorkload[0].caseDetails)).to.be.equal(true)
-      expect(createNewTasks.calledWith([nextTask])).to.be.eql(true)
-    })
+      .then(function (result) {
+        expect(parseStagingWorkload.calledWith([task.additionalData.startingId, endingStagingId])).to.be.equal(true)
+        expect(insertWorkloadOwnerAndDependencies.calledWith(stagingWorkload[0].casesSummary)).to.be.equal(true)
+        expect(insertWorkload.calledWith(appWorkload, stagingWorkload[0].caseDetails)).to.be.equal(true)
+        expect(createNewTasks.calledWith([nextTask])).to.be.eql(true)
+      })
   })
 })

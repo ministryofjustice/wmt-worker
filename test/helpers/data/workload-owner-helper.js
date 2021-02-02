@@ -1,14 +1,14 @@
 const knex = require('../../../knex').appSchema
 const teamHelper = require('./app-team-helper')
-var Promise = require('bluebird').Promise
+const Promise = require('bluebird').Promise
 
 module.exports.addDepenedenciesForWorkloadOwner = function () {
-  var inserts = []
+  let inserts = []
 
-  var promise = knex('offender_manager_type').returning('id').insert({description: 'test'})
+  const promise = knex('offender_manager_type').returning('id').insert({ description: 'test' })
     .then(function (ids) {
       inserts.push({ table: 'offender_manager_type', id: ids[0] })
-      return knex('offender_manager').returning('id').insert({type_id: ids[0]})
+      return knex('offender_manager').returning('id').insert({ type_id: ids[0] })
     })
     .then(function (ids) {
       inserts.push({ table: 'offender_manager', id: ids[0] })
@@ -16,11 +16,11 @@ module.exports.addDepenedenciesForWorkloadOwner = function () {
     })
     .then(function (idsArray) {
       inserts = inserts.concat(idsArray)
-      var lduId = inserts.filter((item) => item.table === 'ldu')[0].id
-      return knex('team').returning('id').insert({ldu_id: lduId})
+      const lduId = inserts.filter((item) => item.table === 'ldu')[0].id
+      return knex('team').returning('id').insert({ ldu_id: lduId })
     })
     .then(function (ids) {
-      inserts.push({table: 'team', id: ids[0]})
+      inserts.push({ table: 'team', id: ids[0] })
       return inserts
     })
 

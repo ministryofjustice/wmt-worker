@@ -8,36 +8,36 @@ const Locations = require('wmt-probation-rules').Locations
 const CaseDetails = require('wmt-probation-rules').CaseDetails
 const workloadOwnerHelper = require('../../../helpers/data/app-workload-owner-helper')
 
-var inserts = []
+const inserts = []
 
 describe('app/services/data/insert-app-workload', function () {
-  var workloadId
-  var workload
-  var caseDetails = []
+  let workloadId
+  let workload
+  const caseDetails = []
   before(function () {
     return workloadOwnerHelper.insertDependencies(inserts)
       .then(function () {
         workload = new Workload(
           inserts.filter((item) => item.table === 'workload_owner')[0].id, // workload owner ID
-          2,  // total cases
-          1,  // total t2a cases
-          3,  // monthly SDRs
-          4,  // SDRs Due Next 30 Days
-          5,  // SDR Conversions Last 30 Days
-          6,  // PAROMS Completed Last 30 Days
-          7,  // PAROMS Due Next 30 Days
+          2, // total cases
+          1, // total t2a cases
+          3, // monthly SDRs
+          4, // SDRs Due Next 30 Days
+          5, // SDR Conversions Last 30 Days
+          6, // PAROMS Completed Last 30 Days
+          7, // PAROMS Due Next 30 Days
           buildTier(Locations.CUSTODY), // Custody Tiers
           buildTier(Locations.COMMUNITY), // Community Tiers
           buildTier(Locations.LICENSE), // License Tiers
           buildTier(Locations.CUSTODY), // T2A Custody Tiers
           buildTier(Locations.COMMUNITY), // T2A Community Tiers
           buildTier(Locations.LICENSE), // T2A License Tiers
-          9,  // License Cases Last 16 Weeks
+          9, // License Cases Last 16 Weeks
           10, // Community Cases Last 16 Weeks
           11, // ARMS Community Cases
           12, // ARMS License Cases
           13, // Staging ID
-          14,  // Workload Report ID
+          14, // Workload Report ID
           buildFilteredTier(Locations.COMMUNITY, 0), // Filtered Community Tiers
           buildFilteredTier(Locations.CUSTODY, 10), // Filtered Custody Tiers
           buildFilteredTier(Locations.LICENSE, 20), // Filtered License Tiers
@@ -51,7 +51,7 @@ describe('app/services/data/insert-app-workload', function () {
         caseDetails.push(buildCaseDetails(Locations.LICENSE, true))
         return insertAppWorkload(workload, caseDetails).then(function (id) {
           workloadId = id
-          inserts.push({table: 'workload', id: id})
+          inserts.push({ table: 'workload', id: id })
         })
       })
   })
@@ -60,18 +60,18 @@ describe('app/services/data/insert-app-workload', function () {
     knex('workload')
       .join('tiers', 'workload.id', 'tiers.workload_id')
       .join('case_details', 'workload.id', 'case_details.workload_id')
-      .where({'workload.id': workloadId})
+      .where({ 'workload.id': workloadId })
       .select('workload.total_cases AS total_cases', 'workload.total_filtered_cases AS total_filtered_cases',
-      'workload.total_t2a_cases AS total_t2a_cases',
-      'workload.monthly_sdrs AS monthly_sdrs', 'workload.sdr_due_next_30_days AS sdr_due_next_30_days',
-      'workload.sdr_conversions_last_30_days AS sdr_conversions_last_30_days',
-      'workload.paroms_completed_last_30_days AS paroms_completed_last_30_days',
-      'workload.paroms_due_next_30_days AS paroms_due_next_30_days',
-      'workload.license_last_16_weeks AS license_last_16_weeks',
-      'workload.community_last_16_weeks AS community_last_16_weeks',
-      'workload.arms_community_cases AS arms_community_cases',
-      'workload.arms_license_cases AS arms_license_cases', 'workload.staging_id AS staging_id',
-      'workload.workload_report_id AS workload_report_id', 'case_details.case_ref_no AS case_ref_no')
+        'workload.total_t2a_cases AS total_t2a_cases',
+        'workload.monthly_sdrs AS monthly_sdrs', 'workload.sdr_due_next_30_days AS sdr_due_next_30_days',
+        'workload.sdr_conversions_last_30_days AS sdr_conversions_last_30_days',
+        'workload.paroms_completed_last_30_days AS paroms_completed_last_30_days',
+        'workload.paroms_due_next_30_days AS paroms_due_next_30_days',
+        'workload.license_last_16_weeks AS license_last_16_weeks',
+        'workload.community_last_16_weeks AS community_last_16_weeks',
+        'workload.arms_community_cases AS arms_community_cases',
+        'workload.arms_license_cases AS arms_license_cases', 'workload.staging_id AS staging_id',
+        'workload.workload_report_id AS workload_report_id', 'case_details.case_ref_no AS case_ref_no')
       .then(function (result) {
         console.log('In here 1')
         knex('tiers')
@@ -79,7 +79,7 @@ describe('app/services/data/insert-app-workload', function () {
           .select()
           .then(function (tiers) {
             console.log('In here 2')
-            var licenceTier6 = tiers.filter(t => t.location === Locations.LICENSE && t.tier_number === 6)
+            const licenceTier6 = tiers.filter(t => t.location === Locations.LICENSE && t.tier_number === 6)
             expect(licenceTier6[0].suspended_lifer_total).to.equal(99)
             expect(result[0]).not.to.be.undefined // eslint-disable-line
             expect(result[0].total_cases).to.equal(2)
@@ -103,17 +103,17 @@ describe('app/services/data/insert-app-workload', function () {
 
   it('should insert the correct community tiers', function () {
     return knex('tiers')
-      .where({'workload_id': workloadId, 'location': Locations.COMMUNITY})
+      .where({ workload_id: workloadId, location: Locations.COMMUNITY })
       .select()
       .then(function (tiers) {
-        var communityUntiered = tiers.filter(t => t.tier_number === 0)
-        var communityTierD2 = tiers.filter(t => t.tier_number === 1)
-        var communityTierD1 = tiers.filter(t => t.tier_number === 2)
-        var communityTierC2 = tiers.filter(t => t.tier_number === 3)
-        var communityTierC1 = tiers.filter(t => t.tier_number === 4)
-        var communityTierB2 = tiers.filter(t => t.tier_number === 5)
-        var communityTierB1 = tiers.filter(t => t.tier_number === 6)
-        var communityTierA = tiers.filter(t => t.tier_number === 7)
+        const communityUntiered = tiers.filter(t => t.tier_number === 0)
+        const communityTierD2 = tiers.filter(t => t.tier_number === 1)
+        const communityTierD1 = tiers.filter(t => t.tier_number === 2)
+        const communityTierC2 = tiers.filter(t => t.tier_number === 3)
+        const communityTierC1 = tiers.filter(t => t.tier_number === 4)
+        const communityTierB2 = tiers.filter(t => t.tier_number === 5)
+        const communityTierB1 = tiers.filter(t => t.tier_number === 6)
+        const communityTierA = tiers.filter(t => t.tier_number === 7)
         expect(communityUntiered[0].total_filtered_cases, 'Untiered Community total should equal 0').to.equal(0)
         expect(communityTierD2[0].total_filtered_cases, 'D2 Community total should equal 1').to.equal(1)
         expect(communityTierD1[0].total_filtered_cases, 'D1 Community total should equal 2').to.equal(2)
@@ -127,17 +127,17 @@ describe('app/services/data/insert-app-workload', function () {
 
   it('should insert the correct licence tiers', function () {
     return knex('tiers')
-      .where({'workload_id': workloadId, 'location': Locations.LICENSE})
+      .where({ workload_id: workloadId, location: Locations.LICENSE })
       .select()
       .then(function (tiers) {
-        var licenceUntiered = tiers.filter(t => t.tier_number === 0)
-        var licenceTierD2 = tiers.filter(t => t.tier_number === 1)
-        var licenceTierD1 = tiers.filter(t => t.tier_number === 2)
-        var licenceTierC2 = tiers.filter(t => t.tier_number === 3)
-        var licenceTierC1 = tiers.filter(t => t.tier_number === 4)
-        var licenceTierB2 = tiers.filter(t => t.tier_number === 5)
-        var licenceTierB1 = tiers.filter(t => t.tier_number === 6)
-        var licenceTierA = tiers.filter(t => t.tier_number === 7)
+        const licenceUntiered = tiers.filter(t => t.tier_number === 0)
+        const licenceTierD2 = tiers.filter(t => t.tier_number === 1)
+        const licenceTierD1 = tiers.filter(t => t.tier_number === 2)
+        const licenceTierC2 = tiers.filter(t => t.tier_number === 3)
+        const licenceTierC1 = tiers.filter(t => t.tier_number === 4)
+        const licenceTierB2 = tiers.filter(t => t.tier_number === 5)
+        const licenceTierB1 = tiers.filter(t => t.tier_number === 6)
+        const licenceTierA = tiers.filter(t => t.tier_number === 7)
         expect(licenceUntiered[0].total_filtered_cases, 'Untiered Licence total should equal 20').to.equal(20)
         expect(licenceTierD2[0].total_filtered_cases, 'D2 Licence total should equal 21').to.equal(21)
         expect(licenceTierD1[0].total_filtered_cases, 'D1 Licence total should equal 22').to.equal(22)
@@ -151,17 +151,17 @@ describe('app/services/data/insert-app-workload', function () {
 
   it('should insert the correct custody tiers', function () {
     return knex('tiers')
-      .where({'workload_id': workloadId, 'location': Locations.CUSTODY})
+      .where({ workload_id: workloadId, location: Locations.CUSTODY })
       .select()
       .then(function (tiers) {
-        var custodyUntiered = tiers.filter(t => t.tier_number === 0)
-        var custodyTierD2 = tiers.filter(t => t.tier_number === 1)
-        var custodyTierD1 = tiers.filter(t => t.tier_number === 2)
-        var custodyTierC2 = tiers.filter(t => t.tier_number === 3)
-        var custodyTierC1 = tiers.filter(t => t.tier_number === 4)
-        var custodyTierB2 = tiers.filter(t => t.tier_number === 5)
-        var custodyTierB1 = tiers.filter(t => t.tier_number === 6)
-        var custodyTierA = tiers.filter(t => t.tier_number === 7)
+        const custodyUntiered = tiers.filter(t => t.tier_number === 0)
+        const custodyTierD2 = tiers.filter(t => t.tier_number === 1)
+        const custodyTierD1 = tiers.filter(t => t.tier_number === 2)
+        const custodyTierC2 = tiers.filter(t => t.tier_number === 3)
+        const custodyTierC1 = tiers.filter(t => t.tier_number === 4)
+        const custodyTierB2 = tiers.filter(t => t.tier_number === 5)
+        const custodyTierB1 = tiers.filter(t => t.tier_number === 6)
+        const custodyTierA = tiers.filter(t => t.tier_number === 7)
         expect(custodyUntiered[0].total_filtered_cases, 'Untiered Licence total should equal 10').to.equal(10)
         expect(custodyTierD2[0].total_filtered_cases, 'D2 Licence total should equal 11').to.equal(11)
         expect(custodyTierD1[0].total_filtered_cases, 'D1 Licence total should equal 12').to.equal(12)
@@ -184,10 +184,10 @@ describe('app/services/data/insert-app-workload', function () {
 
 function buildTier (location) {
   return new Tiers(location,
-        buildTierCount(0), buildTierCount(1), buildTierCount(2),
-        buildTierCount(3), buildTierCount(4), buildTierCount(5),
-        buildTierCount(6), buildTierCount(7), buildTierCount(8),
-        buildTierCount(9), buildTierCount(10), 80)
+    buildTierCount(0), buildTierCount(1), buildTierCount(2),
+    buildTierCount(3), buildTierCount(4), buildTierCount(5),
+    buildTierCount(6), buildTierCount(7), buildTierCount(8),
+    buildTierCount(9), buildTierCount(10), 80)
 }
 
 function buildFilteredTier (location, extra = 0) {
@@ -204,7 +204,7 @@ function buildTierCount (tierCode) {
 
 function buildCaseDetails (location, suspendedLifer = false) {
   // row_type, case_ref_no, tier_code, team_code, om_grade_code, om_key, location
-  var caseDetails = []
+  let caseDetails = []
   if (suspendedLifer) {
     switch (location) {
       case Locations.COMMUNITY:

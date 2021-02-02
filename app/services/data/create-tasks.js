@@ -2,9 +2,9 @@ const knex = require('../../../knex').appSchema
 const TaskStatus = require('../../constants/task-status')
 
 module.exports = function (tasks) {
-  var dbTasks = []
+  const dbTasks = []
   tasks.forEach(function (task) {
-    var dbTask = {
+    const dbTask = {
       submitting_agent: task.submittingAgent,
       type: task.type,
       additional_data: JSON.stringify(task.additionalData),
@@ -16,7 +16,7 @@ module.exports = function (tasks) {
   })
   // Default to ((2100 / 7) - 1). This is to avoid 2100 parameter server error.
   // 7 is the number columns in this table and 2100 is number of max parameters.
-  var batchSize = 299
+  let batchSize = 299
   if (dbTasks.length > 40) {
     batchSize = Math.floor(dbTasks.length / 7) + 1
   }

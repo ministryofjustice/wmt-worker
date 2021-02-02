@@ -1,51 +1,51 @@
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
-require('sinon-bluebird')
+
 const expect = require('chai').expect
 
 const status = require('../../../../app/constants/reduction-status')
 const dateHelper = require('../../../helpers/data/date-helper')
 
-var statusUpdater
-var updateReductionStatusByIds
-var updateAdjustmentStatusByIds
+let statusUpdater
+let updateReductionStatusByIds
+let updateAdjustmentStatusByIds
 
-var activeReduction = {
+const activeReduction = {
   id: 1,
   effectiveFrom: dateHelper.yesterday,
   effectiveTo: dateHelper.tomorrow,
   status: null
 }
 
-var scheduledReduction = {
+const scheduledReduction = {
   id: 2,
   effectiveFrom: dateHelper.tomorrow,
   effectiveTo: dateHelper.dayAfterTomorrow,
   status: null
 }
 
-var archivedReduction = {
+const archivedReduction = {
   id: 3,
   effectiveFrom: dateHelper.dayBeforeYesterday,
   effectiveTo: dateHelper.yesterday,
   status: null
 }
 
-var existingActiveReduction = {
+const existingActiveReduction = {
   id: 1,
   effectiveFrom: dateHelper.yesterday,
   effectiveTo: dateHelper.tomorrow,
   status: status.ACTIVE
 }
 
-var reductions = [activeReduction, scheduledReduction, archivedReduction, existingActiveReduction]
+const reductions = [activeReduction, scheduledReduction, archivedReduction, existingActiveReduction]
 
 describe('services/update-adjustment-reduction-status', function () {
   beforeEach(function () {
     updateReductionStatusByIds = sinon.stub()
     updateAdjustmentStatusByIds = sinon.stub()
     statusUpdater = proxyquire('../../../../app/services/update-adjustment-reduction-status', {
-      '../log': { info: function (message) { } },
+      './log': { info: function (message) { } },
       './data/update-reduction-status-by-ids': updateReductionStatusByIds,
       './data/update-adjustment-status-by-ids': updateAdjustmentStatusByIds
     })

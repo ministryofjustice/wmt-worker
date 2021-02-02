@@ -1,4 +1,4 @@
-var tableName = 'workload'
+const tableName = 'workload'
 
 const workloadRow = {
   workload_owner_id: 1,
@@ -31,14 +31,14 @@ exports.seed = function (knex, Promise) {
   return knex(tableName).del()
     .then(function () {
       return knex('workload_owner').join('team', 'workload_owner.team_id', 'team.id')
-      .select('workload_owner.id').whereNot('team.description', 'CR Team 1')
+        .select('workload_owner.id').whereNot('team.description', 'CR Team 1')
     })
     .then(function (workloadOwners) {
-      var workloadsToInsert = []
-      var stagingId = 1
-      for (var workloadOwner in workloadOwners) {
-        for (var i = 0; i < 5; i++) {
-          workloadsToInsert.push(Object.assign({}, workloadRow, {workload_owner_id: workloadOwners[workloadOwner].id, staging_id: stagingId}))
+      const workloadsToInsert = []
+      let stagingId = 1
+      for (const workloadOwner in workloadOwners) {
+        for (let i = 0; i < 5; i++) {
+          workloadsToInsert.push(Object.assign({}, workloadRow, { workload_owner_id: workloadOwners[workloadOwner].id, staging_id: stagingId }))
           stagingId++
         }
       }

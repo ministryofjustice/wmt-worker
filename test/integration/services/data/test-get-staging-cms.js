@@ -20,33 +20,33 @@ const cmsRecords = [{
 }]
 
 describe('services/data/get-staging-cms', function () {
-  var insertedRecords = []
+  let insertedRecords = []
 
   before(function () {
     return cmsHelper.insertDependencies(cmsRecords)
-    .then(function (inserts) {
-      insertedRecords = inserts
-    })
+      .then(function (inserts) {
+        insertedRecords = inserts
+      })
   })
 
   it('should return the staging cms records', function () {
     return getStagingCms()
-    .then(function (reductions) {
-      var ids = []
-      reductions.forEach(function (reduction) {
-        ids.push(reduction.id)
-        if (reduction.id === insertedRecords[0].id[0]) {
-          expect(Number(reduction.contactId)).to.be.equal(cmsRecords[0].contact_id)
-          expect(reduction.contactCode).to.be.equal(cmsRecords[0].contact_type_code)
-          expect(new Date(reduction.contactDate)).to.be.eql(new Date(cmsRecords[0].contact_date))
-          expect(reduction.contactStaffKey).to.be.equal(cmsRecords[0].contact_staff_key)
-          expect(reduction.contactTeamKey).to.be.equal(cmsRecords[0].contact_team_key)
-          expect(reduction.omKey).to.be.equal(cmsRecords[0].om_key)
-          expect(reduction.omTeamKey).to.be.equal(cmsRecords[0].om_team_key)
-        }
+      .then(function (reductions) {
+        const ids = []
+        reductions.forEach(function (reduction) {
+          ids.push(reduction.id)
+          if (reduction.id === insertedRecords[0].id[0]) {
+            expect(Number(reduction.contactId)).to.be.equal(cmsRecords[0].contact_id)
+            expect(reduction.contactCode).to.be.equal(cmsRecords[0].contact_type_code)
+            expect(new Date(reduction.contactDate)).to.be.eql(new Date(cmsRecords[0].contact_date))
+            expect(reduction.contactStaffKey).to.be.equal(cmsRecords[0].contact_staff_key)
+            expect(reduction.contactTeamKey).to.be.equal(cmsRecords[0].contact_team_key)
+            expect(reduction.omKey).to.be.equal(cmsRecords[0].om_key)
+            expect(reduction.omTeamKey).to.be.equal(cmsRecords[0].om_team_key)
+          }
+        })
+        expect(ids).to.include(insertedRecords[0].id)
       })
-      expect(ids).to.include(insertedRecords[0].id)
-    })
   })
 
   after(function () {

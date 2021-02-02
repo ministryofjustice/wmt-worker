@@ -4,15 +4,15 @@ const insertRegion = require('../../../../app/services/data/insert-region')
 const Region = require('wmt-probation-rules').Region
 
 describe('app/services/data/insert-region', function () {
-  var regionId
+  let regionId
   it('should insert a new region record', function (done) {
-    var code = 'U'
-    var originalRegionName = 'REGION NAME'
-    var region = new Region(undefined, code, originalRegionName)
+    const code = 'U'
+    const originalRegionName = 'REGION NAME'
+    const region = new Region(undefined, code, originalRegionName)
     insertRegion(region).then(function (id) {
       regionId = id
       return knex.table('region')
-        .where({'id': regionId})
+        .where({ id: regionId })
         .first()
         .then(function (result) {
           expect(result['id']).to.not.be.null // eslint-disable-line
@@ -24,13 +24,13 @@ describe('app/services/data/insert-region', function () {
   })
 
   it('should update the name of an existing region', function (done) {
-    var code = 'U'
-    var regionName = 'TEST REGION NAME'
-    var region = new Region(undefined, code, regionName)
+    const code = 'U'
+    const regionName = 'TEST REGION NAME'
+    const region = new Region(undefined, code, regionName)
     insertRegion(region).then(function (id) {
       regionId = id
       return knex.table('region')
-        .where({'id': regionId})
+        .where({ id: regionId })
         .first()
         .then(function (result) {
           expect(result['id']).to.eq(regionId[0]) // eslint-disable-line

@@ -9,37 +9,37 @@ const updateStatus = require('../update-adjustment-reduction-status')
 const operationType = require('../../constants/calculation-tasks-operation-type')
 
 module.exports.execute = function (task) {
-  var courtReportStagingIdStart = task.additionalData.startingId
-  var courtReportStagingIdEnd = courtReportStagingIdStart + task.additionalData.batchSize - 1
-  var workloadReportId = task.workloadReportId
+  const courtReportStagingIdStart = task.additionalData.startingId
+  const courtReportStagingIdEnd = courtReportStagingIdStart + task.additionalData.batchSize - 1
+  const workloadReportId = task.workloadReportId
 
   logger.info('Retrieving open reductions for court reporters with court reports\' staging ids ' + courtReportStagingIdStart + ' - ' + courtReportStagingIdEnd + ', for workload report ' + workloadReportId)
   return getOpenReductionsForCourtReporters(courtReportStagingIdStart, courtReportStagingIdEnd, workloadReportId)
     .then(function (reductions) {
       return updateStatus.updateReductionStatuses(reductions)
-      .then(function (result) {
-        logger.info('Reduction statuses updated')
+        .then(function (result) {
+          logger.info('Reduction statuses updated')
 
-        var courtReportsCalculationAdditionalData = {
-          workloadBatch: task.additionalData,
-          operationType: operationType.INSERT
-        }
+          const courtReportsCalculationAdditionalData = {
+            workloadBatch: task.additionalData,
+            operationType: operationType.INSERT
+          }
 
-        var courtReportsCalculation = new Task(
-          undefined,
-          submittingAgent.WORKER,
-          taskType.COURT_REPORTS_CALCULATION,
-          courtReportsCalculationAdditionalData,
-          task.workloadReportId,
-          undefined,
-          undefined,
-          taskStatus.AWAITING_DUPLICATE_CHECK
+          const courtReportsCalculation = new Task(
+            undefined,
+            submittingAgent.WORKER,
+            taskType.COURT_REPORTS_CALCULATION,
+            courtReportsCalculationAdditionalData,
+            task.workloadReportId,
+            undefined,
+            undefined,
+            taskStatus.AWAITING_DUPLICATE_CHECK
           )
 
-        return createNewTasks([courtReportsCalculation])
-        .then(function () {
-          logger.info('Court reports calculation task created')
+          return createNewTasks([courtReportsCalculation])
+            .then(function () {
+              logger.info('Court reports calculation task created')
+            })
         })
-      })
     })
 }

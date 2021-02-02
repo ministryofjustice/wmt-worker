@@ -5,19 +5,19 @@ const CourtReport = require('wmt-probation-rules').CourtReport
 const OmCourtReports = require('wmt-probation-rules').OmCourtReports
 const helper = require('../../../helpers/data/staging-court-reporters-helper')
 
-var inserts = []
+let inserts = []
 describe('services/data/get-staging-court-reporters', function () {
   before(function () {
     return helper.insertDependencies(inserts)
-    .then(function (builtInserts) {
-      inserts = builtInserts
-    })
+      .then(function (builtInserts) {
+        inserts = builtInserts
+      })
   })
 
   it('should retrieve any staging court reports in the batch', function () {
-    var crId = inserts.filter((item) => item.table === 'court_reporters')[0].id
+    const crId = inserts.filter((item) => item.table === 'court_reporters')[0].id
 
-    var expectCaseSummary = new CasesSummay(
+    const expectCaseSummary = new CasesSummay(
       helper.defaultCourtReporter.trust,
       helper.defaultCourtReporter.region_desc,
       helper.defaultCourtReporter.region_code,
@@ -37,7 +37,7 @@ describe('services/data/get-staging-court-reporters', function () {
       null,
       null
     )
-    var expectedCourtReport = new CourtReport(
+    const expectedCourtReport = new CourtReport(
       helper.defaultCourtReporter.om_key,
       helper.defaultCourtReporter.om_grade_code,
       helper.defaultCourtReporter.sdr_last_30,
@@ -45,16 +45,16 @@ describe('services/data/get-staging-court-reporters', function () {
       helper.defaultCourtReporter.sdr_conv_last_30,
       helper.defaultCourtReporter.oral_reports
     )
-    var expectedCourtReports = new OmCourtReports(
+    const expectedCourtReports = new OmCourtReports(
       crId,
       expectCaseSummary,
       expectedCourtReport
     )
 
     return getStgCourtReporters([crId, crId])
-    .then(function (results) {
-      expect(results).to.be.eql([expectedCourtReports])
-    })
+      .then(function (results) {
+        expect(results).to.be.eql([expectedCourtReports])
+      })
   })
 
   after(function () {

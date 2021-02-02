@@ -8,32 +8,32 @@ const getOpenReductions = require('../data/get-open-reductions')
 const updateStatus = require('../update-adjustment-reduction-status')
 
 module.exports.execute = function (task) {
-  var workloadStagingIdStart = task.additionalData.startingId
-  var workloadStagingIdEnd = workloadStagingIdStart + task.additionalData.batchSize - 1
-  var workloadReportId = task.workloadReportId
+  const workloadStagingIdStart = task.additionalData.startingId
+  const workloadStagingIdEnd = workloadStagingIdStart + task.additionalData.batchSize - 1
+  const workloadReportId = task.workloadReportId
 
   logger.info('Retrieving open reductions for workload owners with workloads\' staging ids ' + workloadStagingIdStart + ' - ' + workloadStagingIdEnd + ', for workload report ' + workloadReportId)
   return getOpenReductions(workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
     .then(function (reductions) {
       return updateStatus.updateReductionStatuses(reductions)
-      .then(function (result) {
-        logger.info('Reduction statuses updated')
+        .then(function (result) {
+          logger.info('Reduction statuses updated')
 
-        var processAdjustments = new Task(
-          undefined,
-          submittingAgent.WORKER,
-          taskType.PROCESS_ADJUSTMENTS,
-          task.additionalData,
-          task.workloadReportId,
-          undefined,
-          undefined,
-          taskStatus.AWAITING_DUPLICATE_CHECK
+          const processAdjustments = new Task(
+            undefined,
+            submittingAgent.WORKER,
+            taskType.PROCESS_ADJUSTMENTS,
+            task.additionalData,
+            task.workloadReportId,
+            undefined,
+            undefined,
+            taskStatus.AWAITING_DUPLICATE_CHECK
           )
 
-        return createNewTasks([processAdjustments])
-        .then(function () {
-          logger.info('Process adjustments task created')
+          return createNewTasks([processAdjustments])
+            .then(function () {
+              logger.info('Process adjustments task created')
+            })
         })
-      })
     })
 }

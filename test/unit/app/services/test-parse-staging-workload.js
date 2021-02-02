@@ -5,12 +5,11 @@ const stagingWorkload = require('../../../constants/staging-workload')
 const armsTotals = require('../../../constants/arms-totals')
 const caseDetails = require('../../../constants/case-details')
 const locations = require('wmt-probation-rules').Locations
-require('sinon-bluebird')
 
-var getStagingWorkload
-var getArmsTotals
-var getStagingCaseDetails
-var parseStagingWorkload
+let getStagingWorkload
+let getArmsTotals
+let getStagingCaseDetails
+let parseStagingWorkload
 
 describe('services/parse-staging-workload', function () {
   before(function () {
@@ -28,7 +27,7 @@ describe('services/parse-staging-workload', function () {
   it('should build an OMWorkload object with the correct case totals', function () {
     return parseStagingWorkload([1, 2]).then(function (omWorkload) {
       // This needs extended to test the other case totals for the other tiers
-      var filteredCommunityTiers = omWorkload[0].casesSummary.filteredCommunityTiers
+      const filteredCommunityTiers = omWorkload[0].casesSummary.filteredCommunityTiers
       expect(filteredCommunityTiers.location).to.be.eql(locations.COMMUNITY)
       expect(filteredCommunityTiers.untiered).to.be.eql('32')
       expect(filteredCommunityTiers.d2).to.be.eql('33')
@@ -42,7 +41,7 @@ describe('services/parse-staging-workload', function () {
       expect(filteredCommunityTiers.f).to.be.eql('96')
       expect(filteredCommunityTiers.g).to.be.eql('95')
 
-      var filteredCustodyTiers = omWorkload[0].casesSummary.filteredCustodyTiers
+      const filteredCustodyTiers = omWorkload[0].casesSummary.filteredCustodyTiers
       expect(filteredCustodyTiers.location).to.be.eql(locations.CUSTODY)
       expect(filteredCustodyTiers.untiered).to.be.eql('48')
       expect(filteredCustodyTiers.d2).to.be.eql('49')
@@ -56,7 +55,7 @@ describe('services/parse-staging-workload', function () {
       expect(filteredCustodyTiers.f).to.be.eql('102')
       expect(filteredCustodyTiers.g).to.be.eql('101')
 
-      var filteredLicenseTiers = omWorkload[0].casesSummary.filteredLicenseTiers
+      const filteredLicenseTiers = omWorkload[0].casesSummary.filteredLicenseTiers
       expect(filteredLicenseTiers.location).to.be.eql(locations.LICENSE)
       expect(filteredLicenseTiers.untiered).to.be.eql('40')
       expect(filteredLicenseTiers.d2).to.be.eql('41')

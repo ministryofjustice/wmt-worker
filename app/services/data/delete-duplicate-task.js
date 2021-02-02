@@ -8,10 +8,10 @@ module.exports = function (additionalData, thisTaskType, workloadReportId, limit
     .andWhere('type', thisTaskType)
     .limit(limit - 1)
     .then(function (results) {
-      var ids = []
+      const ids = []
       if (results) {
         results.forEach(function (result) {
-          ids.push(result['id'])
+          ids.push(result.id)
         })
       }
       return knex('tasks')

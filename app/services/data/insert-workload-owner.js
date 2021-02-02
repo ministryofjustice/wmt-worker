@@ -3,9 +3,9 @@ const knex = require('../../../knex').appSchema
 const workloadOwnerTable = `${config.DB_APP_SCHEMA}.workload_owner`
 
 module.exports = function (workloadOwner) {
-  var workloadOwnerId
+  let workloadOwnerId
 
-  var workloadOwnerDatabaseObject = {}
+  const workloadOwnerDatabaseObject = {}
   workloadOwnerDatabaseObject.offender_manager_id = workloadOwner.offenderManagerId
   workloadOwnerDatabaseObject.contracted_hours = workloadOwner.contractedHours
   workloadOwnerDatabaseObject.team_id = workloadOwner.teamId
@@ -20,7 +20,7 @@ module.exports = function (workloadOwner) {
           .insert(workloadOwnerDatabaseObject)
           .returning('id')
       } else {
-        workloadOwnerId = result['id']
+        workloadOwnerId = result.id
       }
       return workloadOwnerId
     })

@@ -5,10 +5,10 @@ const CasesSummary = require('wmt-probation-rules').CasesSummary
 const CourtReport = require('wmt-probation-rules').CourtReport
 
 module.exports = function (range) {
-  var omCourtReports = []
+  const omCourtReports = []
 
-  var tableName = 'court_reporters'
-  var selectCols = [
+  const tableName = 'court_reporters'
+  const selectCols = [
     'id AS staging_id',
     'trust',
     'region_desc',
@@ -29,46 +29,46 @@ module.exports = function (range) {
   ]
 
   return knex(tableName).whereBetween('id', range).select(selectCols)
-  .then(function (results) {
-    if (results !== 'undefined' && results.length > 0) {
-      return Promise.each(results, function (result) {
-        var casesSummary = new CasesSummary(
-          result['trust'],
-          result['region_desc'],
-          result['region_code'],
-          result['pdu_desc'],
-          result['pdu_code'],
-          result['team_desc'],
-          result['team_code'],
-          result['om_surname'],
-          result['om_forename'],
-          result['om_grade_code'],
-          result['om_key'],
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null
-        )
+    .then(function (results) {
+      if (results !== 'undefined' && results.length > 0) {
+        return Promise.each(results, function (result) {
+          const casesSummary = new CasesSummary(
+            result.trust,
+            result.region_desc,
+            result.region_code,
+            result.pdu_desc,
+            result.pdu_code,
+            result.team_desc,
+            result.team_code,
+            result.om_surname,
+            result.om_forename,
+            result.om_grade_code,
+            result.om_key,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          )
 
-        var courtReport = new CourtReport(
-          result['om_key'],
-          result['om_grade_code'],
-          result['sdr_last_30'],
-          result['sdr_due_next_30'],
-          result['sdr_conv_last_30'],
-          result['oral_reports']
-        )
+          const courtReport = new CourtReport(
+            result.om_key,
+            result.om_grade_code,
+            result.sdr_last_30,
+            result.sdr_due_next_30,
+            result.sdr_conv_last_30,
+            result.oral_reports
+          )
 
-        var stagingId = result['staging_id']
+          const stagingId = result.staging_id
 
-        omCourtReports.push(new OmCourtReports(stagingId, casesSummary, courtReport))
-      })
-      .then(function () {
-        return omCourtReports
-      })
-    }
-  })
+          omCourtReports.push(new OmCourtReports(stagingId, casesSummary, courtReport))
+        })
+          .then(function () {
+            return omCourtReports
+          })
+      }
+    })
 }

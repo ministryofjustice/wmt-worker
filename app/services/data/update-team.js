@@ -6,6 +6,6 @@ module.exports = function (team) {
   return knex(teamTable)
     .update('description', team.description)
     .update('ldu_id', team.ldu_id)
-    .where({'code': team.code})
+    .where({ code: team.code })
     .returning('id')
 }

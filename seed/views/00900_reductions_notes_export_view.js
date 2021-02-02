@@ -1,5 +1,5 @@
 exports.seed = function (knex, promise) {
-  var view = `CREATE VIEW app.reductions_notes_export_view
+  const view = `CREATE VIEW app.reductions_notes_export_view
       WITH SCHEMABINDING
       AS
       SELECT
@@ -34,7 +34,7 @@ exports.seed = function (knex, promise) {
           AND wr.effective_to IS NULL;`
 
   return knex.schema
-        .raw('DROP VIEW IF EXISTS app.reductions_notes_export_view;')
-        .raw('SET ARITHABORT ON')
-        .raw(view)
+    .raw('DROP VIEW IF EXISTS app.reductions_notes_export_view;')
+    .raw('SET ARITHABORT ON')
+    .raw(view)
 }

@@ -6,47 +6,47 @@ const getGsAdjustments = require('../../../../app/services/data/get-app-gs-adjus
 const adjustmentCategory = require('../../../../app/constants/adjustment-category')
 const adjustmentStatus = require('../../../../app/constants/adjustment-status')
 
-var inserts = []
-var startStagingId
-var endStagingId
-var workloadReportId
+let inserts = []
+let startStagingId
+let endStagingId
+let workloadReportId
 
 describe('services/data/get-app-adjustments-for-batch', function () {
   before(function (done) {
     adjustmentsHelper.insertDependencies(inserts)
-    .then(function (builtInserts) {
-      inserts = builtInserts
-      startStagingId = 1
-      endStagingId = startStagingId + 2
-      workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
-      done()
-    })
+      .then(function (builtInserts) {
+        inserts = builtInserts
+        startStagingId = 1
+        endStagingId = startStagingId + 2
+        workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
+        done()
+      })
   })
 
   it('should retrieve the CMS adjustments in DB, for a given batch of active workload staging ids -> workload owners -> adjustments', function () {
     return getAdjustments(adjustmentCategory.CMS, startStagingId, endStagingId, workloadReportId)
-    .then(function (adjustments) {
-      var adjustmentIds = []
-      adjustments.forEach(function (adjustment) {
-        adjustmentIds.push(adjustment.id)
+      .then(function (adjustments) {
+        const adjustmentIds = []
+        adjustments.forEach(function (adjustment) {
+          adjustmentIds.push(adjustment.id)
         expect(adjustment.contactId).to.be.not.null // eslint-disable-line
-        expect(adjustment.adjustmentReasonId).to.be.equal(1)
-        expect(adjustment.status).to.be.equal(adjustmentStatus.ACTIVE)
+          expect(adjustment.adjustmentReasonId).to.be.equal(1)
+          expect(adjustment.status).to.be.equal(adjustmentStatus.ACTIVE)
+        })
       })
-    })
   })
 
   it('should retrieve the GS adjustments in DB, for a given batch of active workload staging ids -> workload owners -> adjustments', function () {
     return getGsAdjustments(startStagingId, endStagingId, workloadReportId)
-    .then(function (adjustments) {
-      var adjustmentIds = []
-      adjustments.forEach(function (adjustment) {
-        adjustmentIds.push(adjustment.id)
+      .then(function (adjustments) {
+        const adjustmentIds = []
+        adjustments.forEach(function (adjustment) {
+          adjustmentIds.push(adjustment.id)
         expect(adjustment.contactId).to.be.not.null // eslint-disable-line
-        expect(adjustment.adjustmentReasonId).to.be.equal(40)
-        expect(adjustment.status).to.be.equal(adjustmentStatus.ACTIVE)
+          expect(adjustment.adjustmentReasonId).to.be.equal(40)
+          expect(adjustment.status).to.be.equal(adjustmentStatus.ACTIVE)
+        })
       })
-    })
   })
 
   it('should retrieve both CMS adjustments and GS adjustments in a combined array', function () {
@@ -54,7 +54,7 @@ describe('services/data/get-app-adjustments-for-batch', function () {
       .then(function (cmsAdjustments) {
         return getGsAdjustments(startStagingId, endStagingId, workloadReportId)
           .then(function (gsAdjustments) {
-            var adjustments = cmsAdjustments.concat(gsAdjustments)
+            const adjustments = cmsAdjustments.concat(gsAdjustments)
             expect(adjustments.length).to.be.equal(3)
           })
       })
@@ -62,9 +62,9 @@ describe('services/data/get-app-adjustments-for-batch', function () {
 
   it('should return an empty array if there are no adjustments matching the query criteria', function () {
     return getAdjustments(adjustmentCategory.CMS, endStagingId * 2, endStagingId * 2, workloadReportId + 1)
-    .then(function (adjustments) {
-      expect(adjustments).to.eql([])
-    })
+      .then(function (adjustments) {
+        expect(adjustments).to.eql([])
+      })
   })
 
   after(function () {

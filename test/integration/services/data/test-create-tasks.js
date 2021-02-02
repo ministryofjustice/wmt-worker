@@ -7,7 +7,7 @@ const Task = require('../../../../app/services/domain/task')
 const TASK_STATUS = require('../../../../app/constants/task-status')
 const timeThreshold = require('../../../constants/time-threshold')
 
-var inserts = []
+const inserts = []
 
 describe('app/services/data/create-tasks', function () {
   before(function () {
@@ -15,19 +15,19 @@ describe('app/services/data/create-tasks', function () {
   })
 
   it('should insert a new task correctly', function (done) {
-    var submittingAgent = 'submittingAgent'
-    var type = 'type'
-    var additionalData = 'additionalData'
-    var workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
+    const submittingAgent = 'submittingAgent'
+    const type = 'type'
+    const additionalData = 'additionalData'
+    const workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
 
-    var task = new Task(undefined, submittingAgent, type, additionalData, workloadReportId)
+    const task = new Task(undefined, submittingAgent, type, additionalData, workloadReportId)
 
     createTasks([task]).then(function (ids) {
       return knex.table('tasks')
-        .where({'id': ids[0]})
+        .where({ id: ids[0] })
         .then(function (results) {
           expect(results.length).to.equal(1)
-          var result = results[0]
+          const result = results[0]
           expect(result.type).to.equal(type)
           expect(result.submitting_agent).to.eq(submittingAgent)
           expect(result.workload_report_id).to.eq(workloadReportId)
@@ -35,7 +35,7 @@ describe('app/services/data/create-tasks', function () {
           expect(result.status).to.equal(TASK_STATUS.PENDING)
           expect(moment().diff(result.date_created, 'seconds')).to.be.lt(timeThreshold.INSERT)
           expect(result.effective_to).to.be.undefined // eslint-disable-line
-          inserts.push({table: 'tasks', id: ids[0]})
+          inserts.push({ table: 'tasks', id: ids[0] })
           done()
         })
     })

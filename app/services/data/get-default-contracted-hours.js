@@ -1,8 +1,8 @@
 const knex = require('../../../knex').appSchema
 
 module.exports = function (grade) {
-  var select = ''
-  var selectAlias = ' AS defaultContractedHours'
+  let select = ''
+  const selectAlias = ' AS defaultContractedHours'
   switch (grade) {
     case 'PO':
     case 'TPO':
@@ -25,7 +25,7 @@ module.exports = function (grade) {
     .andWhere('is_t2a', false)
     .first(select + selectAlias)
     .then((result) => {
-      var hours = result.defaultContractedHours
+      let hours = result.defaultContractedHours
       if (hours === null) {
         hours = 0
       }

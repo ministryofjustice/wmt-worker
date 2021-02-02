@@ -1,17 +1,17 @@
 module.exports = function (caseload) {
-  var licenceArray = formatCase(caseload.caseloadDetails.licenseCaseloadDetails.details, 'Licence')
-  var custodyArray = formatCase(caseload.caseloadDetails.custodyCaseloadDetails.details, 'Custody')
-  var communityArray = formatCase(caseload.caseloadDetails.communityCaseloadDetails.details, 'Community')
+  const licenceArray = formatCase(caseload.caseloadDetails.licenseCaseloadDetails.details, 'Licence')
+  const custodyArray = formatCase(caseload.caseloadDetails.custodyCaseloadDetails.details, 'Custody')
+  const communityArray = formatCase(caseload.caseloadDetails.communityCaseloadDetails.details, 'Community')
   return licenceArray.concat(custodyArray, communityArray)
 }
 
-var formatCase = function (ldus, sentenceType) {
-  var thisCaseArray = []
+const formatCase = function (ldus, sentenceType) {
+  const thisCaseArray = []
   ldus.forEach(function (ldu) {
-    var lduName = ldu.name
-    var regionName = ldu.regionName
+    const lduName = ldu.name
+    const regionName = ldu.regionName
     ldu.grades.forEach(function (grade) {
-      var thisCase = Object.assign({}, grade)
+      const thisCase = Object.assign({}, grade)
       thisCaseArray.push([
         regionName,
         sentenceType,

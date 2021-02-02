@@ -1,13 +1,13 @@
 const moment = require('moment')
 
 exports.now = function () {
-  var now = moment()
+  const now = moment()
   return applyDaylightSavingTime(now)
 }
 
 exports.build = function (day, month, year) {
   month = month - 1
-  var date = moment([year, month, day])
+  const date = moment([year, month, day])
   return applyDaylightSavingTime(date)
 }
 

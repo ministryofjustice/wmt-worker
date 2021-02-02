@@ -10,7 +10,7 @@ module.exports = function (gradeCode) {
           .insert({ grade_code: gradeCode })
           .returning('id')
       } else {
-        return result['id']
+        return result.id
       }
     })
 }
