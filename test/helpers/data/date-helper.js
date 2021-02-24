@@ -1,4 +1,4 @@
-var now = new Date()
+const now = new Date()
 
 module.exports.today = new Date(now)
 

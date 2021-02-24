@@ -1,14 +1,14 @@
-var tableName = 'reduction_reason'
-var insertStatement = 'INSERT INTO app.' + tableName + ' (id, reason, reason_short_name, category_id, allowance_percentage, max_allowance_percentage, months_to_expiry) VALUES '
+const tableName = 'reduction_reason'
+const insertStatement = 'INSERT INTO app.' + tableName + ' (id, reason, reason_short_name, category_id, allowance_percentage, max_allowance_percentage, months_to_expiry) VALUES '
 
-var categoryId
-var sql
+let categoryId
+let sql
 
 exports.seed = function (knex, Promise) {
   // Deletes ALL existing entries
   return knex(tableName).del()
     .then(function () {
-      return knex('reduction_category').select('id').where({category: 'Personal Circumstances'}).first()
+      return knex('reduction_category').select('id').where({ category: 'Personal Circumstances' }).first()
     })
     .then(function (categoryIdResult) {
       categoryId = categoryIdResult.id
@@ -29,7 +29,7 @@ exports.seed = function (knex, Promise) {
         .raw(sql)
     })
     .then(function () {
-      return knex('reduction_category').select('id').where({category: 'Community Justice Learning'}).first()
+      return knex('reduction_category').select('id').where({ category: 'Community Justice Learning' }).first()
     })
     .then(function (categoryIdResult) {
       categoryId = categoryIdResult.id
@@ -45,7 +45,7 @@ exports.seed = function (knex, Promise) {
         .raw(sql)
     })
     .then(function () {
-      return knex('reduction_category').select('id').where({category: 'Work Circumstances'}).first()
+      return knex('reduction_category').select('id').where({ category: 'Work Circumstances' }).first()
     })
     .then(function (categoryIdResult) {
       categoryId = categoryIdResult.id

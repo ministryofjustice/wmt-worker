@@ -1,7 +1,6 @@
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
-require('sinon-bluebird')
 
 const OffenderManager = require('wmt-probation-rules').OffenderManager
 const Team = require('wmt-probation-rules').Team
@@ -10,24 +9,24 @@ const Ldu = require('wmt-probation-rules').Ldu
 const Region = require('wmt-probation-rules').Region
 const filterOmGradeCode = require('wmt-probation-rules').filterOmGradeCode
 
-var insertWoAndDependencies
-var insertOffenderManagerTypeId
-var insertOffenderManager
-var insertWorkloadOwner
-var insertTeam
-var insertLdu
-var insertRegion
-var getDefaultContractedHours
+let insertWoAndDependencies
+let insertOffenderManagerTypeId
+let insertOffenderManager
+let insertWorkloadOwner
+let insertTeam
+let insertLdu
+let insertRegion
+let getDefaultContractedHours
 
-var omTypeId = 1
-var omId = 2
-var woId = 3
-var teamId = 4
-var lduId = 5
-var regionId = 6
-var contractedHours = 37
+const omTypeId = 1
+const omId = 2
+const woId = 3
+const teamId = 4
+const lduId = 5
+const regionId = 6
+const contractedHours = 37
 
-var caseSummary = {
+const caseSummary = {
   omGradeCode: 'D',
   omKey: 'B',
   omForename: 'C',
@@ -40,12 +39,12 @@ var caseSummary = {
   teamDesc: 'J'
 }
 
-var expectedGrade = filterOmGradeCode(caseSummary.omGradeCode)
-var expectedOffenderManager = new OffenderManager(undefined, caseSummary.omKey, caseSummary.omForename, caseSummary.omSurname, omTypeId, expectedGrade)
-var expectedRegion = new Region(undefined, caseSummary.regionCode, caseSummary.regionDesc)
-var expectedLdu = new Ldu(undefined, regionId, caseSummary.lduCode, caseSummary.lduDesc)
-var expectedTeam = new Team(undefined, lduId, caseSummary.teamCode, caseSummary.teamDesc)
-var expectedWorkloadOwner = new WorkloadOwner(undefined, omId, undefined, teamId, contractedHours)
+const expectedGrade = filterOmGradeCode(caseSummary.omGradeCode)
+const expectedOffenderManager = new OffenderManager(undefined, caseSummary.omKey, caseSummary.omForename, caseSummary.omSurname, omTypeId, expectedGrade)
+const expectedRegion = new Region(undefined, caseSummary.regionCode, caseSummary.regionDesc)
+const expectedLdu = new Ldu(undefined, regionId, caseSummary.lduCode, caseSummary.lduDesc)
+const expectedTeam = new Team(undefined, lduId, caseSummary.teamCode, caseSummary.teamDesc)
+const expectedWorkloadOwner = new WorkloadOwner(undefined, omId, undefined, teamId, contractedHours)
 
 describe('services/insert-workload-owner-and-dependencies', function () {
   beforeEach(function () {
@@ -70,14 +69,14 @@ describe('services/insert-workload-owner-and-dependencies', function () {
 
   it('should call on to data services', function () {
     return insertWoAndDependencies(caseSummary)
-    .then(function (result) {
-      expect(result).to.be.eql(woId)
-      expect(insertOffenderManagerTypeId.calledWith(expectedGrade)).to.be.equal(true)
-      expect(insertOffenderManager.calledWith(expectedOffenderManager)).to.be.equal(true)
-      expect(insertRegion.calledWith(expectedRegion)).to.be.equal(true)
-      expect(insertLdu.calledWith(expectedLdu)).to.be.equal(true)
-      expect(insertTeam.calledWith(expectedTeam)).to.be.equal(true)
-      expect(insertWorkloadOwner.calledWith(expectedWorkloadOwner)).to.be.equal(true)
-    })
+      .then(function (result) {
+        expect(result).to.be.eql(woId)
+        expect(insertOffenderManagerTypeId.calledWith(expectedGrade)).to.be.equal(true)
+        expect(insertOffenderManager.calledWith(expectedOffenderManager)).to.be.equal(true)
+        expect(insertRegion.calledWith(expectedRegion)).to.be.equal(true)
+        expect(insertLdu.calledWith(expectedLdu)).to.be.equal(true)
+        expect(insertTeam.calledWith(expectedTeam)).to.be.equal(true)
+        expect(insertWorkloadOwner.calledWith(expectedWorkloadOwner)).to.be.equal(true)
+      })
   })
 })

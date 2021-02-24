@@ -1,20 +1,20 @@
 const knex = require('../../../knex').stagingSchema
-var Promise = require('bluebird').Promise
+const Promise = require('bluebird').Promise
 
 module.exports.insertDependencies = function (inserts) {
   return knex('court_reports').returning('id').insert(getCourtReports())
-  .then(function (ids) {
-    ids.forEach((id) => {
-      inserts.push({ table: 'court_reports', id: id })
+    .then(function (ids) {
+      ids.forEach((id) => {
+        inserts.push({ table: 'court_reports', id: id })
+      })
+      return knex('wmt_extract').returning('id').insert(getWmtExtracts())
     })
-    return knex('wmt_extract').returning('id').insert(getWmtExtracts())
-  })
-  .then(function (ids) {
-    ids.forEach((id) => {
-      inserts.push({ table: 'wmt_extract', id: id })
+    .then(function (ids) {
+      ids.forEach((id) => {
+        inserts.push({ table: 'wmt_extract', id: id })
+      })
+      return inserts
     })
-    return inserts
-  })
 }
 
 module.exports.removeDependencies = function (inserts) {
@@ -24,7 +24,7 @@ module.exports.removeDependencies = function (inserts) {
   })
 }
 
-var getCourtReports = function () {
+const getCourtReports = function () {
   return [
     Object.assign({}, module.exports.defaultCourtReport, { om_key: 'OM01', team_code: 'TM01', om_team_staff_grade: 'om_team_staff_grade' }),
     Object.assign({}, module.exports.defaultCourtReport, { om_key: 'OM02', team_code: 'TM01', om_team_staff_grade: 'om_team_staff_grade' }),
@@ -34,7 +34,7 @@ var getCourtReports = function () {
   ]
 }
 
-var getWmtExtracts = function () {
+const getWmtExtracts = function () {
   return [
     Object.assign({}, defaultWmtExtract, { om_key: 'OM01', team_code: 'TM01' }),
     Object.assign({}, defaultWmtExtract, { om_key: 'OM02', team_code: 'TM01' }),
@@ -63,6 +63,6 @@ module.exports.defaultCourtReport = {
   datestamp: 'datestamp'
 }
 
-var defaultWmtExtract = {
+const defaultWmtExtract = {
 
 }

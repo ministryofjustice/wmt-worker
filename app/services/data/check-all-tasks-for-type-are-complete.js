@@ -8,10 +8,10 @@ module.exports = function (taskType, workloadReportId) {
     .andWhere('type', taskType)
     .unionAll(function () {
       this.from('tasks')
-      .count('* AS theCount')
-      .where('workload_report_id', workloadReportId)
-      .andWhere('type', taskType)
-      .andWhere('status', taskStatus.COMPLETE)
+        .count('* AS theCount')
+        .where('workload_report_id', workloadReportId)
+        .andWhere('type', taskType)
+        .andWhere('status', taskStatus.COMPLETE)
     })
     .then(function (results) {
       return results[0].theCount === results[1].theCount

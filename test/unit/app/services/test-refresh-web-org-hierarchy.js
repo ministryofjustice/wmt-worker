@@ -1,10 +1,9 @@
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
-require('sinon-bluebird')
 
-var refreshHierarchy
-var createRequestPromise
+let refreshHierarchy
+let createRequestPromise
 
 describe('services/refresh-web-org-hierarchy', function () {
   before(function (done) {
@@ -12,7 +11,8 @@ describe('services/refresh-web-org-hierarchy', function () {
 
     refreshHierarchy = proxyquire('../../../../app/services/refresh-web-org-hierarchy', {
       '../../config': { IP_ADDRESSES: 'https://localhost:3000,https://integration:3000' },
-      'request-promise': createRequestPromise})
+      'request-promise': createRequestPromise
+    })
     done()
   })
 

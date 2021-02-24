@@ -3,13 +3,15 @@ const knex = require('knex')(config)
 const glob = require('glob')
 const Promise = require('bluebird').Promise
 
-var dataDirectory = process.argv[2]
-var seedDataFileNames = glob.sync('./seed/data/' + dataDirectory + '/[0...9]*.js')
+const dataDirectory = process.argv[2]
+const seedDataFileNames = glob.sync('./seed/data/' + dataDirectory + '/[0...9]*.js')
 
-var databaseTableNames = seedDataFileNames.sort().reverse()
-    .map((fileName) => fileName.substring(fileName.lastIndexOf('/') + 7, fileName.lastIndexOf('.')))
+const databaseTableNames = seedDataFileNames.sort().reverse()
+  .map((fileName) => fileName.substring(fileName.lastIndexOf('/') + 7, fileName.lastIndexOf('.')))
 
-Promise.each(databaseTableNames, (tableName) =>
-        knex(tableName).del().return()
-)
-.finally(() => knex.destroy())
+Promise.each(databaseTableNames, function (tableName) {
+  return knex(tableName).del()
+})
+  .finally(function () {
+    return knex.destroy()
+  })

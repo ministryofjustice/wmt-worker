@@ -3,7 +3,7 @@ const expect = require('chai').expect
 const appWorkloadOwnerHelper = require('../../../helpers/data/app-workload-owner-helper')
 const getContractedHours = require('../../../../app/services/data/get-contracted-hours')
 
-var inserts = []
+let inserts = []
 
 describe('services/data/get-contracted-hours', function () {
   before(function (done) {
@@ -15,7 +15,7 @@ describe('services/data/get-contracted-hours', function () {
   })
 
   it('should retrieve the contracted hours for a workload owner with specified contracted hours', function (done) {
-    var workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
+    const workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
     getContractedHours(workloadOwnerId).then(function (hours) {
       expect(hours).to.equal(40)
       done()
@@ -23,7 +23,7 @@ describe('services/data/get-contracted-hours', function () {
   })
 
   it('should retrieve default for a workload owner with no defined contracted hours', function (done) {
-    var workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[1].id
+    const workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[1].id
     getContractedHours(workloadOwnerId).then(function (hours) {
       expect(hours).to.equal(37)
       done()

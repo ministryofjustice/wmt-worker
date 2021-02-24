@@ -1,16 +1,15 @@
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
-require('sinon-bluebird')
 
-var getOpenWorkloadReports
-var updateWorkloadEffectiveTo
-var closePreviousWorkloadReport
+let getOpenWorkloadReports
+let updateWorkloadEffectiveTo
+let closePreviousWorkloadReport
 
-var now = new Date()
-var past = now.setMonth(now.getMonth() - 2)
-var newWorkloadReportId = 12
-var previousWorkloadReportId = 3
+const now = new Date()
+const past = now.setMonth(now.getMonth() - 2)
+const newWorkloadReportId = 12
+const previousWorkloadReportId = 3
 
 const currentWorkloads = [
   {

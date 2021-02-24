@@ -1,5 +1,5 @@
 exports.seed = function (knex, promise) {
-  var sql = `CREATE VIEW app.omic_national_case_overview
+  const sql = `CREATE VIEW app.omic_national_case_overview
   WITH SCHEMABINDING
   AS
   SELECT

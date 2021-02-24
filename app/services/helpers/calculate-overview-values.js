@@ -1,7 +1,7 @@
 const calculatePercentage = require('./percentage-calculator').calculatePercentage
 
 module.exports = function (results) {
-  var totalsToReturn = {}
+  let totalsToReturn = {}
   if (results.length !== undefined) {
     results.forEach(function (result) {
       result.remainingPoints = result.availablePoints - result.totalPoints
@@ -10,9 +10,9 @@ module.exports = function (results) {
     })
     totalsToReturn = results
   } else {
-    var capacityPercentage = calculatePercentage(results.totalPoints, results.availablePoints)
-    var cmsPercentage = calculatePercentage(results.cmsAdjustmentPoints, results.availablePoints)
-    totalsToReturn = Object.assign({}, results, {capacity: capacityPercentage, cmsPercentage: cmsPercentage})
+    const capacityPercentage = calculatePercentage(results.totalPoints, results.availablePoints)
+    const cmsPercentage = calculatePercentage(results.cmsAdjustmentPoints, results.availablePoints)
+    totalsToReturn = Object.assign({}, results, { capacity: capacityPercentage, cmsPercentage: cmsPercentage })
   }
   return totalsToReturn
 }

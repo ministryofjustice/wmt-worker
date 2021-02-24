@@ -3,11 +3,11 @@ const knex = require('knex')(config)
 const dateFormatter = require('../date-formatter')
 
 module.exports = function (filePath, fileType) {
-  var fileMetadata = {
-    'file_type': fileType,
-    'date_created': dateFormatter.now().toDate(),
-    'filepath': filePath,
-    'is_enabled': true
+  const fileMetadata = {
+    file_type: fileType,
+    date_created: dateFormatter.now().toDate(),
+    filepath: filePath,
+    is_enabled: true
   }
 
   return knex('app.export_file').insert(fileMetadata).returning('id')

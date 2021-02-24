@@ -2,10 +2,10 @@ const knex = require('../../../knex').appSchema
 const dateFormatter = require('../../services/date-formatter')
 
 module.exports = function () {
-  var table = 'reductions_notes_dashboard'
-  var reductionsAsArray = []
+  const table = 'reductions_notes_dashboard'
+  const reductionsAsArray = []
 
-  var selectColumns = [
+  const selectColumns = [
     'region_name AS regionName',
     'ldu_name AS lduName',
     'team_name AS teamName',

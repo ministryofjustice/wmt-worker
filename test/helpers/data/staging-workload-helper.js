@@ -98,7 +98,7 @@ module.exports.getTestInstitutionalReport = function (omKey = testOmKey) {
 }
 
 module.exports.getArmsData = function (omKey = testOmKey, teamCode = testTeamCode) {
-  var defaultArmsObject = {
+  const defaultArmsObject = {
     assessmentDate: '09/10/2017',
     assessmentCode: 'acode',
     assessmentDescription: 'A description',
@@ -153,7 +153,7 @@ module.exports.insertCaseSummaryReport = function (caseSummary, inserts) {
 }
 
 module.exports.insertCourtReport = function (courtReport, inserts) {
-  var courtReportToInsert = Object.assign({}, courtReport, { teamCode: testTeamCode })
+  const courtReportToInsert = Object.assign({}, courtReport, { teamCode: testTeamCode })
   return knex(courtReportsTable)
     .insert(mapForInsert(courtReportToInsert))
     .returning('id')
@@ -164,7 +164,7 @@ module.exports.insertCourtReport = function (courtReport, inserts) {
 }
 
 module.exports.insertInstitutionalReport = function (institutionalReport, inserts) {
-  var instReportToInsert = Object.assign({}, institutionalReport, { teamCode: testTeamCode })
+  const instReportToInsert = Object.assign({}, institutionalReport, { teamCode: testTeamCode })
   return knex(institutionalReportsTable)
     .insert(mapForInsert(instReportToInsert))
     .returning('id')
@@ -190,33 +190,33 @@ module.exports.deleteAll = function () {
       return knex(courtReportsTable).del()
         .then(function () {
           return knex(t2aTable).del()
-          .then(function () {
-            return knex(wmtExtractTable).del()
-          })
+            .then(function () {
+              return knex(wmtExtractTable).del()
+            })
         })
     })
 }
 
 function mapForInsert (record) {
-  var row = {}
-  for (let key in record) {
+  const row = {}
+  for (const key in record) {
     if (key === 'communityTiers') {
-      for (let subkey in record[key]) {
-        let alias = subkey === 'untiered' ? '0' : subkey
+      for (const subkey in record[key]) {
+        const alias = subkey === 'untiered' ? '0' : subkey
         if (typeof aliases['commtier' + alias] !== 'undefined') {
           row[aliases['commtier' + alias]] = record[key][subkey]
         }
       }
     } else if (key === 'licenseTiers') {
-      for (let subkey in record[key]) {
-        let alias = subkey === 'untiered' ? '0' : subkey
+      for (const subkey in record[key]) {
+        const alias = subkey === 'untiered' ? '0' : subkey
         if (typeof aliases['licencetier' + alias] !== 'undefined') {
           row[aliases['licencetier' + alias]] = record[key][subkey]
         }
       }
     } else if (key === 'custodyTiers') {
-      for (let subkey in record[key]) {
-        let alias = subkey === 'untiered' ? '0' : subkey
+      for (const subkey in record[key]) {
+        const alias = subkey === 'untiered' ? '0' : subkey
         if (typeof aliases['custtier' + alias] !== 'undefined') {
           row[aliases['custtier' + alias]] = record[key][subkey]
         }
@@ -231,25 +231,25 @@ function mapForInsert (record) {
 }
 
 function mapFilteredForInsert (record) {
-  var row = {}
-  for (let key in record) {
+  const row = {}
+  for (const key in record) {
     if (key === 'filteredCommunityTiers') {
-      for (let subkey in record[key]) {
-        let alias = subkey === 'untiered' ? '0' : subkey
+      for (const subkey in record[key]) {
+        const alias = subkey === 'untiered' ? '0' : subkey
         if (typeof aliases['commtier' + alias] !== 'undefined') {
           row[aliases['commtier' + alias]] = record[key][subkey]
         }
       }
     } else if (key === 'filteredLicenseTiers') {
-      for (let subkey in record[key]) {
-        let alias = subkey === 'untiered' ? '0' : subkey
+      for (const subkey in record[key]) {
+        const alias = subkey === 'untiered' ? '0' : subkey
         if (typeof aliases['licencetier' + alias] !== 'undefined') {
           row[aliases['licencetier' + alias]] = record[key][subkey]
         }
       }
     } else if (key === 'filteredCustodyTiers') {
-      for (let subkey in record[key]) {
-        let alias = subkey === 'untiered' ? '0' : subkey
+      for (const subkey in record[key]) {
+        const alias = subkey === 'untiered' ? '0' : subkey
         if (typeof aliases['custtier' + alias] !== 'undefined') {
           row[aliases['custtier' + alias]] = record[key][subkey]
         }
@@ -264,25 +264,25 @@ function mapFilteredForInsert (record) {
 }
 
 function mapT2aForInsert (record) {
-  var row = {}
-  for (let key in record) {
+  const row = {}
+  for (const key in record) {
     if (key === 't2aCommunityTiers') {
-      for (let subkey in record[key]) {
-        let alias = subkey === 'untiered' ? '0' : subkey
+      for (const subkey in record[key]) {
+        const alias = subkey === 'untiered' ? '0' : subkey
         if (typeof aliases['commtier' + alias] !== 'undefined') {
           row[aliases['commtier' + alias]] = record[key][subkey]
         }
       }
     } else if (key === 't2aLicenseTiers') {
-      for (let subkey in record[key]) {
-        let alias = subkey === 'untiered' ? '0' : subkey
+      for (const subkey in record[key]) {
+        const alias = subkey === 'untiered' ? '0' : subkey
         if (typeof aliases['licencetier' + alias] !== 'undefined') {
           row[aliases['licencetier' + alias]] = record[key][subkey]
         }
       }
     } else if (key === 't2aCustodyTiers') {
-      for (let subkey in record[key]) {
-        let alias = subkey === 'untiered' ? '0' : subkey
+      for (const subkey in record[key]) {
+        const alias = subkey === 'untiered' ? '0' : subkey
         if (typeof aliases['custtier' + alias] !== 'undefined') {
           row[aliases['custtier' + alias]] = record[key][subkey]
         }

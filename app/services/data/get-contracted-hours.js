@@ -10,7 +10,7 @@ module.exports = function (workloadOwnerId) {
       'workload_points.default_contracted_hours_po AS default_hours'
     )
     .then((result) => {
-      var hours = result.contracted_hours
+      let hours = result.contracted_hours
       if (hours === null) {
         hours = result.default_hours
       }

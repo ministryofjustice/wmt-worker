@@ -1,6 +1,6 @@
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
-require('sinon-bluebird')
+
 const expect = require('chai').expect
 
 const taskStatus = require('../../../../app/constants/task-status')
@@ -9,13 +9,13 @@ const submittingAgent = require('../../../../app/constants/task-submitting-agent
 const Task = require('../../../../app/services/domain/task')
 const dateHelper = require('../../../helpers/data/date-helper')
 
-var reductionsWorker
-var getOpenReductionsForCourtReporters
-var updateStatus
-var createNewTasks
-var relativeFilePath = 'services/workers/court-reporters-reductions-worker'
+let reductionsWorker
+let getOpenReductionsForCourtReporters
+let updateStatus
+let createNewTasks
+const relativeFilePath = 'services/workers/court-reporters-reductions-worker'
 
-var reductions = [
+const reductions = [
   {
     id: 1,
     effectiveFrom: dateHelper.yesterday,
@@ -24,7 +24,7 @@ var reductions = [
   }
 ]
 
-var task = new Task(
+const task = new Task(
   undefined,
   submittingAgent.WORKER,
   taskType.PROCESS_REDUCTIONS_COURT_REPORTERS,
@@ -35,13 +35,14 @@ var task = new Task(
   taskStatus.PENDING
 )
 
-var courtReportsCalculationTask = new Task(
+const courtReportsCalculationTask = new Task(
   undefined,
   submittingAgent.WORKER,
   taskType.COURT_REPORTS_CALCULATION,
   {
     workloadBatch: { startingId: 1, batchSize: 5 },
-    operationType: 'INSERT'},
+    operationType: 'INSERT'
+  },
   task.workloadReportId,
   undefined,
   undefined,

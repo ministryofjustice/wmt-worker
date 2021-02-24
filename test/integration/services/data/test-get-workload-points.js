@@ -5,8 +5,8 @@ const getWorkloadPoints = require('../../../../app/services/data/get-workload-po
 
 const CaseTypeWeightings = require('wmt-probation-rules').CaseTypeWeightings
 
-var inserts = []
-var isT2A = false
+let inserts = []
+let isT2A = false
 
 describe('services/data/get-workload-points', function () {
   before(function (done) {
@@ -19,9 +19,9 @@ describe('services/data/get-workload-points', function () {
 
   it('retrieves the latest points configuration', function (done) {
     getWorkloadPoints(isT2A).then(function (result) {
-      var points = result.values
+      const points = result.values
       expect(points).to.be.an.instanceof(CaseTypeWeightings)
-      var commPointsConf = points.pointsConfiguration.communityTierPointsConfig
+      const commPointsConf = points.pointsConfiguration.communityTierPointsConfig
 
       expect(commPointsConf.tierTen).to.equal(102)
       expect(commPointsConf.tierNine).to.equal(101)
@@ -34,7 +34,7 @@ describe('services/data/get-workload-points', function () {
       expect(commPointsConf.tierTwo).to.equal(2)
       expect(commPointsConf.tierOne).to.equal(1)
 
-      var custodyPointsConf = points.pointsConfiguration.custodyTierPointsConfig
+      const custodyPointsConf = points.pointsConfiguration.custodyTierPointsConfig
       expect(custodyPointsConf.tierTen).to.equal(105)
       expect(custodyPointsConf.tierNine).to.equal(104)
       expect(custodyPointsConf.tierEight).to.equal(103)
@@ -46,7 +46,7 @@ describe('services/data/get-workload-points', function () {
       expect(custodyPointsConf.tierTwo).to.equal(9)
       expect(custodyPointsConf.tierOne).to.equal(8)
 
-      var licensePointsConf = points.pointsConfiguration.licenseTierPointsConfig
+      const licensePointsConf = points.pointsConfiguration.licenseTierPointsConfig
       expect(licensePointsConf.tierTen).to.equal(108)
       expect(licensePointsConf.tierNine).to.equal(107)
       expect(licensePointsConf.tierEight).to.equal(106)
@@ -82,9 +82,9 @@ describe('services/data/get-workload-points', function () {
   it('retrieves the latest t2a points configuration', function (done) {
     isT2A = true
     getWorkloadPoints(isT2A).then(function (result) {
-      var points = result.values
+      const points = result.values
       expect(points).to.be.an.instanceof(CaseTypeWeightings)
-      var commPointsConf = points.pointsConfiguration.communityTierPointsConfig
+      const commPointsConf = points.pointsConfiguration.communityTierPointsConfig
 
       expect(commPointsConf.tierTen).to.equal(82)
       expect(commPointsConf.tierNine).to.equal(81)
@@ -97,7 +97,7 @@ describe('services/data/get-workload-points', function () {
       expect(commPointsConf.tierTwo).to.equal(6)
       expect(commPointsConf.tierOne).to.equal(5)
 
-      var custodyPointsConf = points.pointsConfiguration.custodyTierPointsConfig
+      const custodyPointsConf = points.pointsConfiguration.custodyTierPointsConfig
       expect(custodyPointsConf.tierTen).to.equal(85)
       expect(custodyPointsConf.tierNine).to.equal(84)
       expect(custodyPointsConf.tierEight).to.equal(83)
@@ -109,7 +109,7 @@ describe('services/data/get-workload-points', function () {
       expect(custodyPointsConf.tierTwo).to.equal(13)
       expect(custodyPointsConf.tierOne).to.equal(12)
 
-      var licensePointsConf = points.pointsConfiguration.licenseTierPointsConfig
+      const licensePointsConf = points.pointsConfiguration.licenseTierPointsConfig
       expect(licensePointsConf.tierTen).to.equal(88)
       expect(licensePointsConf.tierNine).to.equal(87)
       expect(licensePointsConf.tierEight).to.equal(86)

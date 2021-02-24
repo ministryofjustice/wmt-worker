@@ -3,13 +3,17 @@ const knex = require('knex')(config)
 const glob = require('glob')
 const Promise = require('bluebird').Promise
 
-var seedViewFileNames = glob.sync('./seed/views/[0...9]*.js')
+const seedViewFileNames = glob.sync('./seed/views/[0...9]*.js')
 
-var databaseViewNames = seedViewFileNames.sort().reverse()
-    .map((fileName) => fileName.substring(fileName.lastIndexOf('/') + 7, fileName.lastIndexOf('.')))
+const databaseViewNames = seedViewFileNames.sort().reverse()
+  .map((fileName) => fileName.substring(fileName.lastIndexOf('/') + 7, fileName.lastIndexOf('.')))
 
-Promise.each(databaseViewNames, (viewName) =>
-     knex.schema.raw('DROP VIEW IF EXISTS app.' + viewName).return()
-)
-.then(() => knex.schema.raw('DROP VIEW IF EXISTS individual_capacity_view').return())
-.finally(() => knex.destroy())
+Promise.each(databaseViewNames, function (viewName) {
+  return knex.schema.raw('DROP VIEW IF EXISTS app.' + viewName)
+})
+  .then(function () {
+    return knex.schema.raw('DROP VIEW IF EXISTS individual_capacity_view')
+  })
+  .finally(function () {
+    return knex.destroy()
+  })

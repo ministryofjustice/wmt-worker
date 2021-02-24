@@ -5,7 +5,7 @@ const expect = require('chai').expect
 const helper = require('../../../helpers/data/app-workload-points-calculation-helper')
 const insertWorkloadPointsCalculations = require('../../../../app/services/data/insert-workload-points-calculation')
 
-var inserts = []
+let inserts = []
 
 describe('services/data/insert-workload-points-calculation', function () {
   before(function (done) {
@@ -17,28 +17,28 @@ describe('services/data/insert-workload-points-calculation', function () {
   })
 
   it('inserts the workload points calculations with the supplied values', function (done) {
-    var workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
-    var workloadPointIds = inserts.filter((item) => item.table === 'workload_points')
-    var workloadPointsId = workloadPointIds[0].id
-    var t2aWorkloadPointsId = workloadPointIds[1].id
-    var workloadId = inserts.filter((item) => item.table === 'workload')[0].id
-    var totalPoints = 1
-    var sdrPoints = 2
-    var sdrConversionPoints = 3
-    var paromsPoints = 4
-    var nominalTarget = 5
-    var availablePoints = 6
-    var reductionHours = 1.5
-    var contractedHours = 38.5
-    var cmsAdjustmentPoints = 15
-    var gsAdjustmentPoints = -1
+    const workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
+    const workloadPointIds = inserts.filter((item) => item.table === 'workload_points')
+    const workloadPointsId = workloadPointIds[0].id
+    const t2aWorkloadPointsId = workloadPointIds[1].id
+    const workloadId = inserts.filter((item) => item.table === 'workload')[0].id
+    const totalPoints = 1
+    const sdrPoints = 2
+    const sdrConversionPoints = 3
+    const paromsPoints = 4
+    const nominalTarget = 5
+    const availablePoints = 6
+    const reductionHours = 1.5
+    const contractedHours = 38.5
+    const cmsAdjustmentPoints = 15
+    const gsAdjustmentPoints = -1
 
     insertWorkloadPointsCalculations(workloadReportId, workloadPointsId, t2aWorkloadPointsId, workloadId, totalPoints, sdrPoints, sdrConversionPoints,
       paromsPoints, nominalTarget, availablePoints, contractedHours, reductionHours, cmsAdjustmentPoints, gsAdjustmentPoints)
-    .then(function (ids) {
-      var insertedId = ids[0]
-      inserts.push({table: 'workload_points_calculations', id: insertedId})
-      knex('workload_points_calculations').where({id: insertedId})
+      .then(function (ids) {
+        const insertedId = ids[0]
+        inserts.push({ table: 'workload_points_calculations', id: insertedId })
+        knex('workload_points_calculations').where({ id: insertedId })
           .first()
           .then(function (insertedObject) {
             expect(insertedObject.workload_report_id).to.eql(workloadReportId)
@@ -56,7 +56,7 @@ describe('services/data/insert-workload-points-calculation', function () {
             expect(insertedObject.contracted_hours).to.eql(contractedHours)
             done()
           })
-    })
+      })
   })
 
   after(function (done) {

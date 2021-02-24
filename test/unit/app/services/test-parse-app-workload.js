@@ -3,10 +3,8 @@ const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 const appWorkload = require('../../../constants/app-workload')
 
-require('sinon-bluebird')
-
-var getAppWorkloads
-var parseAppWorkloads
+let getAppWorkloads
+let parseAppWorkloads
 
 describe('services/parse-app-workload', function () {
   before(function () {
@@ -19,7 +17,7 @@ describe('services/parse-app-workload', function () {
 
   it('should build a Workload object with the correct case totals', function () {
     return parseAppWorkloads(2201, 2201, 1, 1).then(function (omWorkload) {
-      var filteredCommunityTiers = omWorkload[0].values.filteredCommunityTiers
+      const filteredCommunityTiers = omWorkload[0].values.filteredCommunityTiers
 
       expect(filteredCommunityTiers.untiered.total, 'Community Untiered Filtered Cases should equal 2').to.be.eql(2)
       expect(filteredCommunityTiers.d2.total, 'Community D2 Filtered Cases should equal 3').to.be.eql(3)
@@ -33,7 +31,7 @@ describe('services/parse-app-workload', function () {
       expect(filteredCommunityTiers.f.total, 'Community F Filtered Cases should equal 34').to.be.eql(34)
       expect(filteredCommunityTiers.g.total, 'Community G Filtered Cases should equal 35').to.be.eql(35)
 
-      var filteredCustodyTiers = omWorkload[0].values.filteredCustodyTiers
+      const filteredCustodyTiers = omWorkload[0].values.filteredCustodyTiers
 
       expect(filteredCustodyTiers.untiered.total, 'Custody Untiered Filtered Cases should equal 21').to.be.eql(21)
       expect(filteredCustodyTiers.d2.total, 'Custody D2 Filtered Cases should equal 22').to.be.eql(22)
@@ -47,7 +45,7 @@ describe('services/parse-app-workload', function () {
       expect(filteredCustodyTiers.f.total, 'Custody F Filtered Cases should equal 37').to.be.eql(37)
       expect(filteredCustodyTiers.g.total, 'Custody G Filtered Cases should equal 38').to.be.eql(38)
 
-      var filteredLicenseTiers = omWorkload[0].values.filteredLicenseTiers
+      const filteredLicenseTiers = omWorkload[0].values.filteredLicenseTiers
 
       expect(filteredLicenseTiers.untiered.total, 'Licence Untiered Filtered Cases should equal 13').to.be.eql(13)
       expect(filteredLicenseTiers.d2.total, 'Licence D2 Filtered Cases should equal 14').to.be.eql(14)

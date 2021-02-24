@@ -18,12 +18,12 @@ module.exports.calculateOverallPercentages = function (overallTotals, overallGra
 
 module.exports.getCaseloadSummaryTotalsByTeam = function (caseloads) {
   // Create a mapping for the linkId to do the aggregation
-  var linkIdToCaseloadMap = new Map()
-  for (var idx = 0; idx < caseloads.length; idx++) {
-    var key = caseloads[idx].linkId
+  const linkIdToCaseloadMap = new Map()
+  for (let idx = 0; idx < caseloads.length; idx++) {
+    const key = caseloads[idx].linkId
     if (!linkIdToCaseloadMap.has(key)) {
       // Make a copy of the object to ensure the original value isn't affected
-      var newValue = {
+      let newValue = {
         name: caseloads[idx].name,
         regionName: caseloads[idx].regionName,
         linkId: caseloads[idx].linkId,
@@ -36,7 +36,7 @@ module.exports.getCaseloadSummaryTotalsByTeam = function (caseloads) {
       newValue = updateTotals(newValue, caseloads[idx])
       linkIdToCaseloadMap.set(key, newValue)
     } else {
-      var existingValue = linkIdToCaseloadMap.get(key)
+      let existingValue = linkIdToCaseloadMap.get(key)
       existingValue = updateTotals(existingValue, caseloads[idx])
     }
   }
@@ -86,7 +86,7 @@ module.exports.getCaseloadTotalSummary = function (caseloads) {
   Used to create the bottom most row in the table
 */
 module.exports.calculateTotalsRow = function (caseloads) {
-  var totals = {a: 0, b1: 0, b2: 0, c1: 0, c2: 0, d1: 0, d2: 0, untiered: 0, overall: 0}
+  const totals = { a: 0, b1: 0, b2: 0, c1: 0, c2: 0, d1: 0, d2: 0, untiered: 0, overall: 0 }
   caseloads.forEach(function (val, key) {
     totals.a += val.a
     totals.b1 += val.b1
@@ -102,7 +102,7 @@ module.exports.calculateTotalsRow = function (caseloads) {
 }
 
 module.exports.calculateTotalTiersRow = function (summary) {
-  var totals = {totalCommunity: 0, totalLicense: 0, totalCustody: 0, totalTotalCases: 0}
+  const totals = { totalCommunity: 0, totalLicense: 0, totalCustody: 0, totalTotalCases: 0 }
   summary.forEach(function (val, key) {
     totals.totalCommunity += val.communityTotalCases
     totals.totalLicense += val.licenseTotalCases
@@ -112,7 +112,7 @@ module.exports.calculateTotalTiersRow = function (summary) {
   return totals
 }
 
-var updateTotals = function (entryToUpdate, caseload) {
+const updateTotals = function (entryToUpdate, caseload) {
   entryToUpdate.totalCases += caseload.totalCases
 
   if (caseload.caseType === caseTypes.LICENSE) {
@@ -126,8 +126,8 @@ var updateTotals = function (entryToUpdate, caseload) {
   return entryToUpdate
 }
 
-var convertMapToArray = function (map) {
-  var arrayResult = []
+const convertMapToArray = function (map) {
+  const arrayResult = []
   map.forEach(function (val, key) {
     arrayResult.push(val)
   })
@@ -135,18 +135,18 @@ var convertMapToArray = function (map) {
   return arrayResult
 }
 
-var transform = function (caseloadTotalsByGrade, calculatePercentage = false, isCSV = false) {
-  var transformedData = []
-  var caseloadTotalsByTeam = groupCaseload(caseloadTotalsByGrade, false)
-  var gradeTotals = {}
+const transform = function (caseloadTotalsByGrade, calculatePercentage = false, isCSV = false) {
+  const transformedData = []
+  const caseloadTotalsByTeam = groupCaseload(caseloadTotalsByGrade, false)
+  let gradeTotals = {}
 
   // For each team, create one entry in the new results set with one 'grade' sub-object per grade
-  for (var team in caseloadTotalsByTeam) {
-    var newTeamEntry = { linkId: caseloadTotalsByTeam[team].linkId, name: caseloadTotalsByTeam[team].name, regionName: caseloadTotalsByTeam[team].regionName }
-    var teamGradeRecords = caseloadTotalsByGrade.filter((row) => row.linkId === caseloadTotalsByTeam[team].linkId)
-    var gradeRecords = []
-    for (var record in teamGradeRecords) {
-      var newGradeRecord
+  for (const team in caseloadTotalsByTeam) {
+    let newTeamEntry = { linkId: caseloadTotalsByTeam[team].linkId, name: caseloadTotalsByTeam[team].name, regionName: caseloadTotalsByTeam[team].regionName }
+    const teamGradeRecords = caseloadTotalsByGrade.filter((row) => row.linkId === caseloadTotalsByTeam[team].linkId)
+    const gradeRecords = []
+    for (const record in teamGradeRecords) {
+      let newGradeRecord
       if (calculatePercentage) {
         newGradeRecord = {
           grade: teamGradeRecords[record].grade,
@@ -182,11 +182,11 @@ var transform = function (caseloadTotalsByGrade, calculatePercentage = false, is
       }
       gradeRecords.push(newGradeRecord)
     }
-    newTeamEntry = Object.assign({}, newTeamEntry, {grades: gradeRecords})
+    newTeamEntry = Object.assign({}, newTeamEntry, { grades: gradeRecords })
     transformedData.push(newTeamEntry)
   }
   if (calculatePercentage) {
-    for (var key in gradeTotals) {
+    for (const key in gradeTotals) {
       gradeTotals[key].a = gradeTotals[key].a / gradeTotals[key].numberOfType
       gradeTotals[key].b1 = gradeTotals[key].b1 / gradeTotals[key].numberOfType
       gradeTotals[key].b2 = gradeTotals[key].b2 / gradeTotals[key].numberOfType
@@ -201,8 +201,8 @@ var transform = function (caseloadTotalsByGrade, calculatePercentage = false, is
   return { details: transformedData, totals: gradeTotals }
 }
 
-var collectTransformedData = function (caseloadTotalsByGrade, isCsv = false) {
-  var data = {}
+const collectTransformedData = function (caseloadTotalsByGrade, isCsv = false) {
+  const data = {}
   data.details = transform(caseloadTotalsByGrade, false, false).details
   data.totals = transform(caseloadTotalsByGrade, false, false).totals
   data.detailsPercentages = transform(caseloadTotalsByGrade, true, false).details
@@ -210,7 +210,7 @@ var collectTransformedData = function (caseloadTotalsByGrade, isCsv = false) {
   return data
 }
 
-var addGradeTotals = function (gradeTotals, newGradeRecord) {
+const addGradeTotals = function (gradeTotals, newGradeRecord) {
   if (gradeTotals[newGradeRecord.grade] !== undefined) {
     gradeTotals[newGradeRecord.grade].a += newGradeRecord.a
     gradeTotals[newGradeRecord.grade].b1 += newGradeRecord.b1
@@ -229,20 +229,20 @@ var addGradeTotals = function (gradeTotals, newGradeRecord) {
   return gradeTotals
 }
 
-var groupCaseload = function (caseloads, splitByGrade = false) {
+const groupCaseload = function (caseloads, splitByGrade = false) {
   // Create a mapping for the linkId to do the aggregation
-  var linkIdToCaseloadMap = new Map()
-  for (var idx = 0; idx < caseloads.length; idx++) {
-    var key = caseloads[idx].linkId
+  const linkIdToCaseloadMap = new Map()
+  for (let idx = 0; idx < caseloads.length; idx++) {
+    let key = caseloads[idx].linkId
     if (splitByGrade) {
       key += caseloads[idx].grade
     }
     if (!linkIdToCaseloadMap.has(key)) {
       // Make a copy of the object to ensure the original value isn't affected
-      var newValue = Object.assign({}, caseloads[idx])
+      const newValue = Object.assign({}, caseloads[idx])
       linkIdToCaseloadMap.set(key, newValue)
     } else {
-      var existingValue = linkIdToCaseloadMap.get(key)
+      const existingValue = linkIdToCaseloadMap.get(key)
       existingValue.untiered += caseloads[idx].untiered
       existingValue.d2 += caseloads[idx].d2
       existingValue.d1 += caseloads[idx].d1
@@ -258,17 +258,17 @@ var groupCaseload = function (caseloads, splitByGrade = false) {
   return convertMapToArray(linkIdToCaseloadMap)
 }
 
-var groupOverallCaseloadByGrade = function (caseloads) {
+const groupOverallCaseloadByGrade = function (caseloads) {
   // Create a mapping for the linkId to do the aggregation
-  var linkIdToCaseloadMap = new Map()
-  for (var idx = 0; idx < caseloads.length; idx++) {
-    var key = caseloads[idx].grade
+  const linkIdToCaseloadMap = new Map()
+  for (let idx = 0; idx < caseloads.length; idx++) {
+    const key = caseloads[idx].grade
     if (!linkIdToCaseloadMap.has(key)) {
       // Make a copy of the object to ensure the original value isn't affected
-      var newValue = Object.assign({}, caseloads[idx])
+      const newValue = Object.assign({}, caseloads[idx])
       linkIdToCaseloadMap.set(key, newValue)
     } else {
-      var existingValue = linkIdToCaseloadMap.get(key)
+      const existingValue = linkIdToCaseloadMap.get(key)
       existingValue.untiered += caseloads[idx].untiered
       existingValue.d2 += caseloads[idx].d2
       existingValue.d1 += caseloads[idx].d1
@@ -284,32 +284,32 @@ var groupOverallCaseloadByGrade = function (caseloads) {
   return convertMapToArray(linkIdToCaseloadMap)
 }
 
-var totalWholeCaseload = function (caseloads) {
-  var tierTotals = {a: 0, b1: 0, b2: 0, c1: 0, c2: 0, d1: 0, d2: 0, untiered: 0, totalCases: 0}
+const totalWholeCaseload = function (caseloads) {
+  const tierTotals = { a: 0, b1: 0, b2: 0, c1: 0, c2: 0, d1: 0, d2: 0, untiered: 0, totalCases: 0 }
   if (caseloads.length > 0) {
     caseloads.forEach(function (caseload) {
-      tierTotals['a'] += caseload.a
-      tierTotals['b1'] += caseload.b1
-      tierTotals['b2'] += caseload.b2
-      tierTotals['c1'] += caseload.c1
-      tierTotals['c2'] += caseload.c2
-      tierTotals['d1'] += caseload.d1
-      tierTotals['d2'] += caseload.d2
-      tierTotals['untiered'] += caseload.untiered
-      tierTotals['totalCases'] += caseload.totalCases
+      tierTotals.a += caseload.a
+      tierTotals.b1 += caseload.b1
+      tierTotals.b2 += caseload.b2
+      tierTotals.c1 += caseload.c1
+      tierTotals.c2 += caseload.c2
+      tierTotals.d1 += caseload.d1
+      tierTotals.d2 += caseload.d2
+      tierTotals.untiered += caseload.untiered
+      tierTotals.totalCases += caseload.totalCases
     })
   }
   return tierTotals
 }
 
-var calculateOverallPercentages = function (overallTotals, overallGradeTotals) {
+const calculateOverallPercentages = function (overallTotals, overallGradeTotals) {
   // Create a mapping for the linkId to do the aggregation
-  var linkIdToCaseloadMap = new Map()
-  for (var idx = 0; idx < overallGradeTotals.length; idx++) {
-    var key = overallGradeTotals[idx].grade
-    var newValue = Object.assign({}, overallGradeTotals[idx])
+  const linkIdToCaseloadMap = new Map()
+  for (let idx = 0; idx < overallGradeTotals.length; idx++) {
+    const key = overallGradeTotals[idx].grade
+    const newValue = Object.assign({}, overallGradeTotals[idx])
     linkIdToCaseloadMap.set(key, newValue)
-    var existingValue = linkIdToCaseloadMap.get(key)
+    const existingValue = linkIdToCaseloadMap.get(key)
     existingValue.untiered = percentageCalculator.calculatePercentage(existingValue.untiered, overallTotals.untiered)
     existingValue.d2 = percentageCalculator.calculatePercentage(existingValue.d2, overallTotals.d2)
     existingValue.d1 = percentageCalculator.calculatePercentage(existingValue.d1, overallTotals.d1)
@@ -320,8 +320,8 @@ var calculateOverallPercentages = function (overallTotals, overallGradeTotals) {
     existingValue.a = percentageCalculator.calculatePercentage(existingValue.a, overallTotals.a)
     existingValue.totalCases = percentageCalculator.calculatePercentage(existingValue.totalCases, overallTotals.totalCases)
   }
-  var array = convertMapToArray(linkIdToCaseloadMap)
-  var objects = {}
+  const array = convertMapToArray(linkIdToCaseloadMap)
+  const objects = {}
   array.forEach(function (obj) {
     objects[obj.grade] = obj
   })

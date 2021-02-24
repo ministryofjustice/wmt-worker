@@ -1,14 +1,14 @@
 const knex = require('../../../knex').stagingSchema
-var Promise = require('bluebird').Promise
+const Promise = require('bluebird').Promise
 
 module.exports.insertDependencies = function (inserts) {
   return knex('court_reporters')
-  .returning('id')
-  .insert(module.exports.defaultCourtReporter)
-  .then(function (insertedId) {
-    inserts.push({table: 'court_reporters', id: insertedId[0]})
-    return inserts
-  })
+    .returning('id')
+    .insert(module.exports.defaultCourtReporter)
+    .then(function (insertedId) {
+      inserts.push({ table: 'court_reporters', id: insertedId[0] })
+      return inserts
+    })
 }
 
 module.exports.removeDependencies = function (inserts) {

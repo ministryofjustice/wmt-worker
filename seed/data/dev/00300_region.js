@@ -1,4 +1,4 @@
-var tableName = 'region'
+const tableName = 'region'
 
 exports.seed = function (knex, Promise) {
   // Deletes ALL existing entries

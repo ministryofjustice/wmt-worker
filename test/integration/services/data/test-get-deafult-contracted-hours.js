@@ -4,7 +4,7 @@ const getDefaultContractedHours = require('../../../../app/services/data/get-def
 
 describe('services/data/get-default-contracted-hours', function () {
   it('should retrieve 37 contracted hours as the default contracted hours for a PO', function (done) {
-    var grade = 'PO'
+    const grade = 'PO'
     getDefaultContractedHours(grade).then(function (hours) {
       expect(hours).to.equal(37)
       done()
@@ -12,7 +12,7 @@ describe('services/data/get-default-contracted-hours', function () {
   })
 
   it('should retrieve 37 contracted hours as the default contracted hours for a TPO', function (done) {
-    var grade = 'TPO'
+    const grade = 'TPO'
     getDefaultContractedHours(grade).then(function (hours) {
       expect(hours).to.equal(37)
       done()
@@ -20,7 +20,7 @@ describe('services/data/get-default-contracted-hours', function () {
   })
 
   it('should retrieve 37 contracted hours as the default contracted hours for a PSO', function (done) {
-    var grade = 'PSO'
+    const grade = 'PSO'
     getDefaultContractedHours(grade).then(function (hours) {
       expect(hours).to.equal(37)
       done()
@@ -28,7 +28,7 @@ describe('services/data/get-default-contracted-hours', function () {
   })
 
   it('should retrieve 0 contracted hours as the default contracted hours for an SPO', function (done) {
-    var grade = 'SPO'
+    const grade = 'SPO'
     getDefaultContractedHours(grade).then(function (hours) {
       expect(hours).to.equal(0)
       done()
@@ -36,7 +36,7 @@ describe('services/data/get-default-contracted-hours', function () {
   })
 
   it('should retrieve 0 contracted hours as the default contracted hours for the Dummy grade', function (done) {
-    var grade = 'DMY'
+    const grade = 'DMY'
     getDefaultContractedHours(grade).then(function (hours) {
       expect(hours).to.equal(0)
       done()
@@ -44,7 +44,7 @@ describe('services/data/get-default-contracted-hours', function () {
   })
 
   it('should retrieve 0 contracted hours as the default contracted hours for blank grade', function (done) {
-    var grade = ''
+    const grade = ''
     getDefaultContractedHours(grade).then(function (hours) {
       expect(hours).to.equal(0)
       done()
@@ -52,14 +52,14 @@ describe('services/data/get-default-contracted-hours', function () {
   })
 
   it('should retrieve 0 contracted hours as the default contracted hours for any grade not defined', function (done) {
-    var grade = 'UNRECEGONISED'
+    const grade = 'UNRECEGONISED'
     getDefaultContractedHours(grade).then(function (hours) {
       expect(hours).to.equal(0)
       done()
     })
 
     it('should retrieve 0 contracted hours as the default contracted hours for any grade that is Null', function (done) {
-      var grade = null
+      const grade = null
       getDefaultContractedHours(grade).then(function (hours) {
         expect(hours).to.equal(0)
         done()

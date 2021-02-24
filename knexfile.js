@@ -5,7 +5,8 @@ const defaultConnection = {
   password: config.DATABASE_PASSWORD,
   database: config.DATABASE,
   options: {
-    encrypt: true
+    encrypt: true,
+    enableArithAbort: true
   }
 }
 
@@ -33,7 +34,8 @@ module.exports = {
       password: config.MIGRATION_APP_DATABASE_PASSWORD,
       options: {
         encrypt: true,
-        requestTimeout: 90000
+        requestTimeout: 90000,
+        enableArithAbort: true
       }
     }),
     migrations: {
@@ -56,7 +58,8 @@ module.exports = {
       password: config.MIGRATION_APP_DATABASE_PASSWORD,
       options: {
         encrypt: true,
-        requestTimeout: 500000
+        requestTimeout: 500000,
+        enableArithAbort: true
       }
     }),
     debug: false,
@@ -73,7 +76,8 @@ module.exports = {
       password: config.MIGRATION_APP_DATABASE_PASSWORD,
       options: {
         encrypt: true,
-        requestTimeout: 90000
+        requestTimeout: 90000,
+        enableArithAbort: true
       }
     }),
     seeds: {
@@ -88,7 +92,8 @@ module.exports = {
       password: config.MIGRATION_APP_DATABASE_PASSWORD,
       options: {
         encrypt: true,
-        requestTimeout: 600000
+        requestTimeout: 600000,
+        enableArithAbort: true
       }
     }),
     seeds: {

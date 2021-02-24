@@ -12,19 +12,19 @@ module.exports = function (workload, caseDetails) {
   workload.totalT2aCommunityCases = workload.t2aCommunityTiers.total
   workload.totalT2aCustodyCases = workload.t2aCustodyTiers.total
   workload.totalT2aLicenseCases = workload.t2aLicenseTiers.total
-  var workloadDbObj = mapForInsert(workload)
+  const workloadDbObj = mapForInsert(workload)
 
   return knex('workload')
     .insert(workloadDbObj)
     .returning('id')
     .then(function (workloadId) {
-      var promises = []
+      const promises = []
       promises.push(insertTiers(workload.communityTiers, workload.filteredCommunityTiers, workload.t2aCommunityTiers, workloadId, Locations.COMMUNITY))
       promises.push(insertTiers(workload.custodyTiers, workload.filteredCustodyTiers, workload.t2aCustodyTiers, workloadId, Locations.CUSTODY))
       promises.push(insertTiers(workload.licenseTiers, workload.filteredLicenseTiers, workload.t2aLicenseTiers, workloadId, Locations.LICENSE))
-      var communityCaseDetails = caseDetails.filter((caseDetail) => { return caseDetail.location.toUpperCase() === Locations.COMMUNITY })
-      var custodyCaseDetails = caseDetails.filter((caseDetail) => { return caseDetail.location.toUpperCase() === Locations.CUSTODY })
-      var licenseCaseDetails = caseDetails.filter((caseDetail) => { return caseDetail.location.toUpperCase() === Locations.LICENSE })
+      const communityCaseDetails = caseDetails.filter((caseDetail) => { return caseDetail.location.toUpperCase() === Locations.COMMUNITY })
+      const custodyCaseDetails = caseDetails.filter((caseDetail) => { return caseDetail.location.toUpperCase() === Locations.CUSTODY })
+      const licenseCaseDetails = caseDetails.filter((caseDetail) => { return caseDetail.location.toUpperCase() === Locations.LICENSE })
       promises.push(insertCaseDetails(communityCaseDetails, workloadId, Locations.COMMUNITY))
       promises.push(insertCaseDetails(custodyCaseDetails, workloadId, Locations.CUSTODY))
       promises.push(insertCaseDetails(licenseCaseDetails, workloadId, Locations.LICENSE))
@@ -59,16 +59,16 @@ const aliases = {
   workloadReportId: 'workload_report_id'
 }
 
-var insertTiers = function (tiers, filteredTiers, t2aTiers, workloadId, location) {
-  var tiersToInsert = []
-  var tiersInNumberOrder = tiers.getTiersAsList().reverse()
-  var filteredTiersInNumberOrder = filteredTiers.getTiersAsList().reverse()
-  var t2aTiersInNumberOrder = t2aTiers.getTiersAsList().reverse()
-  for (var i = 0; i < tiersInNumberOrder.length; i++) {
-    var currentTier = tiersInNumberOrder[i]
-    var currentT2aTier = t2aTiersInNumberOrder[i]
-    var currentFilteredTier = filteredTiersInNumberOrder[i]
-    var tierToInsert = {
+const insertTiers = function (tiers, filteredTiers, t2aTiers, workloadId, location) {
+  const tiersToInsert = []
+  const tiersInNumberOrder = tiers.getTiersAsList().reverse()
+  const filteredTiersInNumberOrder = filteredTiers.getTiersAsList().reverse()
+  const t2aTiersInNumberOrder = t2aTiers.getTiersAsList().reverse()
+  for (let i = 0; i < tiersInNumberOrder.length; i++) {
+    const currentTier = tiersInNumberOrder[i]
+    const currentT2aTier = t2aTiersInNumberOrder[i]
+    const currentFilteredTier = filteredTiersInNumberOrder[i]
+    const tierToInsert = {
       workload_id: workloadId,
       tier_number: currentTier.tierCode,
       overdue_terminations_total: currentTier.overdueTermination,
@@ -89,12 +89,12 @@ var insertTiers = function (tiers, filteredTiers, t2aTiers, workloadId, location
   return knex('tiers').insert(tiersToInsert)
 }
 
-var insertCaseDetails = function (caseDetails, workloadId, location) {
-  var caseDetailsToInsert = []
+const insertCaseDetails = function (caseDetails, workloadId, location) {
+  const caseDetailsToInsert = []
   caseDetails.forEach(function (caseDetail) {
-    var tierCode = caseDetail.tierCode.toString()
+    const tierCode = caseDetail.tierCode.toString()
     if (tierCode.match(numericRegex) !== null) {
-      var caseDetailToInsert = {
+      const caseDetailToInsert = {
         workload_id: workloadId,
         tier_code: caseDetail.tierCode,
         row_type: caseDetail.rowType,
@@ -109,16 +109,16 @@ var insertCaseDetails = function (caseDetails, workloadId, location) {
 
   // Default to ((2100 / 8) - 1). This is to avoid 2100 parameter server error.
   // 8 is the number columns in this table and 2100 is number of max parameters.
-  var batchSize = 261
+  let batchSize = 261
   if (caseDetailsToInsert.length > 30) {
     batchSize = Math.floor(caseDetailsToInsert.length / 8) + 1
   }
   return knex.batchInsert('case_details', caseDetailsToInsert, batchSize)
 }
 
-var mapForInsert = function (record) {
-  var row = {}
-  for (let key in record) {
+const mapForInsert = function (record) {
+  const row = {}
+  for (const key in record) {
     if (typeof aliases[key] !== 'undefined') {
       row[aliases[key]] = record[key]
     }

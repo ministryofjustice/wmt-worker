@@ -1,13 +1,13 @@
-var tableName = 'adjustment_reason'
-var insertStatement = 'INSERT INTO app.' + tableName + ' (id, contact_code, contact_description, category_id, points) VALUES '
-var categoryId
-var sql
+const tableName = 'adjustment_reason'
+const insertStatement = 'INSERT INTO app.' + tableName + ' (id, contact_code, contact_description, category_id, points) VALUES '
+let categoryId
+let sql
 
 exports.seed = function (knex, Promise) {
   // Deletes ALL existing entries
   return knex(tableName).del()
     .then(function () {
-      return knex('adjustment_category').select('id').where({category: 'Case Management Support'}).first()
+      return knex('adjustment_category').select('id').where({ category: 'Case Management Support' }).first()
     })
     .then(function (categoryIdResult) {
       categoryId = categoryIdResult.id
@@ -53,7 +53,7 @@ exports.seed = function (knex, Promise) {
         .raw(sql)
     })
     .then(function () {
-      return knex('adjustment_category').select('id').where({category: 'Group Supervision'}).first()
+      return knex('adjustment_category').select('id').where({ category: 'Group Supervision' }).first()
     })
     .then(function (categoryIdResult) {
       categoryId = categoryIdResult.id
