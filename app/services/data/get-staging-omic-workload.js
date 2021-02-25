@@ -15,7 +15,7 @@ module.exports = function (range) {
         .andOn('inst_reports.team_code', 'omic_teams.team_code')
     })
     .select('omic_teams.id AS staging_id', 'omic_teams.trust', 'omic_teams.region_desc', 'omic_teams.region_code',
-      'omic_teams.ldu_desc', 'omic_teams.ldu_code', 'omic_teams.team_desc', 'omic_teams.team_code',
+      'omic_teams.pdu_desc', 'omic_teams.pdu_code', 'omic_teams.team_desc', 'omic_teams.team_code',
       'omic_teams.om_surname', 'omic_teams.om_forename', 'omic_teams.om_grade_code',
       'omic_teams.om_key', 'omic_teams.comIn1st16Weeks', 'omic_teams.licIn1st16Weeks',
       'omic_teams.datestamp', 'omic_teams.commtier0', 'omic_teams.commtierg',
