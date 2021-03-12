@@ -1,5 +1,5 @@
 const ipAddresses = require('../../config').IP_ADDRESSES
-const createRequestPromise = require('request-promise')
+const fetch = require('node-fetch')
 const log = require('./log')
 const Promise = require('bluebird').Promise
 
@@ -10,7 +10,7 @@ module.exports = function () {
   }
 
   return Promise.each(ipAddressesArray, function (ipAddress) {
-    return createRequestPromise(ipAddress + '/refresh')
+    return fetch(ipAddress + '/refresh')
       .then(function () {
         log.info(ipAddress + ' successfully refreshed')
       }).catch(function (err) {
