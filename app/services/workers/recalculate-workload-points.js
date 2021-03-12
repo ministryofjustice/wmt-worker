@@ -1,4 +1,5 @@
 const recalculateWorkloadPoints = require('../data/recalculate-workload-points')
+const logger = require('../log')
 
 module.exports.execute = function (task) {
   const reportId = task.workloadReportId
