@@ -16,6 +16,7 @@ module.exports = function (range) {
       if (results !== 'undefined' && results.length > 0) {
         return Promise.each(results, function (result) {
           return getArmsTotals(result.om_key, result.team_code).then(function (armsCases) {
+            // WMT0229 Change needed here when extract column names are known
             const communityTiers = new Tiers(
               locations.COMMUNITY,
               result.commtier0,
@@ -31,6 +32,7 @@ module.exports = function (range) {
               result.commtierg
             )
 
+            // WMT0229 Change needed here when extract column names are known
             const licenseTiers = new Tiers(
               locations.LICENSE,
               result.licencetier0,
@@ -46,6 +48,7 @@ module.exports = function (range) {
               result.licencetierg
             )
 
+            // WMT0229 Change needed here when extract column names are known
             const custodyTiers = new Tiers(
               locations.CUSTODY,
               result.custtier0,
@@ -61,6 +64,7 @@ module.exports = function (range) {
               result.custtierg
             )
 
+            // WMT0229 Change needed here when extract column names are known
             const t2aCommunityTiers = new Tiers(
               locations.COMMUNITY,
               result.t2a_commtier0,
@@ -76,6 +80,7 @@ module.exports = function (range) {
               result.t2a_commtierg
             )
 
+            // WMT0229 Change needed here when extract column names are known
             const t2aLicenseTiers = new Tiers(
               locations.LICENSE,
               result.t2a_licencetier0,
@@ -91,6 +96,7 @@ module.exports = function (range) {
               result.t2a_licencetierg
             )
 
+            // WMT0229 Change needed here when extract column names are known
             const t2aCustodyTiers = new Tiers(
               locations.CUSTODY,
               result.t2a_custtier0,

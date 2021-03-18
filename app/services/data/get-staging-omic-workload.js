@@ -14,6 +14,7 @@ module.exports = function (range) {
       this.on('inst_reports.om_key', 'omic_teams.om_key')
         .andOn('inst_reports.team_code', 'omic_teams.team_code')
     })
+    // WMT0229 Change needed here when extract column names are known
     .select('omic_teams.id AS staging_id', 'omic_teams.trust', 'omic_teams.region_desc', 'omic_teams.region_code',
       'omic_teams.pdu_desc', 'omic_teams.pdu_code', 'omic_teams.team_desc', 'omic_teams.team_code',
       'omic_teams.om_surname', 'omic_teams.om_forename', 'omic_teams.om_grade_code',

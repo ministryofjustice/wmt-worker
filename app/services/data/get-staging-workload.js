@@ -18,6 +18,7 @@ module.exports = function (range) {
       this.on('inst_reports.om_key', 'wmt_extract.om_key')
         .andOn('inst_reports.team_code', 'wmt_extract.team_code')
     })
+    // WMT0229 Change needed here when extract column names are known
     .select('wmt_extract.id AS staging_id', 'wmt_extract.trust', 'wmt_extract.region_desc', 'wmt_extract.region_code',
       'wmt_extract.pdu_desc', 'wmt_extract.pdu_code', 'wmt_extract.team_desc', 'wmt_extract.team_code',
       'wmt_extract.om_surname', 'wmt_extract.om_forename', 'wmt_extract.om_grade_code',
