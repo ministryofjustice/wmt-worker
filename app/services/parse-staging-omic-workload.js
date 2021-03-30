@@ -20,96 +20,132 @@ module.exports = function (range) {
             const communityTiers = new Tiers(
               locations.COMMUNITY,
               result.commtier0,
-              result.commtierd2,
+              result.commtierd0,
               result.commtierd1,
-              result.commtierc2,
+              result.commtierd2,
+              result.commtierd3,
+              result.commtierc0,
               result.commtierc1,
-              result.commtierb2,
+              result.commtierc2,
+              result.commtierc3,
+              result.commtierb0,
               result.commtierb1,
-              result.commtiera,
-              result.commtiere,
-              result.commtierf,
-              result.commtierg
+              result.commtierb2,
+              result.commtierb3,
+              result.commtiera0,
+              result.commtiera1,
+              result.commtiera2,
+              result.commtiera3
             )
 
             // WMT0229 Change needed here when extract column names are known
             const licenseTiers = new Tiers(
               locations.LICENSE,
               result.licencetier0,
-              result.licencetierd2,
+              result.licencetierd0,
               result.licencetierd1,
-              result.licencetierc2,
+              result.licencetierd2,
+              result.licencetierd3,
+              result.licencetierc0,
               result.licencetierc1,
-              result.licencetierb2,
+              result.licencetierc2,
+              result.licencetierc3,
+              result.licencetierb0,
               result.licencetierb1,
-              result.licencetiera,
-              result.licencetiere,
-              result.licencetierf,
-              result.licencetierg
+              result.licencetierb2,
+              result.licencetierb3,
+              result.licencetiera0,
+              result.licencetiera1,
+              result.licencetiera2,
+              result.licencetiera3
             )
 
             // WMT0229 Change needed here when extract column names are known
             const custodyTiers = new Tiers(
               locations.CUSTODY,
               result.custtier0,
-              result.custtierd2,
+              result.custtierd0,
               result.custtierd1,
-              result.custtierc2,
+              result.custtierd2,
+              result.custtierd3,
+              result.custtierc0,
               result.custtierc1,
-              result.custtierb2,
+              result.custtierc2,
+              result.custtierc3,
+              result.custtierb0,
               result.custtierb1,
-              result.custtiera,
-              result.custtiere,
-              result.custtierf,
-              result.custtierg
+              result.custtierb2,
+              result.custtierb3,
+              result.custtiera0,
+              result.custtiera1,
+              result.custtiera2,
+              result.custtiera3
             )
 
             // WMT0229 Change needed here when extract column names are known
             const t2aCommunityTiers = new Tiers(
               locations.COMMUNITY,
               result.t2a_commtier0,
-              result.t2a_commtierd2,
+              result.t2a_commtierd0,
               result.t2a_commtierd1,
-              result.t2a_commtierc2,
+              result.t2a_commtierd2,
+              result.t2a_commtierd3,
+              result.t2a_commtierc0,
               result.t2a_commtierc1,
-              result.t2a_commtierb2,
+              result.t2a_commtierc2,
+              result.t2a_commtierc3,
+              result.t2a_commtierb0,
               result.t2a_commtierb1,
-              result.t2a_commtiera,
-              result.t2a_commtiere,
-              result.t2a_commtierf,
-              result.t2a_commtierg
+              result.t2a_commtierb2,
+              result.t2a_commtierb3,
+              result.t2a_commtiera0,
+              result.t2a_commtiera1,
+              result.t2a_commtiera2,
+              result.t2a_commtiera3
             )
 
             // WMT0229 Change needed here when extract column names are known
             const t2aLicenseTiers = new Tiers(
               locations.LICENSE,
               result.t2a_licencetier0,
-              result.t2a_licencetierd2,
+              result.t2a_licencetierd0,
               result.t2a_licencetierd1,
-              result.t2a_licencetierc2,
+              result.t2a_licencetierd2,
+              result.t2a_licencetierd3,
+              result.t2a_licencetierc0,
               result.t2a_licencetierc1,
-              result.t2a_licencetierb2,
+              result.t2a_licencetierc2,
+              result.t2a_licencetierc3,
+              result.t2a_licencetierb0,
               result.t2a_licencetierb1,
-              result.t2a_licencetiera,
-              result.t2a_licencetiere,
-              result.t2a_licencetierf,
-              result.t2a_licencetierg
+              result.t2a_licencetierb2,
+              result.t2a_licencetierb3,
+              result.t2a_licencetiera0,
+              result.t2a_licencetiera1,
+              result.t2a_licencetiera2,
+              result.t2a_licencetiera3
             )
 
             // WMT0229 Change needed here when extract column names are known
             const t2aCustodyTiers = new Tiers(
               locations.CUSTODY,
               result.t2a_custtier0,
-              result.t2a_custtierd2,
+              result.t2a_custtierd0,
               result.t2a_custtierd1,
-              result.t2a_custtierc2,
+              result.t2a_custtierd2,
+              result.t2a_custtierd3,
+              result.t2a_custtierc0,
               result.t2a_custtierc1,
-              result.t2a_custtierb2,
+              result.t2a_custtierc2,
+              result.t2a_custtierc3,
+              result.t2a_custtierb0,
               result.t2a_custtierb1,
-              result.t2a_custtiera,
-              result.t2a_custtiere,
-              result.t2a_custtierf,
-              result.t2a_custtierg
+              result.t2a_custtierb2,
+              result.t2a_custtierb3,
+              result.t2a_custtiera0,
+              result.t2a_custtiera1,
+              result.t2a_custtiera2,
+              result.t2a_custtiera3
             )
 
             const casesSummary = new CasesSummary(
