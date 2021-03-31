@@ -21,28 +21,28 @@ module.exports = function (range) {
     .select('wmt_extract.id AS staging_id', 'wmt_extract.trust', 'wmt_extract.region_desc', 'wmt_extract.region_code',
       'wmt_extract.pdu_desc', 'wmt_extract.pdu_code', 'wmt_extract.team_desc', 'wmt_extract.team_code',
       'wmt_extract.om_surname', 'wmt_extract.om_forename', 'wmt_extract.om_grade_code',
-      'wmt_extract.om_key', 'wmt_extract.comIn1st16Weeks', 'wmt_extract.licIn1st16Weeks', 'wmt_extract.datestamp', 
-      
+      'wmt_extract.om_key', 'wmt_extract.comIn1st16Weeks', 'wmt_extract.licIn1st16Weeks', 'wmt_extract.datestamp',
+
       // WMT Extract Community cases
       'wmt_extract.commtier0',
       'wmt_extract.commtierd0', 'wmt_extract.commtierd1', 'wmt_extract.commtierd2', 'wmt_extract.commtierd3',
       'wmt_extract.commtierc0', 'wmt_extract.commtierc1', 'wmt_extract.commtierc2', 'wmt_extract.commtierc3',
       'wmt_extract.commtierb0', 'wmt_extract.commtierb1', 'wmt_extract.commtierb2', 'wmt_extract.commtierb3',
-      'wmt_extract.commtiera0', 'wmt_extract.commtiera1',  'wmt_extract.commtiera2', 'wmt_extract.commtiera3',
+      'wmt_extract.commtiera0', 'wmt_extract.commtiera1', 'wmt_extract.commtiera2', 'wmt_extract.commtiera3',
 
-       // WMT Extract Licence cases
-      'wmt_extract.licencetier0', 
+      // WMT Extract Licence cases
+      'wmt_extract.licencetier0',
       'wmt_extract.licencetierd0', 'wmt_extract.licencetierd1', 'wmt_extract.licencetierd2', 'wmt_extract.licencetierd3',
       'wmt_extract.licencetierc0', 'wmt_extract.licencetierc1', 'wmt_extract.licencetierc2', 'wmt_extract.licencetierc3',
       'wmt_extract.licencetierb0', 'wmt_extract.licencetierb1', 'wmt_extract.licencetierb2', 'wmt_extract.licencetierb3',
-      'wmt_extract.licencetiera0', 'wmt_extract.licencetiera1',  'wmt_extract.licencetiera2', 'wmt_extract.licencetiera3',
+      'wmt_extract.licencetiera0', 'wmt_extract.licencetiera1', 'wmt_extract.licencetiera2', 'wmt_extract.licencetiera3',
 
       // WMT Extract Custody cases
       'wmt_extract.custtier0',
       'wmt_extract.custtierd0', 'wmt_extract.custtierd1', 'wmt_extract.custtierd2', 'wmt_extract.custtierd3',
       'wmt_extract.custtierc0', 'wmt_extract.custtierc1', 'wmt_extract.custtierc2', 'wmt_extract.custtierc3',
       'wmt_extract.custtierb0', 'wmt_extract.custtierb1', 'wmt_extract.custtierb2', 'wmt_extract.custtierb3',
-      'wmt_extract.custtiera0', 'wmt_extract.custtiera1',  'wmt_extract.custtiera2', 'wmt_extract.custtiera3',
+      'wmt_extract.custtiera0', 'wmt_extract.custtiera1', 'wmt_extract.custtiera2', 'wmt_extract.custtiera3',
 
       'wmt_extract_filtered.id AS filtered_staging_id',
       'wmt_extract_filtered.comIn1st16Weeks AS filtered_comIn1st16Weeks',
@@ -83,37 +83,25 @@ module.exports = function (range) {
       'wmt_extract_filtered.custtiera2 AS filtered_custtiera2', 'wmt_extract_filtered.custtiera3 AS filtered_custtiera3',
 
       // T2A Community cases
-      't2a.commtier0 AS t2a_commtier0', 
-      't2a.commtierd0 AS t2a_commtierd0', 't2a.commtierd1 AS t2a_commtierd1',
-      't2a.commtierd2 AS t2a_commtierd2', 't2a.commtierd3 AS t2a_commtierd3',
-      't2a.commtierc0 AS t2a_commtierc0', 't2a.commtierc1 AS t2a_commtierc1',
-      't2a.commtierc2 AS t2a_commtierc2', 't2a.commtierc3 AS t2a_commtierc3',
-      't2a.commtierb0 AS t2a_commtierb0', 't2a.commtierb1 AS t2a_commtierb1',
-      't2a.commtierb2 AS t2a_commtierb2', 't2a.commtierb3 AS t2a_commtierb3',
-      't2a.commtiera0 AS t2a_commtiera0', 't2a.commtiera1 AS t2a_commtiera1',
-      't2a.commtiera2 AS t2a_commtiera2', 't2a.commtiera3 AS t2a_commtiera3',
+      't2a.commtier0 AS t2a_commtier0',
+      't2a.commtierd0 AS t2a_commtierd0', 't2a.commtierd1 AS t2a_commtierd1', 't2a.commtierd2 AS t2a_commtierd2', 't2a.commtierd3 AS t2a_commtierd3',
+      't2a.commtierc0 AS t2a_commtierc0', 't2a.commtierc1 AS t2a_commtierc1', 't2a.commtierc2 AS t2a_commtierc2', 't2a.commtierc3 AS t2a_commtierc3',
+      't2a.commtierb0 AS t2a_commtierb0', 't2a.commtierb1 AS t2a_commtierb1', 't2a.commtierb2 AS t2a_commtierb2', 't2a.commtierb3 AS t2a_commtierb3',
+      't2a.commtiera0 AS t2a_commtiera0', 't2a.commtiera1 AS t2a_commtiera1', 't2a.commtiera2 AS t2a_commtiera2', 't2a.commtiera3 AS t2a_commtiera3',
 
       // T2A Licence cases
       't2a.licencetier0 AS t2a_licencetier0',
-      't2a.licencetierd0 AS t2a_licencetierd0', 't2a.licencetierd1 AS t2a_licencetierd1',
-      't2a.licencetierd2 AS t2a_licencetierd2', 't2a.licencetierd3 AS t2a_licencetierd3',
-      't2a.licencetierc0 AS t2a_licencetierc0', 't2a.licencetierc1 AS t2a_licencetierc1',
-      't2a.licencetierc2 AS t2a_licencetierc2', 't2a.licencetierc3 AS t2a_licencetierc3',
-      't2a.licencetierb0 AS t2a_licencetierb0', 't2a.licencetierb1 AS t2a_licencetierb1',
-      't2a.licencetierb2 AS t2a_licencetierb2', 't2a.licencetierb3 AS t2a_licencetierb3',
-      't2a.licencetiera0 AS t2a_licencetiera0', 't2a.licencetiera1 AS t2a_licencetiera1',
-      't2a.licencetiera2 AS t2a_licencetiera2', 't2a.licencetiera3 AS t2a_licencetiera3',
+      't2a.licencetierd0 AS t2a_licencetierd0', 't2a.licencetierd1 AS t2a_licencetierd1', 't2a.licencetierd2 AS t2a_licencetierd2', 't2a.licencetierd3 AS t2a_licencetierd3',
+      't2a.licencetierc0 AS t2a_licencetierc0', 't2a.licencetierc1 AS t2a_licencetierc1', 't2a.licencetierc2 AS t2a_licencetierc2', 't2a.licencetierc3 AS t2a_licencetierc3',
+      't2a.licencetierb0 AS t2a_licencetierb0', 't2a.licencetierb1 AS t2a_licencetierb1', 't2a.licencetierb2 AS t2a_licencetierb2', 't2a.licencetierb3 AS t2a_licencetierb3',
+      't2a.licencetiera0 AS t2a_licencetiera0', 't2a.licencetiera1 AS t2a_licencetiera1', 't2a.licencetiera2 AS t2a_licencetiera2', 't2a.licencetiera3 AS t2a_licencetiera3',
 
       // T2A Custody cases
-      't2a.custtier0 AS t2a_custtier0', 
-      't2a.custtierd0 AS t2a_custtierd0', 't2a.custtierd1 AS t2a_custtierd1',
-      't2a.custtierd2 AS t2a_custtierd2', 't2a.custtierd3 AS t2a_custtierd3',
-      't2a.custtierc0 AS t2a_custtierc0', 't2a.custtierc1 AS t2a_custtierc1',
-      't2a.custtierc2 AS t2a_custtierc2', 't2a.custtierc3 AS t2a_custtierc3',
-      't2a.custtierb0 AS t2a_custtierb0', 't2a.custtierb1 AS t2a_custtierb1',
-      't2a.custtierb2 AS t2a_custtierb2', 't2a.custtierb3 AS t2a_custtierb3',
-      't2a.custtiera0 AS t2a_custtiera0', 't2a.custtiera1 AS t2a_custtiera1',
-      't2a.custtiera2 AS t2a_custtiera2', 't2a.custtiera3 AS t2a_custtiera3',
+      't2a.custtier0 AS t2a_custtier0',
+      't2a.custtierd0 AS t2a_custtierd0', 't2a.custtierd1 AS t2a_custtierd1', 't2a.custtierd2 AS t2a_custtierd2', 't2a.custtierd3 AS t2a_custtierd3',
+      't2a.custtierc0 AS t2a_custtierc0', 't2a.custtierc1 AS t2a_custtierc1', 't2a.custtierc2 AS t2a_custtierc2', 't2a.custtierc3 AS t2a_custtierc3',
+      't2a.custtierb0 AS t2a_custtierb0', 't2a.custtierb1 AS t2a_custtierb1', 't2a.custtierb2 AS t2a_custtierb2', 't2a.custtierb3 AS t2a_custtierb3',
+      't2a.custtiera0 AS t2a_custtiera0', 't2a.custtiera1 AS t2a_custtiera1', 't2a.custtiera2 AS t2a_custtiera2', 't2a.custtiera3 AS t2a_custtiera3',
 
       'court_reports.om_team_staff_grade', 'court_reports.sdr_last_30',
       'court_reports.sdr_due_next_30', 'court_reports.sdr_conv_last_30',
