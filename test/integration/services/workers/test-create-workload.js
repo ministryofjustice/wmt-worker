@@ -37,7 +37,7 @@ describe('services/workers/create-workload', function () {
           .join('workload_owner', 'workload.workload_owner_id', 'workload_owner.id')
           .join('offender_manager', 'workload_owner.offender_manager_id', 'offender_manager.id')
           .join('tiers', 'tiers.workload_id', 'workload.id')
-          .columns(['workload.id AS workload_id', 'tiers.location AS location', 'tiers.tier_number AS tier_number', 'tiers.total_filtered_cases AS total_filtered_cases',  'tiers.t2a_total_cases AS t2a_total_cases', 'offender_manager.forename AS forename'])
+          .columns(['workload.id AS workload_id', 'tiers.location AS location', 'tiers.tier_number AS tier_number', 'tiers.total_filtered_cases AS total_filtered_cases', 'tiers.t2a_total_cases AS t2a_total_cases', 'offender_manager.forename AS forename'])
           .then(function (workload) {
             const communityTiers = workload.filter(w => w.location === 'COMMUNITY')
             const commUntiered = communityTiers.filter(t => t.tier_number === 0)

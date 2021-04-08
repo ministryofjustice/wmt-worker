@@ -24,7 +24,7 @@ module.exports = function () {
             .insert(wmtExtractFiltered)
             .then(function () {
               return knex('t2a')
-              .insert(t2a)
+                .insert(t2a)
             })
         })
     })
