@@ -12,7 +12,7 @@ const Batch = require('../../../../app/services/domain/batch')
 let inserts = []
 let initialWorkloadStagingId
 
-describe('services/workers/calculate-workload-points', function () {
+describe.only('services/workers/calculate-workload-points', function () {
   before(function () {
     return appWorkloadPointsCalculationHelper.insertDependencies(inserts)
       .then(function (builtInserts) {

@@ -55,7 +55,7 @@
     "lodash": "^4.17.21",
     "mssql": "6.3.1",
     "node-fetch": "^2.6.1",
-    "tedious": "^11.0.6",
+    "tedious": "^11.0.7",
     "wmt-probation-rules": "ministryofjustice/wmt-probation-rules.git#v1.0.4",
     "xlsx-populate": "^1.21.0"
   }
