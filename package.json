@@ -56,7 +56,7 @@
     "mssql": "6.3.1",
     "node-fetch": "^2.6.1",
     "tedious": "^11.0.7",
-    "wmt-probation-rules": "ministryofjustice/wmt-probation-rules.git#v1.0.4",
+    "wmt-probation-rules": "ministryofjustice/wmt-probation-rules.git#v1.0.5",
     "xlsx-populate": "^1.21.0"
   }
 }

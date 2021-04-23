@@ -102,7 +102,7 @@ module.exports.insertDependencies = function (inserts) {
           }
         }
       })
-      return knex('omic_tiers').returning('id').insert(cases)
+      return knex.batchInsert('omic_tiers', cases, 149).returning('id')
     })
     .then(function (ids) {
       ids.forEach((id) => {

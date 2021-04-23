@@ -3,20 +3,20 @@ exports.seed = function (knex, promise) {
   WITH SCHEMABINDING
   AS
   SELECT
-      r.description AS contactRegionName,
-    , r.id AS contactRegionId,
-    , l.description AS contactLduName,
-    , l.id AS contactLduId,
-    , t.description AS contactTeamName,
-    , t.id AS contactTeamId,
-    , a.effective_from AS contactDate,
-    , wo.id AS contactWorkloadOwnerId,
-    , CONCAT(om.forename, ' ', om.surname) AS contactName,
-    , omt.grade_code AS contactGradeCode,
-    , a.contact_id AS contactId,
-    , ar.contact_description AS contactDescription,
-    , ar.contact_code AS contactCode,
-    , a.points AS contactPoints,
+      r.description AS contactRegionName
+    , r.id AS contactRegionId
+    , l.description AS contactLduName
+    , l.id AS contactLduId
+    , t.description AS contactTeamName
+    , t.id AS contactTeamId
+    , a.effective_from AS contactDate
+    , wo.id AS contactWorkloadOwnerId
+    , CONCAT(om.forename, ' ', om.surname) AS contactName
+    , omt.grade_code AS contactGradeCode
+    , a.contact_id AS contactId
+    , ar.contact_description AS contactDescription
+    , ar.contact_code AS contactCode
+    , a.points AS contactPoints
     , a.case_ref_no AS caseRefNo
   FROM app.adjustments AS a 
     JOIN app.adjustment_reason AS ar ON a.adjustment_reason_id = ar.id
