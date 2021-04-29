@@ -1,6 +1,7 @@
 const knex = require('../../../knex').stagingSchema
 const wmtExtract = require('../../constants/wmt-extract')
 const wmtExtractFiltered = require('../../constants/wmt-extract-filtered')
+const t2a = require('../../constants/t2a')
 const overdue = require('../../constants/flag-o-due')
 const priority = require('../../constants/flag-priority')
 const upw = require('../../constants/flag-upw')
@@ -21,6 +22,10 @@ module.exports = function () {
           stagingId = id
           return knex('wmt_extract_filtered')
             .insert(wmtExtractFiltered)
+            .then(function () {
+              return knex('t2a')
+                .insert(t2a)
+            })
         })
     })
     .then(function () {

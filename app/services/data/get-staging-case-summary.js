@@ -12,6 +12,7 @@ module.exports = function (range) {
       let custodyTiers = []
       if (results !== 'undefined' && results.length > 0) {
         for (const result of results) {
+          // WMT0229 Change needed here when extract column names are known
           communityTiers = new Tiers(
             locations.COMMUNITY,
             result.commtier0,
@@ -24,6 +25,7 @@ module.exports = function (range) {
             result.commtiera
           )
 
+          // WMT0229 Change needed here when extract column names are known
           licenseTiers = new Tiers(
             locations.LICENSE,
             result.licencetier0,
@@ -36,6 +38,7 @@ module.exports = function (range) {
             result.licencetiera
           )
 
+          // WMT0229 Change needed here when extract column names are known
           custodyTiers = new Tiers(
             locations.CUSTODY,
             result.custtier0,

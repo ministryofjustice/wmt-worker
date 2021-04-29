@@ -9,54 +9,29 @@ let inserts = []
 let isT2A = false
 
 describe('services/data/get-workload-points', function () {
-  before(function (done) {
-    helper.insertDependencies(inserts)
+  before(function () {
+    return helper.insertDependencies(inserts)
       .then(function (builtInserts) {
         inserts = builtInserts
-        done()
       })
   })
 
-  it('retrieves the latest points configuration', function (done) {
-    getWorkloadPoints(isT2A).then(function (result) {
+  it('retrieves the latest points configuration', function () {
+    return getWorkloadPoints(isT2A).then(function (result) {
       const points = result.values
       expect(points).to.be.an.instanceof(CaseTypeWeightings)
       const commPointsConf = points.pointsConfiguration.communityTierPointsConfig
-
-      expect(commPointsConf.tierTen).to.equal(102)
-      expect(commPointsConf.tierNine).to.equal(101)
-      expect(commPointsConf.tierEight).to.equal(100)
-      expect(commPointsConf.tierSeven).to.equal(7)
-      expect(commPointsConf.tierSix).to.equal(6)
-      expect(commPointsConf.tierFive).to.equal(5)
-      expect(commPointsConf.tierFour).to.equal(4)
-      expect(commPointsConf.tierThree).to.equal(3)
-      expect(commPointsConf.tierTwo).to.equal(2)
-      expect(commPointsConf.tierOne).to.equal(1)
-
       const custodyPointsConf = points.pointsConfiguration.custodyTierPointsConfig
-      expect(custodyPointsConf.tierTen).to.equal(105)
-      expect(custodyPointsConf.tierNine).to.equal(104)
-      expect(custodyPointsConf.tierEight).to.equal(103)
-      expect(custodyPointsConf.tierSeven).to.equal(14)
-      expect(custodyPointsConf.tierSix).to.equal(13)
-      expect(custodyPointsConf.tierFive).to.equal(12)
-      expect(custodyPointsConf.tierFour).to.equal(11)
-      expect(custodyPointsConf.tierThree).to.equal(10)
-      expect(custodyPointsConf.tierTwo).to.equal(9)
-      expect(custodyPointsConf.tierOne).to.equal(8)
-
       const licensePointsConf = points.pointsConfiguration.licenseTierPointsConfig
-      expect(licensePointsConf.tierTen).to.equal(108)
-      expect(licensePointsConf.tierNine).to.equal(107)
-      expect(licensePointsConf.tierEight).to.equal(106)
-      expect(licensePointsConf.tierSeven).to.equal(21)
-      expect(licensePointsConf.tierSix).to.equal(20)
-      expect(licensePointsConf.tierFive).to.equal(19)
-      expect(licensePointsConf.tierFour).to.equal(18)
-      expect(licensePointsConf.tierThree).to.equal(17)
-      expect(licensePointsConf.tierTwo).to.equal(16)
-      expect(licensePointsConf.tierOne).to.equal(15)
+
+      const expectedCommPointsConf = [206, 158, 146, 110, 146, 115, 102, 72, 79, 63, 50, 35, 51, 41, 29, 29]
+      const expectedCustPointsConf = [75, 60, 59, 0, 59, 48, 47, 0, 30, 24, 23, 0, 17, 14, 13, 0]
+      const expectedLicPointsConf = [219, 175, 163, 0, 161, 132, 119, 0, 77, 65, 52, 0, 51, 43, 31, 0]
+      for (let i = 1; i < 17; i++) {
+        expect(commPointsConf['tier' + i], 'Community Tier ' + i + ' weighting should equal ' + expectedCommPointsConf[i - 1]).to.equal(expectedCommPointsConf[i - 1])
+        expect(custodyPointsConf['tier' + i], 'Custody Tier ' + i + ' weighting should equal ' + expectedCustPointsConf[i - 1]).to.equal(expectedCustPointsConf[i - 1])
+        expect(licensePointsConf['tier' + i], 'Licence Tier ' + i + ' weighting should equal ' + expectedLicPointsConf[i - 1]).to.equal(expectedLicPointsConf[i - 1])
+      }
 
       expect(points.pointsConfiguration.sdr).to.equal(22)
       expect(points.pointsConfiguration.sdrConversion).to.equal(23)
@@ -75,51 +50,27 @@ describe('services/data/get-workload-points', function () {
 
       expect(points.pointsConfiguration.paromsEnabled).to.equal(true)
       expect(points.pointsConfiguration.parom).to.equal(31)
-      done()
     })
   })
 
-  it('retrieves the latest t2a points configuration', function (done) {
+  it('retrieves the latest t2a points configuration', function () {
     isT2A = true
-    getWorkloadPoints(isT2A).then(function (result) {
+    return getWorkloadPoints(isT2A).then(function (result) {
       const points = result.values
       expect(points).to.be.an.instanceof(CaseTypeWeightings)
+
       const commPointsConf = points.pointsConfiguration.communityTierPointsConfig
-
-      expect(commPointsConf.tierTen).to.equal(82)
-      expect(commPointsConf.tierNine).to.equal(81)
-      expect(commPointsConf.tierEight).to.equal(80)
-      expect(commPointsConf.tierSeven).to.equal(11)
-      expect(commPointsConf.tierSix).to.equal(10)
-      expect(commPointsConf.tierFive).to.equal(9)
-      expect(commPointsConf.tierFour).to.equal(8)
-      expect(commPointsConf.tierThree).to.equal(7)
-      expect(commPointsConf.tierTwo).to.equal(6)
-      expect(commPointsConf.tierOne).to.equal(5)
-
       const custodyPointsConf = points.pointsConfiguration.custodyTierPointsConfig
-      expect(custodyPointsConf.tierTen).to.equal(85)
-      expect(custodyPointsConf.tierNine).to.equal(84)
-      expect(custodyPointsConf.tierEight).to.equal(83)
-      expect(custodyPointsConf.tierSeven).to.equal(18)
-      expect(custodyPointsConf.tierSix).to.equal(17)
-      expect(custodyPointsConf.tierFive).to.equal(16)
-      expect(custodyPointsConf.tierFour).to.equal(15)
-      expect(custodyPointsConf.tierThree).to.equal(14)
-      expect(custodyPointsConf.tierTwo).to.equal(13)
-      expect(custodyPointsConf.tierOne).to.equal(12)
-
       const licensePointsConf = points.pointsConfiguration.licenseTierPointsConfig
-      expect(licensePointsConf.tierTen).to.equal(88)
-      expect(licensePointsConf.tierNine).to.equal(87)
-      expect(licensePointsConf.tierEight).to.equal(86)
-      expect(licensePointsConf.tierSeven).to.equal(24)
-      expect(licensePointsConf.tierSix).to.equal(23)
-      expect(licensePointsConf.tierFive).to.equal(23)
-      expect(licensePointsConf.tierFour).to.equal(22)
-      expect(licensePointsConf.tierThree).to.equal(21)
-      expect(licensePointsConf.tierTwo).to.equal(20)
-      expect(licensePointsConf.tierOne).to.equal(19)
+
+      const expectedCommPointsConf = [75, 60, 59, 0, 59, 48, 47, 0, 30, 24, 23, 0, 17, 14, 13, 0]
+      const expectedCustPointsConf = [75, 60, 59, 0, 59, 48, 47, 0, 30, 24, 23, 0, 17, 14, 13, 0]
+      const expectedLicPointsConf = [75, 60, 59, 0, 59, 48, 47, 0, 30, 24, 23, 0, 17, 14, 13, 0]
+      for (let i = 1; i < 17; i++) {
+        expect(commPointsConf['tier' + i], 'Community Tier ' + i + ' weighting should equal ' + expectedCommPointsConf[i - 1]).to.equal(expectedCommPointsConf[i - 1])
+        expect(custodyPointsConf['tier' + i], 'Custody Tier ' + i + ' weighting should equal ' + expectedCustPointsConf[i - 1]).to.equal(expectedCustPointsConf[i - 1])
+        expect(licensePointsConf['tier' + i], 'Licence Tier ' + i + ' weighting should equal ' + expectedLicPointsConf[i - 1]).to.equal(expectedLicPointsConf[i - 1])
+      }
 
       expect(points.pointsConfiguration.sdr).to.equal(0)
       expect(points.pointsConfiguration.sdrConversion).to.equal(0)
@@ -138,12 +89,10 @@ describe('services/data/get-workload-points', function () {
 
       expect(points.pointsConfiguration.paromsEnabled).to.equal(false)
       expect(points.pointsConfiguration.parom).to.equal(0)
-      done()
     })
   })
 
-  after(function (done) {
-    helper.removeDependencies(inserts)
-      .then(() => done())
+  after(function () {
+    return helper.removeDependencies(inserts)
   })
 })

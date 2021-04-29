@@ -23,7 +23,13 @@ module.exports = function (isT2a = false) {
         result.comm_tier_7,
         result.comm_tier_8,
         result.comm_tier_9,
-        result.comm_tier_10)
+        result.comm_tier_10,
+        result.comm_tier_11,
+        result.comm_tier_12,
+        result.comm_tier_13,
+        result.comm_tier_14,
+        result.comm_tier_15,
+        result.comm_tier_16)
       const licenseLocationPointsConfiguration = new LocationPointsConfiguration(result.lic_tier_1,
         result.lic_tier_2,
         result.lic_tier_3,
@@ -33,7 +39,13 @@ module.exports = function (isT2a = false) {
         result.lic_tier_7,
         result.lic_tier_8,
         result.lic_tier_9,
-        result.lic_tier_10)
+        result.lic_tier_10,
+        result.lic_tier_11,
+        result.lic_tier_12,
+        result.lic_tier_13,
+        result.lic_tier_14,
+        result.lic_tier_15,
+        result.lic_tier_16)
       const custodyLocationPointsConfiguration = new LocationPointsConfiguration(result.cust_tier_1,
         result.cust_tier_2,
         result.cust_tier_3,
@@ -43,7 +55,13 @@ module.exports = function (isT2a = false) {
         result.cust_tier_7,
         result.cust_tier_8,
         result.cust_tier_9,
-        result.cust_tier_10)
+        result.cust_tier_10,
+        result.cust_tier_11,
+        result.cust_tier_12,
+        result.cust_tier_13,
+        result.cust_tier_14,
+        result.cust_tier_15,
+        result.cust_tier_16)
       const pointsConfiguration = new PointsConfiguration(communityLocationPointsConfiguration,
         licenseLocationPointsConfiguration,
         custodyLocationPointsConfiguration,

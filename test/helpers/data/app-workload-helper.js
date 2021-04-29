@@ -82,7 +82,7 @@ module.exports.insertDependencies = function (inserts) {
       ids.forEach((id) => {
         inserts.push({ table: 'workload', id: id })
         for (let i = 0; i < 3; i++) {
-          for (let j = 0; j < 11; j++) {
+          for (let j = 0; j < 17; j++) {
             cases.push({
               workload_id: id,
               tier_number: j,
@@ -102,7 +102,7 @@ module.exports.insertDependencies = function (inserts) {
           }
         }
       })
-      return knex('tiers').returning('id').insert(cases)
+      return knex.batchInsert('tiers', cases, 149).returning('id')
     })
     .then(function (ids) {
       ids.forEach((id) => {

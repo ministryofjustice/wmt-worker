@@ -61,8 +61,7 @@ describe('services/parse-staging-workload', function () {
       })
   })
 
-  after(function (done) {
-    caseDetailsHelper.deleteAll(insertedRecords)
-      .then(() => done())
+  after(function () {
+    return caseDetailsHelper.deleteAll(insertedRecords)
   })
 })

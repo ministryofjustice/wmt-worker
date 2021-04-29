@@ -18,21 +18,22 @@ module.exports = function (initialId, maxId, batchSize, workloadReportId) {
         }
         if (tempWorkloads[index] === undefined) {
           tempWorkloads[index] = {
-            // WMT0160: Increase Size of all Arrays to 11
-            COMMUNITY: new Array(11),
-            LICENSE: new Array(11),
-            CUSTODY: new Array(11)
+            // WMT0229: Increase Size of all Arrays to 17
+            COMMUNITY: new Array(17),
+            LICENSE: new Array(17),
+            CUSTODY: new Array(17)
           }
           tempWorkloads[index].T2A = {
-            // WMT0160: Increase Size of all Arrays to 11
-            COMMUNITY: new Array(11),
-            LICENSE: new Array(11),
-            CUSTODY: new Array(11)
+            // WMT0229: Increase Size of all Arrays to 17
+            COMMUNITY: new Array(17),
+            LICENSE: new Array(17),
+            CUSTODY: new Array(17)
           }
           tempWorkloads[index].filtered = {
-            COMMUNITY: new Array(11),
-            LICENSE: new Array(11),
-            CUSTODY: new Array(11)
+            // WMT0229: Increase Size of all Arrays to 17
+            COMMUNITY: new Array(17),
+            LICENSE: new Array(17),
+            CUSTODY: new Array(17)
           }
           tempWorkloads[index].id = row.id
           tempWorkloads[index].stagingId = row.staging_id
