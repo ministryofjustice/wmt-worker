@@ -70,13 +70,22 @@ const parseCaseloadResults = function (results) {
 const replaceIncorrectPercentageAverages = function (originalPercentageTotals, correctPercentages) {
   const keys = Object.keys(originalPercentageTotals)
   keys.forEach(function (key) {
-    originalPercentageTotals[key].a = correctPercentages[key].a
-    originalPercentageTotals[key].b1 = correctPercentages[key].b1
+    originalPercentageTotals[key].a3 = correctPercentages[key].a3
+    originalPercentageTotals[key].a2 = correctPercentages[key].a2
+    originalPercentageTotals[key].a1 = correctPercentages[key].a1
+    originalPercentageTotals[key].a0 = correctPercentages[key].a0
+    originalPercentageTotals[key].b3 = correctPercentages[key].b3
     originalPercentageTotals[key].b2 = correctPercentages[key].b2
-    originalPercentageTotals[key].c1 = correctPercentages[key].c1
+    originalPercentageTotals[key].b1 = correctPercentages[key].b1
+    originalPercentageTotals[key].b0 = correctPercentages[key].b0
+    originalPercentageTotals[key].c3 = correctPercentages[key].c3
     originalPercentageTotals[key].c2 = correctPercentages[key].c2
-    originalPercentageTotals[key].d1 = correctPercentages[key].d1
+    originalPercentageTotals[key].c1 = correctPercentages[key].c1
+    originalPercentageTotals[key].c0 = correctPercentages[key].c0
+    originalPercentageTotals[key].d3 = correctPercentages[key].d3
     originalPercentageTotals[key].d2 = correctPercentages[key].d2
+    originalPercentageTotals[key].d1 = correctPercentages[key].d1
+    originalPercentageTotals[key].d0 = correctPercentages[key].d0
     originalPercentageTotals[key].untiered = correctPercentages[key].untiered
     originalPercentageTotals[key].totalCases = correctPercentages[key].totalCases
   })
