@@ -1,11 +1,12 @@
 exports.seed = function (knex, Promise) {
-  const view = `CREATE VIEW app.region_caseload_view
+  const view = `CREATE VIEW [app].[region_caseload_view]
   WITH SCHEMABINDING
   AS
   SELECT
       l.region_id AS id
     , l.id AS link_id
     , l.description AS name
+    , r.description AS region_name
     , omt.grade_code
     , tr.location
     , SUM((CASE WHEN tr.tier_number = 0 THEN tr.total_filtered_cases ELSE 0 END) + (CASE WHEN tr.tier_number = 0 THEN tr.t2a_total_cases ELSE 0 END)) AS untiered
@@ -34,11 +35,12 @@ exports.seed = function (knex, Promise) {
       JOIN app.workload_owner wo ON wo.id = w.workload_owner_id
       JOIN app.team t ON t.id = wo.team_id
       JOIN app.ldu l ON l.id = t.ldu_id
+      JOIN app.region r ON r.id = l.region_id
       JOIN app.offender_manager om ON om.id = wo.offender_manager_id
       JOIN app.offender_manager_type omt ON omt.id = om.type_id
   WHERE wr.effective_from IS NOT NULL
       AND wr.effective_to IS NULL
-  GROUP BY l.region_id, l.id, l.description, omt.grade_code, tr.location;`
+  GROUP BY l.region_id, l.id, r.description, l.description, omt.grade_code, tr.location`
 
   const index = `CREATE UNIQUE CLUSTERED INDEX idx_region_caseload_view
   ON app.region_caseload_view (link_id, location, grade_code)`
