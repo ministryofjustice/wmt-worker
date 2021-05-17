@@ -11,13 +11,22 @@ module.exports = function () {
     'total_cases AS totalCases',
     'location AS caseType',
     'untiered',
+    'd3',
     'd2',
     'd1',
+    'd0',
+    'c3',
     'c2',
     'c1',
+    'c0',
+    'b3',
     'b2',
     'b1',
-    'a'
+    'b0',
+    'a3',
+    'a2',
+    'a1',
+    'a0'
   ]
 
   const noExpandHint = ' WITH (NOEXPAND)'
