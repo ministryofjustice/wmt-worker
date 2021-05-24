@@ -73,12 +73,10 @@ describe('app/services/data/insert-app-workload', function () {
         'workload.arms_license_cases AS arms_license_cases', 'workload.staging_id AS staging_id',
         'workload.workload_report_id AS workload_report_id', 'case_details.case_ref_no AS case_ref_no')
       .then(function (result) {
-        console.log('In here 1')
         knex('tiers')
           .where('workload_id', workloadId)
           .select()
           .then(function (tiers) {
-            console.log('In here 2')
             const licenceTier6 = tiers.filter(t => t.location === Locations.LICENSE && t.tier_number === 6)
             expect(licenceTier6[0].suspended_lifer_total).to.equal(99)
             expect(result[0]).not.to.be.undefined // eslint-disable-line
