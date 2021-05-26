@@ -2840,9 +2840,9 @@ widest-line@^3.1.0:
   dependencies:
     string-width "^4.0.0"
 
-wmt-probation-rules@ministryofjustice/wmt-probation-rules.git#v1.0.6:
-  version "1.0.6"
-  resolved "https://codeload.github.com/ministryofjustice/wmt-probation-rules/tar.gz/2f47f2a265f4584790bb582b550f8dde021c73e2"
+wmt-probation-rules@ministryofjustice/wmt-probation-rules.git#v1.0.7:
+  version "1.0.7"
+  resolved "https://codeload.github.com/ministryofjustice/wmt-probation-rules/tar.gz/2b86d613faeabf32614db7b182307851a78601b5"
   dependencies:
     lodash "^4.17.21"
     moment "^2.29.1"
