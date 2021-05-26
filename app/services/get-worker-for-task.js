@@ -17,6 +17,7 @@ const migrateWorkloads = require('./workers/migrate-workloads')
 const migrateContractedHours = require('./workers/migrate-contracted-hours')
 const removeDuplicateCMS = require('./workers/remove-duplicate-cms')
 const recalculateWorkloadPoints = require('./workers/recalculate-workload-points')
+const etlWorker = require('./workers/etl-worker')
 
 // ALL WORKERS SHOULD HAVE A METHOD `execute(task)` that returns a Promise
 module.exports = function (taskType) {
@@ -39,6 +40,7 @@ module.exports = function (taskType) {
     case taskTypes.CREATE_OMIC_WORKLOAD: return createOmicWorkload
     case taskTypes.CALCULATE_OMIC_WORKLOAD_POINTS: return calculateOmicWorkloadPoints
     case taskTypes.RECALCULATE_WORKLOAD_POINTS: return recalculateWorkloadPoints
+    case taskTypes.RUN_ETL: return etlWorker
   }
 
   return null
