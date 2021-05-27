@@ -1,7 +1,7 @@
 const expect = require('chai').expect
 const getArchiveFileNames = require('../../../../app/wmt-etl/get-archive-filenames')
 
-describe.only('wmt-etl/get-archive-filenames', function () {
+describe('wmt-etl/get-archive-filenames', function () {
   it('should remove the full file path from the extract files, leaving only the filename itself', function (done) {
     const extractFiles = [
       '/PATH/TO/THE/EXTRACT/FILE/extract_file-1.xlsx',

@@ -18,7 +18,7 @@ module.exports = function (extractFiles) {
     return Promise.each(Object.keys(workbook.Sheets), function (sheet) {
       if (config.VALID_SHEET_NAMES.includes(cleanName(sheet))) {
         const worksheet = workbook.Sheets[sheet]
-        const worksheetDataAsJSON = XLSX.utils.sheet_to_json(worksheet)
+        const worksheetDataAsJSON = XLSX.utils.sheet_to_json(worksheet, { raw: false, defval: null })
         return sanitiseWorksheetColumns(worksheetDataAsJSON, cleanName(sheet), extractFile)
           .then(function () {
             return insertToStaging(cleanName(sheet), worksheetDataAsJSON, extractFile)
