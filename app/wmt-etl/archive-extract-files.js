@@ -13,5 +13,6 @@ module.exports = function (extractFiles) {
   return tar.c({ gzip: true, cwd: config.IMPORT_FILE_DIR, file: config.ARCHIVE_FILE_DIR + config.ARCHIVE_FILE_NAME + currentTimestamp + '.tar.gz' }, extractFileNames)
     .then(function () {
       log.info('Archived input files to', config.ARCHIVE_FILE_DIR + config.ARCHIVE_FILE_NAME + currentTimestamp)
+      log.info('Extract process completed')
     })
 }
