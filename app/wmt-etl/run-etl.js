@@ -12,15 +12,15 @@ const Task = require('../services/domain/task')
 const submittingAgent = require('../constants/task-submitting-agent')
 const taskStatus = require('../constants/task-status')
 const taskType = require('../constants/task-type')
+const log = require('../services/log')
 
 module.exports = function () {
   const extractFiles = glob.sync(config.IMPORT_FILE_DIR + '*.xlsx', {})
-  if (!correctNumberOfFilesExist(extractFiles.length)) {
-    throw new Error('Not all expected extract files are present')
-  }
-
   return cleanTables()
     .then(function () {
+      if (!correctNumberOfFilesExist(extractFiles.length)) {
+        throw new Error('Not all expected extract files are present')
+      }
       return processFiles(extractFiles)
         .then(function () {
           return archiveExtractFiles(extractFiles)
@@ -41,5 +41,9 @@ module.exports = function () {
                 })
             })
         })
+    })
+    .catch(function (error) {
+      log.error(error)
+      throw (error)
     })
 }
