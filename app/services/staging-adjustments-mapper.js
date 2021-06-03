@@ -4,6 +4,7 @@ const getWorkloadOwnerId = require('./data/get-app-workload-owner-id')
 const getAdjustmentReasonFromCode = require('./data/get-adjustment-reason-from-code')
 const getWorkloadOwnersInWorkloadRange = require('./data/get-workload-owners-in-workload-range')
 const adjustmentStatus = require('../constants/adjustment-status')
+const moment = require('moment')
 
 module.exports.mapCmsAdjustments = function (workloadStagingIdStart, workloadStagingIdEnd, workloadReportId) {
   return getWorkloadOwnersInWorkloadRange(workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
@@ -22,9 +23,8 @@ module.exports.mapCmsAdjustments = function (workloadStagingIdStart, workloadSta
                       .then(function (contactWorkloadOwnerId) {
                         return getWorkloadOwnerId(cmsRecord.omKey, cmsRecord.omTeamKey)
                           .then(function (omWorkloadOwnerId) {
-                            const startDate = new Date(cmsRecord.contactDate)
-                            const endDate = new Date(startDate)
-                            endDate.setDate(endDate.getDate() + 30)
+                            const startDate = moment(cmsRecord.contactDate, 'DD/MM/YYYY').format('YYYY-MM-DD')
+                            const endDate = moment(startDate).add(30, 'days').format('YYYY-MM-DD')
 
                             if (adjustmentReason) {
                               const contactAdjustment = {
@@ -87,9 +87,8 @@ module.exports.mapGsAdjustments = function (workloadStagingIdStart, workloadStag
                   .then(function (adjustmentReason) {
                     return getWorkloadOwnerId(gsAdjustment.omKey, gsAdjustment.omTeamKey)
                       .then(function (workloadOwnerId) {
-                        const startDate = new Date(gsAdjustment.contactDate)
-                        const endDate = new Date(startDate)
-                        endDate.setDate(endDate.getDate() + 30)
+                        const startDate = moment(gsAdjustment.contactDate, 'DD/MM/YYYY').format('YYYY-MM-DD')
+                        const endDate = moment(startDate).add(30, 'days').format('YYYY-MM-DD')
 
                         const newGsAdjustment = {
                           contactId: gsAdjustment.contactId,
