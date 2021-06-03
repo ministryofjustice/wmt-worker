@@ -1,6 +1,5 @@
 const adjustmentStatus = require('../../../app/constants/adjustment-status')
 const dateHelper = require('./date-helper')
-const moment = require('moment')
 
 module.exports.adjustmentReason = {
   id: 1,
@@ -37,8 +36,8 @@ module.exports.expectedCmsAdjustments = [
     workloadOwnerId: 1,
     points: module.exports.adjustmentReason.points,
     adjustmentReasonId: module.exports.adjustmentReason.id,
-    effectiveFrom: moment(dateHelper.today).format('YYYY-MM-DD'),
-    effectiveTo: moment(dateHelper.thirtyDays).format('YYYY-MM-DD'),
+    effectiveFrom: dateHelper.today,
+    effectiveTo: dateHelper.thirtyDays,
     status: adjustmentStatus.ACTIVE,
     crn: module.exports.stagingAdjustmentRows[0].crn
   },
@@ -47,8 +46,8 @@ module.exports.expectedCmsAdjustments = [
     workloadOwnerId: 1,
     points: module.exports.adjustmentReason.points * -1,
     adjustmentReasonId: module.exports.adjustmentReason.id,
-    effectiveFrom: moment(dateHelper.today).format('YYYY-MM-DD'),
-    effectiveTo: moment(dateHelper.thirtyDays).format('YYYY-MM-DD'),
+    effectiveFrom: dateHelper.today,
+    effectiveTo: dateHelper.thirtyDays,
     status: adjustmentStatus.ACTIVE,
     crn: module.exports.stagingAdjustmentRows[0].crn
   },
@@ -57,8 +56,8 @@ module.exports.expectedCmsAdjustments = [
     workloadOwnerId: 1,
     points: module.exports.adjustmentReason.points,
     adjustmentReasonId: module.exports.adjustmentReason.id,
-    effectiveFrom: moment(dateHelper.today).format('YYYY-MM-DD'),
-    effectiveTo: moment(dateHelper.thirtyDays).format('YYYY-MM-DD'),
+    effectiveFrom: dateHelper.today,
+    effectiveTo: dateHelper.thirtyDays,
     status: adjustmentStatus.ACTIVE,
     crn: module.exports.stagingAdjustmentRows[1].crn
   },
@@ -67,8 +66,8 @@ module.exports.expectedCmsAdjustments = [
     workloadOwnerId: 1,
     points: module.exports.adjustmentReason.points * -1,
     adjustmentReasonId: module.exports.adjustmentReason.id,
-    effectiveFrom: moment(dateHelper.today).format('YYYY-MM-DD'),
-    effectiveTo: moment(dateHelper.thirtyDays).format('YYYY-MM-DD'),
+    effectiveFrom: dateHelper.today,
+    effectiveTo: dateHelper.thirtyDays,
     status: adjustmentStatus.ACTIVE,
     crn: module.exports.stagingAdjustmentRows[1].crn
   }
@@ -80,8 +79,8 @@ module.exports.expectedGsAdjustments = [
     workloadOwnerId: 1,
     points: module.exports.adjustmentReason.points * -1,
     adjustmentReasonId: module.exports.adjustmentReason.id,
-    effectiveFrom: moment(dateHelper.today).format('YYYY-MM-DD'),
-    effectiveTo: moment(dateHelper.thirtyDays).format('YYYY-MM-DD'),
+    effectiveFrom: dateHelper.today,
+    effectiveTo: dateHelper.thirtyDays,
     status: adjustmentStatus.ACTIVE,
     crn: module.exports.stagingAdjustmentRows[0].crn
   },
@@ -90,8 +89,8 @@ module.exports.expectedGsAdjustments = [
     workloadOwnerId: 1,
     points: module.exports.adjustmentReason.points * -1,
     adjustmentReasonId: module.exports.adjustmentReason.id,
-    effectiveFrom: moment(dateHelper.today).format('YYYY-MM-DD'),
-    effectiveTo: moment(dateHelper.thirtyDays).format('YYYY-MM-DD'),
+    effectiveFrom: dateHelper.today,
+    effectiveTo: dateHelper.thirtyDays,
     status: adjustmentStatus.ACTIVE,
     crn: module.exports.stagingAdjustmentRows[1].crn
   }
