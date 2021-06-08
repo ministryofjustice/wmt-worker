@@ -2,6 +2,7 @@ const logger = require('./log')
 const updateReductionStatusByIds = require('./data/update-reduction-status-by-ids')
 const updateAdjustmentStatusByIds = require('./data/update-adjustment-status-by-ids')
 const status = require('../constants/reduction-status')
+const moment = require('moment')
 
 module.exports.updateReductionStatuses = function (reductions) {
   const statusMap = buildStatusMap(reductions)
@@ -50,13 +51,13 @@ const buildStatusMap = function (records) {
 const getCurrentStatus = function (record) {
   let currentStatus = status.ARCHIVED
 
-  const currentTime = new Date().getTime()
-  const startTime = record.effectiveFrom.getTime()
-  const endTime = record.effectiveTo.getTime()
+  const currentTime = moment()
+  const startTime = moment(record.effectiveFrom)
+  const endTime = moment(record.effectiveTo)
 
-  if (startTime < currentTime && endTime > currentTime) {
+  if (startTime.isBefore(currentTime) && endTime.isAfter(currentTime)) {
     currentStatus = status.ACTIVE
-  } else if (startTime > currentTime && endTime > currentTime) {
+  } else if (startTime.isAfter(currentTime) && endTime.isAfter(currentTime)) {
     currentStatus = status.SCHEDULED
   }
   return currentStatus

@@ -10,7 +10,7 @@ const cleanName = require('./clean-name')
 
 module.exports = function (extractFiles) {
   return Promise.each(extractFiles, function (extractFile) {
-    const workbook = XLSX.readFile(extractFile)
+    const workbook = XLSX.readFile(extractFile, { type: 'binary', cellText: false, cellDates: true })
     if (!validateWorkbookFormat(Object.keys(workbook.Sheets))) {
       throw new Error('Workbook does not contain the expected worksheets')
     }
@@ -18,7 +18,7 @@ module.exports = function (extractFiles) {
     return Promise.each(Object.keys(workbook.Sheets), function (sheet) {
       if (config.VALID_SHEET_NAMES.includes(cleanName(sheet))) {
         const worksheet = workbook.Sheets[sheet]
-        const worksheetDataAsJSON = XLSX.utils.sheet_to_json(worksheet, { raw: false, defval: null })
+        const worksheetDataAsJSON = XLSX.utils.sheet_to_json(worksheet, { raw: false, defval: null, dateNF: 'yyyy-mm-dd hh:mm:ss' })
         return sanitiseWorksheetColumns(worksheetDataAsJSON, cleanName(sheet), extractFile)
           .then(function () {
             return insertToStaging(cleanName(sheet), worksheetDataAsJSON, extractFile)
