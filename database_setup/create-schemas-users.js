@@ -15,6 +15,7 @@ knex.schema
   .raw('CREATE USER ??;', [config.WORKER_DATABASE_USERNAME])
   .raw('CREATE USER ??;', [config.WEB_APP_DATABASE_USERNAME])
   .raw('CREATE USER ??;', [config.ETL_STAGING_DATABASE_USERNAME])
+  .raw('CREATE USER ??;', [config.LEGACY_DATABASE_USERNAME])
 
   // Create Roles:
 // app with Delete
@@ -41,6 +42,9 @@ knex.schema
 
   .raw('ALTER USER ?? WITH DEFAULT_SCHEMA = staging;', [config.MIGRATION_STG_DATABASE_USERNAME])
   .raw('ALTER ROLE db_owner ADD MEMBER ??;', [config.MIGRATION_STG_DATABASE_USERNAME])
+
+  .raw('ALTER USER ?? WITH DEFAULT_SCHEMA = dbo;', [config.LEGACY_DATABASE_USERNAME])
+  .raw('ALTER ROLE db_owner ADD MEMBER ??;', [config.LEGACY_DATABASE_USERNAME])
 
   .raw('ALTER USER ?? WITH DEFAULT_SCHEMA = staging;', [config.WORKER_DATABASE_USERNAME])
   .raw('ALTER ROLE stagingreadwrite ADD MEMBER ??;', [config.WORKER_DATABASE_USERNAME])
