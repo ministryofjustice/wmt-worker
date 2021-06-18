@@ -14,7 +14,6 @@ knex.schema
   .raw('CREATE LOGIN ?? WITH Password=\'' + config.WEB_APP_DATABASE_PASSWORD + '\';', config.WEB_APP_DATABASE_USERNAME)
   .raw('CREATE LOGIN ?? WITH Password=\'' + config.ETL_STAGING_DATABASE_PASSWORD + '\';', config.ETL_STAGING_DATABASE_USERNAME)
   .raw('CREATE LOGIN ?? WITH Password=\'' + config.LEGACY_DATABASE_PASSWORD + '\';', config.LEGACY_DATABASE_USERNAME)
-  .raw('CREATE DATABASE ' + config.DATABASE)
   .then(function () {
     process.exit(0)
   })

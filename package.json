@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node --max-old-space-size=5120 start.js",
     "unit-test": "standard && mocha --recursive test/unit/ --exit",
-    "integration-test": "mocha --recursive test/integration/ --timeout 1200000 --exit",
+    "integration-test": "npm run seed-ref && npm run seed-dev && mocha --recursive test/integration/ --timeout 10000 --exit",
     "test-all": "yarn test && yarn test-integration",
     "test": "yarn unit-test && yarn integration-test",
     "create-views": "knex seed:run --env views",

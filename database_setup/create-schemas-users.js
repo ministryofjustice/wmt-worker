@@ -5,9 +5,6 @@ const knexConfig = require('../knexfile').development
 const knex = require('knex')(knexConfig)
 
 knex.schema
-  // Create Schemas
-  .raw('CREATE SCHEMA app;')
-  .raw('CREATE SCHEMA staging;')
 
   // Create Users
   .raw('CREATE USER ??;', [config.MIGRATION_APP_DATABASE_USERNAME])
