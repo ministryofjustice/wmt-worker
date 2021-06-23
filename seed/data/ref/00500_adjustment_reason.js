@@ -5,9 +5,9 @@ let sql
 
 exports.seed = function (knex, Promise) {
   // Deletes ALL existing entries
-  return knex(tableName).del()
+  return knex(tableName).withSchema('app').del()
     .then(function () {
-      return knex('adjustment_category').select('id').where({ category: 'Case Management Support' }).first()
+      return knex('adjustment_category').withSchema('app').select('id').where({ category: 'Case Management Support' }).first()
     })
     .then(function (categoryIdResult) {
       categoryId = categoryIdResult.id
@@ -53,7 +53,7 @@ exports.seed = function (knex, Promise) {
         .raw(sql)
     })
     .then(function () {
-      return knex('adjustment_category').select('id').where({ category: 'Group Supervision' }).first()
+      return knex('adjustment_category').withSchema('app').select('id').where({ category: 'Group Supervision' }).first()
     })
     .then(function (categoryIdResult) {
       categoryId = categoryIdResult.id

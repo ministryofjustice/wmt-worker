@@ -3,7 +3,7 @@ const Promise = require('bluebird').Promise
 
 module.exports.insertDependencies = function (inserts) {
   const workloadPoints = module.exports.getWorkloadPoints()
-  return knex('workload_points').returning('id').insert(workloadPoints)
+  return knex('workload_points').withSchema('app').returning('id').insert(workloadPoints)
     .then(function (ids) {
       ids.forEach((id) => {
         inserts.push({ table: 'workload_points', id: id })
@@ -18,7 +18,7 @@ module.exports.insertDependencies = function (inserts) {
 module.exports.removeDependencies = function (inserts) {
   inserts = inserts.reverse()
   return Promise.each(inserts, (insert) => {
-    return knex(insert.table).where('id', insert.id).del()
+    return knex(insert.table).withSchema('app').where('id', insert.id).del()
   })
 }
 

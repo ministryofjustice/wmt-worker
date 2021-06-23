@@ -10,7 +10,7 @@ describe('app/services/data/insert-offender-manager', function () {
 
   let typeId
   before(function (done) {
-    knex('offender_manager_type').returning('id').insert({ description: 'test' })
+    knex('offender_manager_type').withSchema('app').returning('id').insert({ description: 'test' })
       .then(function (id) {
         typeId = id[0]
         done()
@@ -24,6 +24,7 @@ describe('app/services/data/insert-offender-manager', function () {
     insertOffenderManager(offenderManager).then(function (id) {
       offenderManagerId = id
       return knex.table('offender_manager')
+        .withSchema('app')
         .where({ id: id })
         .first()
         .then(function (result) {
@@ -44,13 +45,14 @@ describe('app/services/data/insert-offender-manager', function () {
     let offenderManager
     let newTypeId
 
-    knex('offender_manager_type').select('id').where('grade_code', 'PO')
+    knex('offender_manager_type').withSchema('app').select('id').where('grade_code', 'PO')
       .then(function (id) {
         newTypeId = id[0].id
         offenderManager = new OffenderManager(undefined, key, undefined, undefined, newTypeId, undefined)
         return insertOffenderManager(offenderManager).then(function (id) {
           offenderManagerId = id
           return knex.table('offender_manager')
+            .withSchema('app')
             .where({ id: id })
             .first()
             .then(function (result) {
@@ -72,13 +74,14 @@ describe('app/services/data/insert-offender-manager', function () {
     let newTypeId
     const newForename = 'A.N'
 
-    knex('offender_manager_type').select('id').where('grade_code', 'PO')
+    knex('offender_manager_type').withSchema('app').select('id').where('grade_code', 'PO')
       .then(function (id) {
         newTypeId = id[0].id
         offenderManager = new OffenderManager(undefined, key, newForename, undefined, newTypeId, undefined)
         return insertOffenderManager(offenderManager).then(function (id) {
           offenderManagerId = id
           return knex.table('offender_manager')
+            .withSchema('app')
             .where({ id: id })
             .first()
             .then(function (result) {
@@ -101,13 +104,14 @@ describe('app/services/data/insert-offender-manager', function () {
     const newForename = 'A.N'
     const newSurname = 'OTHER'
 
-    knex('offender_manager_type').select('id').where('grade_code', 'PO')
+    knex('offender_manager_type').withSchema('app').select('id').where('grade_code', 'PO')
       .then(function (id) {
         newTypeId = id[0].id
         offenderManager = new OffenderManager(undefined, key, newForename, newSurname, newTypeId, undefined)
         return insertOffenderManager(offenderManager).then(function (id) {
           offenderManagerId = id
           return knex.table('offender_manager')
+            .withSchema('app')
             .where({ id: id })
             .first()
             .then(function (result) {
@@ -130,13 +134,14 @@ describe('app/services/data/insert-offender-manager', function () {
     const newForename = 'JOE'
     const newSurname = 'BLOGGS'
 
-    knex('offender_manager_type').select('id').where('grade_code', 'SPO')
+    knex('offender_manager_type').withSchema('app').select('id').where('grade_code', 'SPO')
       .then(function (id) {
         newTypeId = id[0].id
         offenderManager = new OffenderManager(undefined, key, newForename, newSurname, newTypeId, undefined)
         return insertOffenderManager(offenderManager).then(function (id) {
           offenderManagerId = id
           return knex.table('offender_manager')
+            .withSchema('app')
             .where({ id: id })
             .first()
             .then(function (result) {
@@ -153,9 +158,9 @@ describe('app/services/data/insert-offender-manager', function () {
   })
 
   after(function () {
-    return knex('offender_manager').where('id', offenderManagerId).del()
+    return knex('offender_manager').withSchema('app').where('id', offenderManagerId).del()
       .then(function () {
-        return knex('offender_manager_type').where('id', typeId).del()
+        return knex('offender_manager_type').withSchema('app').where('id', typeId).del()
       })
   })
 })

@@ -1,7 +1,7 @@
 const knex = require('../../../knex').stagingSchema
 
 module.exports = function (range) {
-  return knex('omic_teams').whereBetween('omic_teams.id', range)
+  return knex('omic_teams').withSchema('staging').whereBetween('omic_teams.id', range)
     .leftJoin('t2a', function () {
       this.on('omic_teams.om_key', 't2a.om_key')
         .andOn('omic_teams.team_code', 't2a.team_code')

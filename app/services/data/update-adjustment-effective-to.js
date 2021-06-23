@@ -2,6 +2,7 @@ const knex = require('../../../knex').appSchema
 
 module.exports = function (id, effectiveTo) {
   return knex('adjustments')
+    .withSchema('app')
     .where('id', id)
     .update('effective_to', effectiveTo)
     .returning('id')

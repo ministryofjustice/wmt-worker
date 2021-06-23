@@ -17,7 +17,7 @@ module.exports.insertDependencies = function (inserts) {
         total_oral_reports: 7
       }
 
-      return knex('court_reports').returning('id').insert(defaultCourtReport)
+      return knex('court_reports').withSchema('app').returning('id').insert(defaultCourtReport)
         .then(function (ids) {
           inserts.push({ table: 'court_reports', id: ids[0] })
           return inserts
@@ -28,12 +28,13 @@ module.exports.insertDependencies = function (inserts) {
 module.exports.removeDependencies = function (inserts) {
   inserts = inserts.reverse()
   return Promise.each(inserts, (insert) => {
-    return knex(insert.table).where('id', insert.id).del()
+    return knex(insert.table).withSchema('app').where('id', insert.id).del()
   })
 }
 
 module.exports.getAllReductionStatusesForCourtReporters = function (courtReportStagingIdStart, courtReportStagingIdEnd, workloadReportId) {
   return knex('reductions')
+  .withSchema('app')
     .join('court_reports', 'court_reports.workload_owner_id', 'reductions.workload_owner_id')
     .select('reductions.status')
     .whereRaw('court_reports.staging_id BETWEEN ? AND ? ' +

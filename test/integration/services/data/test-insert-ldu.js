@@ -30,6 +30,7 @@ describe('app/services/data/insert-ldu', function () {
     insertLdu(ldu).then(function (lduId) {
       lduUniqueIdentifier = lduId[0]
       return knex.table('ldu')
+        .withSchema('app')
         .where({ id: lduId })
         .first()
         .then(function (result) {
@@ -50,6 +51,7 @@ describe('app/services/data/insert-ldu', function () {
     const ldu = new Ldu(undefined, regionId, code, newLDUName)
     insertLdu(ldu).then(function (lduId) {
       return knex.table('ldu')
+        .withSchema('app')
         .where({ id: lduId })
         .first()
         .then(function (result) {
@@ -68,6 +70,7 @@ describe('app/services/data/insert-ldu', function () {
     const ldu = new Ldu(undefined, regionId, code, newLDUName)
     insertLdu(ldu).then(function (lduId) {
       return knex.table('ldu')
+        .withSchema('app')
         .where({ id: lduId })
         .first()
         .then(function (result) {

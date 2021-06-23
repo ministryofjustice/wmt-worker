@@ -3,6 +3,7 @@ const knex = require('knex')(knexConfig)
 
 module.exports = function () {
   return knex('gs')
+    .withSchema('staging')
     .select(
       'id',
       'contact_id AS contactId',

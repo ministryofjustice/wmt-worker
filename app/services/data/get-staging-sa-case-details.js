@@ -1,5 +1,5 @@
 const config = require('../../../config')
-const knex = require('../../../knex').appSchema
+const knex = require('../../../knex').stagingSchema
 const CaseDetails = require('wmt-probation-rules').CaseDetails
 
 const columns = ['case_ref_no', 'tier_code', 'team_code', 'om_grade_code', 'om_key', 'location']
@@ -9,7 +9,7 @@ module.exports = function (omKey, teamCode) {
     om_key: omKey,
     team_code: teamCode
   }
-  return knex.select(columns).from(`${config.DB_STG_SCHEMA}.wmt_extract_sa`).where(whereObject)
+  return knex.select(columns).withSchema('staging').from('wmt_extract_sa').where(whereObject)
     .then(function (results) {
       const casedetails = []
       if (results !== 'undefined' && results.length > 0) {

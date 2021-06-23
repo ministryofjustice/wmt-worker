@@ -3,6 +3,7 @@ const reductionStatus = require('../../constants/reduction-status')
 
 module.exports = function (workloadStagingIdStart, workloadStagingIdEnd, workloadReportId) {
   return knex('reductions')
+    .withSchema('app')
     .join('workload', 'workload.workload_owner_id', 'reductions.workload_owner_id')
     .select(
       'reductions.id AS id',

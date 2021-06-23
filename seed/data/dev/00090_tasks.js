@@ -14,5 +14,5 @@ exports.seed = function (knex, Promise) {
     status: taskStatus.COMPLETE // default value is the status the incoming task otherwise it's pending
 
   }
-  return knex(tableName).insert([dbTask])
+  return knex(tableName).withSchema('app').insert([dbTask])
 }

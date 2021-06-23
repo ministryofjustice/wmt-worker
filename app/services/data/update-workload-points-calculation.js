@@ -4,6 +4,7 @@ module.exports = function (workloadReportId, workloadPointsId, t2aWorkloadPoints
   paromsPoints, nominalTarget, availablePoints, contractedHours, reductionHours, cmsAdjustmentPoints, gsAdjustmentPoints,
   armsTotalCases) {
   return knex('workload_points_calculations')
+    .withSchema('app')
     .where('workload_report_id', workloadReportId)
     .where('workload_id', workloadId)
     .update({

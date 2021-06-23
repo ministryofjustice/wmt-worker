@@ -15,9 +15,9 @@ describe('services/data/get-app-court-reports', function () {
   })
 
   it('should retrieve all the court-reports with staging ids within a given range and the given workload report id', function () {
-    return knex('court_reports').max('staging_id AS maxId').first()
+    return knex('court_reports').withSchema('app').max('staging_id AS maxId').first()
       .then(function (maxId) {
-        return knex('workload_report').whereNull('effective_to').first('id')
+        return knex('workload_report').withSchema('app').whereNull('effective_to').first('id')
           .then(function (workloadReportId) {
             const expectedResults = [{
               id: inserts.filter((item) => item.table === 'court_reports')[0].id,

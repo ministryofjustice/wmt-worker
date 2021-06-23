@@ -1,6 +1,6 @@
 const config = require('../../../config')
 const knex = require('../../../knex').appSchema
-const offenderManagerTable = `${config.DB_APP_SCHEMA}.offender_manager`
+const offenderManagerTable = 'offender_manager'
 const updateOffenderManager = require('./update-offender-manager')
 
 module.exports = function (offenderManager) {
@@ -12,12 +12,13 @@ module.exports = function (offenderManager) {
   offenderManagerDbObject.surname = offenderManager.surname
   offenderManagerDbObject.type_id = offenderManager.typeId
 
-  return knex(offenderManagerTable)
+  return knex(offenderManagerTable).withSchema('app')
     .where({ key: offenderManagerDbObject.key })
     .first()
     .then(function (result) {
       if (result === undefined) {
         return knex(offenderManagerTable)
+          .withSchema('app')
           .insert(offenderManagerDbObject)
           .returning('id')
           .then(function (id) {

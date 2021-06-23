@@ -15,6 +15,7 @@ module.exports = function (workload, caseDetails) {
   const workloadDbObj = mapForInsert(workload)
 
   return knex('workload')
+    .withSchema('app')
     .insert(workloadDbObj)
     .returning('id')
     .then(function (workloadId) {
@@ -86,7 +87,7 @@ const insertTiers = function (tiers, filteredTiers, t2aTiers, workloadId, locati
     }
     tiersToInsert.push(tierToInsert)
   }
-  return knex('tiers').insert(tiersToInsert)
+  return knex('tiers').withSchema('app').insert(tiersToInsert)
 }
 
 const insertCaseDetails = function (caseDetails, workloadId, location) {
@@ -113,7 +114,7 @@ const insertCaseDetails = function (caseDetails, workloadId, location) {
   if (caseDetailsToInsert.length > 30) {
     batchSize = Math.floor(caseDetailsToInsert.length / 8) + 1
   }
-  return knex.batchInsert('case_details', caseDetailsToInsert, batchSize)
+  return knex.batchInsert('app.case_details', caseDetailsToInsert, batchSize)
 }
 
 const mapForInsert = function (record) {

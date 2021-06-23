@@ -4,7 +4,7 @@ const Tiers = require('wmt-probation-rules').Tiers
 const locations = require('wmt-probation-rules').Locations
 
 module.exports = function (range) {
-  return knex('wmt_extract').whereBetween('id', range)
+  return knex('wmt_extract').withSchema('staging').whereBetween('id', range)
     .then(function (results) {
       const caseSummary = []
       let communityTiers = []

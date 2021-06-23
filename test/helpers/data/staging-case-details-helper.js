@@ -22,6 +22,7 @@ const testCaseDetails = mapForInsert(getTestCaseDetails(getGeneratedCaseRefNo(),
 
 module.exports.insertWarrant = function (inserts) {
   return knex(warrantsTableName)
+    .withSchema('staging')
     .insert(testCaseDetails)
     .returning('id')
     .then(function (id) {
@@ -32,6 +33,7 @@ module.exports.insertWarrant = function (inserts) {
 
 module.exports.insertUnpaidWork = function (inserts) {
   return knex(unpaidWorkTableName)
+    .withSchema('staging')
     .insert(testCaseDetails)
     .returning('id')
     .then(function (id) {
@@ -42,6 +44,7 @@ module.exports.insertUnpaidWork = function (inserts) {
 
 module.exports.insertOverdueTermination = function (inserts) {
   return knex(overdueTerminationsTableName)
+    .withSchema('staging')
     .insert(testCaseDetails)
     .returning('id')
     .then(function (id) {
@@ -52,6 +55,7 @@ module.exports.insertOverdueTermination = function (inserts) {
 
 module.exports.insertPriority = function (inserts) {
   return knex(priorityTableName)
+    .withSchema('staging')
     .insert(testCaseDetails)
     .returning('id')
     .then(function (id) {
@@ -64,9 +68,9 @@ module.exports.deleteAll = function (inserts) {
   inserts = inserts.reverse()
   return Promise.each(inserts, function (insert) {
     if (insert.id instanceof Array) {
-      return knex(insert.table).whereIn('id', insert.id).del()
+      return knex(insert.table).withSchema('staging').whereIn('id', insert.id).del()
     } else {
-      return knex(insert.table).where('id', insert.id).del()
+      return knex(insert.table).withSchema('staging').where('id', insert.id).del()
     }
   })
 }

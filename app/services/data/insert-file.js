@@ -10,5 +10,5 @@ module.exports = function (filePath, fileType) {
     is_enabled: true
   }
 
-  return knex('app.export_file').insert(fileMetadata).returning('id')
+  return knex('export_file').withSchema('app').insert(fileMetadata).returning('id')
 }

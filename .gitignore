@@ -16,3 +16,6 @@ Icon?
 
 /data/
 /archive/
+/.idea/
+
+*.iml

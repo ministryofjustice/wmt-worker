@@ -9,7 +9,7 @@ module.exports.insertDependencies = function (workloadOwnerId, inserts = []) {
     .then(function (idsArray) {
       const workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
       const reductions = module.exports.getReductionObjects(workloadOwnerId)
-      return knex('reductions').returning('id').insert(reductions)
+      return knex('reductions').withSchema('app').returning('id').insert(reductions)
     }).then(function (ids) {
       ids.forEach((id) => {
         inserts.push({ table: 'reductions', id: id })
@@ -26,7 +26,7 @@ module.exports.insertDependencies = function (workloadOwnerId, inserts = []) {
 module.exports.removeDependencies = function (inserts) {
   inserts = inserts.reverse()
   return Promise.each(inserts, (insert) => {
-    return knex(insert.table).where('id', insert.id).del()
+    return knex(insert.table).withSchema('app').where('id', insert.id).del()
   })
 }
 

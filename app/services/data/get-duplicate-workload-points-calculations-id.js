@@ -2,6 +2,7 @@ const knex = require('../../../knex').appSchema
 
 module.exports = function (workloadOwnerId) {
   return knex('workload_points_calculations')
+    .withSchema('app')
     .join('workload', 'workload_points_calculations.workload_id', 'workload.id')
     .join('workload_owner', 'workload.workload_owner_id', 'workload_owner.id')
     .join('workload_report', 'workload_points_calculations.workload_report_id', 'workload_report.id')

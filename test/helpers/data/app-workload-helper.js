@@ -3,26 +3,26 @@ const Locations = require('wmt-probation-rules').Locations
 const Promise = require('bluebird').Promise
 
 module.exports.insertDependencies = function (inserts) {
-  const promise = knex('workload_report').returning('id').insert({})
+  const promise = knex('workload_report').withSchema('app').returning('id').insert({})
     .then(function (ids) {
       inserts.push({ table: 'workload_report', id: ids[0] })
-      return knex('offender_manager_type').returning('id').insert({ description: 'test' })
+      return knex('offender_manager_type').withSchema('app').returning('id').insert({ description: 'test' })
     })
     .then(function (ids) {
       inserts.push({ table: 'offender_manager_type', id: ids[0] })
-      return knex('offender_manager').returning('id').insert({ type_id: ids[0] })
+      return knex('offender_manager').withSchema('app').returning('id').insert({ type_id: ids[0] })
     })
     .then(function (ids) {
       inserts.push({ table: 'offender_manager', id: ids[0] })
-      return knex('region').returning('id').insert({})
+      return knex('region').withSchema('app').returning('id').insert({})
     })
     .then(function (ids) {
       inserts.push({ table: 'region', id: ids[0] })
-      return knex('ldu').returning('id').insert({ region_id: ids[0] })
+      return knex('ldu').withSchema('app').returning('id').insert({ region_id: ids[0] })
     })
     .then(function (ids) {
       inserts.push({ table: 'ldu', id: ids[0] })
-      return knex('team').returning('id').insert({ ldu_id: ids[0] })
+      return knex('team').withSchema('app').returning('id').insert({ ldu_id: ids[0] })
     })
     .then(function (ids) {
       inserts.push({ table: 'team', id: ids[0] })
@@ -36,7 +36,7 @@ module.exports.insertDependencies = function (inserts) {
         defaultWorkloadOwner
       ]
 
-      return knex('workload_owner').returning('id').insert(workloadOwners)
+      return knex('workload_owner').withSchema('app').returning('id').insert(workloadOwners)
     })
     .then(function (ids) {
       ids.forEach((id) => {
@@ -74,7 +74,7 @@ module.exports.insertDependencies = function (inserts) {
         Object.assign({}, defaultWorkload, { total_cases: 30, total_filtered_cases: 17, total_t2a_cases: 20, staging_id: 3, workload_owner_id: ids[2] })
       ]
 
-      return knex('workload').returning('id').insert(workloads)
+      return knex('workload').withSchema('app').returning('id').insert(workloads)
     })
     .then(function (ids) {
       const locations = [Locations.COMMUNITY, Locations.CUSTODY, Locations.LICENSE]
@@ -102,7 +102,7 @@ module.exports.insertDependencies = function (inserts) {
           }
         }
       })
-      return knex.batchInsert('tiers', cases, 149).returning('id')
+      return knex.batchInsert('app.tiers', cases, 149).returning('id')
     })
     .then(function (ids) {
       ids.forEach((id) => {
@@ -130,6 +130,6 @@ module.exports.removeDependencies = function (inserts) {
   }
 
   return Promise.each(groupedDeletions, (deletion) => {
-    return knex(deletion.table).whereIn('id', deletion.id).del()
+    return knex(deletion.table).withSchema('app').whereIn('id', deletion.id).del()
   })
 }

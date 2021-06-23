@@ -4,6 +4,7 @@ const workloadReportStatus = require('../../constants/workload-report-status')
 module.exports = function () {
   const workloadReport = getDefaultWorkloadReport()
   return knex('workload_report')
+    .withSchema('app')
     .insert(workloadReport)
     .returning('id')
     .then(function (ids) {

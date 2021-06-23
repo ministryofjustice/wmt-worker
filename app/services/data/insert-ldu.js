@@ -1,6 +1,6 @@
 const config = require('../../../config')
 const knex = require('../../../knex').appSchema
-const lduTable = `${config.DB_APP_SCHEMA}.ldu`
+const lduTable = 'ldu'
 const updateLDU = require('./update-ldu')
 
 module.exports = function (ldu) {
@@ -13,12 +13,12 @@ module.exports = function (ldu) {
   lduDbObject.effective_from = ldu.effectiveFrom
   lduDbObject.effective_to = ldu.effectiveTo
 
-  return knex.select().from(lduTable)
+  return knex.select().from(lduTable).withSchema('app')
     .where('code', lduDbObject.code)
     .first()
     .then(function (result) {
       if (result === undefined) {
-        return knex(lduTable)
+        return knex(lduTable).withSchema('app')
           .insert(lduDbObject)
           .returning('id')
       } else {
