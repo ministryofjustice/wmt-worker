@@ -1,0 +1,30 @@
+---
+generic-service:
+  nameOverride: hmpps-workload-worker
+  replicaCount: 1
+
+  image:
+    repository: quay.io/hmpps/hmpps-workload-worker
+    tag: app_version    # override at deployment time
+
+  # Environment variables to load into the deployment
+  env:
+    NODE_ENV: "production"
+    WMT_DB_NAME: "hmpps_workload"
+
+  # Pre-existing kubernetes secrets to load as environment variables in the deployment.
+  # namespace_secrets:
+  #   [name of kubernetes secret]:
+  #     [name of environment variable as seen by app]: [key of kubernetes secret to load]
+
+  namespace_secrets:
+    hmpps-workload:
+      APPINSIGHTS_INSTRUMENTATIONKEY: "APPINSIGHTS_INSTRUMENTATIONKEY"
+    rds-instance-output:
+      WMT_DB_USERNAME: "database_username"
+      WMT_DB_PASSWORD: "database_password"
+      WMT_DB_SERVER: "rds_instance_endpoint"
+
+
+generic-prometheus-alerts:
+  targetApplication: hmpps-tier

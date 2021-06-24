@@ -1,0 +1,9 @@
+---
+# Per environment values which override defaults in hmpps-template-typescript/values.yaml
+
+generic-service:
+  replicaCount: 1
+
+generic-prometheus-alerts:
+  alertSeverity: hmpps-tier
+
