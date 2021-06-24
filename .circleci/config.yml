@@ -25,7 +25,7 @@ jobs:
       - checkout
       - run:
           name: Update npm
-          command: 'npm install -g npm@latest'
+          command: 'sudo npm install -g npm@latest'
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
@@ -38,7 +38,6 @@ jobs:
             - ~/.cache
       - run:
           command: |
-#            npm run build
             DATE=$(date '+%Y-%m-%d')
             export BUILD_NUMBER=${DATE}.${CIRCLE_BUILD_NUM}
             export GIT_REF="$CIRCLE_SHA1"
