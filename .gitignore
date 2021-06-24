@@ -19,3 +19,4 @@ Icon?
 /.idea/
 
 *.iml
+/test_results/

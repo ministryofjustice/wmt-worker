@@ -2,7 +2,7 @@ const knex = require('../../../knex').appSchema
 
 module.exports = function () {
   return knex('wmt_extract')
-  .withSchema('staging')
+    .withSchema('staging')
     .select('id')
     .whereIn('id', function () {
       this.select('staging_id').from('app.workload')

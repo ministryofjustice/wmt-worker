@@ -1,4 +1,3 @@
-const config = require('../../../config')
 const knex = require('../../../knex').appSchema
 const offenderManagerTable = 'offender_manager'
 const updateOffenderManager = require('./update-offender-manager')

@@ -12,7 +12,7 @@ exports.seed = function (knex, Promise) {
     .then(function (firstWorkloadOwnerId) {
       workloadOwnerId = firstWorkloadOwnerId.id
       return knex('workload_owner')
-      .withSchema('app')
+        .withSchema('app')
         .join('team', 'workload_owner.team_id', 'team.id')
         .where('team.description', 'CR Team 1')
         .first('workload_owner.id')

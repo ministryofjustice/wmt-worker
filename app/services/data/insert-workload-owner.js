@@ -1,4 +1,3 @@
-const config = require('../../../config')
 const knex = require('../../../knex').appSchema
 const workloadOwnerTable = 'workload_owner'
 

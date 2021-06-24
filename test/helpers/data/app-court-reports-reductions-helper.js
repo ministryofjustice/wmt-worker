@@ -34,7 +34,7 @@ module.exports.removeDependencies = function (inserts) {
 
 module.exports.getAllReductionStatusesForCourtReporters = function (courtReportStagingIdStart, courtReportStagingIdEnd, workloadReportId) {
   return knex('reductions')
-  .withSchema('app')
+    .withSchema('app')
     .join('court_reports', 'court_reports.workload_owner_id', 'reductions.workload_owner_id')
     .select('reductions.status')
     .whereRaw('court_reports.staging_id BETWEEN ? AND ? ' +

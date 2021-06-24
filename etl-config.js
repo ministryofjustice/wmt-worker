@@ -3,7 +3,7 @@ module.exports = {
   IMPORT_FILE_DIR: process.env.WMT_IMPORT_FILE_PATH || './data/',
   ARCHIVE_FILE_DIR: process.env.WMT_ARCHIVE_FILE_PATH || './archive/',
   ARCHIVE_FILE_NAME: process.env.WMT_ARCHIVE_FILE_NAME || 'delius-extract-',
-  EXPECTED_FILE_COUNT: process.env.WMT_EXPECTED_FILE_COUNT || '1',
+  EXPECTED_FILE_COUNT: process.env.WMT_EXPECTED_FILE_COUNT || '2',
 
   // Extract valid source worksheet tabs
   VALID_SHEET_NAMES: [

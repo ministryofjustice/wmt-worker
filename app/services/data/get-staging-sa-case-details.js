@@ -1,4 +1,3 @@
-const config = require('../../../config')
 const knex = require('../../../knex').stagingSchema
 const CaseDetails = require('wmt-probation-rules').CaseDetails
 
