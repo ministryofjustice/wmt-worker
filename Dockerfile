@@ -63,6 +63,7 @@ COPY --from=build --chown=appuser:appgroup \
 COPY --from=build --chown=appuser:appgroup \
         /app/app ./app
 
+EXPOSE 3000
 ENV NODE_ENV='production'
 USER 2000
 
