@@ -53,7 +53,6 @@ jobs:
             - build-info.json
             - build
             - dist
-            - .cache/Cypress
 
   check_outdated:
     executor:
@@ -69,9 +68,6 @@ jobs:
       - run:
           name: Check version
           command: 'npm --version'
-#      - run:
-#          name: Run check
-#          command: 'npm outdated typescript govuk-frontend'
       - slack/notify:
           event: fail
           channel: manage_a_workforce_dev
@@ -141,6 +137,8 @@ workflows:
           tags:
             ignore: /.*/
       - unit_test:
+          context:
+            - hmpps-common-vars
           requires:
             - build
 #      - integration_test:
