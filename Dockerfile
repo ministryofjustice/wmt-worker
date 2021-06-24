@@ -47,6 +47,11 @@ RUN apt-get autoremove -y && \
 COPY --from=build --chown=appuser:appgroup \
         /app/package.json \
         /app/package-lock.json \
+        /app/config.js \
+        /app/etl-config.js \
+        /app/knexfile.js \
+        /app/knex.js \
+        /app/start.js \
         ./
 
 COPY --from=build --chown=appuser:appgroup \
@@ -54,6 +59,9 @@ COPY --from=build --chown=appuser:appgroup \
 
 COPY --from=build --chown=appuser:appgroup \
         /app/node_modules ./node_modules
+
+COPY --from=build --chown=appuser:appgroup \
+        /app/app ./app
 
 ENV NODE_ENV='production'
 USER 2000
