@@ -3163,9 +3163,9 @@ wmf@~1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/wmf/-/wmf-1.0.2.tgz#7d19d621071a08c2bdc6b7e688a9c435298cc2da"
 
-wmt-probation-rules@ministryofjustice/wmt-probation-rules.git#v1.0.8:
-  version "1.0.8"
-  resolved "https://codeload.github.com/ministryofjustice/wmt-probation-rules/tar.gz/0bdc7c45fd3dd333d7cc2a19fa557db355db0470"
+wmt-probation-rules@ministryofjustice/wmt-probation-rules.git#v1.0.9:
+  version "1.0.9"
+  resolved "https://codeload.github.com/ministryofjustice/wmt-probation-rules/tar.gz/2f0e92f7bc721ea24dde2c434014cb5df55cce9b"
   dependencies:
     lodash "^4.17.21"
     moment "^2.29.1"
