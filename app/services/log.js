@@ -1,7 +1,5 @@
-const config = require('../../config')
 const bunyan = require('bunyan')
 const PrettyStream = require('bunyan-prettystream')
-
 
 // Stream to handle pretty printing of Bunyan logs to stdout.
 const prettyStream = new PrettyStream()
