@@ -24,14 +24,14 @@ log.addStream({
   stream: prettyStream
 })
 
-// Add file stream.
-log.addStream({
-  type: 'rotating-file',
-  level: logsLevel,
-  path: logsPath,
-  period: '1d',
-  count: 7
-})
+//// Add file stream.
+//log.addStream({
+//  type: 'rotating-file',
+//  level: logsLevel,
+//  path: logsPath,
+//  period: '1d',
+//  count: 7
+//})
 
 function errorSerializer (error) {
   return {
