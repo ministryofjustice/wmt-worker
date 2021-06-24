@@ -2,7 +2,7 @@ const config = require('./config')
 const log = require('./app/services/log')
 const CronJob = require('cron').CronJob
 const processTasks = require('./app/process-tasks')
-const http = require('http');
+const http = require('http')
 
 const asyncWorkerCron = config.ASYNC_WORKER_CRON
 
@@ -27,9 +27,9 @@ function runProcessTasks () {
 }
 
 const requestListener = function (req, res) {
-  res.writeHead(200);
-  res.end('Hello, World!');
+  res.writeHead(200)
+  res.end('Hello, World!')
 }
 
-const server = http.createServer(requestListener);
-server.listen(3000);
+const server = http.createServer(requestListener)
+server.listen(3000)
