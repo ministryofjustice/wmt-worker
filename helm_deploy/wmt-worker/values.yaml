@@ -23,7 +23,7 @@ generic-service:
     rds-instance-output:
       WMT_DB_USERNAME: "database_username"
       WMT_DB_PASSWORD: "database_password"
-      WMT_DB_SERVER: "rds_instance_endpoint"
+      WMT_DB_SERVER: "rds_instance_address"
 
 
 generic-prometheus-alerts:
