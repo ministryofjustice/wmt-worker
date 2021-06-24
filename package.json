@@ -15,7 +15,8 @@
     "seed-ref": "knex seed:run --env app",
     "delete-dev-data": "node ./delete-data.js dev",
     "delete-ref-data": "node ./delete-data.js ref",
-    "record-build-info": "node ./bin/record-build-info"
+    "record-build-info": "node ./bin/record-build-info",
+    "lint": "standard"
   },
   "standard": {
     "globals": [
