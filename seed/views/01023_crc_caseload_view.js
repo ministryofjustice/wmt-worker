@@ -1,5 +1,5 @@
 exports.seed = function (knex, Promise) {
-  const sql = `CREATE VIEW [app].[national_caseload_view]
+  const sql = `CREATE VIEW [app].[crc_caseload_view]
         WITH SCHEMABINDING
         AS
   SELECT
@@ -38,14 +38,13 @@ exports.seed = function (knex, Promise) {
       JOIN app.offender_manager om ON om.id = wo.offender_manager_id
       JOIN app.offender_manager_type omt ON omt.id = om.type_id
   WHERE wr.effective_from IS NOT NULL
-      AND wr.effective_to IS NULL AND r.description LIKE 'NPS%'
+      AND wr.effective_to IS NULL AND r.description NOT LIKE 'NPS%'
   GROUP BY r.id, r.description, omt.grade_code, tr.location;`
 
-  const index = `CREATE UNIQUE CLUSTERED INDEX idx_national_caseload_view
-  ON app.national_caseload_view (link_id, location, grade_code)`
+  const index = 'CREATE UNIQUE CLUSTERED INDEX idx_crc_caseload_view ON app.crc_caseload_view (link_id, location, grade_code)'
 
   return knex.schema
-    .raw('DROP VIEW IF EXISTS app.national_caseload_view;')
+    .raw('DROP VIEW IF EXISTS app.crc_caseload_view;')
     .raw('SET ARITHABORT ON')
     .raw(sql)
     .raw(index)
