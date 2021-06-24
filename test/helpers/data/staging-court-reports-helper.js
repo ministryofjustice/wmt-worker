@@ -2,12 +2,12 @@ const knex = require('../../../knex').stagingSchema
 const Promise = require('bluebird').Promise
 
 module.exports.insertDependencies = function (inserts) {
-  return knex('court_reports').returning('id').insert(getCourtReports())
+  return knex('court_reports').withSchema('staging').returning('id').insert(getCourtReports())
     .then(function (ids) {
       ids.forEach((id) => {
         inserts.push({ table: 'court_reports', id: id })
       })
-      return knex('wmt_extract').returning('id').insert(getWmtExtracts())
+      return knex('wmt_extract').withSchema('staging').returning('id').insert(getWmtExtracts())
     })
     .then(function (ids) {
       ids.forEach((id) => {
@@ -20,7 +20,7 @@ module.exports.insertDependencies = function (inserts) {
 module.exports.removeDependencies = function (inserts) {
   inserts = inserts.reverse()
   return Promise.each(inserts, function (insert) {
-    return knex(insert.table).where('id', insert.id).del()
+    return knex(insert.table).withSchema('staging').where('id', insert.id).del()
   })
 }
 

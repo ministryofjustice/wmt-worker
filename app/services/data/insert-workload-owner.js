@@ -1,6 +1,5 @@
-const config = require('../../../config')
 const knex = require('../../../knex').appSchema
-const workloadOwnerTable = `${config.DB_APP_SCHEMA}.workload_owner`
+const workloadOwnerTable = 'workload_owner'
 
 module.exports = function (workloadOwner) {
   let workloadOwnerId
@@ -11,12 +10,14 @@ module.exports = function (workloadOwner) {
   workloadOwnerDatabaseObject.team_id = workloadOwner.teamId
 
   return knex(workloadOwnerTable)
+    .withSchema('app')
     .where('offender_manager_id', workloadOwner.offenderManagerId)
     .andWhere('team_id', workloadOwner.teamId)
     .first()
     .then(function (result) {
       if (result === undefined) {
         return knex(workloadOwnerTable)
+          .withSchema('app')
           .insert(workloadOwnerDatabaseObject)
           .returning('id')
       } else {

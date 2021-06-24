@@ -28,9 +28,9 @@ exports.seed = function (knex, Promise) {
   // var partTwoWorkloads = []
   // var partThreeWorkloads = []
   // var partFourWorkloads = []
-  return knex(tableName).del()
+  return knex(tableName).withSchema('app').del()
     .then(function () {
-      return knex('workload_owner').join('team', 'workload_owner.team_id', 'team.id')
+      return knex('workload_owner').withSchema('app').join('team', 'workload_owner.team_id', 'team.id')
         .select('workload_owner.id').whereNot('team.description', 'CR Team 1')
     })
     .then(function (workloadOwners) {
@@ -50,6 +50,6 @@ exports.seed = function (knex, Promise) {
       // partTwoWorkloads = workloadsToInsert.slice(oneQuarterValue, twoQuarterValue)
       // partThreeWorkloads = workloadsToInsert.slice(twoQuarterValue, threeQuarterValue)
       // partFourWorkloads = workloadsToInsert.slice(threeQuarterValue, workloadsToInsert.length)
-      return knex.batchInsert('workload', workloadsToInsert, 100)
+      return knex.batchInsert('app.workload', workloadsToInsert, 100)
     })
 }

@@ -21,7 +21,7 @@ This is the asynchronis worker for the WMT project. It is responsible for
 polling the `app.tasks` table, picking up tasks which are marked as `PENDING`,
 processing them and recording the result.
 
-```
+```shell
 yarn install
 yarn reset-db
 yarn start

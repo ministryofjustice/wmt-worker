@@ -7,17 +7,17 @@ let cmsAdjustmentReasons
 let gsAdjustmentReasons
 
 exports.seed = function (knex, Promise) {
-  return knex(tableName).del()
+  return knex(tableName).withSchema('app').del()
     .then(function () {
-      return knex('workload_owner').select('id').first()
+      return knex('workload_owner').withSchema('app').select('id').first()
     })
     .then(function (firstWorkloadOwnerId) {
       workloadOwnerId = firstWorkloadOwnerId.id
-      return knex('adjustment_reason').select('id').where('category_id', adjustmentCategory.CMS)
+      return knex('adjustment_reason').withSchema('app').select('id').where('category_id', adjustmentCategory.CMS)
     })
     .then(function (cmsAdjustmentReasonIds) {
       cmsAdjustmentReasons = cmsAdjustmentReasonIds
-      return knex('adjustment_reason').select('id').where('category_id', adjustmentCategory.GS)
+      return knex('adjustment_reason').withSchema('app').select('id').where('category_id', adjustmentCategory.GS)
     })
     .then(function (gsAdjustmentReasonIds) {
       gsAdjustmentReasons = gsAdjustmentReasonIds
@@ -42,7 +42,7 @@ exports.seed = function (knex, Promise) {
       archivedFromDate.setDate(effectiveFromDate - 360)
       archivedToDate.setDate(effectiveToDate - 365)
 
-      return knex(tableName).insert([
+      return knex(tableName).withSchema('app').insert([
         {
           workload_owner_id: workloadOwnerId,
           adjustment_reason_id: cmsAdjustmentReasons[0].id,

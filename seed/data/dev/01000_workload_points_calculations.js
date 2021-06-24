@@ -5,21 +5,22 @@ exports.seed = function (knex, Promise) {
   let currentPointsId
   let currentT2aPointsId
   // Deletes ALL existing entries
-  return knex(tableName).del()
+  return knex(tableName).withSchema('app').del()
     .then(function () {
-      return knex('workload_report').select('id')
+      return knex('workload_report').withSchema('app').select('id')
     })
     .then(function (reportIds) {
       existingReportIds = reportIds
-      return knex('workload_points').select('id').first()
+      return knex('workload_points').withSchema('app').select('id').first()
     })
     .then(function (workloadPointsId) {
       currentPointsId = workloadPointsId
-      return knex('workload_points').select('id').first().where('is_t2a', true)
+      return knex('workload_points').withSchema('app').select('id').first().where('is_t2a', true)
     })
     .then(function (t2aWorkloadPintsId) {
       currentT2aPointsId = t2aWorkloadPintsId
       return knex('workload_owner')
+        .withSchema('app')
         .join('workload', 'workload_owner.id', 'workload.workload_owner_id')
         .max('workload.id AS id')
         .groupBy('workload_owner.id')
@@ -58,9 +59,9 @@ exports.seed = function (knex, Promise) {
       const splitValue = workloadPointsCalculationsToInsert.length / 2
       const partOneWpcs = workloadPointsCalculationsToInsert.slice(0, splitValue)
       const partTwoWpcs = workloadPointsCalculationsToInsert.slice(splitValue, workloadPointsCalculationsToInsert.length)
-      return knex('workload_points_calculations').insert(partOneWpcs)
+      return knex('workload_points_calculations').withSchema('app').insert(partOneWpcs)
         .then(function (results) {
-          return knex('workload_points_calculations').insert(partTwoWpcs)
+          return knex('workload_points_calculations').withSchema('app').insert(partTwoWpcs)
         })
     })
 }

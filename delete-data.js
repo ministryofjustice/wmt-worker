@@ -10,7 +10,7 @@ const databaseTableNames = seedDataFileNames.sort().reverse()
   .map((fileName) => fileName.substring(fileName.lastIndexOf('/') + 7, fileName.lastIndexOf('.')))
 
 Promise.each(databaseTableNames, function (tableName) {
-  return knex(tableName).del()
+  return knex(tableName).withSchema('app').del()
 })
   .finally(function () {
     return knex.destroy()

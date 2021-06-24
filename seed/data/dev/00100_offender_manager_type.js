@@ -1,10 +1,10 @@
 const tableName = 'offender_manager_type'
 exports.seed = function (knex, Promise) {
   // Deletes ALL existing entries
-  return knex(tableName).del()
+  return knex(tableName).withSchema('app').del()
     .then(function () {
       // Inserts seed entries
-      return knex(tableName).insert([
+      return knex(tableName).withSchema('app').insert([
         { description: 'Probation Officer', grade_code: 'PO' },
         { description: 'Probation Support Officer', grade_code: 'PSO' },
         { description: 'Senior Probation Officer', grade_code: 'SPO' },

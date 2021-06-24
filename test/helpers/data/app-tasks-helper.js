@@ -2,10 +2,10 @@ const knex = require('../../../knex').appSchema
 const Promise = require('bluebird').Promise
 
 module.exports.insertDependencies = function (inserts) {
-  return knex('workload_report').returning('id').insert({})
+  return knex('workload_report').withSchema('app').returning('id').insert({})
     .then(function (ids) {
       inserts.push({ table: 'workload_report', id: ids[0] })
-      return knex('workload_report').returning('id').insert({})
+      return knex('workload_report').withSchema('app').returning('id').insert({})
     })
     .then(function (ids) {
       inserts.push({ table: 'workload_report', id: ids[0] })
@@ -31,6 +31,6 @@ module.exports.insertDependencies = function (inserts) {
 module.exports.removeDependencies = function (inserts) {
   inserts = inserts.reverse()
   return Promise.each(inserts, (insert) => {
-    return knex(insert.table).where('id', insert.id).del()
+    return knex(insert.table).withSchema('app').where('id', insert.id).del()
   })
 }

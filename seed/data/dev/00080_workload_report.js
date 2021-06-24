@@ -1,7 +1,7 @@
 const tableName = 'workload_report'
 exports.seed = function (knex, Promise) {
   // Deletes ALL existing entries
-  return knex(tableName).del()
+  return knex(tableName).withSchema('app').del()
     .then(function () {
       let effectiveFromDate = new Date()
       effectiveFromDate.setDate(effectiveFromDate.getDate() - 365)
@@ -20,6 +20,6 @@ exports.seed = function (knex, Promise) {
       }
 
       entries[entries.length - 1].effective_to = undefined
-      return knex(tableName).insert(entries)
+      return knex(tableName).withSchema('app').insert(entries)
     })
 }

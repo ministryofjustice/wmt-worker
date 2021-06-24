@@ -1,7 +1,7 @@
 const knex = require('../../../knex').stagingSchema
 
 module.exports = function (range) {
-  return knex('wmt_extract').whereBetween('wmt_extract.id', range)
+  return knex('wmt_extract').withSchema('staging').whereBetween('wmt_extract.id', range)
     .leftJoin('wmt_extract_filtered', function () {
       this.on('wmt_extract.om_key', 'wmt_extract_filtered.om_key')
         .andOn('wmt_extract.team_code', 'wmt_extract_filtered.team_code')

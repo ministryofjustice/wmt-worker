@@ -20,6 +20,7 @@ module.exports = function () {
   ]
 
   return knex(table)
+    .withSchema('app')
     .columns(selectColumns)
     .where('reduction_status', 'ACTIVE')
     .then(function (results) {

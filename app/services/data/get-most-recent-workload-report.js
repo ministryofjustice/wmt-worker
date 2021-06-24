@@ -1,7 +1,8 @@
 const knex = require('../../../knex').appSchema
 
 module.exports = function () {
-  return knex('app.workload_report')
+  return knex('workload_report')
+    .withSchema('app')
     .select('id')
     .limit(1)
     .orderBy('id', 'desc')

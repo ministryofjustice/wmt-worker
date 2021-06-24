@@ -4,6 +4,7 @@ module.exports = function (courtReportCalculation) {
   const dbObject = mapToDbObject(courtReportCalculation)
 
   return knex('court_reports_calculations')
+    .withSchema('app')
     .returning('id')
     .insert(dbObject)
 }

@@ -28,7 +28,7 @@ module.exports.insertDependencies = function (inserts) {
   const promise = omicWorkloadHelper.insertDependencies(inserts)
     .then(function (inserts) {
       const workloadPoints = workloadPointsHelper.getWorkloadPoints()
-      return knex('workload_points').returning('id').insert(workloadPoints)
+      return knex('workload_points').withSchema('app').returning('id').insert(workloadPoints)
         .then(function (ids) {
           ids.forEach((id) => {
             inserts.push({ table: 'workload_points', id: id })
@@ -48,7 +48,7 @@ module.exports.addWorkloadPointsCalculation = function (inserts) {
       omic_workload_id: inserts.filter((item) => item.table === 'omic_workload')[0].id
     }
   )
-  return knex('omic_workload_points_calculations').returning('id').insert(workloadPointsCalculation)
+  return knex('omic_workload_points_calculations').withSchema('app').returning('id').insert(workloadPointsCalculation)
     .then(function (ids) {
       inserts.push({ table: 'omic_workload_points_calculations', id: ids[0] })
       return inserts
@@ -68,6 +68,6 @@ module.exports.removeDependencies = function (inserts) {
   }
 
   return Promise.each(groupedDeletions, (deletion) => {
-    return knex(deletion.table).whereIn('id', deletion.id).del()
+    return knex(deletion.table).withSchema('app').whereIn('id', deletion.id).del()
   })
 }

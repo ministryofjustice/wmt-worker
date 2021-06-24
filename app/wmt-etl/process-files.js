@@ -11,6 +11,7 @@ const cleanName = require('./clean-name')
 module.exports = function (extractFiles) {
   return Promise.each(extractFiles, function (extractFile) {
     const workbook = XLSX.readFile(extractFile, { type: 'binary', cellText: false, cellDates: true })
+    console.log(`all keys of workbook: ${Object.keys(workbook.Sheets)}`)
     if (!validateWorkbookFormat(Object.keys(workbook.Sheets))) {
       throw new Error('Workbook does not contain the expected worksheets')
     }

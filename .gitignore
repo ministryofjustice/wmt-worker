@@ -16,3 +16,7 @@ Icon?
 
 /data/
 /archive/
+/.idea/
+
+*.iml
+/test_results/

@@ -9,9 +9,9 @@ module.exports = function (courtReporters) {
       batchSize = Math.floor(courtReporters.length / 16) + 1
     }
   }
-  return knex('court_reporters').del()
+  return knex('court_reporters').withSchema('staging').del()
     .then(function () {
-      return knex.batchInsert('court_reporters', courtReporters, batchSize)
+      return knex.batchInsert('staging.court_reporters', courtReporters, batchSize)
         .returning('id')
     })
 }

@@ -5,6 +5,7 @@ const adjustmentStatus = require('../../constants/adjustment-status')
 
 module.exports = function (workloadStagingIdStart, workloadStagingIdEnd, workloadReportId) {
   return knex('adjustments')
+    .withSchema('app')
     .join('adjustment_reason', 'adjustment_reason.id', 'adjustments.adjustment_reason_id')
     .join('workload', 'workload.workload_owner_id', 'adjustments.workload_owner_id')
     .andWhere('status', adjustmentStatus.ACTIVE)

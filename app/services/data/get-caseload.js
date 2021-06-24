@@ -1,7 +1,7 @@
 const knex = require('../../../knex').appSchema
 
 module.exports = function () {
-  const table = 'region_caseload_view'
+  const table = 'app.region_caseload_view'
 
   const selectList = [
     'name',

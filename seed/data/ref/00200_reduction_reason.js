@@ -6,9 +6,9 @@ let sql
 
 exports.seed = function (knex, Promise) {
   // Deletes ALL existing entries
-  return knex(tableName).del()
+  return knex(tableName).withSchema('app').del()
     .then(function () {
-      return knex('reduction_category').select('id').where({ category: 'Personal Circumstances' }).first()
+      return knex('reduction_category').withSchema('app').select('id').where({ category: 'Personal Circumstances' }).first()
     })
     .then(function (categoryIdResult) {
       categoryId = categoryIdResult.id
@@ -29,7 +29,7 @@ exports.seed = function (knex, Promise) {
         .raw(sql)
     })
     .then(function () {
-      return knex('reduction_category').select('id').where({ category: 'Community Justice Learning' }).first()
+      return knex('reduction_category').withSchema('app').select('id').where({ category: 'Community Justice Learning' }).first()
     })
     .then(function (categoryIdResult) {
       categoryId = categoryIdResult.id
@@ -45,7 +45,7 @@ exports.seed = function (knex, Promise) {
         .raw(sql)
     })
     .then(function () {
-      return knex('reduction_category').select('id').where({ category: 'Work Circumstances' }).first()
+      return knex('reduction_category').withSchema('app').select('id').where({ category: 'Work Circumstances' }).first()
     })
     .then(function (categoryIdResult) {
       categoryId = categoryIdResult.id

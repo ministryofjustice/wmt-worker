@@ -5,19 +5,20 @@ let workloadOwnerId
 let courtReporterId
 
 exports.seed = function (knex, Promise) {
-  return knex(tableName).del()
+  return knex(tableName).withSchema('app').del()
     .then(function () {
-      return knex('workload_owner').select('id').first()
+      return knex('workload_owner').withSchema('app').select('id').first()
     })
     .then(function (firstWorkloadOwnerId) {
       workloadOwnerId = firstWorkloadOwnerId.id
       return knex('workload_owner')
+        .withSchema('app')
         .join('team', 'workload_owner.team_id', 'team.id')
         .where('team.description', 'CR Team 1')
         .first('workload_owner.id')
         .then(function (firstCourtReporterId) {
           courtReporterId = firstCourtReporterId.id
-          return knex('reduction_reason').select('id')
+          return knex('reduction_reason').withSchema('app').select('id')
         })
     })
     .then(function (reductionReasonId) {
@@ -49,7 +50,7 @@ exports.seed = function (knex, Promise) {
       deletedToDate.setDate(effectiveToDate + 365 * 10)
 
       // Insert all records into the reduction table
-      return knex(tableName).insert([
+      return knex(tableName).withSchema('app').insert([
         {
           workload_owner_id: workloadOwnerId,
           reduction_reason_id: reductionReasonId[0].id,

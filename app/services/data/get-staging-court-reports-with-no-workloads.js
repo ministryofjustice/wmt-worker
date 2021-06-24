@@ -2,6 +2,7 @@ const knex = require('../../../knex').stagingSchema
 
 module.exports = function () {
   return knex('court_reports')
+    .withSchema('staging')
     .leftJoin('wmt_extract', function () {
       this.on('wmt_extract.om_key', 'court_reports.om_key')
         .andOn('wmt_extract.team_code', 'court_reports.team_code')

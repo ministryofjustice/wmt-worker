@@ -1,6 +1,5 @@
-const config = require('../../../config')
 const knex = require('../../../knex').appSchema
-const teamTable = `${config.DB_APP_SCHEMA}.team`
+const teamTable = 'team'
 const updateTeam = require('./update-team')
 
 module.exports = function (team) {
@@ -13,12 +12,13 @@ module.exports = function (team) {
   teamDbObject.effective_from = team.effectiveFrom
   teamDbObject.effective_to = team.effectiveTo
 
-  return knex.select().from(teamTable)
+  return knex.select().withSchema('app').from(teamTable)
     .where('code', teamDbObject.code)
     .first()
     .then(function (result) {
       if (result === undefined) {
         return knex(teamTable)
+          .withSchema('app')
           .insert(teamDbObject)
           .returning('id')
       } else {
