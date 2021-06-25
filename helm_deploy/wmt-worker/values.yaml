@@ -15,6 +15,8 @@ generic-service:
   readinessProbe:
     httpGet:
       path: /ping
+  strategy:
+    type: Recreate
   # Environment variables to load into the deployment
   env:
     NODE_ENV: "production"
