@@ -4,6 +4,5 @@
 generic-service:
   replicaCount: 1
 
-generic-prometheus-alerts:
-  alertSeverity: hmpps-tier
+
 
