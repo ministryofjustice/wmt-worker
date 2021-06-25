@@ -40,4 +40,5 @@ generic-service:
 
 
 generic-prometheus-alerts:
-  targetApplication: hmpps-tier
+  targetApplication: wmt-worker
+  alertSeverity: hmpps-tier
