@@ -16,8 +16,10 @@ generic-service:
     httpGet:
       path: /ping
   strategy:
-    type: Recreate
-    rollingUpdate: null
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 100%
   # Environment variables to load into the deployment
   env:
     NODE_ENV: "production"
