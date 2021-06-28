@@ -5,6 +5,12 @@ module.exports = {
   ARCHIVE_FILE_NAME: process.env.WMT_ARCHIVE_FILE_NAME || 'delius-extract-',
   EXPECTED_FILE_COUNT: process.env.WMT_EXPECTED_FILE_COUNT || '2',
 
+  S3_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID || '8', // Not Needed
+  S3_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY || '8', // Not Needed
+  S3_BUCKET_ARN: process.env.S3_BUCKET_ARN || '8',
+  S3_BUCKET_NAME: process.env.S3_BUCKET_NAME || '8',
+  S3_REGION: process.env.S3_REGION || 'eu-west-2',
+
   // Extract valid source worksheet tabs
   VALID_SHEET_NAMES: [
     'wmt_extract',
