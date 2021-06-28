@@ -4,11 +4,11 @@ const { s3Client } = require("./get-s3-client") // Helper function that creates 
 const config = require('../../etl-config')
 
 const listObjects = function() {
-      s3Client.send(new ListObjectsCommand({
+      return s3Client.send(new ListObjectsCommand({
         Bucket: config.S3_BUCKET_NAME
       }))
       .then(function(data) {
-        console.log("Success", data)
+        return data.Contents
       })
       .catch(function (error) {
         console.error(error)
@@ -16,4 +16,6 @@ const listObjects = function() {
       })
     }
 
-  listObjects();
+module.exports = {
+  listObjects
+}
