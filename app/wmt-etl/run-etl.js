@@ -1,12 +1,9 @@
-const glob = require('glob')
-
-const config = require('../../etl-config')
 
 const cleanTables = require('./clean-tables')
-const correctNumberOfFilesExist = require('./correct-number-of-files-exist')
+// const correctNumberOfFilesExist = require('./correct-number-of-files-exist')
 const processFiles = require('./process-files')
-const archiveExtractFiles = require('./archive-extract-files')
-const deleteExtractFiles = require('./delete-extract-files')
+// const archiveExtractFiles = require('./archive-extract-files')
+// const deleteExtractFiles = require('./delete-extract-files')
 const createTasks = require('../services/data/create-tasks')
 const Task = require('../services/domain/task')
 const submittingAgent = require('../constants/task-submitting-agent')
@@ -15,35 +12,45 @@ const taskType = require('../constants/task-type')
 const log = require('../services/log')
 const { listObjects } = require('./list-s3-objects')
 
-run = function () {
-
+module.exports = function () {
   return cleanTables()
     .then(function () {
-      return listObjects().then(function(extractFiles) {
-
+      return listObjects().then(function (extractFiles) {
       // if (!correctNumberOfFilesExist(extractFiles.length)) {
-      //   throw new Error('Not all expected extract files are present')
-      // }
-      return processFiles(extractFiles)
-        .then(function () {
-          return archiveExtractFiles(extractFiles)
-            .then(function () {
-              return deleteExtractFiles(extractFiles)
-                .then(function () {
-                  const processImportTask = new Task(
-                    undefined,
-                    submittingAgent.WORKER,
-                    taskType.PROCESS_IMPORT,
-                    undefined,
-                    undefined,
-                    undefined,
-                    undefined,
-                    taskStatus.PENDING
-                  )
-                  return createTasks([processImportTask])
-                })
-            })
-        })
+        //   throw new Error('Not all expected extract files are present')
+        // }
+        return processFiles(extractFiles)
+          .then(function () {
+            const processImportTask = new Task(
+              undefined,
+              submittingAgent.WORKER,
+              taskType.PROCESS_IMPORT,
+              undefined,
+              undefined,
+              undefined,
+              undefined,
+              taskStatus.PENDING
+            )
+            return createTasks([processImportTask])
+
+          // return archiveExtractFiles(extractFiles)
+          //   .then(function () {
+          //     return deleteExtractFiles(extractFiles)
+          //       .then(function () {
+          //         const processImportTask = new Task(
+          //           undefined,
+          //           submittingAgent.WORKER,
+          //           taskType.PROCESS_IMPORT,
+          //           undefined,
+          //           undefined,
+          //           undefined,
+          //           undefined,
+          //           taskStatus.PENDING
+          //         )
+          //         return createTasks([processImportTask])
+          //       })
+          //   })
+          })
       })
     })
     .catch(function (error) {
@@ -51,5 +58,3 @@ run = function () {
       throw (error)
     })
 }
-
-run()

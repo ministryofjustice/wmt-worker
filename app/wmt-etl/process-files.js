@@ -11,16 +11,13 @@ const { getObject } = require('./get-s3-object')
 
 module.exports = function (extractFiles) {
   return Promise.each(extractFiles, function (extractFile) {
-    // GET OBJECT
-    // 
-
-    getObject(extractFile.Key).then(function(getObject) {
+    getObject(extractFile.Key).then(function (getObject) {
       const workbook = XLSX.read(getObject, { type: 'array', cellText: false, cellDates: true })
       console.log(`all keys of workbook: ${Object.keys(workbook.Sheets)}`)
       if (!validateWorkbookFormat(Object.keys(workbook.Sheets))) {
         throw new Error('Workbook does not contain the expected worksheets')
       }
-  
+
       return Promise.each(Object.keys(workbook.Sheets), function (sheet) {
         if (config.VALID_SHEET_NAMES.includes(cleanName(sheet))) {
           const worksheet = workbook.Sheets[sheet]
@@ -35,6 +32,5 @@ module.exports = function (extractFiles) {
           log.info('Successfully processed file ' + extractFile)
         })
     })
-    
   })
 }
