@@ -67,7 +67,7 @@ jobs:
           command: 'npm --version'
       - slack/notify:
           event: fail
-          channel: manage_a_workforce_dev
+          channel: << pipeline.parameters.alerts-slack-channel >>
           template: basic_fail_1
 
   unit_test:
@@ -87,7 +87,7 @@ jobs:
           path: test_results/unit-test-reports.html
       - slack/notify:
           event: fail
-          channel: manage_a_workforce_dev
+          channel: << pipeline.parameters.alerts-slack-channel >>
           template: basic_fail_1
 
 #  integration_test:
