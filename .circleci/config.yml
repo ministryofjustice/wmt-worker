@@ -81,14 +81,15 @@ jobs:
       - run:
           name: unit tests
           command: npm run test
-      - store_test_results:
-          path: test_results
-      - store_artifacts:
-          path: test_results/unit-test-reports.html
       - slack/notify:
           event: fail
           channel: << pipeline.parameters.alerts-slack-channel >>
           template: basic_fail_1
+      - store_test_results:
+          path: test_results
+      - store_artifacts:
+          path: test_results/unit-test-reports.html
+      
 
 #  integration_test:
 #    executor:
