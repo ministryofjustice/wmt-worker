@@ -156,6 +156,7 @@ workflows:
       - hmpps/deploy_env:
           name: deploy_dev
           env: "dev"
+          show_changelog: false
           context: hmpps-common-vars
           filters:
             branches:
