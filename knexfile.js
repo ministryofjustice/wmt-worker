@@ -3,9 +3,9 @@ const defaultConnection = {
   host: config.DATABASE_SERVER,
   user: config.DATABASE_USERNAME,
   password: config.DATABASE_PASSWORD,
-  database: config.DATABASE,
+  database: config.DATABASE
   // options: {
-    
+
   // }
 }
 

@@ -10,7 +10,6 @@ const deleteWorkloadPointsCalculationsForWorkloadIds = require('../data/delete-w
 const deleteWorkloadsForIds = require('../data/delete-workloads-for-ids')
 const deleteCourtReportsCalculationsForCourtReportIds = require('../data/delete-court-reports-calculations-for-court-report-ids')
 const deleteCourtReportsForIds = require('../data/delete-court-reports-for-ids')
-const enableIndexing = require('../data/enable-indexing')
 const Promise = require('bluebird').Promise
 const Task = require('../domain/task')
 const createNewTasks = require('../data/create-tasks')

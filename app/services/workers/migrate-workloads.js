@@ -3,7 +3,6 @@ const getNewWorkloadOwnerIds = require('../data/get-new-workload-owner-ids')
 const getOldWorkloadOwnerIds = require('../data/get-old-workload-owner-ids')
 const disableIndexing = require('../data/disable-indexing')
 const getMostRecentlyUsedWorkloadOwnerId = require('../data/get-most-recently-used-workload-owner-id')
-const enableIndexing = require('../data/enable-indexing')
 
 const updateWorkloadWorkloadOwnerId = require('../data/update-workload-workload-owner-id')
 const Promise = require('bluebird').Promise
