@@ -25,7 +25,7 @@ const aliases = {
   omForename: 'om_forename',
   omGradeCode: 'om_grade_code',
   comIn1st16Weeks: 'comin1st16weeks',
-  licIn1st16Weeks: 'licin1st16weeks',
+  licin1st16weeks: 'licin1st16weeks',
   datestamp: 'datestamp',
   commtier0: 'commtier0',
   commtiera3: 'commtiera3',

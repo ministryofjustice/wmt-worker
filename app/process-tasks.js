@@ -28,7 +28,7 @@ module.exports = function () {
   // Check if in progress count === 0
   return getTaskInProgressCount()
     .then(function (count) {
-      if (count[0].theCount === 0) {
+      if (count[0].theCount == 0) {
         return processTasks(batchSize)
       } else {
         log.info('Too many tasks already IN-PROGRESS')

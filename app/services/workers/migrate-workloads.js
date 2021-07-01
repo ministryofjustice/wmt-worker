@@ -52,9 +52,9 @@ module.exports.execute = function (task) {
     .then(function () {
       return recalculateWorkloadPoints(reportId)
     })
-    .then(function () {
-      return enableIndexing()
-    })
+    // .then(function () {
+    //   return enableIndexing()
+    // })
     .then(function () {
       logger.info('Indexing enabled')
     })

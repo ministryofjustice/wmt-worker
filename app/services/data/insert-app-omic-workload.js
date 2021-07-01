@@ -20,15 +20,15 @@ module.exports = function (workload, caseDetails) {
     .returning('id')
     .then(function (workloadId) {
       const promises = []
-      promises.push(insertTiers(workload.communityTiers, workload.filteredCommunityTiers, workload.t2aCommunityTiers, workloadId, Locations.COMMUNITY))
-      promises.push(insertTiers(workload.custodyTiers, workload.filteredCustodyTiers, workload.t2aCustodyTiers, workloadId, Locations.CUSTODY))
-      promises.push(insertTiers(workload.licenseTiers, workload.filteredLicenseTiers, workload.t2aLicenseTiers, workloadId, Locations.LICENSE))
+      promises.push(insertTiers(workload.communityTiers, workload.filteredCommunityTiers, workload.t2aCommunityTiers, workloadId[0], Locations.COMMUNITY))
+      promises.push(insertTiers(workload.custodyTiers, workload.filteredCustodyTiers, workload.t2aCustodyTiers, workloadId[0], Locations.CUSTODY))
+      promises.push(insertTiers(workload.licenseTiers, workload.filteredLicenseTiers, workload.t2aLicenseTiers, workloadId[0], Locations.LICENSE))
       const communityCaseDetails = caseDetails.filter((caseDetail) => { return caseDetail.location.toUpperCase() === Locations.COMMUNITY })
       const custodyCaseDetails = caseDetails.filter((caseDetail) => { return caseDetail.location.toUpperCase() === Locations.CUSTODY })
       const licenseCaseDetails = caseDetails.filter((caseDetail) => { return caseDetail.location.toUpperCase() === Locations.LICENSE })
-      promises.push(insertCaseDetails(communityCaseDetails, workloadId, Locations.COMMUNITY))
-      promises.push(insertCaseDetails(custodyCaseDetails, workloadId, Locations.CUSTODY))
-      promises.push(insertCaseDetails(licenseCaseDetails, workloadId, Locations.LICENSE))
+      promises.push(insertCaseDetails(communityCaseDetails, workloadId[0], Locations.COMMUNITY))
+      promises.push(insertCaseDetails(custodyCaseDetails, workloadId[0], Locations.CUSTODY))
+      promises.push(insertCaseDetails(licenseCaseDetails, workloadId[0], Locations.LICENSE))
       return Promise.all(promises).then(function () { return workloadId[0] })
     })
 }

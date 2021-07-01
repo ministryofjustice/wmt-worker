@@ -22,10 +22,8 @@ module.exports.execute = function (task) {
   const tasks = []
   let workloadReportId
 
-  return disableIndexing()
-    .then(function () {
-      return insertWorkloadReport()
-    })
+
+  return insertWorkloadReport()
     .then(function (insertedWorkloadReportId) {
       workloadReportId = insertedWorkloadReportId
       return populateStagingCourtReporters()

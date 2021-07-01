@@ -21,7 +21,7 @@ module.exports = function (range) {
     .select('wmt_extract.id AS staging_id', 'wmt_extract.trust', 'wmt_extract.region_desc', 'wmt_extract.region_code',
       'wmt_extract.pdu_desc', 'wmt_extract.pdu_code', 'wmt_extract.team_desc', 'wmt_extract.team_code',
       'wmt_extract.om_surname', 'wmt_extract.om_forename', 'wmt_extract.om_grade_code',
-      'wmt_extract.om_key', 'wmt_extract.comIn1st16Weeks', 'wmt_extract.licIn1st16Weeks', 'wmt_extract.datestamp',
+      'wmt_extract.om_key', 'wmt_extract.comin1st16weeks', 'wmt_extract.licin1st16weeks', 'wmt_extract.datestamp',
 
       // WMT Extract Community cases
       'wmt_extract.commtier0',
@@ -45,8 +45,8 @@ module.exports = function (range) {
       'wmt_extract.custtiera0', 'wmt_extract.custtiera1', 'wmt_extract.custtiera2', 'wmt_extract.custtiera3',
 
       'wmt_extract_filtered.id AS filtered_staging_id',
-      'wmt_extract_filtered.comIn1st16Weeks AS filtered_comIn1st16Weeks',
-      'wmt_extract_filtered.licIn1st16Weeks AS filtered_licIn1st16Weeks',
+      'wmt_extract_filtered.comin1st16weeks AS filtered_comIn1st16Weeks',
+      'wmt_extract_filtered.licin1st16weeks AS filtered_licin1st16weeks',
       'wmt_extract_filtered.datestamp AS filtered_datestamp',
 
       // WMT Extract Filtered Community cases

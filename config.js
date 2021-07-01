@@ -8,9 +8,9 @@ module.exports = {
 
   // DB
   DATABASE_SERVER: process.env.WMT_DB_SERVER || 'localhost',
-  DATABASE: process.env.WMT_DB_NAME || 'master',
-  DATABASE_USERNAME: process.env.WMT_DB_USERNAME || 'sa',
-  DATABASE_PASSWORD: process.env.WMT_DB_PASSWORD || 'yourStrong(!)Password',
+  DATABASE: process.env.WMT_DB_NAME || 'postgres',
+  DATABASE_USERNAME: process.env.WMT_DB_USERNAME || 'root',
+  DATABASE_PASSWORD: process.env.WMT_DB_PASSWORD || 'dev',
   DB_APP_SCHEMA: 'app',
   DB_STG_SCHEMA: 'staging',
 

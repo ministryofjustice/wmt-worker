@@ -69,10 +69,10 @@ module.exports.execute = function (task) {
           })
         })
     })
-    .then(function () {
-      logger.info('REMOVE-DUPLICATES - Enabling Indexing')
-      return enableIndexing()
-    })
+    // .then(function () {
+    //   logger.info('REMOVE-DUPLICATES - Enabling Indexing')
+    //   return enableIndexing()
+    // })
     .then(function () {
       logger.info('REMOVE-DUPLICATES - Indexing Enabled')
       const checkForMissingDivisionsTask = new Task(

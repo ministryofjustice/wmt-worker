@@ -232,8 +232,8 @@ module.exports = function (range) {
               t2aCommunityTiers,
               t2aLicenseTiers,
               t2aCustodyTiers,
-              result.comIn1st16Weeks,
-              result.licIn1st16Weeks,
+              result.comin1st16weeks,
+              result.licin1st16weeks,
               armsCases.community,
               armsCases.license,
               filteredCommunityTiers,
@@ -256,7 +256,7 @@ module.exports = function (range) {
               result.parom_comp_last_30
             )
 
-            const stagingId = result.staging_id
+            const stagingId = Number(result.staging_id)
 
             return getStagingCaseDetails(result.om_key, result.team_code).then(function (results) {
               omWorkloads.push(new OmWorkload(
