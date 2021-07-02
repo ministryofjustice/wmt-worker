@@ -26,4 +26,4 @@ function runProcessTasks () {
   })
 }
 
-const server = childProcess.fork('start-server.js')
+childProcess.fork('start-server.js')
