@@ -22,33 +22,53 @@ let createTasks
 const batchSize = 3
 
 describe('process-tasks', function () {
-  beforeEach(function (done) {
-    getPendingTasksAndMarkInProgress = sinon.stub()
-    completeTaskWithStatus = sinon.stub()
-    getWorkerForTask = sinon.stub()
-    updateWorkload = sinon.stub()
-    taskStatusCounter = sinon.stub()
-    callWebRefreshEndpoint = sinon.stub()
-    closePreviousWorkloadReport = sinon.stub()
-    updateWorkloadReportEffectiveTo = sinon.stub()
-    getTaskInProgressCount = sinon.stub()
-    createTasks = sinon.stub()
+  getPendingTasksAndMarkInProgress = sinon.stub()
+  completeTaskWithStatus = sinon.stub()
+  getWorkerForTask = sinon.stub()
+  updateWorkload = sinon.stub()
+  taskStatusCounter = sinon.stub()
+  callWebRefreshEndpoint = sinon.stub()
+  closePreviousWorkloadReport = sinon.stub()
+  updateWorkloadReportEffectiveTo = sinon.stub()
+  getTaskInProgressCount = sinon.stub()
+  createTasks = sinon.stub()
 
-    processTasks = proxyquire('../../../app/process-tasks', {
-      '../config': { ASYNC_WORKER_BATCH_SIZE: batchSize },
-      './services/log': { info: function (message) {}, error: function (message) {} },
-      './services/data/get-pending-tasks-and-mark-in-progress': getPendingTasksAndMarkInProgress,
-      './services/data/update-workload-report-with-status': updateWorkload,
-      './services/task-status-counter': taskStatusCounter,
-      './services/data/complete-task-with-status': completeTaskWithStatus,
-      './services/get-worker-for-task': getWorkerForTask,
-      './services/refresh-web-org-hierarchy': callWebRefreshEndpoint,
-      './services/close-previous-workload-report': closePreviousWorkloadReport,
-      './services/data/update-workload-report-effective-to': updateWorkloadReportEffectiveTo,
-      './services/data/get-tasks-inprogress-count': getTaskInProgressCount,
-      './services/data/create-tasks': createTasks
-    })
-    done()
+  processTasks = proxyquire('../../../app/process-tasks', {
+    '../config': { ASYNC_WORKER_BATCH_SIZE: batchSize },
+    './services/log': { info: function (message) {}, error: function (message) {} },
+    // real task-status
+    // real workload report status
+    // real task type
+    // real triggerable tasks
+    './services/data/get-pending-tasks-and-mark-in-progress': getPendingTasksAndMarkInProgress,
+    './services/data/update-workload-report-with-status': updateWorkload,
+    './services/task-status-counter': taskStatusCounter,
+    './services/data/complete-task-with-status': completeTaskWithStatus,
+    './services/get-worker-for-task': getWorkerForTask,
+    './services/refresh-web-org-hierarchy': callWebRefreshEndpoint,
+    './services/close-previous-workload-report': closePreviousWorkloadReport,
+    './services/data/update-workload-report-effective-to': updateWorkloadReportEffectiveTo,
+    // real operation types
+    './services/data/get-tasks-inprogress-count': getTaskInProgressCount,
+    // real check for duplicate tasks
+    // real set tasks to pending
+    // real delete duplicate tasks
+    // real check all types for  tasks are complete
+    './services/data/create-tasks': createTasks
+    // real submitting-agent
+  })
+
+  this.afterEach(() => {
+    getPendingTasksAndMarkInProgress.reset()
+    completeTaskWithStatus.reset()
+    getWorkerForTask.reset()
+    updateWorkload.reset()
+    taskStatusCounter.reset()
+    callWebRefreshEndpoint.reset()
+    closePreviousWorkloadReport.reset()
+    updateWorkloadReportEffectiveTo.reset()
+    getTaskInProgressCount.reset()
+    createTasks.reset()
   })
 
   it('should get pending tasks and call worker to execute', function () {
