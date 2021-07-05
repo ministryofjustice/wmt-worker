@@ -52,6 +52,7 @@ describe('process-tasks', function () {
   })
 
   it('should get pending tasks and call worker to execute', function () {
+    this.timeout = 4000
     getTaskInProgressCount.resolves([{ theCount: 0 }])
     getPendingTasksAndMarkInProgress.resolves([{ id: 1, type: 'task1' }, { id: 2, type: 'task2' }])
     updateWorkload.resolves({})
