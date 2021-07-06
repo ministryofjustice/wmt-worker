@@ -3,6 +3,7 @@ const log = require('../log')
 
 module.exports = function (oldWorkloadOwnerId, newWorkloadOwnerId, reportId) {
   return knex('workload')
+    .withSchema('app')
     .where('workload_owner_id', oldWorkloadOwnerId)
     .where('workload_report_id', '<=', reportId)
     .update('workload_owner_id', newWorkloadOwnerId)

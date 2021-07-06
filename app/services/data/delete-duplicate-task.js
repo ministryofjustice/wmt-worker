@@ -2,6 +2,7 @@ const knex = require('../../../knex').appSchema
 
 module.exports = function (additionalData, thisTaskType, workloadReportId, limit) {
   return knex('tasks')
+    .withSchema('app')
     .select('id')
     .where('additional_data', additionalData)
     .andWhere('workload_report_id', workloadReportId)
@@ -15,6 +16,7 @@ module.exports = function (additionalData, thisTaskType, workloadReportId, limit
         })
       }
       return knex('tasks')
+        .withSchema('app')
         .whereIn('id', ids)
         .del()
     })

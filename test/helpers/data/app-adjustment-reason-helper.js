@@ -10,6 +10,7 @@ const inserts = []
 
 module.exports.insertDependencies = function (workloadOwnerId) {
   return knex('adjustment_reason')
+    .withSchema('app')
     .insert(testAdjustmentReason)
     .returning('id')
     .then(function (id) {
@@ -21,6 +22,6 @@ module.exports.insertDependencies = function (workloadOwnerId) {
 module.exports.removeDependencies = function (inserts) {
   inserts = inserts.reverse()
   return Promise.each(inserts, (insert) => {
-    return knex(insert.table).where('id', insert.id).del()
+    return knex(insert.table).withSchema('app').where('id', insert.id).del()
   })
 }

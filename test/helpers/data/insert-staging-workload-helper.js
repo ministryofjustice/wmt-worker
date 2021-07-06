@@ -16,11 +16,13 @@ module.exports = function () {
   return deleteStagingRecords()
     .then(function () {
       return knex('wmt_extract')
+        .withSchema('staging')
         .insert(wmtExtract)
         .returning('id')
         .then(function (id) {
           stagingId = id
           return knex('wmt_extract_filtered')
+            .withSchema('staging')
             .insert(wmtExtractFiltered)
             .then(function () {
               return knex('t2a')
@@ -52,5 +54,5 @@ module.exports = function () {
 }
 
 const insertToStagingTable = function (table, data) {
-  return knex(table).insert(data)
+  return knex(table).withSchema('staging').insert(data)
 }

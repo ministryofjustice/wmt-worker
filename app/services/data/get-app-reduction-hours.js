@@ -3,6 +3,7 @@ const reductionStatus = require('../../constants/reduction-status')
 
 module.exports = function (workloadOwnerId) {
   return knex('reductions')
+    .withSchema('app')
     .sum('hours AS hours')
     .where('workload_owner_id', workloadOwnerId)
     .andWhere('status', reductionStatus.ACTIVE)

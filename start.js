@@ -2,6 +2,7 @@ const config = require('./config')
 const log = require('./app/services/log')
 const CronJob = require('cron').CronJob
 const processTasks = require('./app/process-tasks')
+const childProcess = require('child_process')
 
 const asyncWorkerCron = config.ASYNC_WORKER_CRON
 
@@ -24,3 +25,5 @@ function runProcessTasks () {
     log.info('WMT worker completed running task')
   })
 }
+
+childProcess.fork('start-server.js')

@@ -28,7 +28,7 @@ module.exports = function (range) {
     'datestamp'
   ]
 
-  return knex(tableName).whereBetween('id', range).select(selectCols)
+  return knex(tableName).withSchema('staging').whereBetween('id', range).select(selectCols)
     .then(function (results) {
       if (results !== 'undefined' && results.length > 0) {
         return Promise.each(results, function (result) {

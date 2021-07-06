@@ -4,17 +4,18 @@ exports.seed = function (knex, Promise) {
   let existingCrReportIds
   let currentCrPointsId
   // Deletes ALL existing entries
-  return knex(tableName).del()
+  return knex(tableName).withSchema('app').del()
     .then(function () {
-      return knex('workload_report').select('id')
+      return knex('workload_report').withSchema('app').select('id')
     })
     .then(function (reportIds) {
       existingCrReportIds = reportIds
-      return knex('workload_points').select('id').first()
+      return knex('workload_points').withSchema('app').select('id').first()
     })
     .then(function (crWorkloadPointsId) {
       currentCrPointsId = crWorkloadPointsId
       return knex('workload_owner')
+        .withSchema('app')
         .join('court_reports', 'workload_owner.id', 'court_reports.workload_owner_id')
         .max('court_reports.id AS id')
         .groupBy('workload_owner.id')
@@ -41,6 +42,6 @@ exports.seed = function (knex, Promise) {
         }
       }
 
-      return knex(tableName).insert(crWorkloadPointsCalculationsToInsert)
+      return knex(tableName).withSchema('app').insert(crWorkloadPointsCalculationsToInsert)
     })
 }

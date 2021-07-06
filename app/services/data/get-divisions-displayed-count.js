@@ -1,6 +1,7 @@
 const knex = require('../../../knex').appSchema
 
 module.exports = function () {
-  return knex('app.national_case_overview')
+  return knex('national_case_overview')
+    .withSchema('app')
     .count('* AS divisionCount')
 }

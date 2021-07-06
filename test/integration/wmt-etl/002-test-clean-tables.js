@@ -11,7 +11,7 @@ describe('wmt-etl/test-clean-tables', function () {
     return cleanTables()
       .then(function () {
         return Promise.each(config.VALID_SHEET_NAMES, function (sheetName) {
-          return knex(sheetName).columns(config.VALID_COLUMNS[sheetName])
+          return knex(sheetName).withSchema('staging').columns(config.VALID_COLUMNS[sheetName])
             .then(function (results) {
               expect(results.length, sheetName + ' table should contain 0 entries').to.equal(0)
               expect(results, sheetName + ' table results should be equal []').to.deep.equal([])

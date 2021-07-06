@@ -5,6 +5,7 @@ const inserts = []
 
 module.exports.insertDependencies = function (cmsRecords) {
   return knex('cms')
+    .withSchema('staging')
     .insert(cmsRecords)
     .returning('id')
     .then(function (id) {
@@ -16,6 +17,6 @@ module.exports.insertDependencies = function (cmsRecords) {
 module.exports.removeDependencies = function (inserts) {
   inserts = inserts.reverse()
   return Promise.each(inserts, function (insert) {
-    return knex(insert.table).where('id', insert.id).del()
+    return knex(insert.table).withSchema('staging').where('id', insert.id).del()
   })
 }

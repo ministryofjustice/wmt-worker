@@ -1,6 +1,5 @@
-const config = require('../../../config')
 const knex = require('../../../knex').appSchema
-const regionTable = `${config.DB_APP_SCHEMA}.region`
+const regionTable = 'region'
 const updateRegion = require('./update-region')
 
 module.exports = function (region) {
@@ -10,12 +9,13 @@ module.exports = function (region) {
   regionDbObject.code = region.code
   regionDbObject.description = region.description
 
-  return knex.select().from(regionTable)
+  return knex.select().from(regionTable).withSchema('app')
     .where('code', regionDbObject.code)
     .first()
     .then(function (result) {
       if (result === undefined) {
         return knex(regionTable)
+          .withSchema('app')
           .insert(regionDbObject)
           .returning('id')
       } else {

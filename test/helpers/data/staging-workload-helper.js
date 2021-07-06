@@ -142,6 +142,7 @@ module.exports.getArmsData = function (omKey = testOmKey, teamCode = testTeamCod
 
 module.exports.insertT2aCaseSummaryReport = function (caseSummary, inserts) {
   return knex(t2aTable)
+    .withSchema('staging')
     .insert(mapT2aForInsert(caseSummary))
     .returning('id')
     .then(function (id) {
@@ -152,6 +153,7 @@ module.exports.insertT2aCaseSummaryReport = function (caseSummary, inserts) {
 
 module.exports.insertFilteredCaseSummaryReport = function (caseSummary, inserts) {
   return knex(wmtExtractFilteredTable)
+    .withSchema('staging')
     .insert(mapFilteredForInsert(caseSummary))
     .returning('id')
     .then(function (id) {
@@ -162,6 +164,7 @@ module.exports.insertFilteredCaseSummaryReport = function (caseSummary, inserts)
 
 module.exports.insertCaseSummaryReport = function (caseSummary, inserts) {
   return knex(wmtExtractTable)
+    .withSchema('staging')
     .insert(mapForInsert(caseSummary))
     .returning('id')
     .then(function (id) {
@@ -173,6 +176,7 @@ module.exports.insertCaseSummaryReport = function (caseSummary, inserts) {
 module.exports.insertCourtReport = function (courtReport, inserts) {
   const courtReportToInsert = Object.assign({}, courtReport, { teamCode: testTeamCode })
   return knex(courtReportsTable)
+    .withSchema('staging')
     .insert(mapForInsert(courtReportToInsert))
     .returning('id')
     .then(function (id) {
@@ -184,6 +188,7 @@ module.exports.insertCourtReport = function (courtReport, inserts) {
 module.exports.insertInstitutionalReport = function (institutionalReport, inserts) {
   const instReportToInsert = Object.assign({}, institutionalReport, { teamCode: testTeamCode })
   return knex(institutionalReportsTable)
+    .withSchema('staging')
     .insert(mapForInsert(instReportToInsert))
     .returning('id')
     .then(function (id) {
@@ -194,6 +199,7 @@ module.exports.insertInstitutionalReport = function (institutionalReport, insert
 
 module.exports.insertArms = function (arms, inserts) {
   return knex(armsTable)
+    .withSchema('staging')
     .insert(arms.map(mapForInsert))
     .returning('id')
     .then(function (id) {
@@ -203,13 +209,13 @@ module.exports.insertArms = function (arms, inserts) {
 }
 
 module.exports.deleteAll = function () {
-  return knex(institutionalReportsTable).del()
+  return knex(institutionalReportsTable).withSchema('staging').del()
     .then(function () {
-      return knex(courtReportsTable).del()
+      return knex(courtReportsTable).withSchema('staging').del()
         .then(function () {
-          return knex(t2aTable).del()
+          return knex(t2aTable).withSchema('staging').del()
             .then(function () {
-              return knex(wmtExtractTable).del()
+              return knex(wmtExtractTable).withSchema('staging').del()
             })
         })
     })

@@ -10,6 +10,7 @@ module.exports = function (teamId, forename, surname, teamName) {
   ]
 
   return knex('workload_owner AS wo')
+    .withSchema('app')
     .join('offender_manager AS om', 'wo.offender_manager_id', 'om.id')
     .join('team AS t', 'wo.team_id', 't.id')
     .where({

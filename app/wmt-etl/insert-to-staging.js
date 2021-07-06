@@ -9,7 +9,7 @@ module.exports = function (table, worksheetDataAsJSON, extractFile) {
     noOfColumns = 1
   }
   const batchSize = Math.max(1, ((Math.floor(2100 / noOfColumns) - 1) / 2))
-  return knex.batchInsert(table, worksheetDataAsJSON, batchSize)
+  return knex.batchInsert('staging.' + table, worksheetDataAsJSON, batchSize)
     .catch((error) => {
       log.error(noOfColumns, table, extractFile, batchSize)
       throw error

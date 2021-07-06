@@ -3,6 +3,7 @@ const Promise = require('bluebird').Promise
 
 module.exports.insertDependencies = function (inserts) {
   return knex('court_reporters')
+    .withSchema('staging')
     .returning('id')
     .insert(module.exports.defaultCourtReporter)
     .then(function (insertedId) {
@@ -14,7 +15,7 @@ module.exports.insertDependencies = function (inserts) {
 module.exports.removeDependencies = function (inserts) {
   inserts = inserts.reverse()
   return Promise.each(inserts, function (insert) {
-    return knex(insert.table).where('id', insert.id).del()
+    return knex(insert.table).withSchema('staging').where('id', insert.id).del()
   })
 }
 
@@ -46,6 +47,7 @@ module.exports.newCourtReporters = [
 
 module.exports.getAllStagingCourtReporters = function () {
   return knex('court_reporters')
+    .withSchema('staging')
     .select(
       'trust',
       'region_desc',

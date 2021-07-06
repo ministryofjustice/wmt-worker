@@ -1,4 +1,4 @@
-const knex = require('../../../knex').indexing
+const knex = require('../../../knex').appSchema
 const log = require('../log')
 
 module.exports = function () {
