@@ -1,6 +1,6 @@
 module.exports = {
   // Extract file settings
-  IMPORT_FILE_DIR: process.env.WMT_IMPORT_FILE_PATH || './data/',
+  IMPORT_FILE_DIR: process.env.WMT_IMPORT_FILE_PATH || './test/integration/resources/',
   ARCHIVE_FILE_DIR: process.env.WMT_ARCHIVE_FILE_PATH || './archive/',
   ARCHIVE_FILE_NAME: process.env.WMT_ARCHIVE_FILE_NAME || 'delius-extract-',
   EXPECTED_FILE_COUNT: process.env.WMT_EXPECTED_FILE_COUNT || '2',

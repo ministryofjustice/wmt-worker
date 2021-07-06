@@ -4,7 +4,7 @@ services:
         image: localstack/localstack:0.11.2
         networks:
           - hmpps
-        container_name: hmpps-tier-localstack
+        container_name: hmpps-workload-localstack
         ports:
           - "4567-4597:4567-4597"
           - 8999:8080
