@@ -33,8 +33,7 @@
       "beforeEach",
       "after",
       "afterEach",
-      "it",
-      "xit"
+      "it"
     ],
     "ignore": [
       "data/**"
