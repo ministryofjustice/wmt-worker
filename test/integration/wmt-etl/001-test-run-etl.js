@@ -31,9 +31,9 @@ describe('wmt-etl/run-etl', function () {
     archiveExtractFiles.resolves()
     deleteExtractFiles.resolves()
     createTasks.resolves()
-    process.env.AWS_ACCESS_KEY_ID='foobar'
-    process.env.AWS_SECRET_ACCESS_KEY='foobar'
-    
+    process.env.AWS_ACCESS_KEY_ID = 'foobar'
+    process.env.AWS_SECRET_ACCESS_KEY = 'foobar'
+
     return runEtl()
       .then(function () {
         return Promise.each(config.VALID_SHEET_NAMES, function (sheetName) {
