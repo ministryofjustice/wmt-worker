@@ -26,6 +26,7 @@ module.exports = function () {
             .insert(wmtExtractFiltered)
             .then(function () {
               return knex('t2a')
+                .withSchema('staging')
                 .insert(t2a)
             })
         })

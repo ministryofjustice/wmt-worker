@@ -134,7 +134,7 @@ describe('app/services/data/insert-offender-manager', function () {
     const newForename = 'JOE'
     const newSurname = 'BLOGGS'
 
-    knex('offender_manager_type').withSchema('app').select('id').where('grade_code', 'SPO')
+    knex('offender_manager_type').withSchema('app').select('id').where('grade_code', 'PO')
       .then(function (id) {
         newTypeId = id[0].id
         offenderManager = new OffenderManager(undefined, key, newForename, newSurname, newTypeId, undefined)

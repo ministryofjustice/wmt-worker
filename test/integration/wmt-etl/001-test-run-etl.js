@@ -34,7 +34,7 @@ describe('wmt-etl/run-etl', function () {
     return runEtl()
       .then(function () {
         return Promise.each(config.VALID_SHEET_NAMES, function (sheetName) {
-          return knex(sheetName).columns(config.VALID_COLUMNS[sheetName])
+          return knex(sheetName).withSchema('staging').columns(config.VALID_COLUMNS[sheetName])
             .then(function (results) {
               expect(results.length, sheetName + ' table should contain ' + expectedInputData[sheetName].length + ' entries').to.equal(expectedInputData[sheetName].length)
               expect(results).to.deep.equal(expectedInputData[sheetName])

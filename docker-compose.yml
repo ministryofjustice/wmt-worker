@@ -1,0 +1,21 @@
+version: "3"
+services:
+    localstack:
+        image: localstack/localstack:0.11.2
+        networks:
+          - hmpps
+        container_name: hmpps-tier-localstack
+        ports:
+          - "4567-4597:4567-4597"
+          - 8999:8080
+        environment:
+          - SERVICES=s3
+          - DEBUG=${DEBUG- }
+          - DOCKER_HOST=unix:///var/run/docker.sock
+          - DEFAULT_REGION=eu-west-2
+        volumes:
+          - "${TMPDIR:-/tmp/localstack}:/tmp/localstack"
+          - "/var/run/docker.sock:/var/run/docker.sock"
+          - $PWD/test/integration/resources:/docker-entrypoint-initaws.d
+networks:
+  hmpps:

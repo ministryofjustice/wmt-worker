@@ -23,7 +23,7 @@ describe('services/data/update-adjustment-effective-to', function () {
     return updateAdjustmentEffectiveTo(adjustmentId, newDate)
       .then(function (updatedId) {
         expect(updatedId).to.be.equal(adjustmentId)
-        return knex('adjustments').select('effective_to').where('id', updatedId)
+        return knex('adjustments').withSchema('app').select('effective_to').where('id', updatedId)
           .then(function (adjustments) {
             expect(adjustments[0].effective_to).to.be.eql(newDate)
           })

@@ -18,7 +18,7 @@ module.exports.insertDependencies = function (inserts) {
       tasks.push({ workload_report_id: workloadReports[0].id, type: 'CREATE-WORKLOAD', status: 'Status 3' })
       tasks.push({ workload_report_id: workloadReports[1].id, type: 'CREATE-WORKLOAD', status: 'Status 4' })
 
-      return knex('tasks').returning('id').insert(tasks)
+      return knex('tasks').withSchema('app').returning('id').insert(tasks)
     })
     .then(function (ids) {
       ids.forEach((id) => {
