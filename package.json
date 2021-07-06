@@ -17,7 +17,8 @@
     "delete-ref-data": "node ./delete-data.js ref",
     "record-build-info": "node ./bin/record-build-info",
     "security_audit": "npx audit-ci --config audit-ci.json",
-    "lint": "standard"
+    "lint": "standard",
+    "prepare": "husky install"
   },
   "standard": {
     "globals": [
