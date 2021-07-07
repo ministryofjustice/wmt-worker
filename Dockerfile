@@ -17,6 +17,8 @@ WORKDIR /app
 RUN apt-get update && \
     apt-get upgrade -y
 
+RUN npm i -g npm@7
+
 # Stage: build assets
 FROM base as build
 ARG BUILD_NUMBER
