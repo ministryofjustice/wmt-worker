@@ -1,5 +1,5 @@
 exports.seed = function (knex, Promise) {
-  const view = `CREATE VIEW app.national_capacity_view 
+  const view = `CREATE VIEW [app].[national_capacity_view]
     WITH SCHEMABINDING 
     AS 
     SELECT SUM(total_points) AS total_points
@@ -12,6 +12,11 @@ exports.seed = function (knex, Promise) {
     FROM app.workload_points_calculations AS wpc
       JOIN app.workload AS w ON wpc.workload_id = w.id
       JOIN app.workload_report AS wr ON wpc.workload_report_id = wr.id
+      JOIN app.workload_owner AS wo ON wo.id = w.workload_owner_id
+      JOIN app.team AS t ON t.id = wo.team_id
+      JOIN app.ldu AS l ON l.id = t.ldu_id
+      JOIN app.region AS r ON r.id = l.region_id
+    WHERE r.description LIKE 'NPS%'
     GROUP BY wr.effective_from, wr.id;`
 
   const index = `CREATE UNIQUE CLUSTERED INDEX idx_national_capacity_view

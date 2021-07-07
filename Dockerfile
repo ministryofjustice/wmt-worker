@@ -2,7 +2,7 @@
 ARG BUILD_NUMBER
 ARG GIT_REF
 
-FROM node:14.15-buster-slim as base
+FROM node:14.17-buster-slim as base
 
 LABEL maintainer="HMPPS Digital Studio <info@digital.justice.gov.uk>"
 
@@ -16,6 +16,8 @@ WORKDIR /app
 
 RUN apt-get update && \
     apt-get upgrade -y
+
+RUN npm i -g npm@7
 
 # Stage: build assets
 FROM base as build
