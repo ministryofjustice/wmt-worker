@@ -6,6 +6,9 @@
   "repository": "https://github.com/ministryofjustice/wmt-worker.git",
   "author": "Tom Swann",
   "license": "MIT",
+  "engines": {
+    "npm": "6"
+  },
   "scripts": {
     "start": "node --max-old-space-size=5120 start.js",
     "integration-test": "mocha --recursive test/integration/ --timeout 10000 --exit",
