@@ -1,7 +1,7 @@
 # Workload Management Tool - Worker application
 
 ## Pre-requisites
-- Node v6 (managed using [nvm](https://github.com/creationix/nvm))
+- Node v12 (managed using [nvm](https://github.com/creationix/nvm))
 - Yarn
 
 On OSX (using [homebrew](https://brew.sh/)):
@@ -9,8 +9,8 @@ On OSX (using [homebrew](https://brew.sh/)):
 - `brew install nvm`
 - Follow the instructions in the brew installer output
 
-Install Node version 6
-- `nvm install 6`
+Install Node version 12
+- `nvm install 12`
 
 Install Yarn
 - `npm install -g yarn`
