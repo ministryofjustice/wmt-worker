@@ -94,16 +94,6 @@ jobs:
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
-      - setup_remote_docker:
-          version: 20.10.6
-          docker_layer_caching: true
-      - run:
-          name: initialise database
-          command: |
-          docker pull quay.io/hmpps/hmpps-workload:latest
-          docker run -d -e DATABASE_USERNAME=sa -e DATABASE_PASSWORD=<< pipeline.parameters.sa_password >> --name hmpps-workload hmpps-workload
-          docker exec my-app curl --retry 10 --retry-connrefused http://localhost:8080/health/readiness
-
       - run:
          name: Run integration tests
          command: npm run integration-test
