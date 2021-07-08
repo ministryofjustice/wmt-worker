@@ -89,8 +89,25 @@ jobs:
           - DATABASE_USERNAME=sa
           - DATABASE_PASSWORD=<< pipeline.parameters.sa_password >>
         entrypoint: ["/bin/sh", "-c" , "sleep 10 && java -javaagent:/app/agent.jar -jar /app/app.jar"]
+      - image: localstack/localstack:0.12.15
+        environment:
+          - SERVICES=s3
+          - DEBUG=${DEBUG- }
+          - DATA_DIR=/tmp/localstack/data
+          - DOCKER_HOST=unix:///var/run/docker.sock
+          - LAMBDA_EXECUTOR=${LAMBDA_EXECUTOR- }
+          - AWS_EXECUTION_ENV=True
+          - DEFAULT_REGION=eu-west-2
+          - TMPDIR=/private
     steps:
       - checkout
+      - hmpps/install_aws_cli
+      - run:
+          name: Wait for s3 to be ready
+          command: curl -4 --connect-timeout 30 --retry-connrefused --retry 20 --retry-delay 5 http://localhost:4566
+      - run:
+          name: Set up s3 bucket
+          command: test/integration/resources/setup-s3.sh test/integration/resources
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
