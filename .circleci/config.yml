@@ -90,9 +90,6 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
-          name: Install Docker client
-          command: apk add docker-cli
-      - run:
           name: initialise database
           command: |
             docker pull quay.io/hmpps/hmpps-workload:latest
