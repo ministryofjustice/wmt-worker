@@ -74,11 +74,10 @@ jobs:
           path: test_results
       - store_artifacts:
           path: test_results/unit-test-reports.html
-      
 
- integration_test:
-   executor:
-     docker:
+  integration_test:
+    executor:
+      docker:
         - image: cimg/node:<< pipeline.parameters.node-version >>
         - image: mcr.microsoft.com/mssql/server:<< pipeline.parameters.mssql_tag >>
           environment:
@@ -91,7 +90,7 @@ jobs:
             - DATABASE_USERNAME=sa
             - DATABASE_PASSWORD=<< pipeline.parameters.sa_password >>
       working_directory: ~/app
-   steps:
+    steps:
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
