@@ -90,8 +90,8 @@ jobs:
           - DATABASE_PASSWORD=<< pipeline.parameters.sa_password >>
     steps:
       - run:
-        name: initialise db
-        command: java -javaagent:/app/agent.jar -jar /app/app.jar
+          name: initialise db
+          command: java -javaagent:/app/agent.jar -jar /app/app.jar
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
