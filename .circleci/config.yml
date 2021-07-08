@@ -88,10 +88,8 @@ jobs:
         environment:
           - DATABASE_USERNAME=sa
           - DATABASE_PASSWORD=<< pipeline.parameters.sa_password >>
+        entrypoint: ["/bin/sh", "-c" , "sleep 10 && java -javaagent:/app/agent.jar -jar /app/app.jar"]
     steps:
-      - run:
-          name: initialise db
-          command: java -javaagent:/app/agent.jar -jar /app/app.jar
       - checkout
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
