@@ -1,3 +1,5 @@
+const production = process.env.NODE_ENV === 'production'
+
 module.exports = {
   // Extract file settings
   IMPORT_FILE_DIR: process.env.WMT_IMPORT_FILE_PATH || './test/integration/resources/',
@@ -7,6 +9,7 @@ module.exports = {
 
   S3_BUCKET_NAME: process.env.S3_BUCKET_NAME || 'wmt-worker',
   S3_REGION: process.env.S3_REGION || 'eu-west-2',
+  S3_ENDPOINT: production ? null : 'http://localhost:4566',
 
   // Extract valid source worksheet tabs
   VALID_SHEET_NAMES: [

@@ -3,7 +3,8 @@ const config = require('../../etl-config')
 // Create an Amazon S3 service client object.
 const s3Client = new S3Client({
   region: config.S3_REGION,
-  endpoint: 'http://localhost:4572'
+  endpoint: config.S3_ENDPOINT,
+  forcePathStyle: true
 })
 module.exports = {
   s3Client
