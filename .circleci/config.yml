@@ -96,7 +96,7 @@ jobs:
           name: initialise database
           command: |
             docker pull quay.io/hmpps/hmpps-workload:latest
-            docker run -d -e DATABASE_USERNAME=sa -e DATABASE_PASSWORD=<< pipeline.parameters.sa_password >> --name hmpps-workload hmpps-workload
+            docker run -d -e DATABASE_USERNAME=sa -e DATABASE_PASSWORD=<< pipeline.parameters.sa_password >> --name hmpps-workload quay.io/hmpps/hmpps-workload
             docker exec hmpps-workload curl --retry 10 --retry-connrefused http://localhost:8080/health/readiness
 
       - run:
