@@ -77,6 +77,7 @@ jobs:
 
   integration_test:
     executor:
+      name: integration-test-executor
       docker:
         - image: cimg/node:<< pipeline.parameters.node-version >>
         - image: mcr.microsoft.com/mssql/server:<< pipeline.parameters.mssql_tag >>
