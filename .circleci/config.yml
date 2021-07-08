@@ -115,7 +115,7 @@ workflows:
             - hmpps-common-vars
           requires:
             - build
-     - integration_test:
+      - integration_test:
           requires:
             - build
       - hmpps/helm_lint:
