@@ -85,7 +85,7 @@ jobs:
           - DOCKER_HOST=unix:///var/run/docker.sock
           - TMPDIR=/private
       - image: quay.io/hmpps/hmpps-workload:latest
-        entrypoint: "sleep 10 && java -javaagent:/app/agent.jar -jar /app/app.jar"
+        entrypoint: "sleep 10; java -javaagent:/app/agent.jar -jar /app/app.jar"
         environment:
           - DATABASE_USERNAME=sa
           - DATABASE_PASSWORD=<< pipeline.parameters.sa_password >>
