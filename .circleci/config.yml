@@ -76,21 +76,19 @@ jobs:
           path: test_results/unit-test-reports.html
 
   integration_test:
-    executor:
-      name: integration-test-executor
-      docker:
-        - image: cimg/node:<< pipeline.parameters.node-version >>
-        - image: mcr.microsoft.com/mssql/server:<< pipeline.parameters.mssql_tag >>
-          environment:
-            - SA_PASSWORD=<< pipeline.parameters.sa_password >>
-            - ACCEPT_EULA=y
-            - DOCKER_HOST=unix:///var/run/docker.sock
-            - TMPDIR=/private
-        - image: quay.io/hmpps/hmpps-workload:latest
-          environment:
-            - DATABASE_USERNAME=sa
-            - DATABASE_PASSWORD=<< pipeline.parameters.sa_password >>
-      working_directory: ~/app
+    docker:
+      - image: cimg/node:<< pipeline.parameters.node-version >>
+      - image: mcr.microsoft.com/mssql/server:<< pipeline.parameters.mssql_tag >>
+        environment:
+          - SA_PASSWORD=<< pipeline.parameters.sa_password >>
+          - ACCEPT_EULA=y
+          - DOCKER_HOST=unix:///var/run/docker.sock
+          - TMPDIR=/private
+      - image: quay.io/hmpps/hmpps-workload:latest
+        environment:
+          - DATABASE_USERNAME=sa
+          - DATABASE_PASSWORD=<< pipeline.parameters.sa_password >>
+    working_directory: ~/app
     steps:
       - checkout
       - restore_cache:
