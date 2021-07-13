@@ -22,10 +22,10 @@ describe('app/services/data/insert-offender-manager', function () {
     const offenderManager = new OffenderManager(undefined, key, undefined, undefined, typeId, undefined)
 
     insertOffenderManager(offenderManager).then(function (id) {
-      offenderManagerId = id
+      offenderManagerId = id[0]
       return knex.table('offender_manager')
         .withSchema('app')
-        .where({ id: id })
+        .where({ id: id[0] })
         .first()
         .then(function (result) {
           expect(result['id']).to.not.be.null // eslint-disable-line
@@ -36,6 +36,8 @@ describe('app/services/data/insert-offender-manager', function () {
           expect(moment().diff(result['effective_from'], 'seconds')).to.be.lt(timeThreshold.INSERT) // eslint-disable-line
           expect(result['effective_to']).to.be.null // eslint-disable-line
           done()
+        }).catch(function(error) {
+          done(error)
         })
     })
   })
@@ -50,10 +52,10 @@ describe('app/services/data/insert-offender-manager', function () {
         newTypeId = id[0].id
         offenderManager = new OffenderManager(undefined, key, undefined, undefined, newTypeId, undefined)
         return insertOffenderManager(offenderManager).then(function (id) {
-          offenderManagerId = id
+          offenderManagerId = id[0]
           return knex.table('offender_manager')
             .withSchema('app')
-            .where({ id: id })
+            .where({ id: id[0] })
             .first()
             .then(function (result) {
               expect(result['id']).to.not.be.null // eslint-disable-line
@@ -63,6 +65,8 @@ describe('app/services/data/insert-offender-manager', function () {
               expect(result['type_id']).to.eq(newTypeId) // eslint-disable-line
               expect(result['effective_to']).to.be.null // eslint-disable-line
               done()
+            }).catch(function(error) {
+              done(error)
             })
         })
       })
@@ -79,10 +83,10 @@ describe('app/services/data/insert-offender-manager', function () {
         newTypeId = id[0].id
         offenderManager = new OffenderManager(undefined, key, newForename, undefined, newTypeId, undefined)
         return insertOffenderManager(offenderManager).then(function (id) {
-          offenderManagerId = id
+          offenderManagerId = id[0]
           return knex.table('offender_manager')
             .withSchema('app')
-            .where({ id: id })
+            .where({ id: id[0] })
             .first()
             .then(function (result) {
               expect(result['id']).to.not.be.null // eslint-disable-line
@@ -92,6 +96,8 @@ describe('app/services/data/insert-offender-manager', function () {
               expect(result['type_id']).to.eq(newTypeId) // eslint-disable-line
               expect(result['effective_to']).to.be.null // eslint-disable-line
               done()
+            }).catch(function(error) {
+              done(error)
             })
         })
       })
@@ -109,10 +115,10 @@ describe('app/services/data/insert-offender-manager', function () {
         newTypeId = id[0].id
         offenderManager = new OffenderManager(undefined, key, newForename, newSurname, newTypeId, undefined)
         return insertOffenderManager(offenderManager).then(function (id) {
-          offenderManagerId = id
+          offenderManagerId = id[0]
           return knex.table('offender_manager')
             .withSchema('app')
-            .where({ id: id })
+            .where({ id: id[0] })
             .first()
             .then(function (result) {
               expect(result['id']).to.not.be.null // eslint-disable-line
@@ -122,6 +128,8 @@ describe('app/services/data/insert-offender-manager', function () {
               expect(result['type_id']).to.eq(newTypeId) // eslint-disable-line
               expect(result['effective_to']).to.be.null // eslint-disable-line
               done()
+            }).catch(function(error) {
+              done(error)
             })
         })
       })
@@ -139,10 +147,10 @@ describe('app/services/data/insert-offender-manager', function () {
         newTypeId = id[0].id
         offenderManager = new OffenderManager(undefined, key, newForename, newSurname, newTypeId, undefined)
         return insertOffenderManager(offenderManager).then(function (id) {
-          offenderManagerId = id
+          offenderManagerId = id[0]
           return knex.table('offender_manager')
             .withSchema('app')
-            .where({ id: id })
+            .where({ id: id[0] })
             .first()
             .then(function (result) {
               expect(result['id']).to.not.be.null // eslint-disable-line
@@ -152,6 +160,8 @@ describe('app/services/data/insert-offender-manager', function () {
               expect(result['type_id']).to.eq(newTypeId) // eslint-disable-line
               expect(result['effective_to']).to.be.null // eslint-disable-line
               done()
+            }).catch(function(error) {
+              done(error)
             })
         })
       })

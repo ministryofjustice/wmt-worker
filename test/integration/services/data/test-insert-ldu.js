@@ -31,16 +31,21 @@ describe('app/services/data/insert-ldu', function () {
       lduUniqueIdentifier = lduId[0]
       return knex.table('ldu')
         .withSchema('app')
-        .where({ id: lduId })
+        .where({ id: lduUniqueIdentifier })
         .first()
         .then(function (result) {
           expect(result['id']).to.not.be.null // eslint-disable-line
           expect(result['code']).to.eq(code) // eslint-disable-line
           expect(result['description']).to.eq(originalLDUName) // eslint-disable-line
           expect(moment().diff(result['effective_from'], 'seconds')).to.be.lt(timeThreshold.INSERT) // eslint-disable-line
-          inserts.push({ table: 'ldu', id: lduId })
+          inserts.push({ table: 'ldu', id: lduId[0] })
           done()
         })
+        .catch(function(error) {
+          done(error)
+        })
+    }).catch(function(error) {
+      done(error)
     })
   })
 
@@ -52,7 +57,7 @@ describe('app/services/data/insert-ldu', function () {
     insertLdu(ldu).then(function (lduId) {
       return knex.table('ldu')
         .withSchema('app')
-        .where({ id: lduId })
+        .where({ id: lduId[0] })
         .first()
         .then(function (result) {
           expect(result['id']).to.eq(lduUniqueIdentifier) // eslint-disable-line
@@ -71,7 +76,7 @@ describe('app/services/data/insert-ldu', function () {
     insertLdu(ldu).then(function (lduId) {
       return knex.table('ldu')
         .withSchema('app')
-        .where({ id: lduId })
+        .where({ id: lduId[0] })
         .first()
         .then(function (result) {
           expect(result['id']).to.eq(lduUniqueIdentifier) // eslint-disable-line
