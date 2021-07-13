@@ -3,7 +3,7 @@ module.exports = function (capacity) {
   capacity.forEach(function (record) {
     capacityArray.push([
       record.regionName,
-      record.lduCluster,
+      record.lduName,
       record.teamName,
       record.offenderManager,
       record.gradeCode,

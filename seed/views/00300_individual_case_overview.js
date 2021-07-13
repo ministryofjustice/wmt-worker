@@ -9,9 +9,13 @@ exports.seed = function (knex, promise) {
     , r.id AS region_id
     , om_type.grade_code AS grade_code
     , CONCAT(om.forename, ' ', om.surname) AS of_name
+    , om.[key] AS om_key
     , t.description AS team_name
     , l.description AS ldu_name
     , r.description AS region_name
+    , r.code AS region_code
+    , l.code AS ldu_code
+    , t.code AS team_code
     , wpc.available_points AS available_points
     , wpc.total_points AS total_points
     , (w.total_filtered_cases + w.total_t2a_cases) AS total_cases
