@@ -17,11 +17,11 @@ generic-service:
 
   livenessProbe:
     httpGet:
-      path: /ping
+      path: /liveness
 
   readinessProbe:
     httpGet:
-      path: /ping
+      path: /liveness
   strategy:
     type: RollingUpdate
     rollingUpdate:
