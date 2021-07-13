@@ -45,7 +45,7 @@ describe('app/services/data/insert-offender-manager', function () {
     let offenderManager
     let newTypeId
 
-    knex('offender_manager_type').withSchema('app').select('id').where('grade_code', 'PO')
+    knex('offender_manager_type').withSchema('app').select('id').where('description', 'test')
       .then(function (id) {
         newTypeId = id[0].id
         offenderManager = new OffenderManager(undefined, key, undefined, undefined, newTypeId, undefined)
@@ -74,7 +74,7 @@ describe('app/services/data/insert-offender-manager', function () {
     let newTypeId
     const newForename = 'A.N'
 
-    knex('offender_manager_type').withSchema('app').select('id').where('grade_code', 'PO')
+    knex('offender_manager_type').withSchema('app').select('id').where('description', 'test')
       .then(function (id) {
         newTypeId = id[0].id
         offenderManager = new OffenderManager(undefined, key, newForename, undefined, newTypeId, undefined)
@@ -104,7 +104,7 @@ describe('app/services/data/insert-offender-manager', function () {
     const newForename = 'A.N'
     const newSurname = 'OTHER'
 
-    knex('offender_manager_type').withSchema('app').select('id').where('grade_code', 'PO')
+    knex('offender_manager_type').withSchema('app').select('id').where('description', 'test')
       .then(function (id) {
         newTypeId = id[0].id
         offenderManager = new OffenderManager(undefined, key, newForename, newSurname, newTypeId, undefined)
@@ -134,7 +134,7 @@ describe('app/services/data/insert-offender-manager', function () {
     const newForename = 'JOE'
     const newSurname = 'BLOGGS'
 
-    knex('offender_manager_type').withSchema('app').select('id').where('grade_code', 'SPO')
+    knex('offender_manager_type').withSchema('app').select('id').where('description', 'test')
       .then(function (id) {
         newTypeId = id[0].id
         offenderManager = new OffenderManager(undefined, key, newForename, newSurname, newTypeId, undefined)

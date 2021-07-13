@@ -8,15 +8,19 @@ parameters:
   alerts-slack-channel:
     type: string
     default: manage_a_workforce_dev
-
   node-version:
     type: string
     default: 14.17-browsers
-
+  mssql_tag:
+    default: "2019-CU11-ubuntu-20.04"
+    type: string
+  sa_password:
+    default: "yourStrong(!)Password"
+    type: string
 
 jobs:
   build:
-    executor:
+    executor:  
       name: hmpps/node
       tag: << pipeline.parameters.node-version >>
     steps:
@@ -70,45 +74,52 @@ jobs:
           path: test_results
       - store_artifacts:
           path: test_results/unit-test-reports.html
-      
 
-#  integration_test:
-#    executor:
-#      name: hmpps/node_redis
-#      node_tag: << pipeline.parameters.node-version >>
-#      redis_tag: buster
-#    steps:
-#      - checkout
-#      - attach_workspace:
-#          at: ~/app
-#      - run:
-#          name: Install missing OS dependency
-#          command: sudo apt-get install libxss1
-#      - run:
-#          name: Get wiremock
-#          command: curl -o wiremock.jar https://repo1.maven.org/maven2/com/github/tomakehurst/wiremock-standalone/2.27.1/wiremock-standalone-2.27.1.jar
-#      - run:
-#          name: Run wiremock
-#          command: java -jar wiremock.jar --port 9091
-#          background: true
-#      - run:
-#          name: Run the node app.
-#          command: npm run start-feature
-#          background: true
-#      - run:
-#          name: Wait for node app to start
-#          command: sleep 5
-#      - restore_cache:
-#          key: dependency-cache-{{ checksum "package-lock.json" }}
-#      - run:
-#          name: integration tests
-#          command: npm run int-test
-#      - store_test_results:
-#          path: test_results
-#      - store_artifacts:
-#          path: integration-tests/videos
-#      - store_artifacts:
-#          path: integration-tests/screenshots
+  integration_test:
+    docker:
+      - image: cimg/node:<< pipeline.parameters.node-version >>
+      - image: mcr.microsoft.com/mssql/server:<< pipeline.parameters.mssql_tag >>
+        environment:
+          - SA_PASSWORD=<< pipeline.parameters.sa_password >>
+          - ACCEPT_EULA=y
+          - DOCKER_HOST=unix:///var/run/docker.sock
+          - TMPDIR=/private
+      - image: quay.io/hmpps/hmpps-workload:latest
+        environment:
+          - DATABASE_USERNAME=sa
+          - DATABASE_PASSWORD=<< pipeline.parameters.sa_password >>
+        entrypoint: ["/bin/sh", "-c" , "sleep 10 && java -javaagent:/app/agent.jar -jar /app/app.jar"]
+      - image: localstack/localstack:0.12.15
+        environment:
+          - SERVICES=s3
+          - DEBUG=${DEBUG- }
+          - DATA_DIR=/tmp/localstack/data
+          - DOCKER_HOST=unix:///var/run/docker.sock
+          - LAMBDA_EXECUTOR=${LAMBDA_EXECUTOR- }
+          - AWS_EXECUTION_ENV=True
+          - DEFAULT_REGION=eu-west-2
+          - TMPDIR=/private
+    steps:
+      - checkout
+      - hmpps/install_aws_cli
+      - run:
+          name: Wait for s3 to be ready
+          command: curl -4 --connect-timeout 30 --retry-connrefused --retry 20 --retry-delay 5 http://localhost:4566
+      - run:
+          name: Set up s3 bucket
+          command: test/integration/resources/setup-s3.sh test/integration/resources
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+         name: Install Dependencies
+         command: npm ci --no-audit
+      - run:
+         name: Run integration tests
+         command: npm run integration-test
+      - store_test_results:
+          path: test_results
+      - store_artifacts:
+          path: test_results/integration-test-reports.html
 
 workflows:
   version: 2
@@ -123,9 +134,9 @@ workflows:
             - hmpps-common-vars
           requires:
             - build
-#      - integration_test:
-#          requires:
-#            - build
+      - integration_test:
+          requires:
+            - build
       - hmpps/helm_lint:
           name: helm_lint
       - hmpps/build_docker:
@@ -145,7 +156,7 @@ workflows:
           requires:
             - helm_lint
             - unit_test
-#            - integration_test
+            - integration_test
             - build_docker
 
   security:

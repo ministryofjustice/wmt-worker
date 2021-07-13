@@ -38,7 +38,7 @@ describe('services/data/insert-workload-points-calculation', function () {
       .then(function (ids) {
         const insertedId = ids[0]
         inserts.push({ table: 'workload_points_calculations', id: insertedId })
-        knex('workload_points_calculations').where({ id: insertedId })
+        knex('workload_points_calculations').withSchema('app').where({ id: insertedId })
           .first()
           .then(function (insertedObject) {
             expect(insertedObject.workload_report_id).to.eql(workloadReportId)

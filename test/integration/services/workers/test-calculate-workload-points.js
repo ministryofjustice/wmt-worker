@@ -36,6 +36,7 @@ describe('services/workers/calculate-workload-points', function () {
 
     return calculatePointsWorker.execute(task).then(() => {
       return knex('workload_points_calculations')
+        .withSchema('app')
         .whereBetween('workload_id', [insertedWorkloads[0].id, insertedWorkloads[insertedWorkloads.length - 1].id])
         .then(function (workloadPointsCalculations) {
           expect(workloadPointsCalculations.length).to.equal(batchSize)

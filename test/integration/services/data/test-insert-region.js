@@ -12,6 +12,7 @@ describe('app/services/data/insert-region', function () {
     insertRegion(region).then(function (id) {
       regionId = id
       return knex.table('region')
+        .withSchema('app')
         .where({ id: regionId })
         .first()
         .then(function (result) {
@@ -30,6 +31,7 @@ describe('app/services/data/insert-region', function () {
     insertRegion(region).then(function (id) {
       regionId = id
       return knex.table('region')
+        .withSchema('app')
         .where({ id: regionId })
         .first()
         .then(function (result) {
@@ -42,6 +44,6 @@ describe('app/services/data/insert-region', function () {
   })
 
   after(function () {
-    return knex('region').where('id', regionId).del()
+    return knex('region').withSchema('app').where('id', regionId).del()
   })
 })

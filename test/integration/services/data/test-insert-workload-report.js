@@ -21,6 +21,7 @@ describe('app/services/data/insert-workload-report', function () {
     insertWorkloadReport().then(function (id) {
       insertedIds.push(id)
       return knex.table(tableName)
+        .withSchema('app')
         .where({ id: id })
         .then(function (results) {
           expect(results.length).to.be.equal(1)
@@ -36,6 +37,6 @@ describe('app/services/data/insert-workload-report', function () {
   })
 
   after(function () {
-    return knex(tableName).whereIn('id', insertedIds).del()
+    return knex(tableName).withSchema('app').whereIn('id', insertedIds).del()
   })
 })

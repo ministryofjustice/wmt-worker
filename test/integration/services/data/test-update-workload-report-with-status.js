@@ -19,10 +19,10 @@ describe('app/services/data/update-workload-report-with-status', function () {
     const workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
     const newStatus = workloadReportStatus.FAILED
 
-    knex('workload_report').where({ id: workloadReportId }).first().then(function (result) {
+    knex('workload_report').withSchema('app').where({ id: workloadReportId }).first().then(function (result) {
       const oldWorkloadReport = result
       updateWorkloadReport(workloadReportId, newStatus).then(function () {
-        knex('workload_report').where({ id: workloadReportId }).first()
+        knex('workload_report').withSchema('app').where({ id: workloadReportId }).first()
           .then(function (updatedWorkloadReport) {
             expect(oldWorkloadReport.id).to.eql(updatedWorkloadReport.id)
             expect(oldWorkloadReport.status).to.not.eql(updatedWorkloadReport.status)

@@ -33,7 +33,7 @@ describe('services/workers/create-workload', function () {
     createNewTasks.resolves()
     return createWorkload.execute(task)
       .then(function () {
-        return knex('workload').where('offender_manager.key', 'OMKEY01')
+        return knex('workload').withSchema('app').where('offender_manager.key', 'OMKEY01')
           .join('workload_owner', 'workload.workload_owner_id', 'workload_owner.id')
           .join('offender_manager', 'workload_owner.offender_manager_id', 'offender_manager.id')
           .join('tiers', 'tiers.workload_id', 'workload.id')
