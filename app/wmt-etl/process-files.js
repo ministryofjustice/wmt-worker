@@ -11,7 +11,7 @@ const { getObject } = require('./get-s3-object')
 
 module.exports = function (extractFiles) {
   return Promise.each(extractFiles, function (extractFile) {
-    getObject(extractFile.Key).then(function (getObject) {
+    return getObject(extractFile.Key).then(function (getObject) {
       const workbook = XLSX.read(getObject, { type: 'array', cellText: false, cellDates: true })
       console.log(`all keys of workbook: ${Object.keys(workbook.Sheets)}`)
       if (!validateWorkbookFormat(Object.keys(workbook.Sheets))) {
@@ -28,8 +28,8 @@ module.exports = function (extractFiles) {
             })
         }
       })
-        .then(function () {
-          log.info('Successfully processed file ' + extractFile)
+        .then(function (ids) {
+          log.info(`Successfully processed file ${extractFile.Key}`)
         })
     })
   })

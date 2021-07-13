@@ -40,6 +40,7 @@ describe('app/services/insert-workload-owner-and-dependencies', function () {
 
     insertWorkloadOwnerAndDependencies(caseSummary).then(function () {
       return knex.table('offender_manager')
+        .withSchema('app')
         .where({ key: omKey })
         .first()
         .then(function (omRecord) {
@@ -49,6 +50,7 @@ describe('app/services/insert-workload-owner-and-dependencies', function () {
           expect(omRecord.forename).to.eq(omForename)
           expect(omRecord.surname).to.eq(omSurname)
           return knex.table('region')
+            .withSchema('app')
             .where('code', regionCode)
             .first()
             .then(function (regionRecord) {
@@ -56,6 +58,7 @@ describe('app/services/insert-workload-owner-and-dependencies', function () {
               expect(regionRecord.code).to.eq(regionCode)
               expect(regionRecord.description).to.eq(regionDesc)
               return knex.table('ldu')
+                .withSchema('app')
                 .where('code', lduCode)
                 .first()
                 .then(function (lduRecord) {
@@ -64,6 +67,7 @@ describe('app/services/insert-workload-owner-and-dependencies', function () {
                   expect(lduRecord.code).to.eq(lduCode)
                   expect(lduRecord.description).to.eq(lduDesc)
                   return knex.table('team')
+                    .withSchema('app')
                     .where('code', teamCode)
                     .first()
                     .then(function (teamRecord) {
@@ -72,6 +76,7 @@ describe('app/services/insert-workload-owner-and-dependencies', function () {
                       expect(teamRecord.code).to.eq(teamCode)
                       expect(teamRecord.description).to.eq(teamDesc)
                       return knex.table('workload_owner')
+                        .withSchema('app')
                         .where('offender_manager_id', omRecord.id)
                         .first()
                         .then(function (woRecord) {
@@ -105,6 +110,7 @@ describe('app/services/insert-workload-owner-and-dependencies', function () {
 
     insertWorkloadOwnerAndDependencies(caseSummary).then(function () {
       return knex.table('offender_manager')
+        .withSchema('app')
         .where({ key: omKey })
         .first()
         .then(function (omRecord) {
@@ -113,6 +119,7 @@ describe('app/services/insert-workload-owner-and-dependencies', function () {
           expect(omRecord.forename).to.eq(omForename)
           expect(omRecord.surname).to.eq(omSurname)
           return knex.table('region')
+            .withSchema('app')
             .where('code', regionCode)
             .first()
             .then(function (regionRecord) {
@@ -120,6 +127,7 @@ describe('app/services/insert-workload-owner-and-dependencies', function () {
               expect(regionRecord.code).to.eq(regionCode)
               expect(regionRecord.description).to.eq(regionDesc)
               return knex.table('ldu')
+                .withSchema('app')
                 .where('code', lduCode)
                 .first()
                 .then(function (lduRecord) {
@@ -128,6 +136,7 @@ describe('app/services/insert-workload-owner-and-dependencies', function () {
                   expect(lduRecord.code).to.eq(lduCode)
                   expect(lduRecord.description).to.eq(lduDesc)
                   return knex.table('team')
+                    .withSchema('app')
                     .where('code', teamCode)
                     .first()
                     .then(function (teamRecord) {
@@ -136,6 +145,7 @@ describe('app/services/insert-workload-owner-and-dependencies', function () {
                       expect(teamRecord.code).to.eq(teamCode)
                       expect(teamRecord.description).to.eq(teamDesc)
                       return knex.table('workload_owner')
+                        .withSchema('app')
                         .where('offender_manager_id', omRecord.id)
                         .first()
                         .then(function (woRecord) {
@@ -169,6 +179,7 @@ describe('app/services/insert-workload-owner-and-dependencies', function () {
 
     insertWorkloadOwnerAndDependencies(caseSummary).then(function () {
       return knex.table('offender_manager')
+        .withSchema('app')
         .where({ key: omKey })
         .first()
         .then(function (omRecord) {
@@ -177,6 +188,7 @@ describe('app/services/insert-workload-owner-and-dependencies', function () {
           expect(omRecord.forename).to.eq(omForename)
           expect(omRecord.surname).to.eq(omSurname)
           return knex.table('region')
+            .withSchema('app')
             .where('code', secondRegionCode)
             .first()
             .then(function (regionRecord) {
@@ -184,6 +196,7 @@ describe('app/services/insert-workload-owner-and-dependencies', function () {
               expect(regionRecord.code).to.eq(secondRegionCode)
               expect(regionRecord.description).to.eq(regionDesc)
               return knex.table('ldu')
+                .withSchema('app')
                 .where('code', secondLduCode)
                 .first()
                 .then(function (lduRecord) {
@@ -193,6 +206,7 @@ describe('app/services/insert-workload-owner-and-dependencies', function () {
                   expect(lduRecord.code).to.eq(secondLduCode)
                   expect(lduRecord.description).to.eq(lduDesc)
                   return knex.table('team')
+                    .withSchema('app')
                     .where('code', teamCode)
                     .first()
                     .then(function (teamRecord) {
@@ -202,6 +216,7 @@ describe('app/services/insert-workload-owner-and-dependencies', function () {
                       expect(teamRecord.code).to.eq(teamCode)
                       expect(teamRecord.description).to.eq(teamDesc)
                       return knex.table('workload_owner')
+                        .withSchema('app')
                         .where('offender_manager_id', omRecord.id)
                         .first()
                         .then(function (woRecord) {
@@ -219,19 +234,19 @@ describe('app/services/insert-workload-owner-and-dependencies', function () {
   })
 
   after(function () {
-    return knex('workload_owner').where('offender_manager_id', offenderManagerId).del()
+    return knex('workload_owner').withSchema('app').where('offender_manager_id', offenderManagerId).del()
       .then(function () {
-        return knex('offender_manager').where('id', offenderManagerId).del()
+        return knex('offender_manager').withSchema('app').where('id', offenderManagerId).del()
           .then(function () {
-            return knex('team').where('code', teamCode).del()
+            return knex('team').withSchema('app').where('code', teamCode).del()
               .then(function () {
-                return knex('ldu').where('code', lduCode).del()
+                return knex('ldu').withSchema('app').where('code', lduCode).del()
                   .then(function () {
-                    return knex('region').where('code', regionCode).del()
+                    return knex('region').withSchema('app').where('code', regionCode).del()
                       .then(function () {
-                        return knex('ldu').where('code', secondLduCode).del()
+                        return knex('ldu').withSchema('app').where('code', secondLduCode).del()
                           .then(function () {
-                            return knex('region').where('code', secondRegionCode).del()
+                            return knex('region').withSchema('app').where('code', secondRegionCode).del()
                           })
                       })
                   })

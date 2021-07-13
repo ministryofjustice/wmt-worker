@@ -2,7 +2,7 @@
 ARG BUILD_NUMBER
 ARG GIT_REF
 
-FROM node:14.15-buster-slim as base
+FROM node:14.17-buster-slim as base
 
 LABEL maintainer="HMPPS Digital Studio <info@digital.justice.gov.uk>"
 
@@ -17,6 +17,8 @@ WORKDIR /app
 RUN apt-get update && \
     apt-get upgrade -y
 
+RUN npm i -g npm@7
+
 # Stage: build assets
 FROM base as build
 ARG BUILD_NUMBER
@@ -28,7 +30,6 @@ COPY package*.json ./
 RUN CYPRESS_INSTALL_BINARY=0 npm ci --no-audit
 
 COPY . .
-# RUN npm run build
 
 ENV BUILD_NUMBER ${BUILD_NUMBER:-1_0_0}
 ENV GIT_REF ${GIT_REF:-dummy}
@@ -52,6 +53,7 @@ COPY --from=build --chown=appuser:appgroup \
         /app/knexfile.js \
         /app/knex.js \
         /app/start.js \
+        /app/start-server.js \
         ./
 
 COPY --from=build --chown=appuser:appgroup \

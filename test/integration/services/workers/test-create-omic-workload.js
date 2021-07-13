@@ -33,7 +33,7 @@ describe('services/workers/create-omic-workload', function () {
     createNewTasks.resolves()
     return createWorkload.execute(task)
       .then(function () {
-        return knex('omic_workload').where('offender_manager.key', 'OMKEY01')
+        return knex('omic_workload').withSchema('app').where('offender_manager.key', 'OMKEY01')
           .join('workload_owner', 'omic_workload.workload_owner_id', 'workload_owner.id')
           .join('offender_manager', 'workload_owner.offender_manager_id', 'offender_manager.id')
           .join('omic_tiers', 'omic_tiers.omic_workload_id', 'omic_workload.id')

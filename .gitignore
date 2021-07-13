@@ -19,3 +19,5 @@ Icon?
 /.idea/
 
 *.iml
+.nyc_output
+

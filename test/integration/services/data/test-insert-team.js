@@ -29,7 +29,9 @@ describe('app/services/data/insert-team', function () {
     const team = new Team(undefined, lduId, code, originalTeamName)
     return insertTeam(team).then(function (teamId) {
       teamUniqueIdentifier = teamId[0]
+
       return knex.table('team')
+        .withSchema('app')
         .where({ id: teamId })
         .first()
         .then(function (result) {
@@ -51,6 +53,7 @@ describe('app/services/data/insert-team', function () {
     const team = new Team(undefined, lduId, code, newTeamName)
     return insertTeam(team).then(function (teamId) {
       return knex.table('team')
+        .withSchema('app')
         .where({ id: teamId })
         .first()
         .then(function (result) {
@@ -70,6 +73,7 @@ describe('app/services/data/insert-team', function () {
     const team = new Team(undefined, lduId, code, newTeamName)
     return insertTeam(team).then(function (teamId) {
       return knex.table('team')
+        .withSchema('app')
         .where({ id: teamId })
         .first()
         .then(function (result) {

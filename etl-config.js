@@ -1,12 +1,15 @@
+const production = process.env.NODE_ENV === 'production'
+
 module.exports = {
   // Extract file settings
-  IMPORT_FILE_DIR: process.env.WMT_IMPORT_FILE_PATH || './data/',
+  IMPORT_FILE_DIR: process.env.WMT_IMPORT_FILE_PATH || './test/integration/resources/',
   ARCHIVE_FILE_DIR: process.env.WMT_ARCHIVE_FILE_PATH || './archive/',
   ARCHIVE_FILE_NAME: process.env.WMT_ARCHIVE_FILE_NAME || 'delius-extract-',
   EXPECTED_FILE_COUNT: process.env.WMT_EXPECTED_FILE_COUNT || '2',
 
-  S3_BUCKET_NAME: process.env.S3_BUCKET_NAME,
+  S3_BUCKET_NAME: process.env.S3_BUCKET_NAME || 'wmt-worker',
   S3_REGION: process.env.S3_REGION || 'eu-west-2',
+  S3_ENDPOINT: production ? null : 'http://localhost:4566',
 
   // Extract valid source worksheet tabs
   VALID_SHEET_NAMES: [
