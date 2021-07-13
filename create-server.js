@@ -2,24 +2,22 @@ const http = require('http')
 const getTasksInProgress = require('./app/services/data/get-tasks-inprogress-count')
 
 const requestListener = function (req, res) {
-
-  if(req.url.endsWith('/liveness')) {
-    getTasksInProgress().then(function(count){
-      // if(isNaN(count)){
-      //   res.writeHead(500)
-      //   res.end('App is not live')
-      // }
+  if (req.url.endsWith('/liveness')) {
+    return getTasksInProgress().then(function () {
       res.writeHead(200)
       res.end('App is live')
+    }).catch(function (err) {
+      console.log(err)
+      res.writeHead(500)
+      res.end('App is not live')
     })
-
   }
-  // console.log(`request ${req.method} ${req.url}`)
-  // res.writeHead(404)
-  // res.end('Hello, World!')
+  console.log(`request ${req.method} ${req.url}`)
+  res.writeHead(404)
+  res.end()
 }
 
-const server = function(){
+const server = function () {
   return http.createServer(requestListener)
 }
 
