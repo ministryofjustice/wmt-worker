@@ -19,7 +19,7 @@ describe('services/data/get-contracted-hours', function () {
     getContractedHours(workloadOwnerId).then(function (hours) {
       expect(hours).to.equal(40)
       done()
-    }).catch(function(err) {
+    }).catch(function (err) {
       done(err)
     })
   })

@@ -41,10 +41,10 @@ describe('app/services/data/insert-ldu', function () {
           inserts.push({ table: 'ldu', id: lduId[0] })
           done()
         })
-        .catch(function(error) {
+        .catch(function (error) {
           done(error)
         })
-    }).catch(function(error) {
+    }).catch(function (error) {
       done(error)
     })
   })

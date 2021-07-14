@@ -39,7 +39,7 @@ describe('app/services/data/insert-region', function () {
           expect(result['code']).to.eq(code) // eslint-disable-line
           expect(result['description']).to.eq(regionName) // eslint-disable-line
           done()
-        }).catch(function(error) {
+        }).catch(function (error) {
           done(error)
         })
     })
