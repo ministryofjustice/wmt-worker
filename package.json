@@ -22,10 +22,10 @@
     "security_audit": "npx audit-ci --config audit-ci.json",
     "lint": "standard"
   },
-  "nyc" : {
+  "nyc": {
     "exclude": [
-       "seed/**",
-       "test/**"
+      "seed/**",
+      "test/**"
     ],
     "all": true
   },
@@ -53,7 +53,8 @@
     "nyc": "^15.1.0",
     "proxyquire": "^2.1.3",
     "sinon": "^11.1.1",
-    "standard": "^16.0.3"
+    "standard": "^16.0.3",
+    "supertest": "^6.1.3"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.19.0",
