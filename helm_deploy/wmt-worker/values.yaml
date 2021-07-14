@@ -30,7 +30,6 @@ generic-service:
   # Environment variables to load into the deployment
   env:
     NODE_ENV: "production"
-    WMT_DB_NAME: "hmpps_workload"
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:
@@ -44,6 +43,7 @@ generic-service:
       WMT_DB_USERNAME: "database_username"
       WMT_DB_PASSWORD: "database_password"
       WMT_DB_SERVER: "rds_instance_address"
+      WMT_DB_NAME: "database_name"
     s3-bucket-output:
       AWS_ACCESS_KEY_ID: "access_key_id"
       AWS_SECRET_ACCESS_KEY: "secret_access_key"

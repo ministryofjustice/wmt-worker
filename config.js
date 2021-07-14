@@ -4,7 +4,7 @@ module.exports = {
 
   // Worker
   ASYNC_WORKER_CRON: process.env.WMT_ASYNC_WORKER_CRON || '0 * * * * *', // default every minute
-  ASYNC_WORKER_BATCH_SIZE: process.env.WMT_ASYNC_WORKER_BATCH_SIZE || '25',
+  ASYNC_WORKER_BATCH_SIZE: process.env.WMT_ASYNC_WORKER_BATCH_SIZE || '15',
 
   // DB
   DATABASE_SERVER: process.env.WMT_DB_SERVER || 'localhost',
