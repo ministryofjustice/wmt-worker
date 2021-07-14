@@ -1,5 +1,5 @@
 const request = require('supertest')
-const server = require('../../../create-server')()
+const server = require('../../../app/create-server')()
 
 describe('liveness endpoint', function () {
   it('returns 200', function (done) {

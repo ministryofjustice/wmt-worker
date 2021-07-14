@@ -1,5 +1,5 @@
 const http = require('http')
-const getTasksInProgress = require('./app/services/data/get-tasks-inprogress-count')
+const getTasksInProgress = require('./services/data/get-tasks-inprogress-count')
 
 const requestListener = function (req, res) {
   if (req.url.endsWith('/liveness')) {
