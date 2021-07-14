@@ -25,7 +25,7 @@ const aliases = {
   omForename: 'om_forename',
   omGradeCode: 'om_grade_code',
   comIn1st16Weeks: 'comin1st16weeks',
-  licin1st16weeks: 'licin1st16weeks',
+  licIn1st16Weeks: 'licin1st16weeks',
   datestamp: 'datestamp',
   commtier0: 'commtier0',
   commtiera3: 'commtiera3',
@@ -146,7 +146,7 @@ module.exports.insertT2aCaseSummaryReport = function (caseSummary, inserts) {
     .insert(mapT2aForInsert(caseSummary))
     .returning('id')
     .then(function (id) {
-      inserts.push({ table: t2aTable, id: id })
+      inserts.push({ table: t2aTable, id: id[0] })
       return inserts
     })
 }
@@ -157,7 +157,7 @@ module.exports.insertFilteredCaseSummaryReport = function (caseSummary, inserts)
     .insert(mapFilteredForInsert(caseSummary))
     .returning('id')
     .then(function (id) {
-      inserts.push({ table: wmtExtractFilteredTable, id: id })
+      inserts.push({ table: wmtExtractFilteredTable, id: id[0] })
       return inserts
     })
 }
@@ -168,7 +168,7 @@ module.exports.insertCaseSummaryReport = function (caseSummary, inserts) {
     .insert(mapForInsert(caseSummary))
     .returning('id')
     .then(function (id) {
-      inserts.push({ table: wmtExtractTable, id: id })
+      inserts.push({ table: wmtExtractTable, id: id[0] })
       return inserts
     })
 }
@@ -180,7 +180,7 @@ module.exports.insertCourtReport = function (courtReport, inserts) {
     .insert(mapForInsert(courtReportToInsert))
     .returning('id')
     .then(function (id) {
-      inserts.push({ table: courtReportsTable, id: id })
+      inserts.push({ table: courtReportsTable, id: id[0] })
       return inserts
     })
 }
@@ -192,7 +192,7 @@ module.exports.insertInstitutionalReport = function (institutionalReport, insert
     .insert(mapForInsert(instReportToInsert))
     .returning('id')
     .then(function (id) {
-      inserts.push({ table: institutionalReportsTable, id: id })
+      inserts.push({ table: institutionalReportsTable, id: id[0] })
       return inserts
     })
 }
@@ -203,7 +203,7 @@ module.exports.insertArms = function (arms, inserts) {
     .insert(arms.map(mapForInsert))
     .returning('id')
     .then(function (id) {
-      inserts.push({ table: armsTable, id: id })
+      inserts.push({ table: armsTable, id: id[0] })
       return inserts
     })
 }

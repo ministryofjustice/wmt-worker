@@ -21,7 +21,7 @@ describe('services/workers/calculate-workload-points', function () {
       })
   })
 
-  it('creates the expected points calculations', function () {
+  it.only('creates the expected points calculations', function () {
     const workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
     const insertedWorkloads = inserts.filter((item) => item.table === 'workload')
     const batchSize = 3

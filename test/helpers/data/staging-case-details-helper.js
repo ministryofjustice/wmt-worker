@@ -26,7 +26,7 @@ module.exports.insertWarrant = function (inserts) {
     .insert(testCaseDetails)
     .returning('id')
     .then(function (id) {
-      inserts.push({ table: warrantsTableName, id: id })
+      inserts.push({ table: warrantsTableName, id: id[0] })
       return inserts
     })
 }
@@ -37,7 +37,7 @@ module.exports.insertUnpaidWork = function (inserts) {
     .insert(testCaseDetails)
     .returning('id')
     .then(function (id) {
-      inserts.push({ table: unpaidWorkTableName, id: id })
+      inserts.push({ table: unpaidWorkTableName, id: id[0] })
       return inserts
     })
 }
@@ -48,7 +48,7 @@ module.exports.insertOverdueTermination = function (inserts) {
     .insert(testCaseDetails)
     .returning('id')
     .then(function (id) {
-      inserts.push({ table: overdueTerminationsTableName, id: id })
+      inserts.push({ table: overdueTerminationsTableName, id: id[0] })
       return inserts
     })
 }
@@ -59,7 +59,7 @@ module.exports.insertPriority = function (inserts) {
     .insert(testCaseDetails)
     .returning('id')
     .then(function (id) {
-      inserts.push({ table: priorityTableName, id: id })
+      inserts.push({ table: priorityTableName, id: id[0] })
       return inserts
     })
 }
