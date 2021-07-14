@@ -57,7 +57,7 @@ module.exports.execute = function (task) {
           return getAppReductionsPromise.then(function (reductions) {
             return getCmsAdjustmentPointsPromise.then(function (cmsAdjustments) {
               return getGsAdjustmentPointsPromise.then(function (gsAdjustments) {
-                const totalPoints = workloadPointsBreakdown.total + cmsAdjustments + gsAdjustments
+                const totalPoints = Math.round(workloadPointsBreakdown.total + cmsAdjustments + gsAdjustments)
                 return getContractedHoursPromise.then(function (contractedHours) {
                   return getOffenderManagerTypePromise.then(function (offenderManagerTypeId) {
                     const nominalTarget = calculateNominalTarget(offenderManagerTypeId, caseTypeWeightings.pointsConfiguration.defaultNominalTargets)
