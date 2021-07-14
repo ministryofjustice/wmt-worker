@@ -18,5 +18,32 @@ services:
           - "${TMPDIR:-/tmp/localstack}:/tmp/localstack"
           - "/var/run/docker.sock:/var/run/docker.sock"
           - $PWD/test/integration/resources:/docker-entrypoint-initaws.d
+    hmpps-workload:
+      image: quay.io/hmpps/hmpps-workload:latest
+      networks:
+        - hmpps
+      container_name: hmpps-workload
+      ports:
+        - "8081:8080"
+      healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:8080/health/ping"]
+      environment:
+        - SERVER_PORT=8080
+        - SPRING_PROFILES_ACTIVE=dev
+        - DATABASE_ENDPOINT=mssql:1433
+      entrypoint: ["/bin/sh", "-c" , "sleep 10 && java -javaagent:/app/agent.jar -jar /app/app.jar"]
+      depends_on:
+          - "mssql"
+    mssql:
+      image: mcr.microsoft.com/mssql/server:2019-CU11-ubuntu-20.04
+      networks:
+        - hmpps
+      container_name: hmpps-workload-mssql
+      restart: always
+      ports:
+        - '1433:1433'
+      environment:
+        - ACCEPT_EULA=Y
+        - SA_PASSWORD=yourStrong(!)Password
 networks:
   hmpps:
