@@ -54,6 +54,7 @@ COPY --from=build --chown=appuser:appgroup \
         /app/knex.js \
         /app/start.js \
         /app/start-server.js \
+        /app/create-server.js \
         ./
 
 COPY --from=build --chown=appuser:appgroup \
