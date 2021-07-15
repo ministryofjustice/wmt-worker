@@ -65,8 +65,8 @@ module.exports = function (range) {
             communityTiers,
             licenseTiers,
             custodyTiers,
-            result.comIn1st16Weeks,
-            result.licIn1st16Weeks,
+            result.comin1st16weeks,
+            result.licin1st16weeks,
             result.datestamp
           ))
         }

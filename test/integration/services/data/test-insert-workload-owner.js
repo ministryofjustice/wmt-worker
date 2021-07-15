@@ -25,14 +25,14 @@ describe('app/services/data/insert-workload-owner', function () {
 
     insertWorkloadOwner(workloadOwner).then(function (workloadOwnerId) {
       return knex.table(tableName)
-        .where({ id: workloadOwnerId })
+        .where({ id: workloadOwnerId[0] })
         .first()
         .then(function (result) {
           expect(result['id']).to.not.be.null // eslint-disable-line
           expect(result['offender_manager_id']).to.eq(offenderManagerId) // eslint-disable-line
           expect(result['contracted_hours']).to.eq(contractedHours) // eslint-disable-line
           expect(result['team_id']).to.eq(teamId) // eslint-disable-line
-          inserts.push({ table: 'workload_owner', id: workloadOwnerId })
+          inserts.push({ table: 'workload_owner', id: workloadOwnerId[0] })
           done()
         })
     })

@@ -11,7 +11,7 @@ module.exports = function () {
         .insert(omicWmtExtract)
         .returning('id')
         .then(function (id) {
-          stagingId = id
+          stagingId = id[0]
           return stagingId
         })
     })

@@ -10,7 +10,7 @@ describe('app/services/data/insert-region', function () {
     const originalRegionName = 'REGION NAME'
     const region = new Region(undefined, code, originalRegionName)
     insertRegion(region).then(function (id) {
-      regionId = id
+      regionId = id[0]
       return knex.table('region')
         .withSchema('app')
         .where({ id: regionId })
@@ -29,16 +29,18 @@ describe('app/services/data/insert-region', function () {
     const regionName = 'TEST REGION NAME'
     const region = new Region(undefined, code, regionName)
     insertRegion(region).then(function (id) {
-      regionId = id
+      regionId = id[0]
       return knex.table('region')
         .withSchema('app')
         .where({ id: regionId })
         .first()
         .then(function (result) {
-          expect(result['id']).to.eq(regionId[0]) // eslint-disable-line
+          expect(result['id']).to.eq(regionId) // eslint-disable-line
           expect(result['code']).to.eq(code) // eslint-disable-line
           expect(result['description']).to.eq(regionName) // eslint-disable-line
           done()
+        }).catch(function (error) {
+          done(error)
         })
     })
   })

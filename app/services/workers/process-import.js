@@ -15,17 +15,13 @@ const insertWorkloadReport = require('../data/insert-workload-report')
 const taskStatus = require('../../constants/task-status')
 const taskType = require('../../constants/task-type')
 const submittingAgent = require('../../constants/task-submitting-agent')
-const disableIndexing = require('../data/disable-indexing')
 
 module.exports.execute = function (task) {
   const batchSize = parseInt(config.ASYNC_WORKER_BATCH_SIZE, 10)
   const tasks = []
   let workloadReportId
 
-  return disableIndexing()
-    .then(function () {
-      return insertWorkloadReport()
-    })
+  return insertWorkloadReport()
     .then(function (insertedWorkloadReportId) {
       workloadReportId = insertedWorkloadReportId
       return populateStagingCourtReporters()

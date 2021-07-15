@@ -18,7 +18,7 @@ module.exports = function (range) {
     .select('omic_teams.id AS staging_id', 'omic_teams.trust', 'omic_teams.region_desc', 'omic_teams.region_code',
       'omic_teams.pdu_desc', 'omic_teams.pdu_code', 'omic_teams.team_desc', 'omic_teams.team_code',
       'omic_teams.om_surname', 'omic_teams.om_forename', 'omic_teams.om_grade_code',
-      'omic_teams.om_key', 'omic_teams.comIn1st16Weeks', 'omic_teams.licIn1st16Weeks',
+      'omic_teams.om_key', 'omic_teams.comin1st16weeks', 'omic_teams.licin1st16weeks',
       'omic_teams.datestamp',
 
       // OMIC Teams Community cases

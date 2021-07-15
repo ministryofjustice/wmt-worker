@@ -3,17 +3,15 @@ const defaultConnection = {
   host: config.DATABASE_SERVER,
   user: config.DATABASE_USERNAME,
   password: config.DATABASE_PASSWORD,
-  database: config.DATABASE,
-  options: {
-    encrypt: true,
-    requestTimeout: 500000,
-    enableArithAbort: true
-  }
+  database: config.DATABASE
+  // options: {
+
+  // }
 }
 
 module.exports = {
   staging: {
-    client: 'mssql',
+    client: 'pg',
     connection: defaultConnection,
     migrations: {
       directory: 'migrations/staging'
@@ -21,12 +19,13 @@ module.exports = {
     debug: false,
     pool: {
       min: 0,
-      max: 300
+      max: 50,
+      idleTimeoutMillis: 5000
     },
     acquireConnectionTimeout: 1200000
   },
   app: {
-    client: 'mssql',
+    client: 'pg',
     connection: defaultConnection,
     migrations: {
       directory: 'migrations/app'
@@ -37,12 +36,13 @@ module.exports = {
     debug: false,
     pool: {
       min: 0,
-      max: 300
+      max: 50,
+      idleTimeoutMillis: 5000
     },
     acquireConnectionTimeout: 150000
   },
   dev: {
-    client: 'mssql',
+    client: 'pg',
     connection: defaultConnection,
     seeds: {
       directory: 'seed/data/dev'
@@ -50,7 +50,7 @@ module.exports = {
     debug: false
   },
   views: {
-    client: 'mssql',
+    client: 'pg',
     connection: defaultConnection,
     seeds: {
       directory: 'seed/views'

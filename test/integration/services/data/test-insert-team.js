@@ -32,7 +32,7 @@ describe('app/services/data/insert-team', function () {
 
       return knex.table('team')
         .withSchema('app')
-        .where({ id: teamId })
+        .where({ id: teamId[0] })
         .first()
         .then(function (result) {
           expect(result['id']).to.not.be.null // eslint-disable-line
@@ -41,7 +41,7 @@ describe('app/services/data/insert-team', function () {
           expect(result['description']).to.eq(originalTeamName) // eslint-disable-line
           expect(moment().diff(result.effective_from, 'seconds')).to.be.lt(timeThreshold.INSERT)
           expect(result['effective_to']).to.be.null // eslint-disable-line
-          inserts.push({ table: 'team', id: teamId })
+          inserts.push({ table: 'team', id: teamId[0] })
         })
     })
   })
@@ -54,7 +54,7 @@ describe('app/services/data/insert-team', function () {
     return insertTeam(team).then(function (teamId) {
       return knex.table('team')
         .withSchema('app')
-        .where({ id: teamId })
+        .where({ id: teamId[0] })
         .first()
         .then(function (result) {
           expect(result['id']).to.eq(teamUniqueIdentifier) // eslint-disable-line
@@ -74,7 +74,7 @@ describe('app/services/data/insert-team', function () {
     return insertTeam(team).then(function (teamId) {
       return knex.table('team')
         .withSchema('app')
-        .where({ id: teamId })
+        .where({ id: teamId[0] })
         .first()
         .then(function (result) {
           expect(result['id']).to.eq(teamUniqueIdentifier) // eslint-disable-line

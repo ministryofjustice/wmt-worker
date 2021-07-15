@@ -11,11 +11,14 @@ parameters:
   node-version:
     type: string
     default: 14.17-browsers
-  mssql_tag:
-    default: "2019-CU11-ubuntu-20.04"
+  postgres_tag:
+    default: "11"
     type: string
-  sa_password:
-    default: "yourStrong(!)Password"
+  database_user:
+    default: "root"
+    type: string  
+  database_password:
+    default: "dev"
     type: string
 
 jobs:
@@ -78,16 +81,14 @@ jobs:
   integration_test:
     docker:
       - image: cimg/node:<< pipeline.parameters.node-version >>
-      - image: mcr.microsoft.com/mssql/server:<< pipeline.parameters.mssql_tag >>
+      - image: postgres:<< pipeline.parameters.postgres_tag >>
         environment:
-          - SA_PASSWORD=<< pipeline.parameters.sa_password >>
-          - ACCEPT_EULA=y
-          - DOCKER_HOST=unix:///var/run/docker.sock
-          - TMPDIR=/private
+          - POSTGRES_PASSWORD=<< pipeline.parameters.database_password >>
+          - POSTGRES_USER=<< pipeline.parameters.database_user >>
       - image: quay.io/hmpps/hmpps-workload:latest
         environment:
-          - DATABASE_USERNAME=sa
-          - DATABASE_PASSWORD=<< pipeline.parameters.sa_password >>
+          - DATABASE_USERNAME=<< pipeline.parameters.database_user >>
+          - DATABASE_PASSWORD=<< pipeline.parameters.database_password >>
         entrypoint: ["/bin/sh", "-c" , "sleep 10 && java -javaagent:/app/agent.jar -jar /app/app.jar"]
       - image: localstack/localstack:0.12.15
         environment:

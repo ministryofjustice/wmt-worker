@@ -12,7 +12,7 @@ module.exports = [{
   om_grade_code: 'PO',
   om_key: 'KEY0001',
   comIn1st16Weeks: '2',
-  licIn1st16Weeks: '3',
+  licin1st16weeks: '3',
   datestamp: '2019-09-30 04:17:58.0000000',
   commtier0: '1',
   commtiera3: '2',
@@ -70,7 +70,7 @@ module.exports = [{
 
   filtered_staging_id: '28',
   filtered_comIn1st16Weeks: '29',
-  filtered_licIn1st16Weeks: '30',
+  filtered_licin1st16weeks: '30',
   filtered_datestamp: '2019-09-30 04:18:58.0000000',
 
   filtered_commtier0: '0',
