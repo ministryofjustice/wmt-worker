@@ -10,6 +10,7 @@ exports.up = function (knex, Promise) {
     table.dateTime('date_created').defaultTo(knex.fn.now()).notNullable()
     table.dateTime('date_processed')
     table.string('status', 20).notNullable()
+    table.dateTime('date_started')
   }).catch(function (error) {
     logger.error(error)
     throw error

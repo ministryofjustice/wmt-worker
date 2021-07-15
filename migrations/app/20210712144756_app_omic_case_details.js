@@ -1,15 +1,15 @@
 const logger = require('../../app/services/log')
 
 exports.up = function (knex, Promise) {
-  return knex.schema.createTable('case_details', function (table) {
+  return knex.schema.createTable('omic_case_details', function (table) {
     table.increments('id')
-    table.integer('workload_id').unsigned().notNullable().references('workload.id')
-    table.string('row_type', 10)
+    table.integer('omic_workload_id').unsigned().notNullable().references('omic_workload.id')
+    table.string('row_type')
     table.string('case_ref_no').notNullable()
     table.integer('tier_code').unsigned().notNullable()
     table.string('team_code').notNullable()
     table.string('grade_code')
-    table.string('location', 50).notNullable()
+    table.string('location', 20)
   }).catch(function (error) {
     logger.error(error)
     throw error
@@ -17,5 +17,5 @@ exports.up = function (knex, Promise) {
 }
 
 exports.down = function (knex, Promise) {
-  return knex.schema.dropTable('case_details')
+  return knex.schema.dropTable('omic_case_details')
 }

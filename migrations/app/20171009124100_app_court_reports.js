@@ -8,6 +8,7 @@ exports.up = function (knex, Promise) {
     table.integer('total_sdrs').unsigned().notNullable()
     table.integer('total_fdrs').unsigned().notNullable()
     table.integer('total_oral_reports').unsigned().notNullable()
+    table.integer('workload_report_id').unsigned()
   }).catch(function (error) {
     logger.error(error)
     throw error

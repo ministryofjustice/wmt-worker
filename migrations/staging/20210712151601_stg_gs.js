@@ -4,6 +4,7 @@ exports.up = function (knex, Promise) {
   return knex.schema.withSchema('staging').createTable('gs', function (table) {
     table.increments('id')
     table.string('contact_id')
+    table.string('crn')
     table.string('contact_date')
     table.string('contact_type_code')
     table.string('contact_type_desc')

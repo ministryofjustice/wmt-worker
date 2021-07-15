@@ -5,11 +5,13 @@ exports.up = function (knex, Promise) {
     table.increments('id')
     table.integer('reduction_reason_id').unsigned().defaultTo(11).notNullable().references('reduction_reason.id')
     table.integer('workload_owner_id').unsigned().notNullable().references('workload_owner.id')
-    table.decimal('hours').unsigned().notNullable()
+    table.decimal('hours', 8, 1).unsigned().notNullable()
     table.timestamp('effective_from').notNullable()
     table.timestamp('effective_to')
     table.string('status')
-    table.string('notes')
+    table.string('notes', 4000)
+    table.timestamp('updated_date').notNullable().defaultTo(knex.fn.now())
+    table.integer('user_id').unsigned()
   }).catch(function (error) {
     logger.error(error)
     throw error

@@ -3,6 +3,7 @@ const logger = require('../../app/services/log')
 exports.up = function (knex, Promise) {
   return knex.schema.withSchema('staging').createTable('wmt_extract_sa', function (table) {
     table.increments('id')
+    table.string('row_type')
     table.string('case_ref_no')
     table.string('tier_code')
     table.string('team_code')

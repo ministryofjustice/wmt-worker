@@ -6,7 +6,7 @@ exports.up = function (knex, Promise) {
     table.integer('user_id').unsigned().unique().notNullable().references('users.id')
     table.integer('role_id').unsigned().notNullable().references('roles.id')
     table.timestamp('last_updated')
-    table.integer('last_updated_by').unsigned().notNullable().references('users.id')
+    table.string('last_updated_by')
   }).catch(function (error) {
     logger.error(error)
     throw error

@@ -10,6 +10,7 @@ exports.up = function (knex, Promise) {
     table.timestamp('effective_from').notNullable()
     table.timestamp('effective_to')
     table.string('status')
+    table.string('case_ref_no')
   }).catch(function (error) {
     logger.error(error)
     throw error

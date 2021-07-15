@@ -7,8 +7,9 @@ exports.up = function (knex, Promise) {
     table.string('reason_short_name')
     table.integer('category_id').unsigned().notNullable().references('reduction_category.id')
     table.integer('allowance_percentage')
-    table.integer('max_allowance_percentage')
-    table.integer('months_to_expiry')
+    table.decimal('max_allowance_percentage', 5, 2)
+    table.decimal('months_to_expiry', 5, 2)
+    table.boolean('is_enabled').notNullable()
   })
     .catch(function (error) {
       logger.error(error)
