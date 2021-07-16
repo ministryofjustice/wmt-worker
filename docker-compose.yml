@@ -30,20 +30,20 @@ services:
       environment:
         - SERVER_PORT=8080
         - SPRING_PROFILES_ACTIVE=dev
-        - DATABASE_ENDPOINT=mssql:1433
+        - DATABASE_ENDPOINT=postgres:5432
       entrypoint: ["/bin/sh", "-c" , "sleep 10 && java -javaagent:/app/agent.jar -jar /app/app.jar"]
       depends_on:
-          - "mssql"
-    mssql:
-      image: mcr.microsoft.com/mssql/server:2019-CU11-ubuntu-20.04
+          - "postgres"
+    postgres:
+      image: postgres:11
       networks:
         - hmpps
-      container_name: hmpps-workload-mssql
+      container_name: hmpps-workload-postgres
       restart: always
       ports:
-        - '1433:1433'
+        - '5432:5432'
       environment:
-        - ACCEPT_EULA=Y
-        - SA_PASSWORD=yourStrong(!)Password
+        - POSTGRES_PASSWORD=dev
+        - POSTGRES_USER=root
 networks:
   hmpps:
