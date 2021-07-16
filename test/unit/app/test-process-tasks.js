@@ -22,7 +22,7 @@ let createTasks
 const batchSize = 3
 
 describe('process-tasks', function () {
-  beforeEach(function (done) {
+  beforeEach(function () {
     getPendingTasksAndMarkInProgress = sinon.stub()
     completeTaskWithStatus = sinon.stub()
     getWorkerForTask = sinon.stub()
@@ -48,7 +48,6 @@ describe('process-tasks', function () {
       './services/data/get-tasks-inprogress-count': getTaskInProgressCount,
       './services/data/create-tasks': createTasks
     })
-    done()
   })
 
   it('should get pending tasks and call worker to execute', function () {
