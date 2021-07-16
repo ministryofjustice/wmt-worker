@@ -16,7 +16,7 @@ describe('remove duplicates', function () {
             
         })
     })
-    it.only('should process correctly', function() {
+    it('should process correctly', function() {
         return removeDuplicates.execute({}).then(function(result) {
             expect(result[0]).to.be.a('number')
             return checkForDuplicateWorkloads().then(function(duplicates) {
