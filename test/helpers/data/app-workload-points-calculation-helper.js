@@ -61,7 +61,7 @@ module.exports.insertDependencies = function (inserts) {
   return promise
 }
 
-module.exports.addWorkload = function(inserts) {
+module.exports.addWorkload = function (inserts) {
   const defaultWorkload = {
     total_cases: 8,
     total_filtered_cases: 7,
@@ -88,11 +88,11 @@ module.exports.addWorkload = function(inserts) {
   }
 
   const workloads = [
-    Object.assign({}, defaultWorkload, { total_cases: 20, total_filtered_cases: 19, total_t2a_cases: 10, staging_id: 1, workload_owner_id: inserts.find((item) => item.table === 'workload_owner').id }),
-    
+    Object.assign({}, defaultWorkload, { total_cases: 20, total_filtered_cases: 19, total_t2a_cases: 10, staging_id: 1, workload_owner_id: inserts.find((item) => item.table === 'workload_owner').id })
+
   ]
 
-  return knex('workload').withSchema('app').returning('id').insert(workloads).then(function(id) {
+  return knex('workload').withSchema('app').returning('id').insert(workloads).then(function (id) {
     inserts.push({ table: 'workload', id: id[0] })
     return inserts
   })
