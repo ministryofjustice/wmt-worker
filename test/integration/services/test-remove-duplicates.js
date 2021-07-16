@@ -19,7 +19,7 @@ describe('remove duplicates', function () {
     return removeDuplicates.execute({}).then(function (result) {
       expect(result[0]).to.be.a('number')
       return checkForDuplicateWorkloads().then(function (duplicates) {
-        expect(duplicates).to.be.empty
+        return expect(duplicates).to.be.empty
       })
     })
   })
