@@ -3,7 +3,7 @@ module.exports = {
   LOGGING_LEVEL: process.env.LOGGING_LEVEL || 'DEBUG',
 
   // Worker
-  ASYNC_WORKER_CRON: process.env.WMT_ASYNC_WORKER_CRON || '0 * * * * *', // default every minute
+  ASYNC_WORKER_CRON: process.env.WMT_ASYNC_WORKER_CRON || '0/10 * * * * *', //  every 10 seconds
   ASYNC_WORKER_BATCH_SIZE: process.env.WMT_ASYNC_WORKER_BATCH_SIZE || '25',
 
   // DB
@@ -24,5 +24,5 @@ module.exports = {
   WMT_DASHBOARD_PASSWORD: process.env.WMT_DASHBOARD_PASSWORD,
 
   // Expected values
-  EXPECTED_DIVISIONS_COUNT: process.env.WMT_EXPECTED_DIVISIONS_COUNT || '8'
+  EXPECTED_DIVISIONS_COUNT: process.env.WMT_EXPECTED_DIVISIONS_COUNT || '32'
 }
