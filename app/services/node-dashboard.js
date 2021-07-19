@@ -1,15 +1,16 @@
 const XlsxPopulate = require('xlsx-populate')
-const { PutObjectCommand } = require('@aws-sdk/client-s3')
 const config = require('../../config')
 const log = require('./log')
 const dateFormatter = require('./date-formatter')
-const { s3Client } = require('./get-s3-client')
+const uploadDashboard = require('./dashboard/upload-dashboard')
 
 module.exports = function (reductions, capacity, formattedCaseloadData) {
-  const datestamp = dateFormatter.now().format('YYYYMMDDHHmmss')
+  const datestamp = dateFormatter.now().format('YYYYMMDDHH:mm:ss')
+  console.log(`start of function: ${dateFormatter.now().format('mm:ss')}`)
   const outputFilepathOnWorker = config.WMT_DASHBOARD_OUTPUT_FILE_PATH + 'dashboard_' + datestamp + '.xlsx'
   return XlsxPopulate.fromFileAsync(config.WMT_DASHBOARD_TEMPLATE_FILE_PATH)
     .then(workbook => {
+      console.log(`in from file async: ${dateFormatter.now().format('mm:ss')}`)
       // Modify the workbook.
       const reductionsSheet = workbook.sheet('reductions data')
       const capacitySheet = workbook.sheet('capacity data')
@@ -30,17 +31,8 @@ module.exports = function (reductions, capacity, formattedCaseloadData) {
       // reductionsWorkingsSheet.hidden('very')
       // clusterCodesSheet.hidden('very')
       return workbook.outputAsync().then(function (body) {
-        return s3Client.send(new PutObjectCommand({
-          Bucket: config.DASHBOARD_BUCKET,
-          Key: outputFilepathOnWorker,
-          Body: body
-        })).then(function (data) {
-          return outputFilepathOnWorker
-        }).catch(function (error) {
-          log.error('An error occurred while writing the dashboard to', outputFilepathOnWorker)
-          log.error(error)
-          throw (error)
-        })
+        console.log(`in output async: ${dateFormatter.now().format('mm:ss')}`)
+        return uploadDashboard(body, outputFilepathOnWorker)
       })
     })
     .catch(function (error) {

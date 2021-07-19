@@ -1,3 +1,5 @@
+const production = process.env.NODE_ENV === 'production'
+
 module.exports = {
   LOGGING_PATH: process.env.LOGGING_PATH,
   LOGGING_LEVEL: process.env.LOGGING_LEVEL || 'DEBUG',
@@ -26,5 +28,9 @@ module.exports = {
   // Expected values
   EXPECTED_DIVISIONS_COUNT: process.env.WMT_EXPECTED_DIVISIONS_COUNT || '32',
 
-  DASHBOARD_BUCKET: process.env.WMT_DASHBOARD_BUCKET || 'wmt-worker-dashboard'
+  DASHBOARD_BUCKET: process.env.WMT_DASHBOARD_BUCKET || 'wmt-worker-dashboard',
+  DASHBOARD_REGION: process.env.S3_REGION || 'eu-west-2',
+  S3_ENDPOINT: production ? null : 'http://localhost:4566',
+  DASHBOARD_S3_ACCESS_KEY_ID: process.env.DASHBOARD_S3_ACCESS_KEY_ID || 'foobar',
+  DASHBOARD_S3_SECRET_ACCESS_KEY: process.env.DASHBOARD_S3_SECRET_ACCESS_KEY || 'foobar'
 }

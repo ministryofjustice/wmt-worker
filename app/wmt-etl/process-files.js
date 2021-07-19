@@ -7,11 +7,11 @@ const sanitiseWorksheetColumns = require('./sanitise-worksheet-columns')
 const validateWorkbookFormat = require('./validate-workbook-format')
 const insertToStaging = require('./insert-to-staging')
 const cleanName = require('./clean-name')
-const { getObject } = require('../services/get-s3-object')
+const getEtlFile = require('./get-etl-file')
 
 module.exports = function (extractFiles) {
   return Promise.each(extractFiles, function (extractFile) {
-    return getObject(extractFile.Key, config.S3_BUCKET_NAME).then(function (getObject) {
+    return getEtlFile(extractFile.Key).then(function (getObject) {
       const workbook = XLSX.read(getObject, { type: 'array', cellText: false, cellDates: true })
       console.log(`all keys of workbook: ${Object.keys(workbook.Sheets)}`)
       if (!validateWorkbookFormat(Object.keys(workbook.Sheets))) {

@@ -10,13 +10,12 @@ const submittingAgent = require('../constants/task-submitting-agent')
 const taskStatus = require('../constants/task-status')
 const taskType = require('../constants/task-type')
 const log = require('../services/log')
-const { listObjects } = require('../services/list-s3-objects')
-const config = require('../../etl-config')
+const listEtlFiles = require('./list-etl-files')
 
 module.exports = function () {
   return cleanTables()
     .then(function () {
-      return listObjects(config.S3_BUCKET_NAME).then(function (extractFiles) {
+      return listEtlFiles().then(function (extractFiles) {
       // if (!correctNumberOfFilesExist(extractFiles.length)) {
         //   throw new Error('Not all expected extract files are present')
         // }
