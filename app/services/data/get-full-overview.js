@@ -1,8 +1,6 @@
 const knex = require('../../../knex').appSchema
 
 module.exports = function () {
-  const table = 'app.individual_case_overview'
-
   const selectColumns = [
     'region_name AS regionName',
     'ldu_name AS lduCluster',

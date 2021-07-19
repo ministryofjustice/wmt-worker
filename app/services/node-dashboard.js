@@ -3,13 +3,11 @@ const { PutObjectCommand } = require('@aws-sdk/client-s3')
 const config = require('../../config')
 const log = require('./log')
 const dateFormatter = require('./date-formatter')
-const { s3Client } = require('../wmt-etl/get-s3-client')
-
+const { s3Client } = require('./get-s3-client')
 
 module.exports = function (reductions, capacity, formattedCaseloadData) {
   const datestamp = dateFormatter.now().format('YYYYMMDDHHmmss')
   const outputFilepathOnWorker = config.WMT_DASHBOARD_OUTPUT_FILE_PATH + 'dashboard_' + datestamp + '.xlsx'
-  const outputFilepathOnWeb = config.WMT_WEB_DASHBOARD_OUTPUT_FILE_PATH + 'dashboard_' + datestamp + '.xlsx'
   return XlsxPopulate.fromFileAsync(config.WMT_DASHBOARD_TEMPLATE_FILE_PATH)
     .then(workbook => {
       // Modify the workbook.
@@ -31,18 +29,18 @@ module.exports = function (reductions, capacity, formattedCaseloadData) {
       // reductionsButtonsSheet.hidden('very')
       // reductionsWorkingsSheet.hidden('very')
       // clusterCodesSheet.hidden('very')
-      return workbook.outputAsync().then(function(body) {
-          return s3Client.send(new PutObjectCommand( {
-            Bucket: config.DASHBOARD_BUCKET,
-            Key: outputFilepathOnWorker,
-            Body: body
-          })).then(function(data) {
-            return outputFilepathOnWorker
-          }).catch(function(error) {
-            log.error('An error occurred while writing the dashboard to', outputFilepathOnWorker)
-            log.error(error)
-            throw (error)
-          })
+      return workbook.outputAsync().then(function (body) {
+        return s3Client.send(new PutObjectCommand({
+          Bucket: config.DASHBOARD_BUCKET,
+          Key: outputFilepathOnWorker,
+          Body: body
+        })).then(function (data) {
+          return outputFilepathOnWorker
+        }).catch(function (error) {
+          log.error('An error occurred while writing the dashboard to', outputFilepathOnWorker)
+          log.error(error)
+          throw (error)
+        })
       })
     })
     .catch(function (error) {

@@ -1,7 +1,6 @@
 const { GetObjectCommand } = require('@aws-sdk/client-s3')
 
 const { s3Client } = require('./get-s3-client') // Helper function that creates Amazon S3 service client module.
-const config = require('../../etl-config')
 
 const streamToString = (stream) =>
   new Promise((resolve, reject) => {
@@ -11,9 +10,9 @@ const streamToString = (stream) =>
     stream.on('end', () => resolve(Buffer.concat(chunks)))
   })
 
-const getObject = function (key) {
+const getObject = function (key, bucketName) {
   return s3Client.send(new GetObjectCommand({
-    Bucket: config.S3_BUCKET_NAME,
+    Bucket: bucketName,
     Key: key
   }))
     .then(function (data) {
