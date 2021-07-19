@@ -2,7 +2,6 @@ const knex = require('../../../knex').appSchema
 
 module.exports = function () {
   const table = 'app.individual_case_overview'
-  let orderBy = 'lduCluster, teamName'
 
   const selectColumns = [
     'region_name AS regionName',
@@ -18,12 +17,12 @@ module.exports = function () {
     'grade_code AS gradeCode'
   ]
 
-  orderBy = 'regionName,' + orderBy
-
-  return knex.raw(
-    'SELECT ' + selectColumns.join(', ') +
-        ' FROM ' + table + ' ' +
-        ' ORDER BY ' + orderBy)
+  return knex('individual_case_overview')
+    .withSchema('app')
+    .select(selectColumns)
+    .orderBy('region_name')
+    .orderBy('ldu_name')
+    .orderBy('team_name')  
     .then(function (results) {
       return results
     })
