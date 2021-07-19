@@ -12,4 +12,5 @@ export PAGER=
 
 aws --endpoint-url=http://localhost:4566 s3api create-bucket --bucket wmt-worker
 aws --endpoint-url=http://localhost:4566 s3api put-object --bucket wmt-worker --key extract/etl-example.xlsx --body $excelPath/etl-example.xlsx
+aws --endpoint-url=http://localhost:4566 s3api create-bucket --bucket wmt-worker-dashboard
 echo "S3 created bucket"

@@ -22,7 +22,7 @@ module.exports = function () {
     .select(selectColumns)
     .orderBy('region_name')
     .orderBy('ldu_name')
-    .orderBy('team_name')  
+    .orderBy('team_name')
     .then(function (results) {
       return results
     })

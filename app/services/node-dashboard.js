@@ -1,7 +1,10 @@
 const XlsxPopulate = require('xlsx-populate')
+const { PutObjectCommand } = require('@aws-sdk/client-s3')
 const config = require('../../config')
 const log = require('./log')
 const dateFormatter = require('./date-formatter')
+const { s3Client } = require('../wmt-etl/get-s3-client')
+
 
 module.exports = function (reductions, capacity, formattedCaseloadData) {
   const datestamp = dateFormatter.now().format('YYYYMMDDHHmmss')
@@ -28,16 +31,19 @@ module.exports = function (reductions, capacity, formattedCaseloadData) {
       // reductionsButtonsSheet.hidden('very')
       // reductionsWorkingsSheet.hidden('very')
       // clusterCodesSheet.hidden('very')
-
-      return workbook.toFileAsync(outputFilepathOnWorker)
-        .then(function () {
-          return outputFilepathOnWeb
-        })
-        .catch(function (error) {
-          log.error('An error occurred while writing the dashboard to', outputFilepathOnWorker)
-          log.error(error)
-          throw (error)
-        })
+      return workbook.outputAsync().then(function(body) {
+          return s3Client.send(new PutObjectCommand( {
+            Bucket: config.DASHBOARD_BUCKET,
+            Key: outputFilepathOnWorker,
+            Body: body
+          })).then(function(data) {
+            return outputFilepathOnWorker
+          }).catch(function(error) {
+            log.error('An error occurred while writing the dashboard to', outputFilepathOnWorker)
+            log.error(error)
+            throw (error)
+          })
+      })
     })
     .catch(function (error) {
       log.error('An error occurred while reading the dashboard template')

@@ -1,7 +1,6 @@
 const knex = require('../../../knex').appSchema
 
 module.exports = function () {
-
   const selectList = [
     'name',
     'link_id AS linkId',

@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "node --max-old-space-size=5120 start.js",
-    "integration-test": "nyc mocha --recursive test/integration/ --timeout 10000 --exit --reporter mocha-simple-html-reporter --reporter-options output=test_results/integration-test-reports.html",
+    "integration-test": "nyc mocha --recursive test/integration/ --timeout 100000 --exit --reporter mocha-simple-html-reporter --reporter-options output=test_results/integration-test-reports.html",
     "test": "npm run lint && mocha --recursive test/unit/ --exit --reporter mocha-simple-html-reporter --reporter-options output=test_results/unit-test-reports.html",
     "create-views": "knex seed:run --env views",
     "seed-dev": "knex seed:run --env dev",
