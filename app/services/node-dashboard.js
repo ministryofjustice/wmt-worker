@@ -13,7 +13,7 @@ module.exports = function (reductions, capacity, formattedCaseloadData) {
       const reductionsSheet = workbook.sheet('reductions data')
       const capacitySheet = workbook.sheet('capacity data')
       const caseloadSheet = workbook.sheet('caseload data')
-      
+
       populateSheet(reductions, reductionsSheet)
       populateSheet(formattedCaseloadData, caseloadSheet)
       populateSheet(capacity, capacitySheet)
