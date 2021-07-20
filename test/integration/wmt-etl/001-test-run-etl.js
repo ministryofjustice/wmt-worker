@@ -15,9 +15,6 @@ describe('wmt-etl/run-etl', function () {
   })
 
   it('should import the extract file(s) into the staging schema', function () {
-    process.env.AWS_ACCESS_KEY_ID = 'foobar'
-    process.env.AWS_SECRET_ACCESS_KEY = 'foobar'
-
     return runEtl()
       .then(function (result) {
         return Promise.each(config.VALID_SHEET_NAMES, function (sheetName) {
