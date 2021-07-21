@@ -166,7 +166,9 @@ workflows:
       - hmpps/deploy_env:
           name: deploy_preprod
           env: "preprod"
-          context: hmpps-common-vars
+          context: 
+            - hmpps-common-vars
+            - hmpps-workload-preprod
           requires:
             - request-preprod-approval
 
