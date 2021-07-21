@@ -159,6 +159,16 @@ workflows:
             - unit_test
             - integration_test
             - build_docker
+      - request-preprod-approval:
+          type: approval
+          requires:
+            - deploy_dev
+      - hmpps/deploy_env:
+          name: deploy_preprod
+          env: "preprod"
+          context: hmpps-common-vars
+          requires:
+            - request-preprod-approval
 
   security:
     triggers:
