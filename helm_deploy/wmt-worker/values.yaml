@@ -40,7 +40,7 @@ generic-service:
   namespace_secrets:
     hmpps-workload:
       APPINSIGHTS_INSTRUMENTATIONKEY: "APPINSIGHTS_INSTRUMENTATIONKEY"
-    rds-instance-output:
+    rds-live-instance-output:
       WMT_DB_USERNAME: "database_username"
       WMT_DB_PASSWORD: "database_password"
       WMT_DB_SERVER: "rds_instance_address"
