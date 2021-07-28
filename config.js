@@ -18,7 +18,7 @@ module.exports = {
 
   // WMT Worker
   IP_ADDRESSES: process.env.WMT_WORKER_APP_IP_ADDRESSES || 'http://localhost:3000',
-
+  PORT: process.env.PORT || 3000,
   // Dashboard
   WMT_DASHBOARD_TEMPLATE_FILE_PATH: process.env.WMT_DASHBOARD_TEMPLATE_FILE_PATH || './app/templates/dashboard_template.xlsx',
   WMT_DASHBOARD_OUTPUT_FILE_PATH: process.env.WMT_DASHBOARD_OUTPUT_FILE_PATH || 'generated-dashboards/',

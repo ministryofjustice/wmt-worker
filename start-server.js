@@ -1,2 +1,4 @@
 const server = require('./app/create-server')()
-server.listen(3000)
+const { PORT } = require('./config')
+
+server.listen(PORT)
