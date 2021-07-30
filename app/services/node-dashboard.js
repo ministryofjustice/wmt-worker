@@ -5,7 +5,7 @@ const dateFormatter = require('./date-formatter')
 const uploadDashboard = require('./dashboard/upload-dashboard')
 
 module.exports = function (reductions, capacity, formattedCaseloadData) {
-  const datestamp = dateFormatter.now().format('YYYYMMDDHHmmss')
+  const datestamp = dateFormatter.formatDate(new Date(), 'YYYYMMDDHHmmss')
   const fileLocation = config.WMT_DASHBOARD_OUTPUT_FILE_PATH + 'dashboard_' + datestamp + '.xlsx'
   return XlsxPopulate.fromFileAsync(config.WMT_DASHBOARD_TEMPLATE_FILE_PATH)
     .then(workbook => {
