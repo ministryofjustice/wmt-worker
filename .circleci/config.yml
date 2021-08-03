@@ -92,7 +92,7 @@ jobs:
         entrypoint: ["/bin/sh", "-c" , "sleep 10 && java -javaagent:/app/agent.jar -jar /app/app.jar"]
       - image: localstack/localstack:0.12.15
         environment:
-          - SERVICES=s3
+          - SERVICES=s3,sqs
           - DEBUG=${DEBUG- }
           - DATA_DIR=/tmp/localstack/data
           - DOCKER_HOST=unix:///var/run/docker.sock
