@@ -1,6 +1,6 @@
 const config = require('../../etl-config')
 
-const getS3Client = require('../services/s3/get-s3-client')
+const getS3Client = require('../services/aws/s3/get-s3-client')
 
 const s3Client = getS3Client({
   region: config.S3_REGION,
