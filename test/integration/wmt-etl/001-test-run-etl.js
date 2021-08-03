@@ -5,7 +5,7 @@ const config = require('../../../etl-config')
 const getExtractFileData = require('../../helpers/etl/get-extract-file-data')
 const pollSQS = require('../../../app/wmt-etl/poll-sqs')
 
-const getSqsClient = require('../../../app/services/sqs/get-sqs-client')
+const getSqsClient = require('../../../app/services/aws/sqs/get-sqs-client')
 
 const sqsClient = getSqsClient({ region: config.SQS.REGION, accessKeyId: config.SQS.ACCESS_KEY_ID, secretAccessKey: config.SQS.SECRET_ACCESS_KEY, endpoint: config.SQS.ENDPOINT })
 

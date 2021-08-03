@@ -1,7 +1,7 @@
 const { SQS } = require('../../etl-config')
 const log = require('../services/log')
 
-const getSqsClient = require('../services/sqs/get-sqs-client')
+const getSqsClient = require('../services/aws/sqs/get-sqs-client')
 const runEtl = require('./run-etl')
 
 const sqsClient = getSqsClient({ region: SQS.REGION, accessKeyId: SQS.ACCESS_KEY_ID, secretAccessKey: SQS.SECRET_ACCESS_KEY, endpoint: SQS.ENDPOINT })
