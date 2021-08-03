@@ -1,3 +1,5 @@
+const { ReceiveMessageCommand, DeleteMessageCommand } = require('@aws-sdk/client-sqs')
+
 const { SQS } = require('../../etl-config')
 const log = require('../services/log')
 
@@ -21,7 +23,7 @@ const params = {
 module.exports = function () {
   log.info('polling')
 
-  return sqsClient.receiveMessage(params).then(function (data) {
+  return sqsClient.send(new ReceiveMessageCommand(params)).then(function (data) {
     log.info('Message received OK')
     if (data.Messages) {
       log.info('Message processed OK')
@@ -29,13 +31,16 @@ module.exports = function () {
         QueueUrl: queueURL,
         ReceiptHandle: data.Messages[0].ReceiptHandle
       }
-      return sqsClient.deleteMessage(deleteParams).then(function (data) {
-        log.info('Message Deleted', data)
-        log.info('File changed: $JSON.parse(data.Messages[0].Body).Records[0].s3.object.key')
+      return sqsClient.send(new DeleteMessageCommand(deleteParams)).then(function (deleted) {
+        log.info('Message Deleted', deleted)
+        log.info(`File changed: ${JSON.parse(data.Messages[0].Body).Records[0].s3.object.key}`)
         return runEtl()
       }).catch(function (err) {
         log.error('Delete Error', err)
       })
+    } else {
+      log.info(`Unable to process ${JSON.stringify(data)}`)
+      return { data: data.$metadata }
     }
   }).catch(function (err) {
     log.error('Receive Error', err)

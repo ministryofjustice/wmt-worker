@@ -1,4 +1,5 @@
 const expect = require('chai').expect
+const { SendMessageCommand } = require('@aws-sdk/client-sqs')
 
 const knex = require('../../../knex').stagingSchema
 const config = require('../../../etl-config')
@@ -13,20 +14,27 @@ let expectedInputData
 
 const Promise = require('bluebird').Promise
 
+function checkResult (result) {
+  if (result.data && result.data.httpStatusCode) {
+    // for some reason there are hundreds of these strange messages!
+    return pollSQS().then(function (retryResult) {
+      return checkResult(retryResult)
+    })
+  }
+}
 describe('etl', function () {
-  beforeEach(function (done) {
+  beforeEach(function () {
     expectedInputData = getExtractFileData()
     const params = {
       DelaySeconds: 10,
       MessageBody: '{"Records":[{"eventVersion":"2.1","eventSource":"aws:s3","awsRegion":"eu-west-2","eventTime":"2021-08-03T09:24:50.797Z","eventName":"ObjectCreated:Put","userIdentity":{"principalId":"AWS:AIDA27HJSWAHF6JKCLTJX"},"requestParameters":{"sourceIPAddress":"87.80.101.54"},"responseElements":{"x-amz-request-id":"DFHG9DE905XND6ND","x-amz-id-2":"8juDwrbkv3Og2ON/N/m0hIGCNy6kwJ4FMZsm6fs3UYLX0oraz0LyiaYH0lhDzCtvCNRdzL+9Yu2957kVUdPzUZwFxPchv8qYa+eIbkE5cpA="},"s3":{"s3SchemaVersion":"1.0","configurationId":"wmt-extract-upload-event","bucket":{"name":"some-bucket-name","ownerIdentity":{"principalId":"AMVAOCT0NMDFM"},"arn":"arn:aws:s3:::some-arn"},"object":{"key":"extract/WMP_PS.xlsx","size":42644,"eTag":"ba5335b6c410914b6747e60723eff8ec","versionId":"7rcvzt8zcOjkI6w5r3EereHtYpU3ae7M","sequencer":"0061090B62EAEBB5D5"}}}]}',
       QueueUrl: config.SQS.QUEUE_URL
     }
-    sqsClient.sendMessage(params).then(function () {
-      pollSQS().then(function () {
-        done()
+
+    return sqsClient.send(new SendMessageCommand(params)).then(function () {
+      return pollSQS().then(function (result) {
+        return checkResult(result)
       })
-    }).catch(function (err) {
-      console.error(err)
     })
   })
 

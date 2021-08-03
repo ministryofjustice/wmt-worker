@@ -8,7 +8,6 @@ const Promise = require('bluebird').Promise
 
 describe('wmt-etl/test-clean-tables', function () {
   it('should delete all data from all staging schema tables extract file(s) into the staging schema', function () {
-    console.log('about to clean tables')
     return cleanTables()
       .then(function () {
         return Promise.each(config.VALID_SHEET_NAMES, function (sheetName) {
