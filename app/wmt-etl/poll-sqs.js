@@ -21,27 +21,20 @@ const params = {
 }
 
 module.exports = function () {
-  log.info('polling')
-
   return sqsClient.send(new ReceiveMessageCommand(params)).then(function (data) {
-    log.info('Message received OK')
     if (data.Messages) {
-      log.info('Message processed OK')
       const deleteParams = {
         QueueUrl: queueURL,
         ReceiptHandle: data.Messages[0].ReceiptHandle
       }
-      return sqsClient.send(new DeleteMessageCommand(deleteParams)).then(function (deleted) {
-        log.info('Message Deleted', deleted)
+      return sqsClient.send(new DeleteMessageCommand(deleteParams)).then(function () {
         log.info(`File changed: ${JSON.parse(data.Messages[0].Body).Records[0].s3.object.key}`)
         return runEtl()
       }).catch(function (err) {
         log.error('Delete Error', err)
       })
-    } else {
-      log.info(`Unable to process ${JSON.stringify(data)}`)
-      return { data: data.$metadata }
     }
+    return 'No messages to process'
   }).catch(function (err) {
     log.error('Receive Error', err)
   })

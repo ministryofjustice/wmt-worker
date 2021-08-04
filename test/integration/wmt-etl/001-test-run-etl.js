@@ -14,14 +14,17 @@ let expectedInputData
 
 const Promise = require('bluebird').Promise
 
-function checkResult (result) {
-  if (result.data && result.data.httpStatusCode) {
-    // for some reason there are hundreds of these strange messages!
-    return pollSQS().then(function (retryResult) {
-      return checkResult(retryResult)
-    })
-  }
+function pollAndCheck (result) {
+  // waiting for message to apear on queue after startup
+
+  return pollSQS().then(function (result) {
+    if (result === 'No messages to process') {
+      return pollAndCheck(result)
+    }
+    return 'OK'
+  })
 }
+
 describe('etl', function () {
   beforeEach(function () {
     expectedInputData = getExtractFileData()
@@ -32,9 +35,7 @@ describe('etl', function () {
     }
 
     return sqsClient.send(new SendMessageCommand(params)).then(function () {
-      return pollSQS().then(function (result) {
-        return checkResult(result)
-      })
+      return pollAndCheck()
     })
   })
 
