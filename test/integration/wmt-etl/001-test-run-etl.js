@@ -112,3 +112,53 @@ describe('etl runs when both files have been updated', function () {
     })
   })
 })
+
+describe('etl does not run when time between file updates is too great', function () {
+  beforeEach(function () {
+    expectedInputData = getExtractFileData()
+    // put both files 5 seconds apart
+    // check db
+    // delete both files
+
+    return cleanTables().then(function () {
+      return s3Client.send(new PutObjectCommand({
+        Bucket: config.S3.BUCKET_NAME,
+        Key: 'extract/WMP_PS.xlsx',
+        Body: fs.readFileSync('test/integration/resources/WMP_PS.xlsx')
+      })).then(function () {
+        return new Promise(resolve => setTimeout(resolve, 5000)).then(function () {
+          return s3Client.send(new PutObjectCommand({
+            Bucket: config.S3.BUCKET_NAME,
+            Key: 'extract/WMP_CRC.xlsx',
+            Body: fs.readFileSync('test/integration/resources/WMP_CRC.xlsx')
+          })).then(function () {
+            return pollAndCheck()
+          })
+        }, 5000).then(function () {
+          return 'Timeout complete'
+        })
+      })
+    })
+  })
+
+  it('should not run ETL', function () {
+    return Promise.each(config.VALID_SHEET_NAMES, function (sheetName) {
+      return knex(sheetName).withSchema('staging').column(config.VALID_COLUMNS[sheetName])
+        .then(function (results) {
+          expect(results.length).to.equal(0)
+        })
+    })
+  })
+
+  afterEach(function () {
+    return s3Client.send(new DeleteObjectCommand({
+      Bucket: config.S3.BUCKET_NAME,
+      Key: 'extract/WMP_CRC.xlsx'
+    })).then(function () {
+      return s3Client.send(new DeleteObjectCommand({
+        Bucket: config.S3.BUCKET_NAME,
+        Key: 'extract/WMP_PS.xlsx'
+      }))
+    })
+  })
+})

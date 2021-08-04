@@ -35,7 +35,9 @@ module.exports = function () {
         log.info(`File changed: ${JSON.parse(data.Messages[0].Body).Records[0].s3.object.key}`)
         return listObjects(s3Client, S3.BUCKET_NAME).then(function (extracts) {
           if (extracts.length === 2) {
-            return runEtl()
+            if (Math.abs(new Date(extracts[0].LastModified).getTime() - new Date(extracts[1].LastModified).getTime()) < 5000) {
+              return runEtl()
+            }
           }
           log.info('only one file present')
           return 'Only one file present'
