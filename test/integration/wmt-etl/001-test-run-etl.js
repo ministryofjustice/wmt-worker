@@ -11,10 +11,10 @@ const pollSQS = require('../../../app/wmt-etl/poll-sqs')
 
 const getS3Client = require('../../../app/services/aws/s3/get-s3-client')
 const s3Client = getS3Client({
-  region: config.S3_REGION,
-  accessKeyId: config.ETL_S3_ACCESS_KEY_ID,
-  secretAccessKey: config.ETL_S3_SECRET_ACCESS_KEY,
-  endpoint: config.S3_ENDPOINT
+  region: config.S3.REGION,
+  accessKeyId: config.S3.ACCESS_KEY_ID,
+  secretAccessKey: config.S3.SECRET_ACCESS_KEY,
+  endpoint: config.S3.ENDPOINT
 })
 let expectedInputData
 
@@ -66,12 +66,12 @@ describe('etl runs when both files have been updated', function () {
     // make time difference configurable for testing
     return cleanTables().then(function () {
       return s3Client.send(new PutObjectCommand({
-        Bucket: config.S3_BUCKET_NAME,
+        Bucket: config.S3.BUCKET_NAME,
         Key: 'extract/WMP_PS.xlsx',
         Body: fs.readFileSync('test/integration/resources/WMP_PS.xlsx')
       })).then(function () {
         return s3Client.send(new PutObjectCommand({
-          Bucket: config.S3_BUCKET_NAME,
+          Bucket: config.S3.BUCKET_NAME,
           Key: 'extract/WMP_CRC.xlsx',
           Body: fs.readFileSync('test/integration/resources/WMP_CRC.xlsx')
         })).then(function () {
@@ -93,11 +93,11 @@ describe('etl runs when both files have been updated', function () {
 
   this.afterEach(function () {
     return s3Client.send(new DeleteObjectCommand({
-      Bucket: config.S3_BUCKET_NAME,
+      Bucket: config.S3.BUCKET_NAME,
       Key: 'extract/WMP_CRC.xlsx'
     })).then(function () {
       return s3Client.send(new DeleteObjectCommand({
-        Bucket: config.S3_BUCKET_NAME,
+        Bucket: config.S3.BUCKET_NAME,
         Key: 'extract/WMP_PS.xlsx'
       }))
     })

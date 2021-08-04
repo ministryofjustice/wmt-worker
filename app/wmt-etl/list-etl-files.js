@@ -1,8 +1,8 @@
-const config = require('../../etl-config')
+const { S3 } = require('../../etl-config')
 
 const getS3EtlClient = require('./get-s3-etl-client')
 const listS3Objects = require('../services/aws/s3/list-s3-objects')
 
 module.exports = function () {
-  return listS3Objects(getS3EtlClient, config.S3_BUCKET_NAME)
+  return listS3Objects(getS3EtlClient, S3.BUCKET_NAME)
 }
