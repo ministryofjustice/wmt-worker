@@ -1,12 +1,16 @@
 const { ReceiveMessageCommand, DeleteMessageCommand } = require('@aws-sdk/client-sqs')
 
-const { SQS } = require('../../etl-config')
+const { SQS, S3 } = require('../../etl-config')
 const log = require('../services/log')
 
 const getSqsClient = require('../services/aws/sqs/get-sqs-client')
+const getS3Client = require('../services/aws/s3/get-s3-client')
+const listObjects = require('../services/aws/s3/list-s3-objects')
+
 const runEtl = require('./run-etl')
 
 const sqsClient = getSqsClient({ region: SQS.REGION, accessKeyId: SQS.ACCESS_KEY_ID, secretAccessKey: SQS.SECRET_ACCESS_KEY, endpoint: SQS.ENDPOINT })
+const s3Client = getS3Client({ region: S3.REGION, accessKeyId: S3.ACCESS_KEY_ID, secretAccessKey: S3.SECRET_ACCESS_KEY, endpoint: S3.ENDPOINT })
 
 const queueURL = SQS.QUEUE_URL
 
@@ -29,7 +33,13 @@ module.exports = function () {
       }
       return sqsClient.send(new DeleteMessageCommand(deleteParams)).then(function () {
         log.info(`File changed: ${JSON.parse(data.Messages[0].Body).Records[0].s3.object.key}`)
-        return runEtl()
+        return listObjects(s3Client, S3.BUCKET_NAME).then(function (extracts) {
+          if (extracts.length === 2) {
+            return runEtl()
+          }
+          log.info('only one file present')
+          return 'Only one file present'
+        })
       }).catch(function (err) {
         log.error('Delete Error', err)
       })
