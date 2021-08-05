@@ -15,7 +15,7 @@ const asyncWorkerCron = config.ASYNC_WORKER_CRON
 const asyncWorkerJob = new CronJob({
   cronTime: asyncWorkerCron,
   onTick: function () {
-    runProcessTasks()
+    processTasks()
   },
   onComplete: function () {
     log.info('WMT worker completed running task')
@@ -26,11 +26,5 @@ const asyncWorkerJob = new CronJob({
 log.info('Started WMT worker')
 asyncWorkerJob.start()
 extractListener.start()
-
-function runProcessTasks () {
-  return processTasks().then(function () {
-    log.info('WMT worker completed running task')
-  })
-}
 
 childProcess.fork('start-server.js')
