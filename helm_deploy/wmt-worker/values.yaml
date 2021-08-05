@@ -56,7 +56,7 @@ generic-service:
     hmpps-workload-s3-extract-sqs-output:
       ETL_SQS_ACCESS_KEY_ID: "access_key_id"
       ETL_SQS_SECRET_ACCESS_KEY: "secret_access_key"
-      ETL_SQS_QUEUE_NAME: "sqs_url"
+      ETL_SQS_QUEUE_URL: "sqs_url"
 
 
 generic-prometheus-alerts:
