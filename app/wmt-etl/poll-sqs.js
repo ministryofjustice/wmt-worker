@@ -1,9 +1,10 @@
-const { ReceiveMessageCommand, DeleteMessageCommand } = require('@aws-sdk/client-sqs')
+const { ReceiveMessageCommand } = require('@aws-sdk/client-sqs')
 
 const { SQS, S3, FILES_CHANGED_TIME_WINDOW } = require('../../etl-config')
 const log = require('../services/log')
 
 const getSqsClient = require('../services/aws/sqs/get-sqs-client')
+const deleteSqsMessage = require('../services/aws/sqs/delete-sqs-message')
 const getS3Client = require('../services/aws/s3/get-s3-client')
 const listObjects = require('../services/aws/s3/list-s3-objects')
 
@@ -27,11 +28,7 @@ const params = {
 module.exports = function () {
   return sqsClient.send(new ReceiveMessageCommand(params)).then(function (data) {
     if (data.Messages) {
-      const deleteParams = {
-        QueueUrl: queueURL,
-        ReceiptHandle: data.Messages[0].ReceiptHandle
-      }
-      return sqsClient.send(new DeleteMessageCommand(deleteParams)).then(function () {
+      return deleteSqsMessage(sqsClient, queueURL, data.Messages[0].ReceiptHandle).then(function () {
         return listObjects(s3Client, S3.BUCKET_NAME).then(function (extracts) {
           if (extracts.length === 2) {
             if (Math.abs(new Date(extracts[0].LastModified).getTime() - new Date(extracts[1].LastModified).getTime()) < FILES_CHANGED_TIME_WINDOW) {
@@ -42,11 +39,11 @@ module.exports = function () {
           return 'Only one file present'
         })
       }).catch(function (err) {
-        log.error('Delete Error', err)
+        log.error('Error deleintg message from queue', err)
       })
     }
     return 'No messages to process'
   }).catch(function (err) {
-    log.error('Receive Error', err)
+    log.error('Error reading message from queue', err)
   })
 }
