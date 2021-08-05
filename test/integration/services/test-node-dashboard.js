@@ -1,6 +1,6 @@
 const nodeDashboard = require('../../../app/services/node-dashboard')
 const getDashboardClient = require('../../../app/services/dashboard/get-dashboard-s3-client')
-const listS3Objects = require('../../../app/services/s3/list-s3-objects')
+const listS3Objects = require('../../../app/services/aws/s3/list-s3-objects')
 
 const config = require('../../../config')
 

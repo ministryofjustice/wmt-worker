@@ -3,7 +3,7 @@ const XLSX = require('xlsx')
 const config = require('../../../etl-config')
 
 module.exports = function () {
-  const extractFiles = glob.sync(config.IMPORT_FILE_DIR + '*.xlsx', {})
+  const extractFiles = glob.sync('./test/integration/resources/' + '*.xlsx', {})
   const workbooks = []
   const worksheets = {}
 
@@ -20,7 +20,7 @@ module.exports = function () {
 
   config.VALID_SHEET_NAMES.forEach(function (sheet) {
     const worksheet1 = workbooks[0][sheet]
-    // const worksheet2 = workbooks[1].Sheets[sheet]
+    const worksheet2 = workbooks[1][sheet]
     const worksheet1DataAsJSON = XLSX.utils.sheet_to_json(worksheet1, { raw: false, defval: null, dateNF: 'yyyy-mm-dd hh:mm:ss' })
       .map(entry => Object.entries(entry).reduce(
 
@@ -29,8 +29,15 @@ module.exports = function () {
           return acc
         }, {}
       ))
-    // const worksheet2DataAsJSON = XLSX.utils.sheet_to_json(worksheet2, { raw: false, defval: null, dateNF: 'yyyy-mm-dd hh:mm:ss' })
-    worksheets[sheet] = worksheet1DataAsJSON// .concat(worksheet2DataAsJSON)
+    const worksheet2DataAsJSON = XLSX.utils.sheet_to_json(worksheet2, { raw: false, defval: null, dateNF: 'yyyy-mm-dd hh:mm:ss' })
+      .map(entry => Object.entries(entry).reduce(
+
+        function (acc, [key, val]) {
+          acc[key.toLowerCase().replace('-', '').replace('\n', '')] = val
+          return acc
+        }, {}
+      ))
+    worksheets[sheet] = worksheet1DataAsJSON.concat(worksheet2DataAsJSON)
   })
   return worksheets
 }

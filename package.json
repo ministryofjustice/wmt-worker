@@ -12,7 +12,7 @@
   "scripts": {
     "prepare": "husky install",
     "start": "node --max-old-space-size=5120 start.js",
-    "integration-test": "nyc mocha --recursive test/integration/ --timeout 100000 --exit --reporter mocha-simple-html-reporter --reporter-options output=test_results/integration-test-reports.html",
+    "integration-test": "nyc mocha --recursive test/integration/ --timeout 60000 --exit --reporter mocha-simple-html-reporter --reporter-options output=test_results/integration-test-reports.html",
     "test": "npm run lint && mocha --recursive test/unit/ --exit --reporter mocha-simple-html-reporter --reporter-options output=test_results/unit-test-reports.html",
     "create-views": "knex seed:run --env views",
     "seed-dev": "knex seed:run --env dev",
@@ -48,7 +48,6 @@
     "chai": "^4.3.4",
     "husky": "^7.0.0",
     "mocha": "^8.4.0",
-    "mocha-junit-reporter": "^2.0.0",
     "mocha-simple-html-reporter": "^2.0.0",
     "nodemon": "^2.0.7",
     "nyc": "^15.1.0",
@@ -59,6 +58,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.19.0",
+    "@aws-sdk/client-sqs": "^3.24.0",
     "bluebird": "^3.7.2",
     "bunyan": "^1.8.15",
     "bunyan-prettystream": "^0.1.3",

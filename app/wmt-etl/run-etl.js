@@ -1,6 +1,5 @@
 
 const cleanTables = require('./clean-tables')
-// const correctNumberOfFilesExist = require('./correct-number-of-files-exist')
 const processFiles = require('./process-files')
 const createTasks = require('../services/data/create-tasks')
 const Task = require('../services/domain/task')
@@ -14,9 +13,6 @@ module.exports = function () {
   return cleanTables()
     .then(function () {
       return listEtlFiles().then(function (extractFiles) {
-      // if (!correctNumberOfFilesExist(extractFiles.length)) {
-        //   throw new Error('Not all expected extract files are present')
-        // }
         return processFiles(extractFiles)
           .then(function () {
             const processImportTask = new Task(
