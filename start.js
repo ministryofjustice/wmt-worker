@@ -1,3 +1,8 @@
+const { initialiseAppInsights, buildAppInsightsClient } = require('./app/services/azure-appinsights')
+
+initialiseAppInsights()
+buildAppInsightsClient()
+
 const config = require('./config')
 const log = require('./app/services/log')
 const CronJob = require('cron').CronJob
