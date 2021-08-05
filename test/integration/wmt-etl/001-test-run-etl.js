@@ -1,13 +1,15 @@
 const expect = require('chai').expect
 const fs = require('fs')
 const { PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3')
-
+const proxyquire = require('proxyquire')
 const cleanTables = require('../../../app/wmt-etl/clean-tables')
 
 const knex = require('../../../knex').stagingSchema
 const config = require('../../../etl-config')
+
+const FILES_CHANGED_TIME_WINDOW = 1000
 const getExtractFileData = require('../../helpers/etl/get-extract-file-data')
-const pollSQS = require('../../../app/wmt-etl/poll-sqs')
+const pollSQS = proxyquire('../../../app/wmt-etl/poll-sqs', { '../../etl-config': { FILES_CHANGED_TIME_WINDOW } })
 
 const getS3Client = require('../../../app/services/aws/s3/get-s3-client')
 const s3Client = getS3Client({
@@ -21,7 +23,7 @@ let expectedInputData
 const Promise = require('bluebird').Promise
 
 function pollAndCheck (result) {
-  // waiting for message to apear on queue after startup
+  // waiting for message to apear on queue
 
   return pollSQS().then(function (result) {
     if (result === 'No messages to process') {
@@ -34,10 +36,6 @@ function pollAndCheck (result) {
 describe('etl does not run when only one file has been updated', function () {
   beforeEach(function () {
     expectedInputData = getExtractFileData()
-    // put a file
-    // check db
-    // delete a file
-    // make time difference configurable for testing
     return cleanTables().then(function () {
       return s3Client.send(new PutObjectCommand({
         Bucket: config.S3.BUCKET_NAME,
@@ -116,9 +114,6 @@ describe('etl runs when both files have been updated', function () {
 describe('etl does not run when time between file updates is too great', function () {
   beforeEach(function () {
     expectedInputData = getExtractFileData()
-    // put both files 5 seconds apart
-    // check db
-    // delete both files
 
     return cleanTables().then(function () {
       return s3Client.send(new PutObjectCommand({
@@ -126,7 +121,7 @@ describe('etl does not run when time between file updates is too great', functio
         Key: 'extract/WMP_PS.xlsx',
         Body: fs.readFileSync('test/integration/resources/WMP_PS.xlsx')
       })).then(function () {
-        return new Promise(resolve => setTimeout(resolve, 5000)).then(function () {
+        return new Promise(resolve => setTimeout(resolve, FILES_CHANGED_TIME_WINDOW + 1)).then(function () {
           return s3Client.send(new PutObjectCommand({
             Bucket: config.S3.BUCKET_NAME,
             Key: 'extract/WMP_CRC.xlsx',
@@ -134,7 +129,7 @@ describe('etl does not run when time between file updates is too great', functio
           })).then(function () {
             return pollAndCheck()
           })
-        }, 5000).then(function () {
+        }).then(function () {
           return 'Timeout complete'
         })
       })

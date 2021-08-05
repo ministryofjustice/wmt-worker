@@ -7,6 +7,8 @@ module.exports = {
   ARCHIVE_FILE_NAME: process.env.WMT_ARCHIVE_FILE_NAME || 'delius-extract-',
   EXPECTED_FILE_COUNT: process.env.WMT_EXPECTED_FILE_COUNT || '2',
 
+  FILES_CHANGED_TIME_WINDOW: 60000,
+
   S3: {
     BUCKET_NAME: process.env.ETL_S3_BUCKET_NAME || 'wmt-worker',
     REGION: process.env.S3_REGION || 'eu-west-2',

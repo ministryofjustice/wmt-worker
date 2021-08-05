@@ -1,6 +1,6 @@
 const { ReceiveMessageCommand, DeleteMessageCommand } = require('@aws-sdk/client-sqs')
 
-const { SQS, S3 } = require('../../etl-config')
+const { SQS, S3, FILES_CHANGED_TIME_WINDOW } = require('../../etl-config')
 const log = require('../services/log')
 
 const getSqsClient = require('../services/aws/sqs/get-sqs-client')
@@ -32,10 +32,9 @@ module.exports = function () {
         ReceiptHandle: data.Messages[0].ReceiptHandle
       }
       return sqsClient.send(new DeleteMessageCommand(deleteParams)).then(function () {
-        log.info(`File changed: ${JSON.parse(data.Messages[0].Body).Records[0].s3.object.key}`)
         return listObjects(s3Client, S3.BUCKET_NAME).then(function (extracts) {
           if (extracts.length === 2) {
-            if (Math.abs(new Date(extracts[0].LastModified).getTime() - new Date(extracts[1].LastModified).getTime()) < 5000) {
+            if (Math.abs(new Date(extracts[0].LastModified).getTime() - new Date(extracts[1].LastModified).getTime()) < FILES_CHANGED_TIME_WINDOW) {
               return runEtl()
             }
           }
