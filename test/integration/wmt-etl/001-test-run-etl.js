@@ -40,15 +40,19 @@ function deleteFromS3 (file) {
   }))
 }
 
+function putToS3 (file) {
+  return s3Client.send(new PutObjectCommand({
+    Bucket: config.S3.BUCKET_NAME,
+    Key: `extract/${file}`,
+    Body: fs.readFileSync(`test/integration/resources/${file}`)
+  }))
+}
+
 describe('etl does not run when only one file has been updated', function () {
   beforeEach(function () {
     expectedInputData = getExtractFileData()
     return cleanTables().then(function () {
-      return s3Client.send(new PutObjectCommand({
-        Bucket: config.S3.BUCKET_NAME,
-        Key: 'extract/WMP_PS.xlsx',
-        Body: fs.readFileSync('test/integration/resources/WMP_PS.xlsx')
-      })).then(function () {
+      return putToS3('WMP_PS.xlsx').then(function () {
         return pollAndCheck()
       })
     })
@@ -72,16 +76,8 @@ describe('etl runs when both files have been updated', function () {
   beforeEach(function () {
     expectedInputData = getExtractFileData()
     return cleanTables().then(function () {
-      return s3Client.send(new PutObjectCommand({
-        Bucket: config.S3.BUCKET_NAME,
-        Key: 'extract/WMP_PS.xlsx',
-        Body: fs.readFileSync('test/integration/resources/WMP_PS.xlsx')
-      })).then(function () {
-        return s3Client.send(new PutObjectCommand({
-          Bucket: config.S3.BUCKET_NAME,
-          Key: 'extract/WMP_CRC.xlsx',
-          Body: fs.readFileSync('test/integration/resources/WMP_CRC.xlsx')
-        })).then(function () {
+      return putToS3('WMP_PS.xlsx').then(function () {
+        return putToS3('WMP_CRC.xlsx').then(function () {
           return pollAndCheck()
         })
       })
@@ -110,17 +106,9 @@ describe('etl does not run when time between file updates is too great', functio
     expectedInputData = getExtractFileData()
 
     return cleanTables().then(function () {
-      return s3Client.send(new PutObjectCommand({
-        Bucket: config.S3.BUCKET_NAME,
-        Key: 'extract/WMP_PS.xlsx',
-        Body: fs.readFileSync('test/integration/resources/WMP_PS.xlsx')
-      })).then(function () {
+      return putToS3('WMP_PS.xlsx').then(function () {
         return new Promise(resolve => setTimeout(resolve, FILES_CHANGED_TIME_WINDOW + 1)).then(function () {
-          return s3Client.send(new PutObjectCommand({
-            Bucket: config.S3.BUCKET_NAME,
-            Key: 'extract/WMP_CRC.xlsx',
-            Body: fs.readFileSync('test/integration/resources/WMP_CRC.xlsx')
-          })).then(function () {
+          return putToS3('WMP_CRC.xlsx').then(function () {
             return pollAndCheck()
           })
         }).then(function () {
