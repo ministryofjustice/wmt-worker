@@ -1,7 +1,4 @@
 #!/usr/bin/env bash
-echo 'if you want to run this outside docker do ./setup-s3.sh $(PWD)'
-
-excelPath=${1:-/docker-entrypoint-initaws.d}
 
 set -e
 export TERM=ansi
@@ -20,4 +17,4 @@ aws --endpoint-url=http://localhost:4566 s3api create-bucket --bucket wmt-worker
 echo "S3 created bucket"
 
 # to put a file using command line
-# aws --endpoint-url=http://localhost:4566 s3api put-object --bucket wmt-worker --key extract/WMP_CRC.xlsx --body $excelPath/WMP_CRC.xlsx
+# aws --endpoint-url=http://localhost:4566 s3api put-object --bucket wmt-worker --key extract/WMP_CRC.xlsx --body test/integration/resources/WMP_CRC.xlsx

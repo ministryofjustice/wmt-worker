@@ -108,7 +108,7 @@ jobs:
           command: curl -4 --connect-timeout 30 --retry-connrefused --retry 20 --retry-delay 5 http://localhost:4566
       - run:
           name: Set up s3 bucket
-          command: test/integration/resources/setup-s3.sh test/integration/resources
+          command: test/integration/resources/setup-s3.sh
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
