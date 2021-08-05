@@ -33,6 +33,13 @@ function pollAndCheck (result) {
   })
 }
 
+function deleteFromS3 (file) {
+  return s3Client.send(new DeleteObjectCommand({
+    Bucket: config.S3.BUCKET_NAME,
+    Key: file
+  }))
+}
+
 describe('etl does not run when only one file has been updated', function () {
   beforeEach(function () {
     expectedInputData = getExtractFileData()
@@ -57,20 +64,13 @@ describe('etl does not run when only one file has been updated', function () {
   })
 
   this.afterEach(function () {
-    return s3Client.send(new DeleteObjectCommand({
-      Bucket: config.S3.BUCKET_NAME,
-      Key: 'extract/WMP_PS.xlsx'
-    }))
+    return deleteFromS3('extract/WMP_PS.xlsx')
   })
 })
 
 describe('etl runs when both files have been updated', function () {
   beforeEach(function () {
     expectedInputData = getExtractFileData()
-    // put both files
-    // check db
-    // delete both files
-    // make time difference configurable for testing
     return cleanTables().then(function () {
       return s3Client.send(new PutObjectCommand({
         Bucket: config.S3.BUCKET_NAME,
@@ -99,14 +99,8 @@ describe('etl runs when both files have been updated', function () {
   })
 
   afterEach(function () {
-    return s3Client.send(new DeleteObjectCommand({
-      Bucket: config.S3.BUCKET_NAME,
-      Key: 'extract/WMP_CRC.xlsx'
-    })).then(function () {
-      return s3Client.send(new DeleteObjectCommand({
-        Bucket: config.S3.BUCKET_NAME,
-        Key: 'extract/WMP_PS.xlsx'
-      }))
+    return deleteFromS3('extract/WMP_CRC.xlsx').then(function () {
+      return deleteFromS3('extract/WMP_PS.xlsx')
     })
   })
 })
@@ -146,14 +140,8 @@ describe('etl does not run when time between file updates is too great', functio
   })
 
   afterEach(function () {
-    return s3Client.send(new DeleteObjectCommand({
-      Bucket: config.S3.BUCKET_NAME,
-      Key: 'extract/WMP_CRC.xlsx'
-    })).then(function () {
-      return s3Client.send(new DeleteObjectCommand({
-        Bucket: config.S3.BUCKET_NAME,
-        Key: 'extract/WMP_PS.xlsx'
-      }))
+    return deleteFromS3('extract/WMP_CRC.xlsx').then(function () {
+      return deleteFromS3('extract/WMP_PS.xlsx')
     })
   })
 })
