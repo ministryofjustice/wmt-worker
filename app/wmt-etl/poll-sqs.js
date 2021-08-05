@@ -33,11 +33,11 @@ module.exports = function () {
           if (bothFilesPresent(extracts) && bothFilesUploadedRecently(extracts)) {
             return runEtl()
           }
-          log.info('only one file present')
-          return 'Only one file present'
+          log.info('only one file updated')
+          return 'Only one file updated'
         })
       }).catch(function (err) {
-        log.error('Error deleintg message from queue', err)
+        log.error('Error deleting message from queue', err)
       })
     }
     return 'No messages to process'
