@@ -25,15 +25,20 @@ const params = {
   WaitTimeSeconds: 0
 }
 
+const bothFilesPresent = function (extracts) {
+  return extracts.length === 2
+}
+const bothFilesUploadedRecently = function (extracts) {
+  return Math.abs(new Date(extracts[0].LastModified).getTime() - new Date(extracts[1].LastModified).getTime()) < FILES_CHANGED_TIME_WINDOW
+}
+
 module.exports = function () {
   return sqsClient.send(new ReceiveMessageCommand(params)).then(function (data) {
     if (data.Messages) {
       return deleteSqsMessage(sqsClient, queueURL, data.Messages[0].ReceiptHandle).then(function () {
         return listObjects(s3Client, S3.BUCKET_NAME).then(function (extracts) {
-          if (extracts.length === 2) {
-            if (Math.abs(new Date(extracts[0].LastModified).getTime() - new Date(extracts[1].LastModified).getTime()) < FILES_CHANGED_TIME_WINDOW) {
-              return runEtl()
-            }
+          if (bothFilesPresent(extracts) && bothFilesUploadedRecently(extracts)) {
+            return runEtl()
           }
           log.info('only one file present')
           return 'Only one file present'
