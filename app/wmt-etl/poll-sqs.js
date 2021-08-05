@@ -28,8 +28,12 @@ const params = {
 const bothFilesPresent = function (extracts) {
   return extracts.length === 2
 }
-const bothFilesUploadedRecently = function (extracts) {
-  return Math.abs(new Date(extracts[0].LastModified).getTime() - new Date(extracts[1].LastModified).getTime()) < FILES_CHANGED_TIME_WINDOW
+const bothFilesUploadedRecently = function ([first, second]) {
+  return Math.abs(lastModified(first) - lastModified(second)) < FILES_CHANGED_TIME_WINDOW
+}
+
+const lastModified = function (extract) {
+  return new Date(extract.LastModified).getTime()
 }
 
 module.exports = function () {
