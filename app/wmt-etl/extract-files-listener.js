@@ -1,6 +1,6 @@
 const CronJob = require('cron').CronJob
 
-const { EXTRACT_LISTENER_CRON } = require('../../config')
+const { EXTRACT_LISTENER_CRON } = require('../../etl-config')
 const log = require('../services/log')
 const pollSQS = require('./poll-sqs')
 

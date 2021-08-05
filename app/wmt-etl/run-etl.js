@@ -1,9 +1,6 @@
 
 const cleanTables = require('./clean-tables')
-// const correctNumberOfFilesExist = require('./correct-number-of-files-exist')
 const processFiles = require('./process-files')
-// const archiveExtractFiles = require('./archive-extract-files')
-// const deleteExtractFiles = require('./delete-extract-files')
 const createTasks = require('../services/data/create-tasks')
 const Task = require('../services/domain/task')
 const submittingAgent = require('../constants/task-submitting-agent')
@@ -16,9 +13,6 @@ module.exports = function () {
   return cleanTables()
     .then(function () {
       return listEtlFiles().then(function (extractFiles) {
-      // if (!correctNumberOfFilesExist(extractFiles.length)) {
-        //   throw new Error('Not all expected extract files are present')
-        // }
         return processFiles(extractFiles)
           .then(function () {
             const processImportTask = new Task(
@@ -32,24 +26,6 @@ module.exports = function () {
               taskStatus.PENDING
             )
             return createTasks([processImportTask])
-
-          // return archiveExtractFiles(extractFiles)
-          //   .then(function () {
-          //     return deleteExtractFiles(extractFiles)
-          //       .then(function () {
-          //         const processImportTask = new Task(
-          //           undefined,
-          //           submittingAgent.WORKER,
-          //           taskType.PROCESS_IMPORT,
-          //           undefined,
-          //           undefined,
-          //           undefined,
-          //           undefined,
-          //           taskStatus.PENDING
-          //         )
-          //         return createTasks([processImportTask])
-          //       })
-          //   })
           })
       })
     })

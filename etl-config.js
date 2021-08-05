@@ -1,13 +1,10 @@
 const production = process.env.NODE_ENV === 'production'
 
 module.exports = {
-  // Extract file settings
-  IMPORT_FILE_DIR: process.env.WMT_IMPORT_FILE_PATH || './test/integration/resources/',
-  ARCHIVE_FILE_DIR: process.env.WMT_ARCHIVE_FILE_PATH || './archive/',
-  ARCHIVE_FILE_NAME: process.env.WMT_ARCHIVE_FILE_NAME || 'delius-extract-',
-  EXPECTED_FILE_COUNT: process.env.WMT_EXPECTED_FILE_COUNT || '2',
 
   FILES_CHANGED_TIME_WINDOW: 60000,
+
+  EXTRACT_LISTENER_CRON: process.env.EXTRACT_LISTENER_CRON || '0/10 * * * * *', //  every 10 seconds
 
   S3: {
     BUCKET_NAME: process.env.ETL_S3_BUCKET_NAME || 'wmt-worker',

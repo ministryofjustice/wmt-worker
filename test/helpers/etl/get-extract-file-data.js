@@ -3,7 +3,7 @@ const XLSX = require('xlsx')
 const config = require('../../../etl-config')
 
 module.exports = function () {
-  const extractFiles = glob.sync(config.IMPORT_FILE_DIR + '*.xlsx', {})
+  const extractFiles = glob.sync('./test/integration/resources/' + '*.xlsx', {})
   const workbooks = []
   const worksheets = {}
 
