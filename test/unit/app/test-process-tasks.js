@@ -19,6 +19,7 @@ let closePreviousWorkloadReport
 let updateWorkloadReportEffectiveTo
 let getTaskInProgressCount
 let createTasks
+let log
 const batchSize = 3
 
 describe('process-tasks', function () {
@@ -33,10 +34,11 @@ describe('process-tasks', function () {
     updateWorkloadReportEffectiveTo = sinon.stub()
     getTaskInProgressCount = sinon.stub()
     createTasks = sinon.stub()
+    log = { info: function (message) {}, error: function (message) {}, jobError: sinon.stub() }
 
     processTasks = proxyquire('../../../app/process-tasks', {
       '../config': { ASYNC_WORKER_BATCH_SIZE: batchSize },
-      './services/log': { info: function (message) {}, error: function (message) {} },
+      './services/log': log,
       './services/data/get-pending-tasks-and-mark-in-progress': getPendingTasksAndMarkInProgress,
       './services/data/update-workload-report-with-status': updateWorkload,
       './services/task-status-counter': taskStatusCounter,
@@ -73,7 +75,7 @@ describe('process-tasks', function () {
     })
   })
 
-  it('should update workload report as complete and refresh web hierarchy when there are no pending, inprogress or failed tasks', function () {
+  it('should update workload report as complete and refresh web hierarchy when there are no pending, in progress or failed tasks', function () {
     createTasks.resolves()
     getTaskInProgressCount.resolves([{ theCount: 0 }])
     getPendingTasksAndMarkInProgress.resolves([
@@ -158,6 +160,8 @@ describe('process-tasks', function () {
       expect(getWorkerForTask.calledWith('task2')).to.be.true
       expect(completeTaskWithStatus.calledWith(1, taskStatus.FAILED)).to.be.true
       expect(completeTaskWithStatus.calledWith(2, taskStatus.FAILED)).to.be.true
+      expect(log.jobError.calledWith('1-task1')).to.be.true
+      expect(log.jobError.calledWith('2-task2')).to.be.true
     })
   })
 
