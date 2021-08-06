@@ -42,6 +42,6 @@ module.exports = function () {
     }
     return 'No messages to process'
   }).catch(function (err) {
-    log.error('Error reading message from queue', err)
+    log.jobError('RUN-ETL', err)
   })
 }
