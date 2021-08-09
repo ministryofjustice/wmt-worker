@@ -1,7 +1,7 @@
 const config = require('../../../config')
 const knexConfig = require('../../../knexfile').app
 const knex = require('knex')(knexConfig)
-
+const log = require('../log')
 module.exports = function (omKey, teamCode) {
   const whereObject = {
     assessment_staff_key: omKey,
@@ -27,7 +27,7 @@ module.exports = function (omKey, teamCode) {
             armsTotals.license = row.count
             break
           default:
-            console.log('Unrecognised sentence type: ' + row.sentence_type)
+            log.info('Unrecognised sentence type: ' + row.sentence_type)
         }
       })
 

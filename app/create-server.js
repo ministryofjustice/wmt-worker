@@ -1,18 +1,18 @@
 const http = require('http')
 const getTasksInProgress = require('./services/data/get-tasks-inprogress-count')
-
+const log = require('./services/log')
 const requestListener = function (req, res) {
   if (req.url.endsWith('/liveness')) {
     return getTasksInProgress().then(function () {
       res.writeHead(200)
       res.end('App is live')
     }).catch(function (err) {
-      console.log(err)
+      log.error(err)
       res.writeHead(500)
       res.end('App is not live')
     })
   }
-  console.log(`request ${req.method} ${req.url}`)
+  log.info(`request ${req.method} ${req.url} not found`)
   res.writeHead(404)
   res.end()
 }

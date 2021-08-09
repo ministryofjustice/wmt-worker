@@ -13,7 +13,7 @@ module.exports = function (extractFiles) {
   return Promise.each(extractFiles, function (extractFile) {
     return getEtlFile(extractFile.Key).then(function (getObject) {
       const workbook = XLSX.read(getObject, { type: 'array', cellText: false, cellDates: true })
-      console.log(`all keys of workbook: ${Object.keys(workbook.Sheets)}`)
+      log.info(`all keys of workbook: ${Object.keys(workbook.Sheets)}`)
       if (!validateWorkbookFormat(Object.keys(workbook.Sheets))) {
         throw new Error('Workbook does not contain the expected worksheets')
       }
