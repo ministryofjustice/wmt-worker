@@ -1,6 +1,7 @@
 const http = require('http')
 const getTasksInProgress = require('./services/data/get-tasks-inprogress-count')
 const log = require('./services/log')
+
 const requestListener = function (req, res) {
   if (req.url.endsWith('/liveness')) {
     return getTasksInProgress().then(function () {
