@@ -5,17 +5,15 @@ const disableIndexing = require('../data/disable-indexing')
 const getMostRecentlyUsedWorkloadOwnerId = require('../data/get-most-recently-used-workload-owner-id')
 const enableIndexing = require('../data/enable-indexing')
 
-const updateWorkloadWorkloadOwnerId = require('../data/update-workload-workload-owner-id')
+const updateReductionsWorkloadOwnerId = require('../data/update-reductions-workload-owner-id')
 const Promise = require('bluebird').Promise
 const duplicateWorkloads = []
 const oldAndNewCombined = []
-const recalculateWorkloadPoints = require('../data/recalculate-workload-points')
 
 module.exports.execute = function (task) {
-  const regionIds = task.additionalData.regionIds
+  const teamIds = task.additionalData.teamIds
   const maximumWorkloadReportId = task.additionalData.maximumWorkloadReportId
-  const reportId = task.workloadReportId
-  return getNewWorkloadOwnerIds(regionIds)
+  return getNewWorkloadOwnerIds(teamIds)
     .then(function (newWorkloadOwners) {
       return Promise.each(newWorkloadOwners, function (workloadOwner) {
         return getOldWorkloadOwnerIds(workloadOwner.teamId, workloadOwner.forename, workloadOwner.surname, workloadOwner.teamName)
@@ -46,11 +44,8 @@ module.exports.execute = function (task) {
     .then(function () {
       logger.info('Indexing disabled')
       return Promise.each(oldAndNewCombined, function (onc) {
-        return updateWorkloadWorkloadOwnerId(onc.old, onc.new, maximumWorkloadReportId)
+        return updateReductionsWorkloadOwnerId(onc.old, onc.new, maximumWorkloadReportId)
       })
-    })
-    .then(function () {
-      return recalculateWorkloadPoints(reportId)
     })
     .then(function () {
       return enableIndexing()

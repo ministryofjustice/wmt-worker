@@ -7,12 +7,10 @@ const updateContractedHours = require('../data/update-contracted-hours')
 const Promise = require('bluebird').Promise
 const duplicateWorkloads = []
 const oldAndNewCombined = []
-const recalculateWorkloadPoints = require('../data/recalculate-workload-points')
 
 module.exports.execute = function (task) {
-  const regionIds = task.additionalData.regionIds
-  const reportId = task.workloadReportId
-  return getNewWorkloadOwnerIds(regionIds)
+  const teamIds = task.additionalData.teamIds
+  return getNewWorkloadOwnerIds(teamIds)
     .then(function (newWorkloadOwners) {
       return Promise.each(newWorkloadOwners, function (workloadOwner) {
         return getOldWorkloadOwnerIds(workloadOwner.teamId, workloadOwner.forename, workloadOwner.surname, workloadOwner.teamName)
@@ -42,9 +40,6 @@ module.exports.execute = function (task) {
         logger.info(onc.new, onc.old, onc.contractedHours, onc.cameFromDuplicate)
         return updateContractedHours(onc.new, onc.contractedHours)
       })
-    })
-    .then(function () {
-      return recalculateWorkloadPoints(reportId)
     })
     .catch(function (error) {
       logger.error('MIGRATE-CONTRACTED-HOURS - An error occurred migrating contracted hours')
