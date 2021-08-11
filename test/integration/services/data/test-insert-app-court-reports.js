@@ -1,6 +1,6 @@
 const expect = require('chai').expect
 const knex = require('../../../../knex').appSchema
-const CourtReports = require('wmt-probation-rules').CourtReports
+const CourtReports = require('../../../../app/services/probation-rules').CourtReports
 const workloadOwnerHelper = require('../../../helpers/data/app-workload-owner-helper')
 const insertAppCourtReports = require('../../../../app/services/data/insert-app-court-reports')
 

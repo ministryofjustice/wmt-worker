@@ -1,11 +1,11 @@
 const expect = require('chai').expect
 const knex = require('../../../../knex').appSchema
 const insertAppWorkload = require('../../../../app/services/data/insert-app-workload')
-const Workload = require('wmt-probation-rules').Workload
-const Tiers = require('wmt-probation-rules').AppTiers
-const TierCounts = require('wmt-probation-rules').TierCounts
-const Locations = require('wmt-probation-rules').Locations
-const CaseDetails = require('wmt-probation-rules').CaseDetails
+const Workload = require('../../../../app/services/probation-rules').Workload
+const Tiers = require('../../../../app/services/probation-rules').AppTiers
+const TierCounts = require('../../../../app/services/probation-rules').TierCounts
+const Locations = require('../../../../app/services/probation-rules').Locations
+const CaseDetails = require('../../../../app/services/probation-rules').CaseDetails
 const workloadOwnerHelper = require('../../../helpers/data/app-workload-owner-helper')
 
 const inserts = []

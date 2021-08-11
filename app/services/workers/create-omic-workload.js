@@ -1,7 +1,7 @@
 const Promise = require('bluebird').Promise
 const logger = require('../log')
 
-const mapWorkload = require('wmt-probation-rules').mapWorkload
+const mapWorkload = require('../probation-rules').mapWorkload
 const Task = require('../domain/task')
 const taskType = require('../../constants/task-type')
 const taskStatus = require('../../constants/task-status')

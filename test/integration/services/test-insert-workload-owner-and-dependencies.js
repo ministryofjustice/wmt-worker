@@ -1,7 +1,7 @@
 const expect = require('chai').expect
 const knex = require('../../../knex').appSchema
 const insertWorkloadOwnerAndDependencies = require('../../../app/services/insert-workload-owner-and-dependencies')
-const CasesSummary = require('wmt-probation-rules').CasesSummary
+const CasesSummary = require('../../../app/services/probation-rules').CasesSummary
 
 describe('app/services/insert-workload-owner-and-dependencies', function () {
   let omGradeCode

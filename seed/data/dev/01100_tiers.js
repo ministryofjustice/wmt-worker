@@ -1,4 +1,4 @@
-const locations = require('wmt-probation-rules').Locations
+const locations = require('../../../app/services/probation-rules').Locations
 const tableName = 'tiers'
 const insertData = []
 

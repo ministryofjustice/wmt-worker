@@ -1,5 +1,5 @@
 const knex = require('../../../knex').appSchema
-const Locations = require('wmt-probation-rules').Locations
+const Locations = require('../../../app/services/probation-rules').Locations
 const Promise = require('bluebird').Promise
 
 module.exports.insertDependencies = function (inserts) {

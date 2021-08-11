@@ -1,5 +1,5 @@
 const knex = require('../../../knex').stagingSchema
-const stagingHelper = require('wmt-probation-rules').stagingTestHelper
+const stagingHelper = require('./staging-helper')
 const Promise = require('bluebird').Promise
 
 const aliases = {

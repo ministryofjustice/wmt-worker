@@ -4,7 +4,7 @@ const sinon = require('sinon')
 const stagingWorkload = require('../../../constants/staging-workload')
 const armsTotals = require('../../../constants/arms-totals')
 const caseDetails = require('../../../constants/case-details')
-const locations = require('wmt-probation-rules').Locations
+const locations = require('../../../../app/services/probation-rules').Locations
 
 let getStagingWorkload
 let getArmsTotals

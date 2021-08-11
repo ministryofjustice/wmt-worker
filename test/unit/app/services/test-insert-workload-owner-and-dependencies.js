@@ -2,12 +2,12 @@ const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
-const OffenderManager = require('wmt-probation-rules').OffenderManager
-const Team = require('wmt-probation-rules').Team
-const WorkloadOwner = require('wmt-probation-rules').WorkloadOwner
-const Ldu = require('wmt-probation-rules').Ldu
-const Region = require('wmt-probation-rules').Region
-const filterOmGradeCode = require('wmt-probation-rules').filterOmGradeCode
+const OffenderManager = require('../../../../app/services/probation-rules').OffenderManager
+const Team = require('../../../../app/services/probation-rules').Team
+const WorkloadOwner = require('../../../../app/services/probation-rules').WorkloadOwner
+const Ldu = require('../../../../app/services/probation-rules').Ldu
+const Region = require('../../../../app/services/probation-rules').Region
+const filterOmGradeCode = require('../../../../app/services/probation-rules').filterOmGradeCode
 
 let insertWoAndDependencies
 let insertOffenderManagerTypeId

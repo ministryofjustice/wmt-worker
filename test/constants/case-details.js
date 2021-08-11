@@ -1,4 +1,4 @@
-const CaseDetails = require('wmt-probation-rules').CaseDetails
+const CaseDetails = require('../../app/services/probation-rules').CaseDetails
 
 module.exports = [
   new CaseDetails('W', 'CASEREF9000', '6', 'TEAM001', 'PO', 'OM9000', 'LICENSE'),
