@@ -67,7 +67,6 @@
     "knex": "^0.95.6",
     "node-fetch": "^2.6.1",
     "pg": "^8.6.0",
-    "wmt-probation-rules": "ministryofjustice/wmt-probation-rules.git#v1.1.1",
     "xlsx": "^0.17.0",
     "xlsx-populate": "^1.21.0"
   }
