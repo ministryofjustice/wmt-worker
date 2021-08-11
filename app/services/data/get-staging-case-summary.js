@@ -1,7 +1,7 @@
 const knex = require('../../../knex').stagingSchema
-const CasesSummary = require('wmt-probation-rules').CasesSummary
-const Tiers = require('wmt-probation-rules').Tiers
-const locations = require('wmt-probation-rules').Locations
+const CasesSummary = require('../probation-rules').CasesSummary
+const Tiers = require('../probation-rules').Tiers
+const locations = require('../probation-rules').Locations
 
 module.exports = function (range) {
   return knex('wmt_extract').withSchema('staging').whereBetween('id', range)

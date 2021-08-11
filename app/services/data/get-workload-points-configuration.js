@@ -1,9 +1,9 @@
 const knex = require('../../../knex').appSchema
-const CaseTypeWeightings = require('wmt-probation-rules').CaseTypeWeightings
-const PointsConfiguration = require('wmt-probation-rules').PointsConfiguration
-const LocationPointsConfiguration = require('wmt-probation-rules').LocationPointsConfiguration
-const DefaultNominalTargets = require('wmt-probation-rules').DefaultNominalTargets
-const DefaultContractedHours = require('wmt-probation-rules').DefaultContractedHours
+const CaseTypeWeightings = require('../probation-rules').CaseTypeWeightings
+const PointsConfiguration = require('../probation-rules').PointsConfiguration
+const LocationPointsConfiguration = require('../probation-rules').LocationPointsConfiguration
+const DefaultNominalTargets = require('../probation-rules').DefaultNominalTargets
+const DefaultContractedHours = require('../probation-rules').DefaultContractedHours
 
 module.exports = function (isT2a = false) {
   return knex('workload_points')

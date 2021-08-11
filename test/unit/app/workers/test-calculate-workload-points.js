@@ -2,7 +2,7 @@ const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
-const pointsHelper = require('wmt-probation-rules').pointsHelper
+const { getCaseTypeWeightings } = require('../../../helpers/points-helper')
 
 const Batch = require('../../../../app/services/domain/batch')
 const operationTypes = require('../../../../app/constants/calculation-tasks-operation-type')
@@ -86,12 +86,12 @@ describe('services/workers/calculate-workload-points', function () {
       '../data/get-contracted-hours': getContractedHours,
       '../data/insert-workload-points-calculation': insertWorkloadPointsCalculationsStub,
       '../data/update-workload-points-calculation': updateWorkloadPointsCalculationsStub,
-      'wmt-probation-rules': probationRulesStub,
+      '../probation-rules': probationRulesStub,
       '../data/get-adjustment-points': getAdjustmentPoints,
       '../data/check-for-duplicate-calculation': checkForDuplicateCalculation
     })
     parseWorkloadsStub.resolves([{ values: workloads, id: WORKLOAD_ID }])
-    getPointsConfigurationStub.resolves({ values: pointsHelper.getCaseTypeWeightings(), id: WORKLOAD_ID })
+    getPointsConfigurationStub.resolves({ values: getCaseTypeWeightings(), id: WORKLOAD_ID })
     getAppReductions.resolves(REDUCTION_HOURS)
     getContractedHours.resolves(CONTRACTED_HOURS)
     probationRulesStub.calculateWorkloadPoints.returns(WORKLOAD_POINTS_BREAKDOWN)

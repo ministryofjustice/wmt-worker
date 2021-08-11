@@ -3,7 +3,7 @@ const expect = require('chai').expect
 const helper = require('../../../helpers/data/app-workload-points-helper')
 const getWorkloadPoints = require('../../../../app/services/data/get-workload-points-configuration')
 
-const CaseTypeWeightings = require('wmt-probation-rules').CaseTypeWeightings
+const CaseTypeWeightings = require('../../../../app/services/probation-rules').CaseTypeWeightings
 
 let inserts = []
 let isT2A = false

@@ -1,8 +1,8 @@
 const knex = require('../../../knex').stagingSchema
 const Promise = require('bluebird').Promise
-const OmCourtReports = require('wmt-probation-rules').OmCourtReports
-const CasesSummary = require('wmt-probation-rules').CasesSummary
-const CourtReport = require('wmt-probation-rules').CourtReport
+const OmCourtReports = require('../probation-rules').OmCourtReports
+const CasesSummary = require('../probation-rules').CasesSummary
+const CourtReport = require('../probation-rules').CourtReport
 
 module.exports = function (range) {
   const omCourtReports = []

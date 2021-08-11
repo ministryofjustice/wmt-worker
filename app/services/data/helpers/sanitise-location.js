@@ -1,7 +1,7 @@
 // To Fix WMT0047 - Inactive Licence cases not being counted in totals
 
-const locations = require('wmt-probation-rules').Locations
-const ExtractLocations = require('wmt-probation-rules').ExtractLocations
+const locations = require('../../probation-rules').Locations
+const ExtractLocations = require('../../probation-rules').ExtractLocations
 
 module.exports = function (location) {
   if (location !== null && location !== undefined) {

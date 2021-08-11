@@ -62,7 +62,7 @@ describe('services/workers/create-court-reports', function () {
       '../data/get-staging-court-reporters': getStagingCourtReporters,
       '../insert-workload-owner-and-dependencies': insertWorkloadOwnerAndDependencies,
       '../data/insert-app-court-reports': insertCourtReports,
-      'wmt-probation-rules': probationRulesStub,
+      '../probation-rules': probationRulesStub,
       '../data/create-tasks': createNewTasks
     })
   })
