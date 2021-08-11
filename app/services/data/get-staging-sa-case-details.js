@@ -1,5 +1,5 @@
 const knex = require('../../../knex').stagingSchema
-const CaseDetails = require('wmt-probation-rules').CaseDetails
+const CaseDetails = require('../probation-rules').CaseDetails
 
 const columns = ['case_ref_no', 'tier_code', 'team_code', 'om_grade_code', 'om_key', 'location']
 

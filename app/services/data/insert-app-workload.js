@@ -1,5 +1,5 @@
 const knex = require('../../../knex').appSchema
-const Locations = require('wmt-probation-rules').Locations
+const Locations = require('../probation-rules').Locations
 const numericRegex = /^[0-9]*$/
 
 module.exports = function (workload, caseDetails) {
