@@ -7,7 +7,6 @@ const taskType = require('../../../../app/constants/task-type')
 
 let getTasks
 let updateWorkloadReportStatus
-let callWebRefreshEndpoint
 let taskStatusCounter
 
 const defaultTask = { id: 1, workload_report_id: 1, status: taskStatus.COMPLETE }
@@ -31,12 +30,10 @@ describe('services/task-counter', function () {
   before(function (done) {
     getTasks = sinon.stub()
     updateWorkloadReportStatus = sinon.stub()
-    callWebRefreshEndpoint = sinon.stub()
 
     taskStatusCounter = proxyquire('../../../../app/services/task-status-counter', {
       './data/get-tasks': getTasks,
-      './data/update-workload-report-with-status': updateWorkloadReportStatus,
-      './refresh-web-org-hierarchy': callWebRefreshEndpoint
+      './data/update-workload-report-with-status': updateWorkloadReportStatus
     })
     done()
   })

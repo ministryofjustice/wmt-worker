@@ -16,8 +16,6 @@ module.exports = {
   DB_APP_SCHEMA: 'app',
   DB_STG_SCHEMA: 'staging',
 
-  // WMT Worker
-  IP_ADDRESSES: process.env.WMT_WORKER_APP_IP_ADDRESSES || 'http://localhost:3000',
   PORT: process.env.PORT || 3000,
 
   // Dashboard

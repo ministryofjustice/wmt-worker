@@ -10,7 +10,6 @@ const updateWorkloadReportStatus = require('./services/data/update-workload-repo
 const countTaskStatuses = require('./services/task-status-counter')
 const completeTaskWithStatus = require('./services/data/complete-task-with-status')
 const getWorkerForTask = require('./services/get-worker-for-task')
-const callWebRefreshEndpoint = require('./services/refresh-web-org-hierarchy')
 const closePreviousWorkloadReport = require('./services/close-previous-workload-report')
 const updateWorkloadReportEffectiveTo = require('./services/data/update-workload-report-effective-to')
 const operationTypes = require('./constants/calculation-tasks-operation-type')
@@ -85,9 +84,6 @@ function executeWorkerForTaskType (worker, task) {
                           )
                           return createNewTasks([removeDuplicatesTask])
                         })
-                        .then((result) => {
-                          return callWebRefreshEndpoint()
-                        })
                     })
                 }
               })
@@ -113,8 +109,6 @@ function executeWorkerForTaskType (worker, task) {
                   // Set Mapped tasks to pending
                 }
               })
-          } else if (task.type === taskType.CALCULATE_WORKLOAD_POINTS && task.additionalData.operationType === operationTypes.UPDATE) {
-            return callWebRefreshEndpoint()
           }
           log.info(`completed task: ${task.id}-${task.type}`)
         })

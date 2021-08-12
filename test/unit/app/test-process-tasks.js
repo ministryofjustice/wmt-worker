@@ -14,7 +14,6 @@ let updateWorkload
 let taskStatusCounter
 let completeTaskWithStatus
 let getWorkerForTask
-let callWebRefreshEndpoint
 let closePreviousWorkloadReport
 let updateWorkloadReportEffectiveTo
 let getTaskInProgressCount
@@ -29,7 +28,6 @@ describe('process-tasks', function () {
     getWorkerForTask = sinon.stub()
     updateWorkload = sinon.stub()
     taskStatusCounter = sinon.stub()
-    callWebRefreshEndpoint = sinon.stub()
     closePreviousWorkloadReport = sinon.stub()
     updateWorkloadReportEffectiveTo = sinon.stub()
     getTaskInProgressCount = sinon.stub()
@@ -44,7 +42,6 @@ describe('process-tasks', function () {
       './services/task-status-counter': taskStatusCounter,
       './services/data/complete-task-with-status': completeTaskWithStatus,
       './services/get-worker-for-task': getWorkerForTask,
-      './services/refresh-web-org-hierarchy': callWebRefreshEndpoint,
       './services/close-previous-workload-report': closePreviousWorkloadReport,
       './services/data/update-workload-report-effective-to': updateWorkloadReportEffectiveTo,
       './services/data/get-tasks-inprogress-count': getTaskInProgressCount,
@@ -108,7 +105,6 @@ describe('process-tasks', function () {
       expect(closePreviousWorkloadReport.calledWith(3)).to.be.true
       expect(updateWorkload.calledWith(1, workloadReportStatus.COMPLETE)).to.be.false
       expect(updateWorkload.calledWith(3, workloadReportStatus.COMPLETE)).to.be.true
-      expect(callWebRefreshEndpoint.called).to.be.true
     })
   })
 
@@ -138,7 +134,6 @@ describe('process-tasks', function () {
       expect(completeTaskWithStatus.calledWith(2, taskStatus.COMPLETE)).to.be.true
       expect(closePreviousWorkloadReport.called).to.be.false
       expect(updateWorkload.calledWith(2, workloadReportStatus.COMPLETE)).to.be.false
-      expect(callWebRefreshEndpoint.called).to.be.false
     })
   })
 
@@ -208,7 +203,6 @@ describe('process-tasks', function () {
     completeTaskWithStatus.resolves({})
 
     return processTasks().then(function () {
-      expect(callWebRefreshEndpoint.called).to.be.true
       expect(completeTaskWithStatus.called).to.be.true
       expect(taskStatusCounter.called).to.be.false
       expect(closePreviousWorkloadReport.called).to.be.false
