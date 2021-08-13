@@ -138,34 +138,27 @@ describe('process-tasks', function () {
     })
   })
 
-  it('should mark tasks as failed when worker execution fails', function () {
+  it('should not mark workload as failed when web jobs fail', function () {
     getTaskInProgressCount.resolves([{ theCount: 0 }])
-    getPendingTasksAndMarkInProgress.resolves([{ id: 1, type: 'task1' }, { id: 2, type: 'task2' }])
+    getPendingTasksAndMarkInProgress.resolves([{ id: 2, type: 'task2', submitting_agent: 'WEB' }])
     getWorkerForTask.returns({
       execute: function () {
-        return new Promise(function (resolve, reject) {
-          reject(Error('Fail'))
-        })
+        return Promise.reject(new Error('Fail'))
       }
     })
     completeTaskWithStatus.resolves({})
 
     return processTasks().then(function () {
-      expect(getPendingTasksAndMarkInProgress.calledWith(batchSize)).to.be.true
-      expect(getWorkerForTask.calledWith('task1')).to.be.true
-      expect(getWorkerForTask.calledWith('task2')).to.be.true
-      expect(completeTaskWithStatus.calledWith(1, taskStatus.FAILED)).to.be.true
-      expect(completeTaskWithStatus.calledWith(2, taskStatus.FAILED)).to.be.true
-      expect(log.jobError.calledWith('1-task1')).to.be.true
-      expect(log.jobError.calledWith('2-task2')).to.be.true
+      expect(updateWorkloadReportEffectiveTo.called).to.be.false
+      expect(updateWorkloadReportEffectiveTo.called).to.be.false
     })
   })
 
   it('should mark tasks as failed and update WR when worker execution fails', function () {
     getTaskInProgressCount.resolves([{ theCount: 0 }])
     getPendingTasksAndMarkInProgress.resolves([
-      { id: 1, workloadReportId: 1, type: 'task1' },
-      { id: 2, workloadReportId: 2, type: taskTypes.GENERATE_DASHBOARD, additionalData: { operationType: operationTypes.INSERT } }
+      { id: 1, workloadReportId: 1, type: 'task1', submitting_agent: 'WORKER' },
+      { id: 2, workloadReportId: 2, type: taskTypes.GENERATE_DASHBOARD, additionalData: { operationType: operationTypes.INSERT }, submitting_agent: 'WORKER' }
     ])
     getWorkerForTask.returns({
       execute: function () {

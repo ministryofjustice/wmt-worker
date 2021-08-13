@@ -114,9 +114,10 @@ function executeWorkerForTaskType (worker, task) {
         })
     }).catch(function (error) {
       log.jobError(`${task.id}-${task.type}`, error)
-      updateWorkloadReportStatus(task.workloadReportId, workloadReportStatus.FAILED)
-      updateWorkloadReportEffectiveTo(task.workloadReportId, new Date())
-
+      if (task.submitting_agent === 'WORKER') {
+        updateWorkloadReportStatus(task.workloadReportId, workloadReportStatus.FAILED)
+        updateWorkloadReportEffectiveTo(task.workloadReportId, new Date())
+      }
       return completeTaskWithStatus(task.id, taskStatus.FAILED)
     })
 }
