@@ -20,6 +20,7 @@ let updateWorkloadReportEffectiveTo
 let getTaskInProgressCount
 let createTasks
 let log
+let checkTasksAreCompleteForWorkload
 const batchSize = 3
 
 describe('process-tasks', function () {
@@ -33,6 +34,7 @@ describe('process-tasks', function () {
     updateWorkloadReportEffectiveTo = sinon.stub()
     getTaskInProgressCount = sinon.stub()
     createTasks = sinon.stub()
+    checkTasksAreCompleteForWorkload = sinon.stub()
     log = { info: function (message) {}, error: function (message) {}, jobError: sinon.stub() }
 
     processTasks = proxyquire('../../../app/process-tasks', {
@@ -46,6 +48,7 @@ describe('process-tasks', function () {
       './services/close-previous-workload-report': closePreviousWorkloadReport,
       './services/data/update-workload-report-effective-to': updateWorkloadReportEffectiveTo,
       './services/data/get-tasks-inprogress-count': getTaskInProgressCount,
+      './services/data/check-tasks-are-complete-for-workload': checkTasksAreCompleteForWorkload,
       './services/data/create-tasks': createTasks
     })
   })
@@ -78,7 +81,7 @@ describe('process-tasks', function () {
     getTaskInProgressCount.resolves([{ theCount: 0 }])
     getPendingTasksAndMarkInProgress.resolves([
       { id: 1, workloadReportId: 1, type: 'task1' },
-      { id: 2, workloadReportId: 3, type: 'CALCULATE-WORKLOAD-POINTS', additionalData: { operationType: operationTypes.INSERT } }
+      { id: 2, workloadReportId: 3, type: 'GENERATE-DASHBOARD', additionalData: { operationType: operationTypes.INSERT } }
     ])
     getWorkerForTask.returns({
       execute: function () {
@@ -95,14 +98,15 @@ describe('process-tasks', function () {
     })
     updateWorkload.resolves({})
     closePreviousWorkloadReport.resolves(3)
+    checkTasksAreCompleteForWorkload.resolves(true)
 
     return processTasks().then(function () {
       expect(getPendingTasksAndMarkInProgress.calledWith(batchSize)).to.be.true
       expect(getWorkerForTask.calledWith('task1')).to.be.true
-      expect(getWorkerForTask.calledWith('CALCULATE-WORKLOAD-POINTS')).to.be.true
+      expect(getWorkerForTask.calledWith('GENERATE-DASHBOARD')).to.be.true
       expect(completeTaskWithStatus.calledWith(1, taskStatus.COMPLETE)).to.be.true
       expect(completeTaskWithStatus.calledWith(2, taskStatus.COMPLETE)).to.be.true
-      expect(closePreviousWorkloadReport.calledWith(1)).to.be.false
+      expect(closePreviousWorkloadReport.calledWith(1)).to.be.true
       expect(closePreviousWorkloadReport.calledWith(3)).to.be.true
       expect(updateWorkload.calledWith(1, workloadReportStatus.COMPLETE)).to.be.false
       expect(updateWorkload.calledWith(3, workloadReportStatus.COMPLETE)).to.be.true

@@ -18,6 +18,7 @@ const checkForDuplicateTasks = require('./services/data/check-for-duplicate-task
 const setTasksToPending = require('./services/data/set-tasks-to-pending')
 const deleteDuplicateTask = require('./services/data/delete-duplicate-task')
 const checkAllTasksForTypeAreComplete = require('./services/data/check-all-tasks-for-type-are-complete')
+const checkWorkloadIsComplete = require('./services/data/check-tasks-are-complete-for-workload')
 const Task = require('./services/domain/task')
 const createNewTasks = require('./services/data/create-tasks')
 const submittingAgent = require('./constants/task-submitting-agent')
@@ -68,23 +69,17 @@ function executeWorkerForTaskType (worker, task) {
             return countTaskStatuses(task)
               .then(function (totals) {
                 if (totals.numPending === 0 && totals.numInProgress === 0 && totals.numFailed === 0) {
-                  return closePreviousWorkloadReport(task.workloadReportId)
-                    .then(function (previousWorkloadReportId) {
-                      return updateWorkloadReportStatus(previousWorkloadReportId, workloadReportStatus.COMPLETE)
-                        .then(function () {
-                          const removeDuplicatesTask = new Task(
-                            undefined,
-                            submittingAgent.WORKER,
-                            taskType.REMOVE_DUPLICATES,
-                            undefined,
-                            task.workloadReportId,
-                            undefined,
-                            undefined,
-                            taskStatus.PENDING
-                          )
-                          return createNewTasks([removeDuplicatesTask])
-                        })
-                    })
+                  const removeDuplicatesTask = new Task(
+                    undefined,
+                    submittingAgent.WORKER,
+                    taskType.REMOVE_DUPLICATES,
+                    undefined,
+                    task.workloadReportId,
+                    undefined,
+                    undefined,
+                    taskStatus.PENDING
+                  )
+                  return createNewTasks([removeDuplicatesTask])
                 }
               })
           } else if (Object.keys(triggerableTasks).includes(task.type)) {
@@ -111,6 +106,14 @@ function executeWorkerForTaskType (worker, task) {
               })
           }
           log.info(`completed task: ${task.id}-${task.type}`)
+          return checkWorkloadIsComplete(task.workloadReportId).then(function (result) {
+            if (result) {
+              return closePreviousWorkloadReport(task.workloadReportId)
+                .then(function (previousWorkloadReportId) {
+                  return updateWorkloadReportStatus(previousWorkloadReportId, workloadReportStatus.COMPLETE)
+                })
+            }
+          })
         })
     }).catch(function (error) {
       log.jobError(`${task.id}-${task.type}`, error)
