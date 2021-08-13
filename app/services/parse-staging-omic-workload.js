@@ -7,14 +7,12 @@ const Tiers = require('./probation-rules').Tiers
 const locations = require('./probation-rules').Locations
 const getStagingCaseDetails = require('./data/get-staging-case-details')
 const getArmsTotals = require('./data/get-arms-totals')
-const Promise = require('bluebird').Promise
 
 module.exports = function (range) {
-  const omWorkloads = []
   return getStagingOmicWorkload(range)
     .then(function (results) {
       if (results !== 'undefined' && results.length > 0) {
-        return Promise.each(results, function (result) {
+        return Promise.all(results.map(function (result) {
           return getArmsTotals(result.om_key, result.team_code).then(function (armsCases) {
             // WMT0229 Change needed here when extract column names are known
             const communityTiers = new Tiers(
@@ -193,15 +191,12 @@ module.exports = function (range) {
             const stagingId = result.staging_id
 
             return getStagingCaseDetails(result.om_key, result.team_code).then(function (results) {
-              omWorkloads.push(new OmWorkload(
+              return new OmWorkload(
                 stagingId, casesSummary, courtReport, institutionalReport, results
-              ))
+              )
             })
           })
-        })
-          .then(function () {
-            return omWorkloads
-          })
+        }))
       }
     })
 }
