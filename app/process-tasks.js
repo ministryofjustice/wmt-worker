@@ -114,10 +114,9 @@ function executeWorkerForTaskType (worker, task) {
         })
     }).catch(function (error) {
       log.jobError(`${task.id}-${task.type}`, error)
-      if (task.type === taskType.CALCULATE_WORKLOAD_POINTS) {
-        updateWorkloadReportStatus(task.workloadReportId, workloadReportStatus.FAILED)
-        updateWorkloadReportEffectiveTo(task.workloadReportId, new Date())
-      }
+      updateWorkloadReportStatus(task.workloadReportId, workloadReportStatus.FAILED)
+      updateWorkloadReportEffectiveTo(task.workloadReportId, new Date())
+
       return completeTaskWithStatus(task.id, taskStatus.FAILED)
     })
 }

@@ -5,6 +5,7 @@ const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
 const taskStatus = require('../../../app/constants/task-status')
+const taskTypes = require('../../../app/constants/task-type')
 const workloadReportStatus = require('../../../app/constants/workload-report-status')
 const operationTypes = require('../../../app/constants/calculation-tasks-operation-type')
 
@@ -72,7 +73,7 @@ describe('process-tasks', function () {
     })
   })
 
-  it('should update workload report as complete and refresh web hierarchy when there are no pending, in progress or failed tasks', function () {
+  it('should update workload report as complete when there are no pending, in progress or failed tasks', function () {
     createTasks.resolves()
     getTaskInProgressCount.resolves([{ theCount: 0 }])
     getPendingTasksAndMarkInProgress.resolves([
@@ -160,17 +161,15 @@ describe('process-tasks', function () {
     })
   })
 
-  it('should mark tasks as failed and update WR when worker execution fails for calculate workload points tasks', function () {
+  it('should mark tasks as failed and update WR when worker execution fails', function () {
     getTaskInProgressCount.resolves([{ theCount: 0 }])
     getPendingTasksAndMarkInProgress.resolves([
       { id: 1, workloadReportId: 1, type: 'task1' },
-      { id: 2, workloadReportId: 2, type: 'CALCULATE-WORKLOAD-POINTS', additionalData: { operationType: operationTypes.INSERT } }
+      { id: 2, workloadReportId: 2, type: taskTypes.GENERATE_DASHBOARD, additionalData: { operationType: operationTypes.INSERT } }
     ])
     getWorkerForTask.returns({
       execute: function () {
-        return new Promise(function (resolve, reject) {
-          reject(Error('Fail'))
-        })
+        return Promise.reject(new Error('Fail'))
       }
     })
     updateWorkloadReportEffectiveTo.resolves()
@@ -179,16 +178,16 @@ describe('process-tasks', function () {
     return processTasks().then(function () {
       expect(getPendingTasksAndMarkInProgress.calledWith(batchSize)).to.be.true
       expect(getWorkerForTask.calledWith('task1')).to.be.true
-      expect(getWorkerForTask.calledWith('CALCULATE-WORKLOAD-POINTS')).to.be.true
+      expect(getWorkerForTask.calledWith('GENERATE-DASHBOARD')).to.be.true
       expect(completeTaskWithStatus.calledWith(1, taskStatus.FAILED)).to.be.true
-      expect(updateWorkload.calledWith(1, workloadReportStatus.FAILED)).to.be.false
+      expect(updateWorkload.calledWith(1, workloadReportStatus.FAILED)).to.be.true
       expect(completeTaskWithStatus.calledWith(2, taskStatus.FAILED)).to.be.true
       expect(updateWorkload.calledWith(2, workloadReportStatus.FAILED)).to.be.true
       expect(updateWorkloadReportEffectiveTo.called).to.be.true
     })
   })
 
-  it('should not update the workload report but should refresh the hierarchy for UPDATE CALCULATE-WORKLOAD-POINTS tasks', function () {
+  it('should not update the workload report for UPDATE CALCULATE-WORKLOAD-POINTS tasks', function () {
     getTaskInProgressCount.resolves([{ theCount: 0 }])
     getPendingTasksAndMarkInProgress.resolves([
       { id: 2, workloadReportId: 2, type: 'CALCULATE-WORKLOAD-POINTS', additionalData: { operationType: operationTypes.UPDATE } }
