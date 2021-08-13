@@ -3,28 +3,14 @@ const { initialiseAppInsights, buildAppInsightsClient } = require('./app/service
 initialiseAppInsights()
 buildAppInsightsClient()
 
-const config = require('./config')
-const log = require('./app/services/log')
-const CronJob = require('cron').CronJob
-const processTasks = require('./app/process-tasks')
 const childProcess = require('child_process')
 const extractListener = require('./app/wmt-etl/extract-files-listener')
+const taskCronJob = require('./app/task-cron-job')
+const updateInProgressTasksToPending = require('./app/services/data/update-in-progress-tasks-to-pending')
 
-const asyncWorkerCron = config.ASYNC_WORKER_CRON
+updateInProgressTasksToPending().then(function () {
+  taskCronJob.start()
+  extractListener.start()
 
-const asyncWorkerJob = new CronJob({
-  cronTime: asyncWorkerCron,
-  onTick: function () {
-    processTasks()
-  },
-  onComplete: function () {
-    log.info('WMT worker completed running task')
-  },
-  start: false
+  childProcess.fork('start-server.js')
 })
-
-log.info('Started WMT worker')
-asyncWorkerJob.start()
-extractListener.start()
-
-childProcess.fork('start-server.js')
