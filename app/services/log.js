@@ -55,13 +55,21 @@ const logger = {
     if (ENABLE_SLACK_ALERTING) {
       Sentry.captureException(new JobError(jobName, error))
     }
-    appInsightsClient.trackException({ exception: new JobError(jobName, error) })
+    if (appInsightsClient) {
+      appInsightsClient.trackException({ exception: new JobError(jobName, error) })
+    } else {
+      log.error(new JobError(jobName, error))
+    }
   },
   error: function (e) {
     if (ENABLE_SLACK_ALERTING) {
       Sentry.captureException(e)
     }
-    appInsightsClient.trackException({ exception: e })
+    if (appInsightsClient) {
+      appInsightsClient.trackException({ exception: e })
+    } else {
+      log.error(e)
+    }
   }
 
 }

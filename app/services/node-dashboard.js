@@ -30,5 +30,7 @@ module.exports = function (reductions, capacity, formattedCaseloadData) {
 }
 
 const populateSheet = function (data, sheet) {
-  sheet.cell('A2').value(data)
+  if (Array.isArray(data) && data.length) {
+    sheet.cell('A2').value(data)
+  }
 }
