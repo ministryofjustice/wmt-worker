@@ -108,7 +108,7 @@ describe('process-tasks', function () {
       expect(completeTaskWithStatus.calledWith(2, taskStatus.COMPLETE)).to.be.true
       expect(closePreviousWorkloadReport.calledWith(1)).to.be.true
       expect(closePreviousWorkloadReport.calledWith(3)).to.be.true
-      expect(updateWorkload.calledWith(1, workloadReportStatus.COMPLETE)).to.be.false
+      expect(updateWorkload.calledWith(1, workloadReportStatus.COMPLETE)).to.be.true
       expect(updateWorkload.calledWith(3, workloadReportStatus.COMPLETE)).to.be.true
     })
   })

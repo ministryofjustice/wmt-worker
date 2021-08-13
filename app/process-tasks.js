@@ -109,8 +109,8 @@ function executeWorkerForTaskType (worker, task) {
           return checkWorkloadIsComplete(task.workloadReportId).then(function (result) {
             if (result) {
               return closePreviousWorkloadReport(task.workloadReportId)
-                .then(function (previousWorkloadReportId) {
-                  return updateWorkloadReportStatus(previousWorkloadReportId, workloadReportStatus.COMPLETE)
+                .then(function () {
+                  return updateWorkloadReportStatus(task.workloadReportId, workloadReportStatus.COMPLETE)
                 })
             }
           })
