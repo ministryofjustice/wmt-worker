@@ -72,8 +72,8 @@ module.exports.deleteAll = function (inserts) {
     } else {
       return knex(deletion.table).withSchema('staging').where('id', deletion.id).del()
     }
-  }).reduce(function(prev, current){
-    return prev.then(function() {
+  }).reduce(function (prev, current) {
+    return prev.then(function () {
       return current
     })
   }, Promise.resolve())
