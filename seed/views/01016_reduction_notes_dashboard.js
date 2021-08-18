@@ -7,10 +7,14 @@ exports.seed = function (knex, promise) {
     , team.id AS team_id
     , ldu.id AS ldu_id
     , region.id AS region_id
+    , region.code AS region_code
+    , ldu.code AS ldu_code
+    , team.code AS team_code
     , region.description AS region_name
     , ldu.description AS ldu_name
     , team.description AS team_name
     , CONCAT(om.forename, ' ', om.surname) AS name
+    , om.[key] AS om_key
     , wo.contracted_hours AS contracted_hours
     , rr.reason_short_name AS reduction_reason
     , r.hours AS amount

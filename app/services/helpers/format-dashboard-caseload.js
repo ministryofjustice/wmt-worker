@@ -1,14 +1,16 @@
-module.exports = function (caseload) {
-  const licenceArray = formatCase(caseload.caseloadDetails.licenseCaseloadDetails.details, 'Licence')
-  const custodyArray = formatCase(caseload.caseloadDetails.custodyCaseloadDetails.details, 'Custody')
-  const communityArray = formatCase(caseload.caseloadDetails.communityCaseloadDetails.details, 'Community')
+const transformPduName = require('../data/helpers/transform-organisation-name')
+
+module.exports = function (caseload, duplicatePDUsAndTeams) {
+  const licenceArray = formatCase(caseload.caseloadDetails.licenseCaseloadDetails.details, 'Licence', duplicatePDUsAndTeams)
+  const custodyArray = formatCase(caseload.caseloadDetails.custodyCaseloadDetails.details, 'Custody', duplicatePDUsAndTeams)
+  const communityArray = formatCase(caseload.caseloadDetails.communityCaseloadDetails.details, 'Community', duplicatePDUsAndTeams)
   return licenceArray.concat(custodyArray, communityArray)
 }
 
-const formatCase = function (ldus, sentenceType) {
+const formatCase = function (ldus, sentenceType, duplicatePDUsAndTeams) {
   const thisCaseArray = []
   ldus.forEach(function (ldu) {
-    const lduName = ldu.name
+    const lduName = transformPduName(duplicatePDUsAndTeams.duplicatePDUs, ldu.name, ldu.regionCode)
     const regionName = ldu.regionName
     ldu.grades.forEach(function (grade) {
       const thisCase = Object.assign({}, grade)

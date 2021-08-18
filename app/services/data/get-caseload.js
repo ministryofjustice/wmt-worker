@@ -6,6 +6,8 @@ module.exports = function () {
     'link_id AS linkId',
     'grade_code AS grade',
     'region_name AS regionName',
+    'region_code AS regionCode',
+    'ldu_code AS lduCode',
     'total_cases AS totalCases',
     'location AS caseType',
     'untiered',
