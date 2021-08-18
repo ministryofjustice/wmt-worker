@@ -19,7 +19,7 @@ describe('services/workers/calculate-omic-workload-points', function () {
       })
   })
 
-  it.only('creates the expected omic points calculations', function () {
+  it('creates the expected omic points calculations', function () {
     const workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
     const insertedWorkloads = inserts.filter((item) => item.table === 'omic_workload').sort((a, b) => a.id > b.id ? 1 : -1)
     const batchSize = 3
