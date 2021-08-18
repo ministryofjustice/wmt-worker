@@ -100,6 +100,7 @@ jobs:
           - AWS_EXECUTION_ENV=True
           - DEFAULT_REGION=eu-west-2
           - TMPDIR=/private
+    resource_class: medium+
     steps:
       - checkout
       - hmpps/install_aws_cli
