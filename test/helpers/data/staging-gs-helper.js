@@ -1,6 +1,5 @@
 const knexConfig = require('../../../knexfile').staging
 const knex = require('knex')(knexConfig)
-const Promise = require('bluebird').Promise
 
 const inserts = []
 
@@ -41,7 +40,11 @@ module.exports.insertDependencies = function () {
 
 module.exports.removeDependencies = function (inserts) {
   inserts = inserts.reverse()
-  return Promise.each(inserts, function (insert) {
-    return knex(insert.table).withSchema('staging').where('id', insert.id).del()
-  })
+  return inserts.map((deletion) => {
+    return knex(deletion.table).withSchema('staging').whereIn('id', [deletion.id]).del()
+  }).reduce(function(prev, current){
+    return prev.then(function() {
+      return current
+    })
+  }, Promise.resolve())
 }

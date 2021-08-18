@@ -20,8 +20,6 @@ const s3Client = getS3Client({
 })
 let expectedInputData
 
-const Promise = require('bluebird').Promise
-
 function pollAndCheck (result) {
   // waiting for message to apear on queue
 
@@ -59,12 +57,12 @@ describe('etl does not run when only one file has been updated', function () {
   })
 
   it('should not run ETL', function () {
-    return Promise.each(config.VALID_SHEET_NAMES, function (sheetName) {
+    return Promise.all(config.VALID_SHEET_NAMES.map(function (sheetName) {
       return knex(sheetName).withSchema('staging').column(config.VALID_COLUMNS[sheetName])
         .then(function (results) {
           expect(results.length).to.equal(0)
         })
-    })
+    }))
   })
 
   this.afterEach(function () {
@@ -85,13 +83,13 @@ describe('etl runs when both files have been updated', function () {
   })
 
   it('should import the extract files into the staging schema', function () {
-    return Promise.each(config.VALID_SHEET_NAMES, function (sheetName) {
+    return Promise.all(config.VALID_SHEET_NAMES.map(function (sheetName) {
       return knex(sheetName).withSchema('staging').column(config.VALID_COLUMNS[sheetName])
         .then(function (results) {
           expect(results.length, sheetName + ' table should contain ' + expectedInputData[sheetName].length + ' entries').to.equal(expectedInputData[sheetName].length)
-          expect(results).to.deep.equal(expectedInputData[sheetName])
+          expect(results).to.have.deep.members(expectedInputData[sheetName])
         })
-    })
+    }))
   })
 
   afterEach(function () {
@@ -119,12 +117,12 @@ describe('etl does not run when time between file updates is too great', functio
   })
 
   it('should not run ETL', function () {
-    return Promise.each(config.VALID_SHEET_NAMES, function (sheetName) {
+    return Promise.all(config.VALID_SHEET_NAMES.map(function (sheetName) {
       return knex(sheetName).withSchema('staging').column(config.VALID_COLUMNS[sheetName])
         .then(function (results) {
           expect(results.length).to.equal(0)
         })
-    })
+    }))
   })
 
   afterEach(function () {

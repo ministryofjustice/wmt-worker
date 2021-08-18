@@ -1,7 +1,6 @@
 const knex = require('../../../knex').appSchema
 const omicWorkloadHelper = require('./app-omic-workload-helper')
 const workloadPointsHelper = require('./app-workload-points-helper')
-const Promise = require('bluebird').Promise
 
 module.exports.defaultWorkloadPointsCalculation = {
   total_points: 99,
@@ -67,7 +66,11 @@ module.exports.removeDependencies = function (inserts) {
     }
   }
 
-  return Promise.each(groupedDeletions, (deletion) => {
-    return knex(deletion.table).withSchema('app').whereIn('id', deletion.id).del()
-  })
+  return groupedDeletions.map((deletion) => {
+    return knex(deletion.table).withSchema('app').whereIn('id', [deletion.id]).del()
+  }).reduce(function(prev, current){
+    return prev.then(function() {
+      return current
+    })
+  }, Promise.resolve())
 }

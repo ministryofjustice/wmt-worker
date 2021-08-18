@@ -1,4 +1,3 @@
-const Promise = require('bluebird').Promise
 const logger = require('../log')
 const getAppCourtReports = require('../data/get-app-court-reports')
 const insertCourtReportsCalculations = require('../data/insert-court-reports-calculation')
@@ -28,7 +27,7 @@ module.exports.execute = function (task) {
 
   return getAppCourtReports(startingStagingId, maxStagingId, reportId)
     .then(function (courtReports) {
-      return Promise.each(courtReports, function (courtReport) {
+      return Promise.all(courtReports.map(function (courtReport) {
         const workloadOwnerId = courtReport.workloadOwnerId
         const courtReportsId = courtReport.id
 
@@ -65,7 +64,7 @@ module.exports.execute = function (task) {
                   })
               })
           })
-      })
+      }))
     }).catch(function (error) {
       logger.error('Unable to retrieve court-reports with staging ids ' + startingStagingId + ' - ' + maxStagingId + ', for workload report ' + reportId)
       logger.error(error)

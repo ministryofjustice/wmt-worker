@@ -1,6 +1,5 @@
 const knex = require('../../../knex').appSchema
 const Locations = require('../../../app/services/probation-rules').Locations
-const Promise = require('bluebird').Promise
 
 module.exports.insertDependencies = function (inserts) {
   const promise = knex('workload_report').withSchema('app').returning('id').insert({})
@@ -129,7 +128,11 @@ module.exports.removeDependencies = function (inserts) {
     }
   }
 
-  return Promise.each(groupedDeletions, (deletion) => {
+  return groupedDeletions.map((deletion) => {
     return knex(deletion.table).withSchema('app').whereIn('id', deletion.id).del()
-  })
+  }).reduce(function(prev, current){
+    return prev.then(function() {
+      return current
+    })
+  }, Promise.resolve())
 }

@@ -10,14 +10,12 @@ const operationTypes = require('../../../../app/constants/calculation-tasks-oper
 const Batch = require('../../../../app/services/domain/batch')
 
 let inserts = []
-let initialWorkloadStagingId
 
 describe('services/workers/calculate-omic-workload-points', function () {
   before(function () {
     return appOmicWorkloadPointsCalculationHelper.insertDependencies(inserts)
       .then(function (builtInserts) {
         inserts = builtInserts
-        initialWorkloadStagingId = 1
       })
   })
 
@@ -28,7 +26,7 @@ describe('services/workers/calculate-omic-workload-points', function () {
 
     const task = {
       additionalData: {
-        workloadBatch: new Batch(initialWorkloadStagingId, batchSize),
+        workloadBatch: new Batch(1, batchSize),
         operationType: operationTypes.INSERT
       },
       workloadReportId: workloadReportId

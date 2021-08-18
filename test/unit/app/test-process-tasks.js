@@ -1,5 +1,4 @@
 /* eslint no-unused-expressions: 0 */
-const Promise = require('bluebird')
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')

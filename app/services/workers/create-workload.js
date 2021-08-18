@@ -1,4 +1,3 @@
-const Promise = require('bluebird').Promise
 const logger = require('../log')
 
 const mapWorkload = require('../probation-rules').mapWorkload
@@ -18,7 +17,7 @@ module.exports.execute = function (task) {
   const workloadReportId = task.workloadReportId
 
   return parseStagingWorkload([startingStagingId, endingStagingId]).then(function (stagingWorkloads) {
-    return Promise.each(stagingWorkloads, function (stagingWorkload) {
+    return Promise.all(stagingWorkloads.map(function (stagingWorkload) {
       const caseSummary = stagingWorkload.casesSummary
       if (caseSummary.omKey !== null) {
         return insertWorkloadOwnerAndDependencies(caseSummary)
@@ -28,7 +27,8 @@ module.exports.execute = function (task) {
             return insertWorkload(workloadToInsert, caseDetails)
           })
       }
-    })
+      return Promise.resolve()
+    }))
       .then(function () {
         const reductionsWorkerTask = new Task(
           undefined,

@@ -4,7 +4,6 @@ const getOldWorkloadOwnerIds = require('../data/get-old-workload-owner-ids')
 const getMostRecentlyUsedWorkloadOwnerId = require('../data/get-most-recently-used-workload-owner-id')
 
 const updateContractedHours = require('../data/update-contracted-hours')
-const Promise = require('bluebird').Promise
 const duplicateWorkloads = []
 const oldAndNewCombined = []
 const recalculateWorkloadPoints = require('../data/recalculate-workload-points')
@@ -14,7 +13,7 @@ module.exports.execute = function (task) {
   const reportId = task.workloadReportId
   return getNewWorkloadOwnerIds(regionIds)
     .then(function (newWorkloadOwners) {
-      return Promise.each(newWorkloadOwners, function (workloadOwner) {
+      return Promise.all(newWorkloadOwners.map(function (workloadOwner) {
         return getOldWorkloadOwnerIds(workloadOwner.teamId, workloadOwner.forename, workloadOwner.surname, workloadOwner.teamName)
           .then(function (oldWorkload) {
             if (oldWorkload) {
@@ -25,23 +24,23 @@ module.exports.execute = function (task) {
               }
             }
           })
-      })
+      }))
     })
     .then(function () {
-      return Promise.each(duplicateWorkloads, function (duplicateWorkload) {
+      return Promise.all(duplicateWorkloads.map(function (duplicateWorkload) {
         return getMostRecentlyUsedWorkloadOwnerId(duplicateWorkload.old)
           .then(function (w) {
             if (w) {
               oldAndNewCombined.push({ old: w.workloadOwnerId, new: duplicateWorkload.new, contractedHours: w.contractedHours, cameFromDuplicate: true })
             }
           })
-      })
+      }))
     })
     .then(function () {
-      return Promise.each(oldAndNewCombined, function (onc) {
+      return Promise.all(oldAndNewCombined.map(function (onc) {
         logger.info(onc.new, onc.old, onc.contractedHours, onc.cameFromDuplicate)
         return updateContractedHours(onc.new, onc.contractedHours)
-      })
+      }))
     })
     .then(function () {
       return recalculateWorkloadPoints(reportId)
