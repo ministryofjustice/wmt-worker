@@ -9,6 +9,7 @@ const getStgCourtReporters = require('../data/get-staging-court-reporters')
 const insertWorkloadOwnerAndDependencies = require('../insert-workload-owner-and-dependencies')
 const insertCourtReports = require('../data/insert-app-court-reports')
 const createNewTasks = require('../data/create-tasks')
+const { arrayToPromise } = require('../helpers/promise-helper')
 
 module.exports.execute = function (task) {
   const batchSize = task.additionalData.batchSize
@@ -18,7 +19,7 @@ module.exports.execute = function (task) {
 
   return getStgCourtReporters([startingStagingId, endingStagingId])
     .then(function (stagingCourtReports) {
-      return Promise.all(stagingCourtReports.map(function (stagingCourtReport) {
+      return arrayToPromise(stagingCourtReports, function (stagingCourtReport) {
         const caseSummary = stagingCourtReport.casesSummary
         if (caseSummary.omKey !== null) {
           return insertWorkloadOwnerAndDependencies(caseSummary)
@@ -32,7 +33,7 @@ module.exports.execute = function (task) {
             })
         }
         return Promise.resolve()
-      }))
+      })
         .then(function () {
           const reductionsWorkerTask = new Task(
             undefined,

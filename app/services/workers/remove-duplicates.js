@@ -14,11 +14,12 @@ const createNewTasks = require('../data/create-tasks')
 const submittingAgent = require('../../constants/task-submitting-agent')
 const taskType = require('../../constants/task-type')
 const taskStatus = require('../../constants/task-status')
+const { arrayToPromise } = require('../helpers/promise-helper')
 
 module.exports.execute = function (task) {
   return checkForDuplicateWorkloads()
     .then(function (duplicateWorkloads) {
-      return Promise.all(duplicateWorkloads.map(function (duplicateWorkload) {
+      return arrayToPromise(duplicateWorkloads, function (duplicateWorkload) {
         return getDuplicateWorkloadIds(duplicateWorkload.link_id)
           .then(function (workloadIds) {
             let workloadIdsToRemove = []
@@ -40,12 +41,12 @@ module.exports.execute = function (task) {
               })
             }
           })
-      }))
+      })
     })
     .then(function () {
       return checkForDuplicateCourtReports()
         .then(function (duplicateCourtReports) {
-          return Promise.all(duplicateCourtReports.map(function (duplicateCourtReport) {
+          return arrayToPromise(duplicateCourtReports, function (duplicateCourtReport) {
             return getDuplicateCourtReportIds(duplicateCourtReport.id)
               .then(function (courtReportIds) {
                 let courtReportIdsToRemove = []
@@ -63,7 +64,7 @@ module.exports.execute = function (task) {
                   })
                 }
               })
-          }))
+          })
         })
     })
     .then(function () {

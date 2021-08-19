@@ -10,6 +10,7 @@ const getOffenderManagerTypeId = require('../data/get-offender-manager-type-id')
 const getContractedHours = require('../data/get-contracted-hours')
 const operationTypes = require('../../constants/calculation-tasks-operation-type')
 const checkForDuplicateOmicCalculation = require('../data/check-for-duplicate-omic-calculation')
+const { arrayToPromise } = require('../helpers/promise-helper')
 
 module.exports.execute = function (task) {
   const startingStagingId = task.additionalData.workloadBatch.startingId
@@ -35,7 +36,7 @@ module.exports.execute = function (task) {
   const t2aPointsConfigurationPromise = getWorkloadPointsConfiguration(isT2a)
 
   return parseOmicAppWorkloads(startingStagingId, maxStagingId, batchSize, reportId).then(function (workloads) {
-    return Promise.all(workloads.map(function (workloadResult) {
+    return arrayToPromise(workloads, function (workloadResult) {
       const workload = workloadResult.values
       const workloadId = workloadResult.id
       const getOffenderManagerTypePromise = getOffenderManagerTypeId(workload.workloadOwnerId)
@@ -107,6 +108,6 @@ module.exports.execute = function (task) {
         logger.error(error)
         throw (error)
       })
-    }))
+    })
   })
 }

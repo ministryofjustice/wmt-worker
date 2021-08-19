@@ -1,8 +1,8 @@
 const config = require('../../etl-config')
 const knex = require('../../knex').stagingSchema
-
+const { arrayToPromise } = require('../services/helpers/promise-helper')
 module.exports = function () {
-  return Promise.all(config.VALID_SHEET_NAMES.map(function (table) {
+  return arrayToPromise(config.VALID_SHEET_NAMES, function (table) {
     return knex(table).withSchema('staging').del()
-  }))
+  })
 }

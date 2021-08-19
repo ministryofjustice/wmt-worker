@@ -7,12 +7,13 @@ const Tiers = require('./probation-rules').Tiers
 const locations = require('./probation-rules').Locations
 const getStagingCaseDetails = require('./data/get-staging-case-details')
 const getArmsTotals = require('./data/get-arms-totals')
+const { arrayToPromise } = require('./helpers/promise-helper')
 
 module.exports = function (range) {
   return getStagingWorkload(range)
     .then(function (results) {
       if (results !== 'undefined' && results.length > 0) {
-        return Promise.all(results.map(function (result) {
+        return arrayToPromise(results, function (result) {
           return getArmsTotals(result.om_key, result.team_code).then(function (armsCases) {
             // WMT0229 Change needed here when extract column names are known
             const communityTiers = new Tiers(
@@ -262,7 +263,7 @@ module.exports = function (range) {
               )
             })
           })
-        }))
+        })
       }
     })
 }

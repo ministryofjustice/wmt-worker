@@ -7,13 +7,14 @@ const updateContractedHours = require('../data/update-contracted-hours')
 const duplicateWorkloads = []
 const oldAndNewCombined = []
 const recalculateWorkloadPoints = require('../data/recalculate-workload-points')
+const { arrayToPromise } = require('../helpers/promise-helper')
 
 module.exports.execute = function (task) {
   const regionIds = task.additionalData.regionIds
   const reportId = task.workloadReportId
   return getNewWorkloadOwnerIds(regionIds)
     .then(function (newWorkloadOwners) {
-      return Promise.all(newWorkloadOwners.map(function (workloadOwner) {
+      return arrayToPromise(newWorkloadOwners, function (workloadOwner) {
         return getOldWorkloadOwnerIds(workloadOwner.teamId, workloadOwner.forename, workloadOwner.surname, workloadOwner.teamName)
           .then(function (oldWorkload) {
             if (oldWorkload) {
@@ -24,23 +25,23 @@ module.exports.execute = function (task) {
               }
             }
           })
-      }))
+      })
     })
     .then(function () {
-      return Promise.all(duplicateWorkloads.map(function (duplicateWorkload) {
+      return arrayToPromise(duplicateWorkloads, function (duplicateWorkload) {
         return getMostRecentlyUsedWorkloadOwnerId(duplicateWorkload.old)
           .then(function (w) {
             if (w) {
               oldAndNewCombined.push({ old: w.workloadOwnerId, new: duplicateWorkload.new, contractedHours: w.contractedHours, cameFromDuplicate: true })
             }
           })
-      }))
+      })
     })
     .then(function () {
-      return Promise.all(oldAndNewCombined.map(function (onc) {
+      return arrayToPromise(oldAndNewCombined, function (onc) {
         logger.info(onc.new, onc.old, onc.contractedHours, onc.cameFromDuplicate)
         return updateContractedHours(onc.new, onc.contractedHours)
-      }))
+      })
     })
     .then(function () {
       return recalculateWorkloadPoints(reportId)

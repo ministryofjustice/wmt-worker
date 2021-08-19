@@ -6,6 +6,7 @@ const getWorkloadPointsConfiguration = require('../data/get-workload-points-conf
 const getAppReductions = require('../data/get-app-reduction-hours')
 const getContractedHours = require('../data/get-contracted-hours')
 const operationTypes = require('../../constants/calculation-tasks-operation-type')
+const { arrayToPromise } = require('../helpers/promise-helper')
 
 module.exports.execute = function (task) {
   const startingStagingId = task.additionalData.workloadBatch.startingId
@@ -27,7 +28,7 @@ module.exports.execute = function (task) {
 
   return getAppCourtReports(startingStagingId, maxStagingId, reportId)
     .then(function (courtReports) {
-      return Promise.all(courtReports.map(function (courtReport) {
+      return arrayToPromise(courtReports, function (courtReport) {
         const workloadOwnerId = courtReport.workloadOwnerId
         const courtReportsId = courtReport.id
 
@@ -64,7 +65,7 @@ module.exports.execute = function (task) {
                   })
               })
           })
-      }))
+      })
     }).catch(function (error) {
       logger.error('Unable to retrieve court-reports with staging ids ' + startingStagingId + ' - ' + maxStagingId + ', for workload report ' + reportId)
       logger.error(error)
