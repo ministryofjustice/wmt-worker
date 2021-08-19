@@ -36,7 +36,7 @@ describe('services/workers/calculate-omic-workload-points', function () {
       return knex('omic_workload_points_calculations')
         .withSchema('app')
         .whereBetween('omic_workload_id', [insertedWorkloads[0].id, insertedWorkloads[insertedWorkloads.length - 1].id])
-        .orderBy('id')
+        .orderBy('omic_workload_id')
         .then(function (workloadPointsCalculations) {
           expect(workloadPointsCalculations.length).to.equal(batchSize)
           expect(workloadPointsCalculations[0].workload_report_id).to.equal(workloadReportId)
