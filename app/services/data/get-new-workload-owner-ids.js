@@ -1,6 +1,6 @@
 const knex = require('../../../knex').appSchema
 
-module.exports = function (regionIds) {
+module.exports = function (teamIds) {
   const columns = [
     'om.forename',
     'om.surname',
@@ -15,6 +15,6 @@ module.exports = function (regionIds) {
     .join('team AS t', 'wo.team_id', 't.id')
     .join('ldu AS l', 't.ldu_id', 'l.id')
     .join('region AS r', 'l.region_id', 'r.id')
-    .whereIn('r.id', regionIds)
+    .whereIn('t.id', teamIds)
     .columns(columns)
 }
