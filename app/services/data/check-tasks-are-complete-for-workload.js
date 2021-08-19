@@ -11,4 +11,5 @@ module.exports = function (workloadReportId) {
         return results[0].theCount === 0
       })
   }
+  return Promise.resolve()
 }
