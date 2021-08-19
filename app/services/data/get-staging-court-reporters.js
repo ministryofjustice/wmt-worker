@@ -3,8 +3,6 @@ const OmCourtReports = require('../probation-rules').OmCourtReports
 const CasesSummary = require('../probation-rules').CasesSummary
 const CourtReport = require('../probation-rules').CourtReport
 
-const { arrayToPromise } = require('./helpers/promise-helper')
-
 module.exports = function (range) {
   const tableName = 'court_reporters'
   const selectCols = [
@@ -30,7 +28,7 @@ module.exports = function (range) {
   return knex(tableName).withSchema('staging').whereBetween('id', range).select(selectCols)
     .then(function (results) {
       if (results !== 'undefined' && results.length > 0) {
-        return arrayToPromise(results, function (result) {
+        return results.map(function (result) {
           const casesSummary = new CasesSummary(
             result.trust,
             result.region_desc,
