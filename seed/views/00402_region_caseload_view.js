@@ -7,6 +7,8 @@ exports.seed = function (knex, Promise) {
     , l.id AS link_id
     , l.description AS name
     , r.description AS region_name
+    , r.code AS region_code
+    , l.code AS ldu_code
     , omt.grade_code
     , tr.location
     , SUM((CASE WHEN tr.tier_number = 0 THEN tr.total_filtered_cases ELSE 0 END) + (CASE WHEN tr.tier_number = 0 THEN tr.t2a_total_cases ELSE 0 END)) AS untiered
@@ -40,7 +42,7 @@ exports.seed = function (knex, Promise) {
       JOIN app.offender_manager_type omt ON omt.id = om.type_id
   WHERE wr.effective_from IS NOT NULL
       AND wr.effective_to IS NULL
-  GROUP BY l.region_id, l.id, r.description, l.description, omt.grade_code, tr.location`
+  GROUP BY l.region_id, l.id, r.description, l.description, omt.grade_code, tr.location, r.code, l.code`
 
   const index = `CREATE UNIQUE CLUSTERED INDEX idx_region_caseload_view
   ON app.region_caseload_view (link_id, location, grade_code)`

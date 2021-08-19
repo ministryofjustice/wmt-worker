@@ -15,7 +15,7 @@ describe('node dashboard', function () {
         })
       })
   })
-  it.only('should generate dashboard when empty data passed in', function () {
+  it('should generate dashboard when empty data passed in', function () {
     return nodeDashboard([], [], [])
       .then(function (filePath) {
         return listS3Objects(getDashboardClient, config.DASHBOARD_BUCKET).then(function (s3Objects) {

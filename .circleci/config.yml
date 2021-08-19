@@ -10,7 +10,7 @@ parameters:
     default: manage_a_workforce_dev
   node-version:
     type: string
-    default: 14.17-browsers
+    default: 16.6-browsers
   postgres_tag:
     default: "11"
     type: string
@@ -100,6 +100,7 @@ jobs:
           - AWS_EXECUTION_ENV=True
           - DEFAULT_REGION=eu-west-2
           - TMPDIR=/private
+    resource_class: medium+
     steps:
       - checkout
       - hmpps/install_aws_cli

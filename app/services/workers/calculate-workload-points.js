@@ -1,4 +1,3 @@
-const Promise = require('bluebird').Promise
 const logger = require('../log')
 const calculateWorkloadPoints = require('../probation-rules').calculateWorkloadPoints
 const calculateNominalTarget = require('../probation-rules').calculateNominalTarget
@@ -40,7 +39,7 @@ module.exports.execute = function (task) {
   const t2aPointsConfigurationPromise = getWorkloadPointsConfiguration(isT2a)
 
   return parseAppWorkloads(startingStagingId, maxStagingId, batchSize, reportId).then(function (workloads) {
-    return Promise.each(workloads, function (workloadResult) {
+    return Promise.all(workloads.map(function (workloadResult) {
       const workload = workloadResult.values
       const workloadId = workloadResult.id
       const getOffenderManagerTypePromise = getOffenderManagerTypeId(workload.workloadOwnerId)
@@ -125,6 +124,6 @@ module.exports.execute = function (task) {
         logger.error(error)
         throw (error)
       })
-    })
+    }))
   })
 }

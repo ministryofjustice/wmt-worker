@@ -14,9 +14,13 @@ module.exports = function (newWorkloadReportId) {
       if (newWorkload && newWorkload.length > 0) {
         effectiveFrom = newWorkload[0].effective_from
       }
-      return updateWorkloadReportEffectiveEndDate(id, effectiveFrom)
-        .then(function () {
-          return id
-        })
+      if (id) {
+        return updateWorkloadReportEffectiveEndDate(id, effectiveFrom)
+          .then(function () {
+            return id
+          })
+      } else {
+        return id
+      }
     })
 }

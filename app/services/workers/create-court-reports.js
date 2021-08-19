@@ -1,5 +1,4 @@
 const logger = require('../log')
-const Promise = require('bluebird').Promise
 
 const Task = require('../domain/task')
 const taskType = require('../../constants/task-type')
@@ -19,7 +18,7 @@ module.exports.execute = function (task) {
 
   return getStgCourtReporters([startingStagingId, endingStagingId])
     .then(function (stagingCourtReports) {
-      return Promise.each(stagingCourtReports, function (stagingCourtReport) {
+      return Promise.all(stagingCourtReports.map(function (stagingCourtReport) {
         const caseSummary = stagingCourtReport.casesSummary
         if (caseSummary.omKey !== null) {
           return insertWorkloadOwnerAndDependencies(caseSummary)
@@ -28,10 +27,12 @@ module.exports.execute = function (task) {
               return insertCourtReports(courtReportToInsert)
                 .then(function (insertedId) {
                   logger.info('Court Report with id ' + insertedId + ' added')
+                  return insertedId
                 })
             })
         }
-      })
+        return Promise.resolve()
+      }))
         .then(function () {
           const reductionsWorkerTask = new Task(
             undefined,

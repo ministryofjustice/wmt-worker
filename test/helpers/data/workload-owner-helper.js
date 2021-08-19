@@ -1,6 +1,5 @@
 const knex = require('../../../knex').appSchema
 const teamHelper = require('./app-team-helper')
-const Promise = require('bluebird').Promise
 
 module.exports.addDepenedenciesForWorkloadOwner = function () {
   let inserts = []
@@ -29,7 +28,11 @@ module.exports.addDepenedenciesForWorkloadOwner = function () {
 
 module.exports.removeDependenciesForWorkloadOwner = function (inserts) {
   inserts = inserts.reverse()
-  return Promise.each(inserts, (insert) => {
-    return knex(insert.table).withSchema('app').where('id', insert.id).del()
-  })
+  return inserts.map((deletion) => {
+    return knex(deletion.table).withSchema('app').whereIn('id', [deletion.id]).del()
+  }).reduce(function (prev, current) {
+    return prev.then(function () {
+      return current
+    })
+  }, Promise.resolve())
 }

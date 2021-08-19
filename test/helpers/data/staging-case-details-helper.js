@@ -1,6 +1,5 @@
 const knex = require('../../../knex').stagingSchema
 const stagingHelper = require('./staging-helper')
-const Promise = require('bluebird').Promise
 
 const aliases = {
   caseRefNo: 'case_ref_no',
@@ -66,13 +65,18 @@ module.exports.insertPriority = function (inserts) {
 
 module.exports.deleteAll = function (inserts) {
   inserts = inserts.reverse()
-  return Promise.each(inserts, function (insert) {
-    if (insert.id instanceof Array) {
-      return knex(insert.table).withSchema('staging').whereIn('id', insert.id).del()
+
+  return inserts.map((deletion) => {
+    if (deletion.id instanceof Array) {
+      return knex(deletion.table).withSchema('staging').whereIn('id', deletion.id).del()
     } else {
-      return knex(insert.table).withSchema('staging').where('id', insert.id).del()
+      return knex(deletion.table).withSchema('staging').where('id', deletion.id).del()
     }
-  })
+  }).reduce(function (prev, current) {
+    return prev.then(function () {
+      return current
+    })
+  }, Promise.resolve())
 }
 
 function getTestCaseDetails (caseRefNo, omKey, location) {

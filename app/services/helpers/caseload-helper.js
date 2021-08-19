@@ -26,6 +26,8 @@ module.exports.getCaseloadSummaryTotalsByTeam = function (caseloads) {
       let newValue = {
         name: caseloads[idx].name,
         regionName: caseloads[idx].regionName,
+        regionCode: caseloads[idx].regionCode,
+        lduCode: caseloads[idx].lduCode,
         linkId: caseloads[idx].linkId,
         totalCases: 0,
         custodyTotalCases: 0,
@@ -151,7 +153,13 @@ const transform = function (caseloadTotalsByGrade, calculatePercentage = false, 
 
   // For each team, create one entry in the new results set with one 'grade' sub-object per grade
   for (const team in caseloadTotalsByTeam) {
-    let newTeamEntry = { linkId: caseloadTotalsByTeam[team].linkId, name: caseloadTotalsByTeam[team].name, regionName: caseloadTotalsByTeam[team].regionName }
+    let newTeamEntry = {
+      linkId: caseloadTotalsByTeam[team].linkId,
+      name: caseloadTotalsByTeam[team].name,
+      regionName: caseloadTotalsByTeam[team].regionName,
+      regionCode: caseloadTotalsByTeam[team].regionCode,
+      lduCode: caseloadTotalsByTeam[team].lduCode
+    }
     const teamGradeRecords = caseloadTotalsByGrade.filter((row) => row.linkId === caseloadTotalsByTeam[team].linkId)
     const gradeRecords = []
     for (const record in teamGradeRecords) {

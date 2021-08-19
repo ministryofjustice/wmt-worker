@@ -1,5 +1,4 @@
 const knex = require('../../../knex').appSchema
-const Promise = require('bluebird').Promise
 const moment = require('moment')
 
 const getAppAdjustmentsForBatch = require('../../../app/services/data/get-app-adjustments-for-batch')
@@ -30,9 +29,13 @@ module.exports.insertDependencies = function (workloadOwnerId, inserts = []) {
 
 module.exports.removeDependencies = function (inserts) {
   inserts = inserts.reverse()
-  return Promise.each(inserts, (insert) => {
-    return knex(insert.table).withSchema('app').where('id', insert.id).del()
-  })
+  return inserts.map((deletion) => {
+    return knex(deletion.table).withSchema('app').whereIn('id', [deletion.id]).del()
+  }).reduce(function (prev, current) {
+    return prev.then(function () {
+      return current
+    })
+  }, Promise.resolve())
 }
 
 module.exports.getAdjustmentsForTest = function (adjustmentCategory, minWorkloadId, maxWorkloadId, workloadReportId) {
