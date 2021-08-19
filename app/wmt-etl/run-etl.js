@@ -8,6 +8,7 @@ const taskStatus = require('../constants/task-status')
 const taskType = require('../constants/task-type')
 const log = require('../services/log')
 const listEtlFiles = require('./list-etl-files')
+const deleteFileTags = require('./delete-file-tags')
 
 module.exports = function () {
   return cleanTables()
@@ -26,6 +27,11 @@ module.exports = function () {
               taskStatus.PENDING
             )
             return createTasks([processImportTask])
+          }).catch(function (error) {
+            return deleteFileTags(extractFiles)
+              .then(function () {
+                throw (error)
+              })
           })
       })
     })

@@ -2,10 +2,9 @@ const production = process.env.NODE_ENV === 'production'
 
 module.exports = {
 
-  FILES_CHANGED_TIME_WINDOW: 60000,
-
   EXTRACT_LISTENER_CRON: process.env.EXTRACT_LISTENER_CRON || '0/10 * * * * *', //  every 10 seconds
 
+  READ_TAG_KEY: 'hasBeenRead',
   S3: {
     BUCKET_NAME: process.env.ETL_S3_BUCKET_NAME || 'wmt-worker',
     REGION: process.env.S3_REGION || 'eu-west-2',
