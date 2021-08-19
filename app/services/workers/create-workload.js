@@ -9,6 +9,7 @@ const parseStagingWorkload = require('../parse-staging-workload')
 const insertWorkloadOwnerAndDependencies = require('../insert-workload-owner-and-dependencies')
 const insertWorkload = require('../data/insert-app-workload')
 const createNewTasks = require('../data/create-tasks')
+const { arrayToPromise } = require('../helpers/promise-helper')
 
 module.exports.execute = function (task) {
   const workloadBatchSize = task.additionalData.batchSize
@@ -17,7 +18,7 @@ module.exports.execute = function (task) {
   const workloadReportId = task.workloadReportId
 
   return parseStagingWorkload([startingStagingId, endingStagingId]).then(function (stagingWorkloads) {
-    return Promise.all(stagingWorkloads.map(function (stagingWorkload) {
+    return arrayToPromise(stagingWorkloads, function (stagingWorkload) {
       const caseSummary = stagingWorkload.casesSummary
       if (caseSummary.omKey !== null) {
         return insertWorkloadOwnerAndDependencies(caseSummary)
@@ -28,7 +29,7 @@ module.exports.execute = function (task) {
           })
       }
       return Promise.resolve()
-    }))
+    })
       .then(function () {
         const reductionsWorkerTask = new Task(
           undefined,

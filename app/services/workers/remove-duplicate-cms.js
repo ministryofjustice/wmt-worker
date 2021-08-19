@@ -2,14 +2,15 @@ const logger = require('../log')
 const checkForDuplicateCMS = require('../data/check-for-duplicate-cms')
 const deleteDuplicateCMS = require('../data/delete-duplicate-cms')
 const recalculateWorkloadPoints = require('../data/recalculate-workload-points')
+const { arrayToPromise } = require('../helpers/promise-helper')
 
 module.exports.execute = function (task) {
   const reportId = task.workloadReportId
   return checkForDuplicateCMS()
     .then(function (duplicateCMSRecords) {
-      return Promise.all(duplicateCMSRecords.map(function (duplicateCMS) {
+      return arrayToPromise(duplicateCMSRecords, function (duplicateCMS) {
         return deleteDuplicateCMS(duplicateCMS.contactId)
-      }))
+      })
     })
     .then(function () {
       return recalculateWorkloadPoints(reportId)

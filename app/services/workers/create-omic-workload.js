@@ -11,6 +11,8 @@ const insertOmicWorkload = require('../data/insert-app-omic-workload')
 const createNewTasks = require('../data/create-tasks')
 const operationTypes = require('../../constants/calculation-tasks-operation-type')
 
+const { arrayToPromise } = require('../helpers/promise-helper')
+
 module.exports.execute = function (task) {
   const workloadBatchSize = task.additionalData.batchSize
   const startingStagingId = task.additionalData.startingId
@@ -18,7 +20,7 @@ module.exports.execute = function (task) {
   const workloadReportId = task.workloadReportId
 
   return parseStagingOmicWorkload([startingStagingId, endingStagingId]).then(function (stagingWorkloads) {
-    return Promise.all(stagingWorkloads.map(function (stagingWorkload) {
+    return arrayToPromise(stagingWorkloads, function (stagingWorkload) {
       const caseSummary = stagingWorkload.casesSummary
       if (caseSummary.omKey !== null) {
         return insertWorkloadOwnerAndDependencies(caseSummary)
@@ -29,7 +31,7 @@ module.exports.execute = function (task) {
           })
       }
       return Promise.resolve()
-    }))
+    })
       .then(function () {
         const calculateOmicWpAdditionalData = {
           workloadBatch: task.additionalData,

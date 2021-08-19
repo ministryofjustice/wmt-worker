@@ -28,7 +28,7 @@ module.exports = function (range) {
   return knex(tableName).withSchema('staging').whereBetween('id', range).select(selectCols)
     .then(function (results) {
       if (results !== 'undefined' && results.length > 0) {
-        return Promise.all(results.map(function (result) {
+        return results.map(function (result) {
           const casesSummary = new CasesSummary(
             result.trust,
             result.region_desc,
@@ -62,7 +62,7 @@ module.exports = function (range) {
           const stagingId = result.staging_id
 
           return new OmCourtReports(stagingId, casesSummary, courtReport)
-        }))
+        })
       }
     })
 }

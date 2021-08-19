@@ -1,13 +1,13 @@
 const logger = require('../log')
 const getNewWorkloadOwnerIds = require('../data/get-new-workload-owner-ids')
 const getOldWorkloadOwnerIds = require('../data/get-old-workload-owner-ids')
-const disableIndexing = require('../data/disable-indexing')
 const getMostRecentlyUsedWorkloadOwnerId = require('../data/get-most-recently-used-workload-owner-id')
 
 const updateWorkloadWorkloadOwnerId = require('../data/update-workload-workload-owner-id')
 const duplicateWorkloads = []
 const oldAndNewCombined = []
 const recalculateWorkloadPoints = require('../data/recalculate-workload-points')
+const { arrayToPromise } = require('../helpers/promise-helper')
 
 module.exports.execute = function (task) {
   const regionIds = task.additionalData.regionIds
@@ -15,7 +15,7 @@ module.exports.execute = function (task) {
   const reportId = task.workloadReportId
   return getNewWorkloadOwnerIds(regionIds)
     .then(function (newWorkloadOwners) {
-      return Promise.all(newWorkloadOwners.map(function (workloadOwner) {
+      return arrayToPromise(newWorkloadOwners, function (workloadOwner) {
         return getOldWorkloadOwnerIds(workloadOwner.teamId, workloadOwner.forename, workloadOwner.surname, workloadOwner.teamName)
           .then(function (oldWorkload) {
             if (oldWorkload) {
@@ -26,33 +26,26 @@ module.exports.execute = function (task) {
               }
             }
           })
-      }))
+      })
     })
     .then(function () {
-      return Promise.all(duplicateWorkloads.map(function (duplicateWorkload) {
+      return arrayToPromise(duplicateWorkloads, function (duplicateWorkload) {
         return getMostRecentlyUsedWorkloadOwnerId(duplicateWorkload.old)
           .then(function (w) {
             if (w) {
               oldAndNewCombined.push({ old: w.workloadOwnerId, new: duplicateWorkload.new })
             }
           })
-      }))
+      })
     })
     .then(function () {
-      return disableIndexing()
-    })
-    .then(function () {
-      logger.info('Indexing disabled')
-      return Promise.all(oldAndNewCombined.map(function (onc) {
+      return arrayToPromise(oldAndNewCombined, function (onc) {
         return updateWorkloadWorkloadOwnerId(onc.old, onc.new, maximumWorkloadReportId)
-      }))
+      })
     })
     .then(function () {
       return recalculateWorkloadPoints(reportId)
     })
-    // .then(function () {
-    //   return enableIndexing()
-    // })
     .then(function () {
       logger.info('Indexing enabled')
     })
