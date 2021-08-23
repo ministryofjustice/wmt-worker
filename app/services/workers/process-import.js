@@ -16,6 +16,8 @@ const taskStatus = require('../../constants/task-status')
 const taskType = require('../../constants/task-type')
 const submittingAgent = require('../../constants/task-submitting-agent')
 const disableIndexing = require('../data/disable-indexing')
+const calculateNumberOfRecordsToProcess = require('../helpers/calculate-number-of-records-to-process')
+const calculateNumberOfTasksRequired = require('../helpers/calculate-number-of-tasks-required')
 
 module.exports.execute = function (task) {
   const batchSize = parseInt(config.ASYNC_WORKER_BATCH_SIZE, 10)
@@ -58,8 +60,8 @@ const populateStagingCourtReporters = function () {
 
 const createAndGetCourtReportsTaskObjects = function (tasks, batchSize, workloadReportId) {
   return getCourtReportersIdRange().then(function (idRange) {
-    const numberOfRecordsToProcess = idRange.lastId - idRange.firstId
-    const courtReportsTasksRequired = Math.ceil(numberOfRecordsToProcess / batchSize)
+    const numberOfRecordsToProcess = calculateNumberOfRecordsToProcess(idRange)
+    const courtReportsTasksRequired = calculateNumberOfTasksRequired(numberOfRecordsToProcess, batchSize)
 
     if (courtReportsTasksRequired > 0) {
       return createTaskObjects(tasks, taskType.CREATE_COURT_REPORTS, batchSize, idRange, workloadReportId)
@@ -70,8 +72,8 @@ const createAndGetCourtReportsTaskObjects = function (tasks, batchSize, workload
 
 const createAndGetWorkloadTaskObjects = function (tasks, batchSize, workloadReportId) {
   return getWmtExtractIdRange().then(function (idRange) {
-    const numberOfRecordsToProcess = idRange.lastId - idRange.firstId
-    const workloadTasksRequired = Math.ceil(numberOfRecordsToProcess / batchSize)
+    const numberOfRecordsToProcess = calculateNumberOfRecordsToProcess(idRange)
+    const workloadTasksRequired = calculateNumberOfTasksRequired(numberOfRecordsToProcess, batchSize)
 
     if (workloadTasksRequired > 0) {
       return createTaskObjects(tasks, taskType.CREATE_WORKLOAD, batchSize, idRange, workloadReportId)
@@ -82,8 +84,8 @@ const createAndGetWorkloadTaskObjects = function (tasks, batchSize, workloadRepo
 
 const createAndGetOmicTaskObjects = function (tasks, batchSize, workloadReportId) {
   return getOmicTeamsIdRange().then(function (idRange) {
-    const numberOfRecordsToProcess = idRange.lastId - idRange.firstId
-    const omicTasksRequired = Math.ceil(numberOfRecordsToProcess / batchSize)
+    const numberOfRecordsToProcess = calculateNumberOfRecordsToProcess(idRange)
+    const omicTasksRequired = calculateNumberOfTasksRequired(numberOfRecordsToProcess, batchSize)
 
     if (omicTasksRequired > 0) {
       return createTaskObjects(tasks, taskType.CREATE_OMIC_WORKLOAD, batchSize, idRange, workloadReportId)
@@ -93,8 +95,8 @@ const createAndGetOmicTaskObjects = function (tasks, batchSize, workloadReportId
 }
 
 const createTaskObjects = function (tasks, taskTypeToCreate, batchSize, idRange, workloadReportId) {
-  const numberOfRecordsToProcess = idRange.lastId - idRange.firstId
-  const tasksRequired = Math.ceil(numberOfRecordsToProcess / batchSize)
+  const numberOfRecordsToProcess = calculateNumberOfRecordsToProcess(idRange)
+  const tasksRequired = calculateNumberOfTasksRequired(numberOfRecordsToProcess, batchSize)
 
   logger.info('Creating ' + tasksRequired + ' ' + taskTypeToCreate + ' tasks')
 
