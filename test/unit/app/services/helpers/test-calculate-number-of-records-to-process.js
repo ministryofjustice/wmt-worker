@@ -1,7 +1,7 @@
 const expect = require('chai').expect
 const calculateNumberOfRecordsToProcess = require('../../../../../app/services/helpers/calculate-number-of-records-to-process')
 
-describe.only('services/helpers/calculate-number-of-records-to-process', function () {
+describe('services/helpers/calculate-number-of-records-to-process', function () {
   it('should return 0 when idRange is null', function () {
     const numberOfRecordsToProcess = calculateNumberOfRecordsToProcess(null)
     expect(numberOfRecordsToProcess).to.eql(0)
