@@ -1,7 +1,7 @@
 const expect = require('chai').expect
 const calculateNumberOfTasksRequired = require('../../../../../app/services/helpers/calculate-number-of-tasks-required')
 
-describe.only('services/helpers/calculate-number-of-tasks-required', function () {
+describe('services/helpers/calculate-number-of-tasks-required', function () {
   it('should return 1 when numberOfRecordsToProcess = 25 and batchSize = 25', function () {
     const numberOfRecordsToProcess = 25
     const batchSize = 25
