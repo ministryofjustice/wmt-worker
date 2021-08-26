@@ -38,11 +38,17 @@ module.exports = {
   IP_ADDRESSES: process.env.WMT_WORKER_APP_IP_ADDRESSES || 'http://localhost:3000',
 
   // Dashboard
-  WMT_DASHBOARD_TEMPLATE_FILE_PATH: process.env.WMT_DASHBOARD_TEMPLATE_FILE_PATH || '/usr/src/app/wmt-etl/data/templates/dashboard_template.xlsx',
-  WMT_DASHBOARD_OUTPUT_FILE_PATH: process.env.WMT_DASHBOARD_OUTPUT_FILE_PATH || '/usr/src/app/wmt-etl/data/dashboard/',
+  WMT_DASHBOARD_TEMPLATE_FILE_PATH: process.env.WMT_DASHBOARD_TEMPLATE_FILE_PATH || '/usr/src/app/wmt-worker/data/templates/dashboard_template.xlsx',
+  WMT_DASHBOARD_OUTPUT_FILE_PATH: process.env.WMT_DASHBOARD_OUTPUT_FILE_PATH || '/usr/src/app/wmt-worker/data/dashboard/',
   WMT_WEB_DASHBOARD_OUTPUT_FILE_PATH: process.env.WMT_WEB_DASHBOARD_OUTPUT_FILE_PATH || '/data/dashboard/',
   WMT_DASHBOARD_PASSWORD: process.env.WMT_DASHBOARD_PASSWORD,
 
+  // Reductions and Contracted Hours
+  WMT_REDUCTIONS_AND_CONTRACTED_HOURS_PATH: process.env.WMT_REDUCTIONS_AND_CONTRACTED_HOURS_PATH || '/usr/src/app/wmt-worker/data/reductions_and_contracted_hours/',
+
   // Expected values
-  EXPECTED_DIVISIONS_COUNT: process.env.WMT_EXPECTED_DIVISIONS_COUNT || '8'
+  EXPECTED_DIVISIONS_COUNT: process.env.WMT_EXPECTED_DIVISIONS_COUNT || '8',
+
+  // Environment
+  WMT_ENVIRONMENT: process.env.WMT_ENVIRONMENT
 }
