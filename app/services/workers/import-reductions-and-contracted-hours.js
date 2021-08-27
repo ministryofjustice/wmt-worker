@@ -7,9 +7,13 @@ const Promise = require('bluebird')
 const glob = require('glob')
 const config = require('../../../config')
 
-module.exports.init = function (task) {
+module.exports = function (task) {
   if (config.WMT_ENVIRONMENT === 'production') {
     throw new Error('IMPORT-REDUCTIONS-AND-CONTRACTED-HOURS: This task can only be used in a non-production environment')
+  }
+
+  if (!task.workloadReportId) {
+    throw new Error('IMPORT-REDUCTIONS-AND-CONTRACTED-HOURS: The workloadReportId must be included in the task')
   }
 
   const reductionsAndContractedHoursFilePath = glob.sync(config.WMT_REDUCTIONS_AND_CONTRACTED_HOURS_PATH + '*.json', {})
