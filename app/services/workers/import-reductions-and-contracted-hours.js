@@ -6,6 +6,7 @@ const deleteAllReductions = require('../data/delete-all-reductions')
 const Promise = require('bluebird')
 const glob = require('glob')
 const config = require('../../../config')
+const fs = require('fs')
 
 module.exports = function (task) {
   if (config.WMT_ENVIRONMENT === 'production') {
@@ -42,6 +43,7 @@ module.exports = function (task) {
           })
       })
         .then(function () {
+          fs.unlinkSync(reductionsAndContractedHoursFilePath[0])
           return recalculateWorkloadPoints(task.workloadReportId)
         })
     })
