@@ -12,7 +12,7 @@ module.exports.insertDependencies = function (inserts) {
     })
     .then(function (ids) {
       inserts.push({ table: 'region', id: ids[0] })
-      return knex('ldu').withSchema('app').returning('id').insert({ region_id: ids[0] })
+      return knex('ldu').withSchema('app').returning('id').insert({ region_id: ids[0], description: 'Test Ldu 4' })
     })
     .then(function (ids) {
       inserts.push({ table: 'ldu', id: ids[0] })

@@ -2,10 +2,11 @@ const knex = require('../../../knex').appSchema
 
 const helper = require('./app-workload-helper')
 const reductionStatus = require('../../../app/constants/reduction-status')
+const removeData = require('./remove-data')
 
-module.exports.insertDependencies = function (workloadOwnerId, inserts = []) {
+module.exports.insertDependencies = function (inserts = []) {
   const promise = helper.insertDependencies(inserts)
-    .then(function (idsArray) {
+    .then(function () {
       const workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
       const reductions = module.exports.getReductionObjects(workloadOwnerId)
       return knex('reductions').withSchema('app').returning('id').insert(reductions)
@@ -23,14 +24,7 @@ module.exports.insertDependencies = function (workloadOwnerId, inserts = []) {
 }
 
 module.exports.removeDependencies = function (inserts) {
-  inserts = inserts.reverse()
-  return inserts.map((deletion) => {
-    return knex(deletion.table).withSchema('app').where('id', deletion.id).del()
-  }).reduce(function (prev, current) {
-    return prev.then(function () {
-      return current
-    })
-  }, Promise.resolve())
+  return removeData(inserts)
 }
 
 module.exports.getReductionObjects = function (workloadOwnerId) {

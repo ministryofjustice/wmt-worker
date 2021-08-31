@@ -1,6 +1,5 @@
 const expect = require('chai').expect
 const knex = require('../../../../knex').appSchema
-const appWorkloadOwnerHelper = require('../../../helpers/data/app-workload-owner-helper')
 const appAdjustmentsHelper = require('../../../helpers/data/app-adjustments-helper')
 const updateAdjustmentEffectiveTo = require('../../../../app/services/data/update-adjustment-effective-to')
 
@@ -9,12 +8,9 @@ const newDate = new Date(2020, 11, 17)
 
 describe('services/data/update-adjustment-effective-to', function () {
   before(function () {
-    return appWorkloadOwnerHelper.insertDependencies(inserts)
-      .then(function (builtInserts) {
-        return appAdjustmentsHelper.insertDependencies(inserts)
-          .then(function (builtInserts) {
-            inserts = builtInserts
-          })
+    return appAdjustmentsHelper.insertDependencies([])
+      .then(function (appAdjustmentInserts) {
+        inserts = appAdjustmentInserts
       })
   })
 

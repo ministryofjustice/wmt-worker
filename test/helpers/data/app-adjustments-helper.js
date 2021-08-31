@@ -8,9 +8,9 @@ const helper = require('./app-workload-helper')
 const CMS_ADJUSTMENT_REASON_ID = 1
 const GS_ADJUSTMENT_REASON_ID = 40
 
-module.exports.insertDependencies = function (workloadOwnerId, inserts = []) {
+module.exports.insertDependencies = function (inserts = []) {
   const promise = helper.insertDependencies(inserts)
-    .then(function (idsArray) {
+    .then(function () {
       const workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
       const adjustments = module.exports.getAdjustmentObjects(workloadOwnerId)
       return knex('adjustments').withSchema('app').returning('id').insert(adjustments)
