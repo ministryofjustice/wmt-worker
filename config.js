@@ -23,6 +23,9 @@ module.exports = {
   WMT_DASHBOARD_OUTPUT_FILE_PATH: process.env.WMT_DASHBOARD_OUTPUT_FILE_PATH || 'generated-dashboards/',
   WMT_DASHBOARD_PASSWORD: process.env.WMT_DASHBOARD_PASSWORD,
 
+  // Reductions and Contracted Hours
+  WMT_REDUCTIONS_AND_CONTRACTED_HOURS_PATH: process.env.WMT_REDUCTIONS_AND_CONTRACTED_HOURS_PATH || '/usr/src/app/wmt-worker/data/reductions_and_contracted_hours/',
+
   // Expected values
   EXPECTED_DIVISIONS_COUNT: process.env.WMT_EXPECTED_DIVISIONS_COUNT || '32',
 
@@ -34,5 +37,8 @@ module.exports = {
 
   APPINSIGHTS_INSTRUMENTATIONKEY: process.env.APPINSIGHTS_INSTRUMENTATIONKEY,
   ENABLE_SLACK_ALERTING: !!process.env.SENTRY_DSN,
-  SENTRY_DSN: process.env.SENTRY_DSN
+  SENTRY_DSN: process.env.SENTRY_DSN,
+
+  // Environment
+  WMT_ENVIRONMENT: process.env.NODE_ENV
 }

@@ -13,11 +13,11 @@ const removeDuplicates = require('./workers/remove-duplicates')
 const checkForMissingDivisions = require('./workers/check-for-missing-divisions')
 const createOmicWorkload = require('./workers/create-omic-workload')
 const calculateOmicWorkloadPoints = require('./workers/calculate-omic-workload-points')
-const migrateWorkloads = require('./workers/migrate-workloads')
+const migrateReductions = require('./workers/migrate-reductions')
 const migrateContractedHours = require('./workers/migrate-contracted-hours')
 const removeDuplicateCMS = require('./workers/remove-duplicate-cms')
 const recalculateWorkloadPoints = require('./workers/recalculate-workload-points')
-
+const importReductionsAndContractedHours = require('./workers/import-reductions-and-contracted-hours')
 // ALL WORKERS SHOULD HAVE A METHOD `execute(task)` that returns a Promise
 module.exports = function (taskType) {
   switch (taskType) {
@@ -34,11 +34,12 @@ module.exports = function (taskType) {
     case taskTypes.REMOVE_DUPLICATES: return removeDuplicates
     case taskTypes.REMOVE_DUPLICATE_CMS: return removeDuplicateCMS
     case taskTypes.CHECK_FOR_MISSING_DIVISIONS: return checkForMissingDivisions
-    case taskTypes.MIGRATE_WORKLOADS: return migrateWorkloads
+    case taskTypes.MIGRATE_REDUCTIONS: return migrateReductions
     case taskTypes.MIGRATE_CONTRACTED_HOURS: return migrateContractedHours
     case taskTypes.CREATE_OMIC_WORKLOAD: return createOmicWorkload
     case taskTypes.CALCULATE_OMIC_WORKLOAD_POINTS: return calculateOmicWorkloadPoints
     case taskTypes.RECALCULATE_WORKLOAD_POINTS: return recalculateWorkloadPoints
+    case taskTypes.IMPORT_REDUCTIONS_AND_CONTRACTED_HOURS: return importReductionsAndContractedHours
   }
 
   return null

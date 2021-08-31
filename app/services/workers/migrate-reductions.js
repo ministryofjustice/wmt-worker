@@ -2,18 +2,14 @@ const logger = require('../log')
 const getNewWorkloadOwnerIds = require('../data/get-new-workload-owner-ids')
 const getOldWorkloadOwnerIds = require('../data/get-old-workload-owner-ids')
 const getMostRecentlyUsedWorkloadOwnerId = require('../data/get-most-recently-used-workload-owner-id')
-
-const updateWorkloadWorkloadOwnerId = require('../data/update-workload-workload-owner-id')
+const { arrayToPromise } = require('../helpers/promise-helper')
+const updateReductionsWorkloadOwnerId = require('../data/update-reductions-workload-owner-id')
 const duplicateWorkloads = []
 const oldAndNewCombined = []
-const recalculateWorkloadPoints = require('../data/recalculate-workload-points')
-const { arrayToPromise } = require('../helpers/promise-helper')
 
 module.exports.execute = function (task) {
-  const regionIds = task.additionalData.regionIds
-  const maximumWorkloadReportId = task.additionalData.maximumWorkloadReportId
-  const reportId = task.workloadReportId
-  return getNewWorkloadOwnerIds(regionIds)
+  const teamIds = task.additionalData.teamIds
+  return getNewWorkloadOwnerIds(teamIds)
     .then(function (newWorkloadOwners) {
       return arrayToPromise(newWorkloadOwners, function (workloadOwner) {
         return getOldWorkloadOwnerIds(workloadOwner.teamId, workloadOwner.forename, workloadOwner.surname, workloadOwner.teamName)
@@ -40,17 +36,11 @@ module.exports.execute = function (task) {
     })
     .then(function () {
       return arrayToPromise(oldAndNewCombined, function (onc) {
-        return updateWorkloadWorkloadOwnerId(onc.old, onc.new, maximumWorkloadReportId)
+        return updateReductionsWorkloadOwnerId(onc.old, onc.new)
       })
     })
-    .then(function () {
-      return recalculateWorkloadPoints(reportId)
-    })
-    .then(function () {
-      logger.info('Indexing enabled')
-    })
     .catch(function (error) {
-      logger.error('MIGRATE-WORKLOADS - An error occurred migrating old workloads')
+      logger.error('MIGRATE-REDUCTIONS - An error occurred migrating Reductions')
       logger.error(error)
       throw (error)
     })
