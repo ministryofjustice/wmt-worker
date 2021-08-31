@@ -39,7 +39,7 @@ describe('poll-sqs', function () {
 
   it('must not run etl when only one file present', function () {
     receiveSqsMessage.resolves({ Messages: [{ ReceiptHandle: {} }] })
-    listObjects.resolves([{}])
+    listObjects.resolves([{ Key: 'one.xlsx' }])
     return pollSqs().then(function (result) {
       return expect(result).to.equal('Only one file updated')
     })
@@ -47,9 +47,9 @@ describe('poll-sqs', function () {
 
   it('must not run when one file has already been read', function () {
     receiveSqsMessage.resolves({ Messages: [{ ReceiptHandle: {} }] })
-    listObjects.resolves([{ Key: '1', LastModified: new Date() }, { Key: '2', LastModified: new Date() }])
-    getHasBeenRead.withArgs('1').resolves(true)
-    getHasBeenRead.withArgs('2').resolves(false)
+    listObjects.resolves([{ Key: '1.xlsx', LastModified: new Date() }, { Key: '2.xlsx', LastModified: new Date() }])
+    getHasBeenRead.withArgs('1.xlsx').resolves(true)
+    getHasBeenRead.withArgs('2.xlsx').resolves(false)
     return pollSqs().then(function (result) {
       return expect(result).to.equal('Files have been read')
     })
@@ -57,7 +57,7 @@ describe('poll-sqs', function () {
 
   it('must run when both files have not been read', function () {
     receiveSqsMessage.resolves({ Messages: [{ ReceiptHandle: {} }] })
-    listObjects.resolves([{ Key: '1', LastModified: new Date() }, { Key: '2', LastModified: new Date() }])
+    listObjects.resolves([{ Key: '1.xlsx', LastModified: new Date() }, { Key: '2.xlsx', LastModified: new Date() }])
     getHasBeenRead.resolves(false)
     runEtl.resolves(true)
     return pollSqs().then(function (result) {
