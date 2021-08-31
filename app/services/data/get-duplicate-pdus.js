@@ -2,11 +2,11 @@ const knex = require('../../../knex').appSchema
 
 module.exports = function () {
   return knex
-    .select(knex.count('* as theCount'), 'description')
+    .select(knex.raw('count(*) as theCount'), 'description')
     .from('ldu')
     .withSchema('app')
     .groupBy('description')
-    .having(knex.count('*'), '>', 1)
+    .having(knex.raw('count(*)'), '>', 1)
     .then((results) => {
       const resultsArray = []
       results.forEach((result) => {
