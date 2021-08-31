@@ -1,6 +1,5 @@
 const knex = require('../../../knex').stagingSchema
-const stagingHelper = require('wmt-probation-rules').stagingTestHelper
-const Promise = require('bluebird').Promise
+const stagingHelper = require('./staging-helper')
 
 const aliases = {
   caseRefNo: 'case_ref_no',
@@ -22,53 +21,62 @@ const testCaseDetails = mapForInsert(getTestCaseDetails(getGeneratedCaseRefNo(),
 
 module.exports.insertWarrant = function (inserts) {
   return knex(warrantsTableName)
+    .withSchema('staging')
     .insert(testCaseDetails)
     .returning('id')
     .then(function (id) {
-      inserts.push({ table: warrantsTableName, id: id })
+      inserts.push({ table: warrantsTableName, id: id[0] })
       return inserts
     })
 }
 
 module.exports.insertUnpaidWork = function (inserts) {
   return knex(unpaidWorkTableName)
+    .withSchema('staging')
     .insert(testCaseDetails)
     .returning('id')
     .then(function (id) {
-      inserts.push({ table: unpaidWorkTableName, id: id })
+      inserts.push({ table: unpaidWorkTableName, id: id[0] })
       return inserts
     })
 }
 
 module.exports.insertOverdueTermination = function (inserts) {
   return knex(overdueTerminationsTableName)
+    .withSchema('staging')
     .insert(testCaseDetails)
     .returning('id')
     .then(function (id) {
-      inserts.push({ table: overdueTerminationsTableName, id: id })
+      inserts.push({ table: overdueTerminationsTableName, id: id[0] })
       return inserts
     })
 }
 
 module.exports.insertPriority = function (inserts) {
   return knex(priorityTableName)
+    .withSchema('staging')
     .insert(testCaseDetails)
     .returning('id')
     .then(function (id) {
-      inserts.push({ table: priorityTableName, id: id })
+      inserts.push({ table: priorityTableName, id: id[0] })
       return inserts
     })
 }
 
 module.exports.deleteAll = function (inserts) {
   inserts = inserts.reverse()
-  return Promise.each(inserts, function (insert) {
-    if (insert.id instanceof Array) {
-      return knex(insert.table).whereIn('id', insert.id).del()
+
+  return inserts.map((deletion) => {
+    if (deletion.id instanceof Array) {
+      return knex(deletion.table).withSchema('staging').whereIn('id', deletion.id).del()
     } else {
-      return knex(insert.table).where('id', insert.id).del()
+      return knex(deletion.table).withSchema('staging').where('id', deletion.id).del()
     }
-  })
+  }).reduce(function (prev, current) {
+    return prev.then(function () {
+      return current
+    })
+  }, Promise.resolve())
 }
 
 function getTestCaseDetails (caseRefNo, omKey, location) {

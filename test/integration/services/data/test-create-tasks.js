@@ -23,7 +23,7 @@ describe('app/services/data/create-tasks', function () {
     const task = new Task(undefined, submittingAgent, type, additionalData, workloadReportId)
 
     createTasks([task]).then(function (ids) {
-      return knex.table('tasks')
+      return knex.table('tasks').withSchema('app')
         .where({ id: ids[0] })
         .then(function (results) {
           expect(results.length).to.equal(1)

@@ -1,6 +1,4 @@
 const expect = require('chai').expect
-
-const appWorkloadOwnerHelper = require('../../../helpers/data/app-workload-owner-helper')
 const appReductionsHelper = require('../../../helpers/data/app-reductions-helper')
 
 const updateReductionStatusByIds = require('../../../../app/services/data/update-reduction-status-by-ids')
@@ -10,15 +8,11 @@ let inserts = []
 let workloadReportId
 
 describe('services/data/update-reduction-status-by-ids', function () {
-  before(function (done) {
-    appWorkloadOwnerHelper.insertDependencies(inserts)
-      .then(function (builtInserts) {
-        return appReductionsHelper.insertDependencies(inserts)
-          .then(function (builtInserts) {
-            inserts = builtInserts
-            workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
-            done()
-          })
+  before(function () {
+    return appReductionsHelper.insertDependencies([])
+      .then(function (appReductionInserts) {
+        inserts = appReductionInserts
+        workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
       })
   })
 
@@ -41,8 +35,7 @@ describe('services/data/update-reduction-status-by-ids', function () {
       })
   })
 
-  after(function (done) {
-    appReductionsHelper.removeDependencies(inserts)
-      .then(() => done())
+  after(function () {
+    return appReductionsHelper.removeDependencies(inserts)
   })
 })

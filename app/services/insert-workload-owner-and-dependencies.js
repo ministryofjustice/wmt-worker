@@ -5,12 +5,12 @@ const insertTeam = require('./data/insert-team')
 const insertLdu = require('./data/insert-ldu')
 const insertRegion = require('./data/insert-region')
 
-const OffenderManager = require('wmt-probation-rules').OffenderManager
-const Team = require('wmt-probation-rules').Team
-const WorkloadOwner = require('wmt-probation-rules').WorkloadOwner
-const Ldu = require('wmt-probation-rules').Ldu
-const Region = require('wmt-probation-rules').Region
-const filterOmGradeCode = require('wmt-probation-rules').filterOmGradeCode
+const OffenderManager = require('./probation-rules').OffenderManager
+const Team = require('./probation-rules').Team
+const WorkloadOwner = require('./probation-rules').WorkloadOwner
+const Ldu = require('./probation-rules').Ldu
+const Region = require('./probation-rules').Region
+const filterOmGradeCode = require('./probation-rules').filterOmGradeCode
 const getDefaultContractedHours = require('./data/get-default-contracted-hours')
 
 module.exports = function (caseSummary) {

@@ -1,5 +1,4 @@
 const knex = require('../../../knex').appSchema
-const Promise = require('bluebird').Promise
 
 const testAdjustmentReason = {
   contact_description: 'Test Reason',
@@ -10,6 +9,7 @@ const inserts = []
 
 module.exports.insertDependencies = function (workloadOwnerId) {
   return knex('adjustment_reason')
+    .withSchema('app')
     .insert(testAdjustmentReason)
     .returning('id')
     .then(function (id) {
@@ -20,7 +20,11 @@ module.exports.insertDependencies = function (workloadOwnerId) {
 
 module.exports.removeDependencies = function (inserts) {
   inserts = inserts.reverse()
-  return Promise.each(inserts, (insert) => {
-    return knex(insert.table).where('id', insert.id).del()
-  })
+  return inserts.map((deletion) => {
+    return knex(deletion.table).withSchema('app').whereIn('id', [deletion.id]).del()
+  }).reduce(function (prev, current) {
+    return prev.then(function () {
+      return current
+    })
+  }, Promise.resolve())
 }

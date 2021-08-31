@@ -1,15 +1,15 @@
 const logger = require('../log')
-const Promise = require('bluebird').Promise
 
 const Task = require('../domain/task')
 const taskType = require('../../constants/task-type')
 const taskStatus = require('../../constants/task-status')
 const submittingAgent = require('../../constants/task-submitting-agent')
-const mapCourtReports = require('wmt-probation-rules').mapCourtReports
+const mapCourtReports = require('../probation-rules').mapCourtReports
 const getStgCourtReporters = require('../data/get-staging-court-reporters')
 const insertWorkloadOwnerAndDependencies = require('../insert-workload-owner-and-dependencies')
 const insertCourtReports = require('../data/insert-app-court-reports')
 const createNewTasks = require('../data/create-tasks')
+const { arrayToPromise } = require('../helpers/promise-helper')
 
 module.exports.execute = function (task) {
   const batchSize = task.additionalData.batchSize
@@ -19,7 +19,7 @@ module.exports.execute = function (task) {
 
   return getStgCourtReporters([startingStagingId, endingStagingId])
     .then(function (stagingCourtReports) {
-      return Promise.each(stagingCourtReports, function (stagingCourtReport) {
+      return arrayToPromise(stagingCourtReports, function (stagingCourtReport) {
         const caseSummary = stagingCourtReport.casesSummary
         if (caseSummary.omKey !== null) {
           return insertWorkloadOwnerAndDependencies(caseSummary)
@@ -28,9 +28,11 @@ module.exports.execute = function (task) {
               return insertCourtReports(courtReportToInsert)
                 .then(function (insertedId) {
                   logger.info('Court Report with id ' + insertedId + ' added')
+                  return insertedId
                 })
             })
         }
+        return Promise.resolve()
       })
         .then(function () {
           const reductionsWorkerTask = new Task(

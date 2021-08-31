@@ -1,9 +1,8 @@
-const Promise = require('bluebird').Promise
 const config = require('../../etl-config')
 const knex = require('../../knex').stagingSchema
-
+const { arrayToPromise } = require('../services/helpers/promise-helper')
 module.exports = function () {
-  return Promise.each(config.VALID_SHEET_NAMES, function (table) {
-    return knex(table).del()
+  return arrayToPromise(config.VALID_SHEET_NAMES, function (table) {
+    return knex(table).withSchema('staging').del()
   })
 }

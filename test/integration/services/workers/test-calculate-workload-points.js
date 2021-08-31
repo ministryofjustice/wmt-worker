@@ -3,7 +3,6 @@ const knex = require('../../../../knex').appSchema
 const expect = require('chai').expect
 
 const appWorkloadPointsCalculationHelper = require('../../../helpers/data/app-workload-points-calculation-helper')
-const appReductionsHelper = require('../../../helpers/data/app-reductions-helper')
 const calculatePointsWorker = require('../../../../app/services/workers/calculate-workload-points')
 const operationTypes = require('../../../../app/constants/calculation-tasks-operation-type')
 
@@ -36,6 +35,7 @@ describe('services/workers/calculate-workload-points', function () {
 
     return calculatePointsWorker.execute(task).then(() => {
       return knex('workload_points_calculations')
+        .withSchema('app')
         .whereBetween('workload_id', [insertedWorkloads[0].id, insertedWorkloads[insertedWorkloads.length - 1].id])
         .then(function (workloadPointsCalculations) {
           expect(workloadPointsCalculations.length).to.equal(batchSize)
@@ -59,6 +59,6 @@ describe('services/workers/calculate-workload-points', function () {
   })
 
   after(function () {
-    return appReductionsHelper.removeDependencies(inserts)
+    return appWorkloadPointsCalculationHelper.removeDependencies(inserts)
   })
 })

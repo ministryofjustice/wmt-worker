@@ -1,8 +1,8 @@
 const getOmicAppWorkloads = require('./data/get-omic-app-workloads')
-const TierCounts = require('wmt-probation-rules').TierCounts
-const Tiers = require('wmt-probation-rules').AppTiers
-const Workload = require('wmt-probation-rules').Workload
-const Locations = require('wmt-probation-rules').Locations
+const TierCounts = require('./probation-rules').TierCounts
+const Tiers = require('./probation-rules').AppTiers
+const Workload = require('./probation-rules').Workload
+const Locations = require('./probation-rules').Locations
 
 module.exports = function (initialId, maxId, batchSize, workloadReportId) {
   return getOmicAppWorkloads(initialId, maxId, workloadReportId)

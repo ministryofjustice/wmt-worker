@@ -1,11 +1,11 @@
 const knex = require('../../../knex').stagingSchema
 
 module.exports = function () {
-  return knex('omic_teams').del()
-    .then(function () { return knex('flag_o_due').del() })
-    .then(function () { return knex('flag_priority').del() })
-    .then(function () { return knex('flag_upw').del() })
-    .then(function () { return knex('flag_warr_4_n').del() })
-    .then(function () { return knex('wmt_extract_sa').del() })
-    .then(function () { return knex('suspended_lifers').del() })
+  return knex('omic_teams').withSchema('staging').del()
+    .then(function () { return knex('flag_o_due').withSchema('staging').del() })
+    .then(function () { return knex('flag_priority').withSchema('staging').del() })
+    .then(function () { return knex('flag_upw').withSchema('staging').del() })
+    .then(function () { return knex('flag_warr_4_n').withSchema('staging').del() })
+    .then(function () { return knex('wmt_extract_sa').withSchema('staging').del() })
+    .then(function () { return knex('suspended_lifers').withSchema('staging').del() })
 }

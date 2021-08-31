@@ -1,8 +1,7 @@
-const Promise = require('bluebird').Promise
 const logger = require('../log')
-const calculateOmicWorkloadPoints = require('wmt-probation-rules').calculateOmicWorkloadPoints
-const calculateNominalTarget = require('wmt-probation-rules').calculateNominalTarget
-const calculateAvailablePoints = require('wmt-probation-rules').calculateAvailablePoints
+const calculateOmicWorkloadPoints = require('../probation-rules').calculateOmicWorkloadPoints
+const calculateNominalTarget = require('../probation-rules').calculateNominalTarget
+const calculateAvailablePoints = require('../probation-rules').calculateAvailablePoints
 const parseOmicAppWorkloads = require('../parse-omic-app-workloads')
 const insertOmicWorkloadPointsCalculations = require('../data/insert-omic-workload-points-calculation')
 const updateOmicWorkloadPointsCalculations = require('../data/update-omic-workload-points-calculation')
@@ -11,6 +10,7 @@ const getOffenderManagerTypeId = require('../data/get-offender-manager-type-id')
 const getContractedHours = require('../data/get-contracted-hours')
 const operationTypes = require('../../constants/calculation-tasks-operation-type')
 const checkForDuplicateOmicCalculation = require('../data/check-for-duplicate-omic-calculation')
+const { arrayToPromise } = require('../helpers/promise-helper')
 
 module.exports.execute = function (task) {
   const startingStagingId = task.additionalData.workloadBatch.startingId
@@ -36,7 +36,7 @@ module.exports.execute = function (task) {
   const t2aPointsConfigurationPromise = getWorkloadPointsConfiguration(isT2a)
 
   return parseOmicAppWorkloads(startingStagingId, maxStagingId, batchSize, reportId).then(function (workloads) {
-    return Promise.each(workloads, function (workloadResult) {
+    return arrayToPromise(workloads, function (workloadResult) {
       const workload = workloadResult.values
       const workloadId = workloadResult.id
       const getOffenderManagerTypePromise = getOffenderManagerTypeId(workload.workloadOwnerId)

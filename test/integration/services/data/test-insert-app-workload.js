@@ -1,11 +1,11 @@
 const expect = require('chai').expect
 const knex = require('../../../../knex').appSchema
 const insertAppWorkload = require('../../../../app/services/data/insert-app-workload')
-const Workload = require('wmt-probation-rules').Workload
-const Tiers = require('wmt-probation-rules').AppTiers
-const TierCounts = require('wmt-probation-rules').TierCounts
-const Locations = require('wmt-probation-rules').Locations
-const CaseDetails = require('wmt-probation-rules').CaseDetails
+const Workload = require('../../../../app/services/probation-rules').Workload
+const Tiers = require('../../../../app/services/probation-rules').AppTiers
+const TierCounts = require('../../../../app/services/probation-rules').TierCounts
+const Locations = require('../../../../app/services/probation-rules').Locations
+const CaseDetails = require('../../../../app/services/probation-rules').CaseDetails
 const workloadOwnerHelper = require('../../../helpers/data/app-workload-owner-helper')
 
 const inserts = []
@@ -57,7 +57,7 @@ describe('app/services/data/insert-app-workload', function () {
   })
 
   it('should insert a new workload record', function (done) {
-    knex('workload')
+    knex('workload').withSchema('app')
       .join('tiers', 'workload.id', 'tiers.workload_id')
       .join('case_details', 'workload.id', 'case_details.workload_id')
       .where({ 'workload.id': workloadId })
@@ -73,7 +73,7 @@ describe('app/services/data/insert-app-workload', function () {
         'workload.arms_license_cases AS arms_license_cases', 'workload.staging_id AS staging_id',
         'workload.workload_report_id AS workload_report_id', 'case_details.case_ref_no AS case_ref_no')
       .then(function (result) {
-        knex('tiers')
+        knex('tiers').withSchema('app')
           .where('workload_id', workloadId)
           .select()
           .then(function (tiers) {
@@ -100,7 +100,7 @@ describe('app/services/data/insert-app-workload', function () {
   })
 
   it('should insert the correct community tiers', function () {
-    return knex('tiers')
+    return knex('tiers').withSchema('app')
       .where({ workload_id: workloadId, location: Locations.COMMUNITY })
       .select()
       .then(function (tiers) {
@@ -124,7 +124,7 @@ describe('app/services/data/insert-app-workload', function () {
   })
 
   it('should insert the correct licence tiers', function () {
-    return knex('tiers')
+    return knex('tiers').withSchema('app')
       .where({ workload_id: workloadId, location: Locations.LICENSE })
       .select()
       .then(function (tiers) {
@@ -148,7 +148,7 @@ describe('app/services/data/insert-app-workload', function () {
   })
 
   it('should insert the correct custody tiers', function () {
-    return knex('tiers')
+    return knex('tiers').withSchema('app')
       .where({ workload_id: workloadId, location: Locations.CUSTODY })
       .select()
       .then(function (tiers) {
@@ -172,8 +172,8 @@ describe('app/services/data/insert-app-workload', function () {
   })
 
   after(function () {
-    return knex('tiers').where('workload_id', workloadId).del().then(function () {
-      return knex('case_details').where('workload_id', workloadId).del().then(function () {
+    return knex('tiers').withSchema('app').where('workload_id', workloadId).del().then(function () {
+      return knex('case_details').withSchema('app').where('workload_id', workloadId).del().then(function () {
         return workloadOwnerHelper.removeDependencies(inserts)
       })
     })

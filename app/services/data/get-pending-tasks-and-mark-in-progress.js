@@ -5,6 +5,7 @@ const Task = require('../domain/task')
 
 module.exports = function (batchSize) {
   return knex.select().table('tasks')
+    .withSchema('app')
     .where('status', taskStatus.PENDING)
     .orderBy('date_created', 'asc')
     .limit(batchSize)

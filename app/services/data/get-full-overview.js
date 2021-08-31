@@ -2,9 +2,6 @@ const knex = require('../../../knex').appSchema
 const transformOrganisationName = require('./helpers/transform-organisation-name')
 
 module.exports = function (duplicatePDUsAndTeams) {
-  const table = 'individual_case_overview'
-  let orderBy = 'lduName, teamName'
-
   const selectColumns = [
     'region_name AS regionName',
     'ldu_name AS lduName',
@@ -22,12 +19,12 @@ module.exports = function (duplicatePDUsAndTeams) {
     'grade_code AS gradeCode'
   ]
 
-  orderBy = 'regionName,' + orderBy
-
-  return knex.raw(
-    'SELECT ' + selectColumns.join(', ') +
-        ' FROM ' + table + ' WITH (NOEXPAND)' +
-        ' ORDER BY ' + orderBy)
+  return knex('individual_case_overview')
+    .withSchema('app')
+    .select(selectColumns)
+    .orderBy('region_name')
+    .orderBy('ldu_name')
+    .orderBy('team_name')
     .then(function (results) {
       results.forEach(function (record) {
         record.lduName = transformOrganisationName(duplicatePDUsAndTeams.duplicatePDUs, record.lduName, record.regionCode)

@@ -2,10 +2,10 @@ const tableName = 'users'
 
 exports.seed = function (knex, Promise) {
   // Deletes ALL existing entries
-  return knex(tableName).del()
+  return knex(tableName).withSchema('app').del()
     .then(function () {
       // Inserts seed entries
-      return knex(tableName).insert([
+      return knex(tableName).withSchema('app').insert([
         { username: 'Manager.Test', name: 'Manager Test' },
         { username: 'System.AdminTest', name: 'System AdminTest' },
         { username: 'Data.AdminTest', name: 'Data AdminTest' },

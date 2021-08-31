@@ -1,9 +1,16 @@
-const config = require('../../config')
+const { defaultClient: appInsightsClient } = require('applicationinsights')
+const { ENABLE_SLACK_ALERTING, SENTRY_DSN } = require('../../config')
+const Sentry = require('@sentry/node')
 const bunyan = require('bunyan')
 const PrettyStream = require('bunyan-prettystream')
+class JobError extends Error {
+  constructor (jobName, error) {
+    super(`${jobName} |job failed with| ${error.message}`)
 
-const logsPath = config.LOGGING_PATH || 'logs/wmt-worker.log'
-const logsLevel = config.LOGGING_LEVEL
+    Error.captureStackTrace(this, this.constructor)
+    this.name = this.constructor.name
+  }
+}
 
 // Stream to handle pretty printing of Bunyan logs to stdout.
 const prettyStream = new PrettyStream()
@@ -24,15 +31,6 @@ log.addStream({
   stream: prettyStream
 })
 
-// Add file stream.
-log.addStream({
-  type: 'rotating-file',
-  level: logsLevel,
-  path: logsPath,
-  period: '1d',
-  count: 7
-})
-
 function errorSerializer (error) {
   return {
     message: error.message,
@@ -41,4 +39,38 @@ function errorSerializer (error) {
   }
 }
 
-module.exports = log
+if (ENABLE_SLACK_ALERTING) {
+  Sentry.init({
+    dsn: SENTRY_DSN,
+
+    // We recommend adjusting this value in production, or using tracesSampler
+    // for finer control
+    tracesSampleRate: 1.0
+  })
+}
+
+const logger = {
+  info: log.info.bind(log),
+  jobError: function (jobName, error) {
+    if (ENABLE_SLACK_ALERTING) {
+      Sentry.captureException(new JobError(jobName, error))
+    }
+    if (appInsightsClient) {
+      appInsightsClient.trackException({ exception: new JobError(jobName, error) })
+    } else {
+      log.error(new JobError(jobName, error))
+    }
+  },
+  error: function (e) {
+    if (ENABLE_SLACK_ALERTING) {
+      Sentry.captureException(e)
+    }
+    if (appInsightsClient) {
+      appInsightsClient.trackException({ exception: e })
+    } else {
+      log.error(e)
+    }
+  }
+
+}
+module.exports = logger

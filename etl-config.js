@@ -1,9 +1,25 @@
+const production = process.env.NODE_ENV === 'production'
+
 module.exports = {
-  // Extract file settings
-  IMPORT_FILE_DIR: process.env.WMT_IMPORT_FILE_PATH || './data/',
-  ARCHIVE_FILE_DIR: process.env.WMT_ARCHIVE_FILE_PATH || './archive/',
-  ARCHIVE_FILE_NAME: process.env.WMT_ARCHIVE_FILE_NAME || 'delius-extract-',
-  EXPECTED_FILE_COUNT: process.env.WMT_EXPECTED_FILE_COUNT || '2',
+
+  EXTRACT_LISTENER_CRON: process.env.EXTRACT_LISTENER_CRON || '0/10 * * * * *', //  every 10 seconds
+
+  READ_TAG_KEY: 'hasBeenRead',
+  S3: {
+    BUCKET_NAME: process.env.ETL_S3_BUCKET_NAME || 'wmt-worker',
+    REGION: process.env.S3_REGION || 'eu-west-2',
+    ENDPOINT: production ? null : 'http://localhost:4566',
+    ACCESS_KEY_ID: process.env.ETL_S3_ACCESS_KEY_ID || 'foobar',
+    SECRET_ACCESS_KEY: process.env.ETL_S3_SECRET_ACCESS_KEY || 'foobar'
+  },
+
+  SQS: {
+    REGION: process.env.SQS_REGION || 'eu-west-2',
+    ENDPOINT: production ? null : 'http://localhost:4566',
+    ACCESS_KEY_ID: process.env.ETL_SQS_ACCESS_KEY_ID || 'foobar',
+    SECRET_ACCESS_KEY: process.env.ETL_SQS_SECRET_ACCESS_KEY || 'foobar',
+    QUEUE_URL: process.env.ETL_SQS_QUEUE_URL || 'http://localhost:4566/000000000000/s3_extract_event_queue'
+  },
 
   // Extract valid source worksheet tabs
   VALID_SHEET_NAMES: [

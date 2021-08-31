@@ -15,18 +15,16 @@ describe('services/data/get-app-court-reports', function () {
   })
 
   it('should retrieve all the court-reports with staging ids within a given range and the given workload report id', function () {
-    return knex('court_reports').max('staging_id AS maxId').first()
+    return knex('court_reports').withSchema('app').max('staging_id AS maxId').first()
       .then(function (maxId) {
-        return knex('workload_report').whereNull('effective_to').first('id')
-          .then(function (workloadReportId) {
-            const expectedResults = [{
-              id: inserts.filter((item) => item.table === 'court_reports')[0].id,
-              workloadOwnerId: inserts.filter((item) => item.table === 'workload_owner')[0].id
-            }]
-            return getAppCourtReports(maxId.maxId, maxId.maxId, workloadReportId.id)
-              .then(function (results) {
-                expect(results).to.eql(expectedResults)
-              })
+        const workloadReportId = inserts.find((item) => item.table === 'workload_report').id
+        const expectedResults = [{
+          id: inserts.find((item) => item.table === 'court_reports').id,
+          workloadOwnerId: inserts.find((item) => item.table === 'workload_owner').id
+        }]
+        return getAppCourtReports(maxId.maxId, maxId.maxId, workloadReportId)
+          .then(function (results) {
+            expect(results).to.eql(expectedResults)
           })
       })
   })

@@ -1,20 +1,19 @@
 const getStagingOmicWorkload = require('./data/get-staging-omic-workload')
-const OmWorkload = require('wmt-probation-rules').OmWorkload
-const CasesSummary = require('wmt-probation-rules').CasesSummary
-const CourtReport = require('wmt-probation-rules').CourtReport
-const InstitutionalReport = require('wmt-probation-rules').InstitutionalReport
-const Tiers = require('wmt-probation-rules').Tiers
-const locations = require('wmt-probation-rules').Locations
+const OmWorkload = require('./probation-rules').OmWorkload
+const CasesSummary = require('./probation-rules').CasesSummary
+const CourtReport = require('./probation-rules').CourtReport
+const InstitutionalReport = require('./probation-rules').InstitutionalReport
+const Tiers = require('./probation-rules').Tiers
+const locations = require('./probation-rules').Locations
 const getStagingCaseDetails = require('./data/get-staging-case-details')
 const getArmsTotals = require('./data/get-arms-totals')
-const Promise = require('bluebird').Promise
+const { arrayToPromise } = require('./helpers/promise-helper')
 
 module.exports = function (range) {
-  const omWorkloads = []
   return getStagingOmicWorkload(range)
     .then(function (results) {
       if (results !== 'undefined' && results.length > 0) {
-        return Promise.each(results, function (result) {
+        return arrayToPromise(results, function (result) {
           return getArmsTotals(result.om_key, result.team_code).then(function (armsCases) {
             // WMT0229 Change needed here when extract column names are known
             const communityTiers = new Tiers(
@@ -166,8 +165,8 @@ module.exports = function (range) {
               t2aCommunityTiers,
               t2aLicenseTiers,
               t2aCustodyTiers,
-              result.comIn1st16Weeks,
-              result.licIn1st16Weeks,
+              result.comin1st16weeks,
+              result.licin1st16weeks,
               armsCases.community,
               armsCases.license,
               communityTiers,
@@ -193,15 +192,12 @@ module.exports = function (range) {
             const stagingId = result.staging_id
 
             return getStagingCaseDetails(result.om_key, result.team_code).then(function (results) {
-              omWorkloads.push(new OmWorkload(
+              return new OmWorkload(
                 stagingId, casesSummary, courtReport, institutionalReport, results
-              ))
+              )
             })
           })
         })
-          .then(function () {
-            return omWorkloads
-          })
       }
     })
 }

@@ -11,13 +11,13 @@ let courtReportsToInsert
 
 exports.seed = function (knex, Promise) {
   // Deletes ALL existing entries
-  return knex(tableName).del()
+  return knex(tableName).withSchema('app').del()
     .then(function () {
-      return knex('workload_owner').select('workload_owner.id')
+      return knex('workload_owner').withSchema('app').select('workload_owner.id')
         .join('team', 'team.id', 'workload_owner.team_id').where('team.description', 'CR Team 1')
     })
     .then(function (workloadOwners) {
-      return knex('workload_report').select('id')
+      return knex('workload_report').withSchema('app').select('id')
         .then(function (existingWrIds) {
           for (let wr = 0; wr < existingWrIds.length; wr++) {
             courtReportsToInsert = []
@@ -27,7 +27,7 @@ exports.seed = function (knex, Promise) {
               }
             }
           }
-          return knex(tableName).insert(courtReportsToInsert)
+          return knex(tableName).withSchema('app').insert(courtReportsToInsert)
         })
     })
 }

@@ -16,3 +16,8 @@ Icon?
 
 /data/
 /archive/
+/.idea/
+
+*.iml
+.nyc_output
+

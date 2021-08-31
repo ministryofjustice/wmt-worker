@@ -1,15 +1,15 @@
 const knex = require('../../../knex').appSchema
-const Promise = require('bluebird').Promise
 
 const helper = require('./app-workload-helper')
 const reductionStatus = require('../../../app/constants/reduction-status')
+const removeData = require('./remove-data')
 
-module.exports.insertDependencies = function (workloadOwnerId, inserts = []) {
+module.exports.insertDependencies = function (inserts = []) {
   const promise = helper.insertDependencies(inserts)
-    .then(function (idsArray) {
+    .then(function () {
       const workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
       const reductions = module.exports.getReductionObjects(workloadOwnerId)
-      return knex('reductions').returning('id').insert(reductions)
+      return knex('reductions').withSchema('app').returning('id').insert(reductions)
     }).then(function (ids) {
       ids.forEach((id) => {
         inserts.push({ table: 'reductions', id: id })
@@ -24,10 +24,7 @@ module.exports.insertDependencies = function (workloadOwnerId, inserts = []) {
 }
 
 module.exports.removeDependencies = function (inserts) {
-  inserts = inserts.reverse()
-  return Promise.each(inserts, (insert) => {
-    return knex(insert.table).where('id', insert.id).del()
-  })
+  return removeData(inserts)
 }
 
 module.exports.getReductionObjects = function (workloadOwnerId) {

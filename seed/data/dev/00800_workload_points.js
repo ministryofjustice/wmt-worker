@@ -2,10 +2,10 @@ const tableName = 'workload_points'
 
 exports.seed = function (knex, Promise) {
   // Deletes ALL existing entries
-  return knex(tableName).del()
+  return knex(tableName).withSchema('app').del()
     .then(function () {
       // Inserts seed entries
-      return knex(tableName).insert({
+      return knex(tableName).withSchema('app').insert({
         comm_tier_1: 206,
         comm_tier_2: 158,
         comm_tier_3: 146,
@@ -72,7 +72,7 @@ exports.seed = function (knex, Promise) {
         default_contracted_hours_spo: 0
       })
         .then(function () {
-          return knex(tableName).insert({
+          return knex(tableName).withSchema('app').insert({
             comm_tier_1: 75,
             comm_tier_2: 60,
             comm_tier_3: 59,

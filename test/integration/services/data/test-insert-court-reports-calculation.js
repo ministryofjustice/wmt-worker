@@ -15,11 +15,11 @@ describe('services/data/insert-court-reports-calculation', function () {
   })
 
   it('inserts the workload points calculations with the supplied values', function () {
-    return knex('workload_points').first('id')
+    return knex('workload_points').withSchema('app').first('id')
       .then(function (workloadPointsId) {
-        return knex('workload_report').whereNull('effective_to').first('id')
+        return knex('workload_report').withSchema('app').whereNull('effective_to').first('id')
           .then(function (workloadReportId) {
-            return knex('court_reports').max('id AS id')
+            return knex('court_reports').withSchema('app').max('id AS id')
               .then(function (courtReportsId) {
                 const insertObject = {
                   workloadReportId: workloadReportId.id,
@@ -32,7 +32,7 @@ describe('services/data/insert-court-reports-calculation', function () {
                 return insertCourtReportsCalculations(insertObject)
                   .then(function (insertedId) {
                     inserts.push({ table: 'court_reports_calculations', id: insertedId[0] })
-                    return knex('court_reports_calculations').where({ id: insertedId[0] }).first()
+                    return knex('court_reports_calculations').withSchema('app').where({ id: insertedId[0] }).first()
                       .then(function (result) {
                         const expectedResult = {
                           id: insertedId[0],

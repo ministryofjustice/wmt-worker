@@ -1,7 +1,6 @@
-const Promise = require('bluebird').Promise
 const logger = require('../log')
 
-const mapWorkload = require('wmt-probation-rules').mapWorkload
+const mapWorkload = require('../probation-rules').mapWorkload
 const Task = require('../domain/task')
 const taskType = require('../../constants/task-type')
 const taskStatus = require('../../constants/task-status')
@@ -12,6 +11,8 @@ const insertOmicWorkload = require('../data/insert-app-omic-workload')
 const createNewTasks = require('../data/create-tasks')
 const operationTypes = require('../../constants/calculation-tasks-operation-type')
 
+const { arrayToPromise } = require('../helpers/promise-helper')
+
 module.exports.execute = function (task) {
   const workloadBatchSize = task.additionalData.batchSize
   const startingStagingId = task.additionalData.startingId
@@ -19,7 +20,7 @@ module.exports.execute = function (task) {
   const workloadReportId = task.workloadReportId
 
   return parseStagingOmicWorkload([startingStagingId, endingStagingId]).then(function (stagingWorkloads) {
-    return Promise.each(stagingWorkloads, function (stagingWorkload) {
+    return arrayToPromise(stagingWorkloads, function (stagingWorkload) {
       const caseSummary = stagingWorkload.casesSummary
       if (caseSummary.omKey !== null) {
         return insertWorkloadOwnerAndDependencies(caseSummary)
@@ -29,6 +30,7 @@ module.exports.execute = function (task) {
             return insertOmicWorkload(workloadToInsert, caseDetails)
           })
       }
+      return Promise.resolve()
     })
       .then(function () {
         const calculateOmicWpAdditionalData = {

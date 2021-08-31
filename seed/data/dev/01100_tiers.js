@@ -1,12 +1,12 @@
-const locations = require('wmt-probation-rules').Locations
+const locations = require('../../../app/services/probation-rules').Locations
 const tableName = 'tiers'
 const insertData = []
 
 exports.seed = function (knex, Promise) {
   // Deletes ALL existing entries
-  return knex(tableName).del()
+  return knex(tableName).withSchema('app').del()
     .then(function () {
-      return knex('workload').select('id')
+      return knex('workload').withSchema('app').select('id')
     })
     .then(function (workloads) {
       workloads.forEach(function (workload) {
@@ -89,6 +89,6 @@ exports.seed = function (knex, Promise) {
       // var partFifteen = insertData.slice(splitSize * 14, splitSize * 15)
       // var partSixteen = insertData.slice(splitSize * 15, insertData.length)
 
-      return knex.batchInsert(tableName, insertData, 100)
+      return knex.batchInsert(`app.${tableName}`, insertData, 100)
     })
 }

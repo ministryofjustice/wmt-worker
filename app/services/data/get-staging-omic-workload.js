@@ -1,7 +1,7 @@
 const knex = require('../../../knex').stagingSchema
 
 module.exports = function (range) {
-  return knex('omic_teams').whereBetween('omic_teams.id', range)
+  return knex('omic_teams').withSchema('staging').whereBetween('omic_teams.id', range)
     .leftJoin('t2a', function () {
       this.on('omic_teams.om_key', 't2a.om_key')
         .andOn('omic_teams.team_code', 't2a.team_code')
@@ -18,7 +18,7 @@ module.exports = function (range) {
     .select('omic_teams.id AS staging_id', 'omic_teams.trust', 'omic_teams.region_desc', 'omic_teams.region_code',
       'omic_teams.pdu_desc', 'omic_teams.pdu_code', 'omic_teams.team_desc', 'omic_teams.team_code',
       'omic_teams.om_surname', 'omic_teams.om_forename', 'omic_teams.om_grade_code',
-      'omic_teams.om_key', 'omic_teams.comIn1st16Weeks', 'omic_teams.licIn1st16Weeks',
+      'omic_teams.om_key', 'omic_teams.comin1st16weeks', 'omic_teams.licin1st16weeks',
       'omic_teams.datestamp',
 
       // OMIC Teams Community cases

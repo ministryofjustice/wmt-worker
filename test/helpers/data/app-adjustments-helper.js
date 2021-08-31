@@ -1,5 +1,4 @@
 const knex = require('../../../knex').appSchema
-const Promise = require('bluebird').Promise
 const moment = require('moment')
 
 const getAppAdjustmentsForBatch = require('../../../app/services/data/get-app-adjustments-for-batch')
@@ -9,12 +8,12 @@ const helper = require('./app-workload-helper')
 const CMS_ADJUSTMENT_REASON_ID = 1
 const GS_ADJUSTMENT_REASON_ID = 40
 
-module.exports.insertDependencies = function (workloadOwnerId, inserts = []) {
+module.exports.insertDependencies = function (inserts = []) {
   const promise = helper.insertDependencies(inserts)
-    .then(function (idsArray) {
+    .then(function () {
       const workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
       const adjustments = module.exports.getAdjustmentObjects(workloadOwnerId)
-      return knex('adjustments').returning('id').insert(adjustments)
+      return knex('adjustments').withSchema('app').returning('id').insert(adjustments)
     }).then(function (ids) {
       ids.forEach((id) => {
         inserts.push({ table: 'adjustments', id: id })
@@ -30,9 +29,13 @@ module.exports.insertDependencies = function (workloadOwnerId, inserts = []) {
 
 module.exports.removeDependencies = function (inserts) {
   inserts = inserts.reverse()
-  return Promise.each(inserts, (insert) => {
-    return knex(insert.table).where('id', insert.id).del()
-  })
+  return inserts.map((deletion) => {
+    return knex(deletion.table).withSchema('app').whereIn('id', [deletion.id]).del()
+  }).reduce(function (prev, current) {
+    return prev.then(function () {
+      return current
+    })
+  }, Promise.resolve())
 }
 
 module.exports.getAdjustmentsForTest = function (adjustmentCategory, minWorkloadId, maxWorkloadId, workloadReportId) {

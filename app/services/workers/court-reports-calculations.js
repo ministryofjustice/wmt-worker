@@ -1,4 +1,3 @@
-const Promise = require('bluebird').Promise
 const logger = require('../log')
 const getAppCourtReports = require('../data/get-app-court-reports')
 const insertCourtReportsCalculations = require('../data/insert-court-reports-calculation')
@@ -7,6 +6,7 @@ const getWorkloadPointsConfiguration = require('../data/get-workload-points-conf
 const getAppReductions = require('../data/get-app-reduction-hours')
 const getContractedHours = require('../data/get-contracted-hours')
 const operationTypes = require('../../constants/calculation-tasks-operation-type')
+const { arrayToPromise } = require('../helpers/promise-helper')
 
 module.exports.execute = function (task) {
   const startingStagingId = task.additionalData.workloadBatch.startingId
@@ -28,7 +28,7 @@ module.exports.execute = function (task) {
 
   return getAppCourtReports(startingStagingId, maxStagingId, reportId)
     .then(function (courtReports) {
-      return Promise.each(courtReports, function (courtReport) {
+      return arrayToPromise(courtReports, function (courtReport) {
         const workloadOwnerId = courtReport.workloadOwnerId
         const courtReportsId = courtReport.id
 

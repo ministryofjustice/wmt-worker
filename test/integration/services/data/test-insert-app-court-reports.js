@@ -1,6 +1,6 @@
 const expect = require('chai').expect
 const knex = require('../../../../knex').appSchema
-const CourtReports = require('wmt-probation-rules').CourtReports
+const CourtReports = require('../../../../app/services/probation-rules').CourtReports
 const workloadOwnerHelper = require('../../../helpers/data/app-workload-owner-helper')
 const insertAppCourtReports = require('../../../../app/services/data/insert-app-court-reports')
 
@@ -19,7 +19,7 @@ describe('app/services/data/insert-app-court-reports', function () {
         inserts = builtInserts
         workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
 
-        return knex('workload_report').insert({ effective_from: new Date(), effective_to: null }).returning('id')
+        return knex('workload_report').withSchema('app').insert({ effective_from: new Date(), effective_to: null }).returning('id')
           .then(function (insertedId) {
             inserts.push({ table: 'workload_report', id: insertedId })
             workloadReportId = parseInt(insertedId)
@@ -32,8 +32,8 @@ describe('app/services/data/insert-app-court-reports', function () {
 
     return insertAppCourtReports(newEntry)
       .then(function (insertedId) {
-        inserts.push({ table: 'court_reports', id: insertedId })
-        return knex('court_reports').where('id', insertedId)
+        inserts.push({ table: 'court_reports', id: insertedId[0] })
+        return knex('court_reports').withSchema('app').where('id', insertedId[0])
           .first('id', 'workload_owner_id', 'total_sdrs', 'total_fdrs', 'total_oral_reports', 'staging_id', 'workload_report_id')
           .then(function (results) {
             const expectedCourtReports = {

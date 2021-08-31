@@ -1,0 +1,7 @@
+---
+
+generic-service:
+  namespace_secrets:
+    hmpps-workload:
+      APPINSIGHTS_INSTRUMENTATIONKEY: "APPINSIGHTS_INSTRUMENTATIONKEY"
+      SENTRY_DSN: "SENTRY_DSN"

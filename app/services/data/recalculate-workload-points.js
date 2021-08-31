@@ -11,6 +11,7 @@ module.exports = function (reportId) {
   ]
 
   return knex('tasks')
+    .withSchema('app')
     .where({
       type: taskTypes.CALCULATE_WORKLOAD_POINTS,
       submitting_agent: 'WORKER',
@@ -32,6 +33,6 @@ module.exports = function (reportId) {
         batchSize = Math.floor(tasks.length / 7) + 1
       }
 
-      return knex.batchInsert('tasks', tasks, batchSize)
+      return knex.batchInsert('app.tasks', tasks, batchSize)
     })
 }

@@ -1,7 +1,7 @@
 const expect = require('chai').expect
 const knex = require('../../../../knex').appSchema
 const insertLdu = require('../../../../app/services/data/insert-ldu')
-const Ldu = require('wmt-probation-rules').Ldu
+const Ldu = require('../../../../app/services/probation-rules').Ldu
 const moment = require('moment')
 const lduHelper = require('../../../helpers/data/app-ldu-helper')
 const timeThreshold = require('../../../constants/time-threshold')
@@ -30,16 +30,22 @@ describe('app/services/data/insert-ldu', function () {
     insertLdu(ldu).then(function (lduId) {
       lduUniqueIdentifier = lduId[0]
       return knex.table('ldu')
-        .where({ id: lduId })
+        .withSchema('app')
+        .where({ id: lduUniqueIdentifier })
         .first()
         .then(function (result) {
           expect(result['id']).to.not.be.null // eslint-disable-line
           expect(result['code']).to.eq(code) // eslint-disable-line
           expect(result['description']).to.eq(originalLDUName) // eslint-disable-line
           expect(moment().diff(result['effective_from'], 'seconds')).to.be.lt(timeThreshold.INSERT) // eslint-disable-line
-          inserts.push({ table: 'ldu', id: lduId })
+          inserts.push({ table: 'ldu', id: lduId[0] })
           done()
         })
+        .catch(function (error) {
+          done(error)
+        })
+    }).catch(function (error) {
+      done(error)
     })
   })
 
@@ -50,7 +56,8 @@ describe('app/services/data/insert-ldu', function () {
     const ldu = new Ldu(undefined, regionId, code, newLDUName)
     insertLdu(ldu).then(function (lduId) {
       return knex.table('ldu')
-        .where({ id: lduId })
+        .withSchema('app')
+        .where({ id: lduId[0] })
         .first()
         .then(function (result) {
           expect(result['id']).to.eq(lduUniqueIdentifier) // eslint-disable-line
@@ -68,7 +75,8 @@ describe('app/services/data/insert-ldu', function () {
     const ldu = new Ldu(undefined, regionId, code, newLDUName)
     insertLdu(ldu).then(function (lduId) {
       return knex.table('ldu')
-        .where({ id: lduId })
+        .withSchema('app')
+        .where({ id: lduId[0] })
         .first()
         .then(function (result) {
           expect(result['id']).to.eq(lduUniqueIdentifier) // eslint-disable-line

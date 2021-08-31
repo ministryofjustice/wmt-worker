@@ -1,8 +1,8 @@
 const knex = require('../../../knex').stagingSchema
-const Promise = require('bluebird').Promise
 
 module.exports.insertDependencies = function (inserts) {
   return knex('court_reporters')
+    .withSchema('staging')
     .returning('id')
     .insert(module.exports.defaultCourtReporter)
     .then(function (insertedId) {
@@ -13,9 +13,13 @@ module.exports.insertDependencies = function (inserts) {
 
 module.exports.removeDependencies = function (inserts) {
   inserts = inserts.reverse()
-  return Promise.each(inserts, function (insert) {
-    return knex(insert.table).where('id', insert.id).del()
-  })
+  return inserts.map((deletion) => {
+    return knex(deletion.table).withSchema('staging').whereIn('id', [deletion.id]).del()
+  }).reduce(function (prev, current) {
+    return prev.then(function () {
+      return current
+    })
+  }, Promise.resolve())
 }
 
 module.exports.defaultCourtReporter = {
@@ -46,6 +50,7 @@ module.exports.newCourtReporters = [
 
 module.exports.getAllStagingCourtReporters = function () {
   return knex('court_reporters')
+    .withSchema('staging')
     .select(
       'trust',
       'region_desc',

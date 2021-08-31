@@ -59,7 +59,7 @@ describe('services/workers/create-workload', function () {
       '../parse-staging-workload': parseStagingWorkload,
       '../insert-workload-owner-and-dependencies': insertWorkloadOwnerAndDependencies,
       '../data/insert-app-workload': insertWorkload,
-      'wmt-probation-rules': probationRulesStub,
+      '../probation-rules': probationRulesStub,
       '../data/create-tasks': createNewTasks
     })
   })

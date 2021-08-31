@@ -15,7 +15,6 @@ const insertWorkloadReport = require('../data/insert-workload-report')
 const taskStatus = require('../../constants/task-status')
 const taskType = require('../../constants/task-type')
 const submittingAgent = require('../../constants/task-submitting-agent')
-const disableIndexing = require('../data/disable-indexing')
 const calculateNumberOfRecordsToProcess = require('../helpers/calculate-number-of-records-to-process')
 const calculateNumberOfTasksRequired = require('../helpers/calculate-number-of-tasks-required')
 
@@ -24,10 +23,7 @@ module.exports.execute = function (task) {
   const tasks = []
   let workloadReportId
 
-  return disableIndexing()
-    .then(function () {
-      return insertWorkloadReport()
-    })
+  return insertWorkloadReport()
     .then(function (insertedWorkloadReportId) {
       workloadReportId = insertedWorkloadReportId
       return populateStagingCourtReporters()

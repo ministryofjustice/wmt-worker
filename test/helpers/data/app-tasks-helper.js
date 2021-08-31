@@ -1,11 +1,10 @@
 const knex = require('../../../knex').appSchema
-const Promise = require('bluebird').Promise
 
 module.exports.insertDependencies = function (inserts) {
-  return knex('workload_report').returning('id').insert({})
+  return knex('workload_report').withSchema('app').returning('id').insert({})
     .then(function (ids) {
       inserts.push({ table: 'workload_report', id: ids[0] })
-      return knex('workload_report').returning('id').insert({})
+      return knex('workload_report').withSchema('app').returning('id').insert({})
     })
     .then(function (ids) {
       inserts.push({ table: 'workload_report', id: ids[0] })
@@ -18,7 +17,7 @@ module.exports.insertDependencies = function (inserts) {
       tasks.push({ workload_report_id: workloadReports[0].id, type: 'CREATE-WORKLOAD', status: 'Status 3' })
       tasks.push({ workload_report_id: workloadReports[1].id, type: 'CREATE-WORKLOAD', status: 'Status 4' })
 
-      return knex('tasks').returning('id').insert(tasks)
+      return knex('tasks').withSchema('app').returning('id').insert(tasks)
     })
     .then(function (ids) {
       ids.forEach((id) => {
@@ -30,7 +29,11 @@ module.exports.insertDependencies = function (inserts) {
 
 module.exports.removeDependencies = function (inserts) {
   inserts = inserts.reverse()
-  return Promise.each(inserts, (insert) => {
-    return knex(insert.table).where('id', insert.id).del()
-  })
+  return inserts.map((deletion) => {
+    return knex(deletion.table).withSchema('app').whereIn('id', [deletion.id]).del()
+  }).reduce(function (prev, current) {
+    return prev.then(function () {
+      return current
+    })
+  }, Promise.resolve())
 }

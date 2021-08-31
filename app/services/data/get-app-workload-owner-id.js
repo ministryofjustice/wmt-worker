@@ -14,7 +14,8 @@ module.exports = function (offenderManagerKey, teamCode) {
           .then(function (team) {
             if (team !== undefined) {
               teamId = team.id
-              return knex('app.workload_owner')
+              return knex('workload_owner')
+                .withSchema('app')
                 .where('offender_manager_id', offenderManagerId)
                 .andWhere('team_id', teamId)
                 .first('workload_owner.id')

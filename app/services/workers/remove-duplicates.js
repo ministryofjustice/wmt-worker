@@ -1,7 +1,6 @@
 const logger = require('../log')
 const checkForDuplicateWorkloads = require('../data/check-for-duplicate-workloads')
 const checkForDuplicateCourtReports = require('../data/check-for-duplicate-court-reports')
-// const getDuplicateWorkloadPointsCalculationsId = require('../data/get-duplicate-workload-points-calculations-id')
 const getDuplicateWorkloadIds = require('../data/get-duplicate-workload-ids')
 const getDuplicateCourtReportIds = require('../data/get-duplicate-court-report-ids')
 const deleteTiersForWorkloadIds = require('../data/delete-tiers-for-workload-ids')
@@ -10,18 +9,17 @@ const deleteWorkloadPointsCalculationsForWorkloadIds = require('../data/delete-w
 const deleteWorkloadsForIds = require('../data/delete-workloads-for-ids')
 const deleteCourtReportsCalculationsForCourtReportIds = require('../data/delete-court-reports-calculations-for-court-report-ids')
 const deleteCourtReportsForIds = require('../data/delete-court-reports-for-ids')
-const enableIndexing = require('../data/enable-indexing')
-const Promise = require('bluebird').Promise
 const Task = require('../domain/task')
 const createNewTasks = require('../data/create-tasks')
 const submittingAgent = require('../../constants/task-submitting-agent')
 const taskType = require('../../constants/task-type')
 const taskStatus = require('../../constants/task-status')
+const { arrayToPromise } = require('../helpers/promise-helper')
 
 module.exports.execute = function (task) {
   return checkForDuplicateWorkloads()
     .then(function (duplicateWorkloads) {
-      return Promise.each(duplicateWorkloads, function (duplicateWorkload) {
+      return arrayToPromise(duplicateWorkloads, function (duplicateWorkload) {
         return getDuplicateWorkloadIds(duplicateWorkload.link_id)
           .then(function (workloadIds) {
             let workloadIdsToRemove = []
@@ -48,7 +46,7 @@ module.exports.execute = function (task) {
     .then(function () {
       return checkForDuplicateCourtReports()
         .then(function (duplicateCourtReports) {
-          return Promise.each(duplicateCourtReports, function (duplicateCourtReport) {
+          return arrayToPromise(duplicateCourtReports, function (duplicateCourtReport) {
             return getDuplicateCourtReportIds(duplicateCourtReport.id)
               .then(function (courtReportIds) {
                 let courtReportIdsToRemove = []
@@ -68,10 +66,6 @@ module.exports.execute = function (task) {
               })
           })
         })
-    })
-    .then(function () {
-      logger.info('REMOVE-DUPLICATES - Enabling Indexing')
-      return enableIndexing()
     })
     .then(function () {
       logger.info('REMOVE-DUPLICATES - Indexing Enabled')

@@ -1,12 +1,9 @@
 const knex = require('../../../knex').stagingSchema
-const Promise = require('bluebird').Promise
-const OmCourtReports = require('wmt-probation-rules').OmCourtReports
-const CasesSummary = require('wmt-probation-rules').CasesSummary
-const CourtReport = require('wmt-probation-rules').CourtReport
+const OmCourtReports = require('../probation-rules').OmCourtReports
+const CasesSummary = require('../probation-rules').CasesSummary
+const CourtReport = require('../probation-rules').CourtReport
 
 module.exports = function (range) {
-  const omCourtReports = []
-
   const tableName = 'court_reporters'
   const selectCols = [
     'id AS staging_id',
@@ -28,10 +25,10 @@ module.exports = function (range) {
     'datestamp'
   ]
 
-  return knex(tableName).whereBetween('id', range).select(selectCols)
+  return knex(tableName).withSchema('staging').whereBetween('id', range).select(selectCols)
     .then(function (results) {
       if (results !== 'undefined' && results.length > 0) {
-        return Promise.each(results, function (result) {
+        return results.map(function (result) {
           const casesSummary = new CasesSummary(
             result.trust,
             result.region_desc,
@@ -64,11 +61,8 @@ module.exports = function (range) {
 
           const stagingId = result.staging_id
 
-          omCourtReports.push(new OmCourtReports(stagingId, casesSummary, courtReport))
+          return new OmCourtReports(stagingId, casesSummary, courtReport)
         })
-          .then(function () {
-            return omCourtReports
-          })
       }
     })
 }

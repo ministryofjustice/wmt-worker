@@ -11,6 +11,7 @@ module.exports = function (teamIds) {
     'wo.id as woId'
   ]
   return knex('workload_owner AS wo')
+    .withSchema('app')
     .join('offender_manager AS om', 'wo.offender_manager_id', 'om.id')
     .join('team AS t', 'wo.team_id', 't.id')
     .join('ldu AS l', 't.ldu_id', 'l.id')

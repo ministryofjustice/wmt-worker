@@ -2,9 +2,8 @@ const logger = require('../log')
 const getNewWorkloadOwnerIds = require('../data/get-new-workload-owner-ids')
 const getOldWorkloadOwnerIds = require('../data/get-old-workload-owner-ids')
 const getMostRecentlyUsedWorkloadOwnerId = require('../data/get-most-recently-used-workload-owner-id')
-
+const { arrayToPromise } = require('../helpers/promise-helper')
 const updateContractedHours = require('../data/update-contracted-hours')
-const Promise = require('bluebird').Promise
 const duplicateWorkloads = []
 const oldAndNewCombined = []
 
@@ -12,7 +11,7 @@ module.exports.execute = function (task) {
   const teamIds = task.additionalData.teamIds
   return getNewWorkloadOwnerIds(teamIds)
     .then(function (newWorkloadOwners) {
-      return Promise.each(newWorkloadOwners, function (workloadOwner) {
+      return arrayToPromise(newWorkloadOwners, function (workloadOwner) {
         return getOldWorkloadOwnerIds(workloadOwner.teamId, workloadOwner.forename, workloadOwner.surname, workloadOwner.teamName)
           .then(function (oldWorkload) {
             if (oldWorkload) {
@@ -26,7 +25,7 @@ module.exports.execute = function (task) {
       })
     })
     .then(function () {
-      return Promise.each(duplicateWorkloads, function (duplicateWorkload) {
+      return arrayToPromise(duplicateWorkloads, function (duplicateWorkload) {
         return getMostRecentlyUsedWorkloadOwnerId(duplicateWorkload.old)
           .then(function (w) {
             if (w) {
@@ -36,7 +35,7 @@ module.exports.execute = function (task) {
       })
     })
     .then(function () {
-      return Promise.each(oldAndNewCombined, function (onc) {
+      return arrayToPromise(oldAndNewCombined, function (onc) {
         logger.info(onc.new, onc.old, onc.contractedHours, onc.cameFromDuplicate)
         return updateContractedHours(onc.new, onc.contractedHours)
       })

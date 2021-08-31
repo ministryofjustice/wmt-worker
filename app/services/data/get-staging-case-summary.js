@@ -1,10 +1,10 @@
 const knex = require('../../../knex').stagingSchema
-const CasesSummary = require('wmt-probation-rules').CasesSummary
-const Tiers = require('wmt-probation-rules').Tiers
-const locations = require('wmt-probation-rules').Locations
+const CasesSummary = require('../probation-rules').CasesSummary
+const Tiers = require('../probation-rules').Tiers
+const locations = require('../probation-rules').Locations
 
 module.exports = function (range) {
-  return knex('wmt_extract').whereBetween('id', range)
+  return knex('wmt_extract').withSchema('staging').whereBetween('id', range)
     .then(function (results) {
       const caseSummary = []
       let communityTiers = []
@@ -65,8 +65,8 @@ module.exports = function (range) {
             communityTiers,
             licenseTiers,
             custodyTiers,
-            result.comIn1st16Weeks,
-            result.licIn1st16Weeks,
+            result.comin1st16weeks,
+            result.licin1st16weeks,
             result.datestamp
           ))
         }

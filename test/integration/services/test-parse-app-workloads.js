@@ -3,7 +3,7 @@ const expect = require('chai').expect
 const helper = require('../../helpers/data/app-workload-helper')
 const parseAppWorkloads = require('../../../app/services/parse-app-workloads')
 
-const Workload = require('wmt-probation-rules').Workload
+const Workload = require('../../../app/services/probation-rules').Workload
 
 let inserts = []
 let initialWorkloadStagingId

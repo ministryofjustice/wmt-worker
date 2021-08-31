@@ -1,4 +1,3 @@
-const Promise = require('bluebird')
 const config = require('../config')
 const log = require('./services/log')
 const taskStatus = require('./constants/task-status')
@@ -10,7 +9,6 @@ const updateWorkloadReportStatus = require('./services/data/update-workload-repo
 const countTaskStatuses = require('./services/task-status-counter')
 const completeTaskWithStatus = require('./services/data/complete-task-with-status')
 const getWorkerForTask = require('./services/get-worker-for-task')
-const callWebRefreshEndpoint = require('./services/refresh-web-org-hierarchy')
 const closePreviousWorkloadReport = require('./services/close-previous-workload-report')
 const updateWorkloadReportEffectiveTo = require('./services/data/update-workload-report-effective-to')
 const operationTypes = require('./constants/calculation-tasks-operation-type')
@@ -19,6 +17,7 @@ const checkForDuplicateTasks = require('./services/data/check-for-duplicate-task
 const setTasksToPending = require('./services/data/set-tasks-to-pending')
 const deleteDuplicateTask = require('./services/data/delete-duplicate-task')
 const checkAllTasksForTypeAreComplete = require('./services/data/check-all-tasks-for-type-are-complete')
+const checkWorkloadIsComplete = require('./services/data/check-tasks-are-complete-for-workload')
 const Task = require('./services/domain/task')
 const createNewTasks = require('./services/data/create-tasks')
 const submittingAgent = require('./constants/task-submitting-agent')
@@ -39,8 +38,8 @@ module.exports = function () {
 function processTasks (batchSize) {
   return getPendingTasksAndMarkInProgress(batchSize)
     .then(function (tasks) {
-      log.info(`found ${tasks.length} tasks`)
       if (tasks.length === 0) { return }
+      log.info(`found ${tasks.length} tasks`)
 
       const promiseArray = []
 
@@ -69,26 +68,17 @@ function executeWorkerForTaskType (worker, task) {
             return countTaskStatuses(task)
               .then(function (totals) {
                 if (totals.numPending === 0 && totals.numInProgress === 0 && totals.numFailed === 0) {
-                  return closePreviousWorkloadReport(task.workloadReportId)
-                    .then(function (previousWorkloadReportId) {
-                      return updateWorkloadReportStatus(previousWorkloadReportId, workloadReportStatus.COMPLETE)
-                        .then(function () {
-                          const removeDuplicatesTask = new Task(
-                            undefined,
-                            submittingAgent.WORKER,
-                            taskType.REMOVE_DUPLICATES,
-                            undefined,
-                            task.workloadReportId,
-                            undefined,
-                            undefined,
-                            taskStatus.PENDING
-                          )
-                          return createNewTasks([removeDuplicatesTask])
-                        })
-                        .then((result) => {
-                          return callWebRefreshEndpoint()
-                        })
-                    })
+                  const removeDuplicatesTask = new Task(
+                    undefined,
+                    submittingAgent.WORKER,
+                    taskType.REMOVE_DUPLICATES,
+                    undefined,
+                    task.workloadReportId,
+                    undefined,
+                    undefined,
+                    taskStatus.PENDING
+                  )
+                  return createNewTasks([removeDuplicatesTask])
                 }
               })
           } else if (Object.keys(triggerableTasks).includes(task.type)) {
@@ -113,15 +103,20 @@ function executeWorkerForTaskType (worker, task) {
                   // Set Mapped tasks to pending
                 }
               })
-          } else if (task.type === taskType.CALCULATE_WORKLOAD_POINTS && task.additionalData.operationType === operationTypes.UPDATE) {
-            return callWebRefreshEndpoint()
           }
           log.info(`completed task: ${task.id}-${task.type}`)
+          return checkWorkloadIsComplete(task.workloadReportId).then(function (result) {
+            if (result) {
+              return closePreviousWorkloadReport(task.workloadReportId)
+                .then(function () {
+                  return updateWorkloadReportStatus(task.workloadReportId, workloadReportStatus.COMPLETE)
+                })
+            }
+          })
         })
     }).catch(function (error) {
-      log.error(`error running task: ${task.id}-${task.type}, error: ${error}`)
-      log.error({ error: error })
-      if (task.type === taskType.CALCULATE_WORKLOAD_POINTS) {
+      log.jobError(`${task.id}-${task.type}`, error)
+      if (task.submitting_agent === 'WORKER') {
         updateWorkloadReportStatus(task.workloadReportId, workloadReportStatus.FAILED)
         updateWorkloadReportEffectiveTo(task.workloadReportId, new Date())
       }

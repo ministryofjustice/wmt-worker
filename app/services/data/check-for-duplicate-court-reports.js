@@ -1,7 +1,9 @@
 const knex = require('../../../knex').appSchema
 
 module.exports = function () {
-  return knex.schema.raw(
-    'SELECT COUNT(id) AS idCount, id FROM app.individual_court_reporter_overview GROUP BY id HAVING COUNT(id) > 1'
-  )
+  return knex('individual_court_reporter_overview')
+    .withSchema('app')
+    .select('id')
+    .groupBy('id')
+    .having(knex.raw('count(id)'), '>', 1)
 }

@@ -1,5 +1,5 @@
 const knex = require('../../../knex').appSchema
-const Locations = require('wmt-probation-rules').Locations
+const Locations = require('../probation-rules').Locations
 const numericRegex = /^[0-9]*$/
 
 module.exports = function (workload, caseDetails) {
@@ -15,19 +15,20 @@ module.exports = function (workload, caseDetails) {
   const workloadDbObj = mapForInsert(workload)
 
   return knex('workload')
+    .withSchema('app')
     .insert(workloadDbObj)
     .returning('id')
     .then(function (workloadId) {
       const promises = []
-      promises.push(insertTiers(workload.communityTiers, workload.filteredCommunityTiers, workload.t2aCommunityTiers, workloadId, Locations.COMMUNITY))
-      promises.push(insertTiers(workload.custodyTiers, workload.filteredCustodyTiers, workload.t2aCustodyTiers, workloadId, Locations.CUSTODY))
-      promises.push(insertTiers(workload.licenseTiers, workload.filteredLicenseTiers, workload.t2aLicenseTiers, workloadId, Locations.LICENSE))
+      promises.push(insertTiers(workload.communityTiers, workload.filteredCommunityTiers, workload.t2aCommunityTiers, workloadId[0], Locations.COMMUNITY))
+      promises.push(insertTiers(workload.custodyTiers, workload.filteredCustodyTiers, workload.t2aCustodyTiers, workloadId[0], Locations.CUSTODY))
+      promises.push(insertTiers(workload.licenseTiers, workload.filteredLicenseTiers, workload.t2aLicenseTiers, workloadId[0], Locations.LICENSE))
       const communityCaseDetails = caseDetails.filter((caseDetail) => { return caseDetail.location.toUpperCase() === Locations.COMMUNITY })
       const custodyCaseDetails = caseDetails.filter((caseDetail) => { return caseDetail.location.toUpperCase() === Locations.CUSTODY })
       const licenseCaseDetails = caseDetails.filter((caseDetail) => { return caseDetail.location.toUpperCase() === Locations.LICENSE })
-      promises.push(insertCaseDetails(communityCaseDetails, workloadId, Locations.COMMUNITY))
-      promises.push(insertCaseDetails(custodyCaseDetails, workloadId, Locations.CUSTODY))
-      promises.push(insertCaseDetails(licenseCaseDetails, workloadId, Locations.LICENSE))
+      promises.push(insertCaseDetails(communityCaseDetails, workloadId[0], Locations.COMMUNITY))
+      promises.push(insertCaseDetails(custodyCaseDetails, workloadId[0], Locations.CUSTODY))
+      promises.push(insertCaseDetails(licenseCaseDetails, workloadId[0], Locations.LICENSE))
       return Promise.all(promises).then(function () { return workloadId[0] })
     })
 }
@@ -86,7 +87,7 @@ const insertTiers = function (tiers, filteredTiers, t2aTiers, workloadId, locati
     }
     tiersToInsert.push(tierToInsert)
   }
-  return knex('tiers').insert(tiersToInsert)
+  return knex('tiers').withSchema('app').insert(tiersToInsert)
 }
 
 const insertCaseDetails = function (caseDetails, workloadId, location) {
@@ -113,7 +114,7 @@ const insertCaseDetails = function (caseDetails, workloadId, location) {
   if (caseDetailsToInsert.length > 30) {
     batchSize = Math.floor(caseDetailsToInsert.length / 8) + 1
   }
-  return knex.batchInsert('case_details', caseDetailsToInsert, batchSize)
+  return knex.batchInsert('app.case_details', caseDetailsToInsert, batchSize)
 }
 
 const mapForInsert = function (record) {

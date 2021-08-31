@@ -3,6 +3,7 @@ const adjustmentStatus = require('../../constants/adjustment-status')
 
 module.exports = function (workloadOwnerId, category) {
   return knex('adjustments')
+    .withSchema('app')
     .join('adjustment_reason', 'adjustment_reason.id', 'adjustments.adjustment_reason_id')
     .sum('adjustments.points AS points')
     .where('workload_owner_id', workloadOwnerId)

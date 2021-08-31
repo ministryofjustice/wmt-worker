@@ -1,26 +1,16 @@
-const config = require('./config')
-const log = require('./app/services/log')
-const CronJob = require('cron').CronJob
-const processTasks = require('./app/process-tasks')
+const { initialiseAppInsights, buildAppInsightsClient } = require('./app/services/azure-appinsights')
 
-const asyncWorkerCron = config.ASYNC_WORKER_CRON
+initialiseAppInsights()
+buildAppInsightsClient()
 
-const asyncWorkerJob = new CronJob({
-  cronTime: asyncWorkerCron,
-  onTick: function () {
-    runProcessTasks()
-  },
-  onComplete: function () {
-    log.info('WMT worker completed running task')
-  },
-  start: false
+const childProcess = require('child_process')
+const extractListener = require('./app/wmt-etl/extract-files-listener')
+const taskCronJob = require('./app/task-cron-job')
+const updateInProgressTasksToPending = require('./app/services/data/update-in-progress-tasks-to-pending')
+
+updateInProgressTasksToPending().then(function () {
+  taskCronJob.start()
+  extractListener.start()
+
+  childProcess.fork('start-server.js')
 })
-
-log.info('Started WMT worker')
-asyncWorkerJob.start()
-
-function runProcessTasks () {
-  return processTasks().then(function () {
-    log.info('WMT worker completed running task')
-  })
-}

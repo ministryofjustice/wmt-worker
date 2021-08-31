@@ -2,42 +2,25 @@ const XlsxPopulate = require('xlsx-populate')
 const config = require('../../config')
 const log = require('./log')
 const dateFormatter = require('./date-formatter')
+const uploadDashboard = require('./dashboard/upload-dashboard')
 
 module.exports = function (reductions, capacity, formattedCaseloadData) {
-  const datestamp = dateFormatter.now().format('YYYYMMDDHHmmss')
-  const outputFilepathOnWorker = config.WMT_DASHBOARD_OUTPUT_FILE_PATH + 'dashboard_' + datestamp + '.xlsx'
-  const outputFilepathOnWeb = config.WMT_WEB_DASHBOARD_OUTPUT_FILE_PATH + 'dashboard_' + datestamp + '.xlsx'
+  const datestamp = dateFormatter.formatDate(new Date(), 'YYYYMMDDHHmmss')
+  const fileLocation = config.WMT_DASHBOARD_OUTPUT_FILE_PATH + 'dashboard_' + datestamp + '.xlsx'
   return XlsxPopulate.fromFileAsync(config.WMT_DASHBOARD_TEMPLATE_FILE_PATH)
     .then(workbook => {
       // Modify the workbook.
       const reductionsSheet = workbook.sheet('reductions data')
       const capacitySheet = workbook.sheet('capacity data')
       const caseloadSheet = workbook.sheet('caseload data')
-      // var capacityButtonsSheet = workbook.sheet('Capacity Buttons')
-      // var reductionsButtonsSheet = workbook.sheet('Reductions Buttons')
-      // var reductionsWorkingsSheet = workbook.sheet('reductions workings')
-      // var clusterCodesSheet = workbook.sheet('cluster codes')
+
       populateSheet(reductions, reductionsSheet)
       populateSheet(formattedCaseloadData, caseloadSheet)
       populateSheet(capacity, capacitySheet)
 
-      // reductionsSheet.hidden('very')
-      // capacitySheet.hidden('very')
-      // caseloadSheet.hidden('very')
-      // capacityButtonsSheet.hidden('very')
-      // reductionsButtonsSheet.hidden('very')
-      // reductionsWorkingsSheet.hidden('very')
-      // clusterCodesSheet.hidden('very')
-
-      return workbook.toFileAsync(outputFilepathOnWorker)
-        .then(function () {
-          return outputFilepathOnWeb
-        })
-        .catch(function (error) {
-          log.error('An error occurred while writing the dashboard to', outputFilepathOnWorker)
-          log.error(error)
-          throw (error)
-        })
+      return workbook.outputAsync().then(function (body) {
+        return uploadDashboard(body, fileLocation)
+      })
     })
     .catch(function (error) {
       log.error('An error occurred while reading the dashboard template')
@@ -47,5 +30,7 @@ module.exports = function (reductions, capacity, formattedCaseloadData) {
 }
 
 const populateSheet = function (data, sheet) {
-  sheet.cell('A2').value(data)
+  if (Array.isArray(data) && data.length) {
+    sheet.cell('A2').value(data)
+  }
 }

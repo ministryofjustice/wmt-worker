@@ -2,14 +2,14 @@ const tableName = 'offender_manager'
 
 exports.seed = function (knex, Promise) {
   // Deletes ALL existing entries
-  return knex(tableName).del()
+  return knex(tableName).withSchema('app').del()
     .then(function () {
-      return knex('offender_manager_type').select('id').where({ description: 'Probation Officer' }).first()
+      return knex('offender_manager_type').withSchema('app').select('id').where({ description: 'Probation Officer' }).first()
         .then(function (probationOfficerTypeId) {
-          return knex('offender_manager_type').select('id').where({ description: 'Probation Support Officer' }).first()
+          return knex('offender_manager_type').withSchema('app').select('id').where({ description: 'Probation Support Officer' }).first()
             .then(function (probationSupportOfficerTypeId) {
               // Inserts seed entries
-              return knex(tableName).insert([
+              return knex(tableName).withSchema('app').insert([
                 { type_id: probationOfficerTypeId.id, key: 'JS01', forename: 'John', surname: 'Smith' },
                 { type_id: probationSupportOfficerTypeId.id, key: 'JS02', forename: 'Tony', surname: 'Test' },
                 { type_id: probationOfficerTypeId.id, key: 'JS03', forename: 'Jane', surname: 'Doe' },

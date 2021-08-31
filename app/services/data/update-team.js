@@ -1,9 +1,9 @@
-const config = require('../../../config')
 const knex = require('../../../knex').appSchema
-const teamTable = `${config.DB_APP_SCHEMA}.team`
+const teamTable = 'team'
 
 module.exports = function (team) {
   return knex(teamTable)
+    .withSchema('app')
     .update('description', team.description)
     .update('ldu_id', team.ldu_id)
     .where({ code: team.code })

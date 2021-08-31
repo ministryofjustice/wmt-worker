@@ -1,7 +1,8 @@
 const knex = require('../../../knex').appSchema
 
 module.exports = function () {
-  return knex('staging.wmt_extract')
+  return knex('wmt_extract')
+    .withSchema('staging')
     .select('id')
     .whereIn('id', function () {
       this.select('staging_id').from('app.workload')

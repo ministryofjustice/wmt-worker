@@ -1,9 +1,12 @@
 const knex = require('../../../knex').appSchema
 
 module.exports = function () {
-  return knex.schema.raw(
-    'SELECT COUNT(*) AS theCount, description FROM app.ldu GROUP BY description HAVING COUNT(*) > 1'
-  )
+  return knex
+    .select(knex.raw('count(*) as theCount'), 'description')
+    .from('ldu')
+    .withSchema('app')
+    .groupBy('description')
+    .having(knex.raw('count(*)'), '>', 1)
     .then((results) => {
       const resultsArray = []
       results.forEach((result) => {

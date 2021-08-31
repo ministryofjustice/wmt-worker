@@ -1,7 +1,6 @@
-const Promise = require('bluebird').Promise
 const logger = require('../log')
 
-const mapWorkload = require('wmt-probation-rules').mapWorkload
+const mapWorkload = require('../probation-rules').mapWorkload
 const Task = require('../domain/task')
 const taskType = require('../../constants/task-type')
 const taskStatus = require('../../constants/task-status')
@@ -10,6 +9,7 @@ const parseStagingWorkload = require('../parse-staging-workload')
 const insertWorkloadOwnerAndDependencies = require('../insert-workload-owner-and-dependencies')
 const insertWorkload = require('../data/insert-app-workload')
 const createNewTasks = require('../data/create-tasks')
+const { arrayToPromise } = require('../helpers/promise-helper')
 
 module.exports.execute = function (task) {
   const workloadBatchSize = task.additionalData.batchSize
@@ -18,7 +18,7 @@ module.exports.execute = function (task) {
   const workloadReportId = task.workloadReportId
 
   return parseStagingWorkload([startingStagingId, endingStagingId]).then(function (stagingWorkloads) {
-    return Promise.each(stagingWorkloads, function (stagingWorkload) {
+    return arrayToPromise(stagingWorkloads, function (stagingWorkload) {
       const caseSummary = stagingWorkload.casesSummary
       if (caseSummary.omKey !== null) {
         return insertWorkloadOwnerAndDependencies(caseSummary)
@@ -28,6 +28,7 @@ module.exports.execute = function (task) {
             return insertWorkload(workloadToInsert, caseDetails)
           })
       }
+      return Promise.resolve()
     })
       .then(function () {
         const reductionsWorkerTask = new Task(

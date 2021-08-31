@@ -7,10 +7,11 @@ module.exports = function () {
   return deleteStagingOmicRecords()
     .then(function () {
       return knex('omic_teams')
+        .withSchema('staging')
         .insert(omicWmtExtract)
         .returning('id')
         .then(function (id) {
-          stagingId = id
+          stagingId = id[0]
           return stagingId
         })
     })

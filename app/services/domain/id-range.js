@@ -1,7 +1,7 @@
 class IdRange {
   constructor (firstId, lastId) {
-    this.firstId = firstId
-    this.lastId = lastId
+    this.firstId = Number(firstId)
+    this.lastId = Number(lastId)
   }
 }
 

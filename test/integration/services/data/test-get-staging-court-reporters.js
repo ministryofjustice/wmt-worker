@@ -1,8 +1,8 @@
 const expect = require('chai').expect
 const getStgCourtReporters = require('../../../../app/services/data/get-staging-court-reporters')
-const CasesSummay = require('wmt-probation-rules').CasesSummary
-const CourtReport = require('wmt-probation-rules').CourtReport
-const OmCourtReports = require('wmt-probation-rules').OmCourtReports
+const CasesSummay = require('../../../../app/services/probation-rules').CasesSummary
+const CourtReport = require('../../../../app/services/probation-rules').CourtReport
+const OmCourtReports = require('../../../../app/services/probation-rules').OmCourtReports
 const helper = require('../../../helpers/data/staging-court-reporters-helper')
 
 let inserts = []

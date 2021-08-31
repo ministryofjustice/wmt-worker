@@ -1,8 +1,7 @@
-const Promise = require('bluebird').Promise
 const logger = require('../log')
-const calculateWorkloadPoints = require('wmt-probation-rules').calculateWorkloadPoints
-const calculateNominalTarget = require('wmt-probation-rules').calculateNominalTarget
-const calculateAvailablePoints = require('wmt-probation-rules').calculateAvailablePoints
+const calculateWorkloadPoints = require('../probation-rules').calculateWorkloadPoints
+const calculateNominalTarget = require('../probation-rules').calculateNominalTarget
+const calculateAvailablePoints = require('../probation-rules').calculateAvailablePoints
 const parseAppWorkloads = require('../parse-app-workloads')
 const insertWorkloadPointsCalculations = require('../data/insert-workload-points-calculation')
 const updateWorkloadPointsCalculations = require('../data/update-workload-points-calculation')
@@ -15,6 +14,7 @@ const operationTypes = require('../../constants/calculation-tasks-operation-type
 const checkForDuplicateCalculation = require('../data/check-for-duplicate-calculation')
 
 const adjustmentCategory = require('../../constants/adjustment-category')
+const { arrayToPromise } = require('../helpers/promise-helper')
 
 module.exports.execute = function (task) {
   const startingStagingId = task.additionalData.workloadBatch.startingId
@@ -40,7 +40,7 @@ module.exports.execute = function (task) {
   const t2aPointsConfigurationPromise = getWorkloadPointsConfiguration(isT2a)
 
   return parseAppWorkloads(startingStagingId, maxStagingId, batchSize, reportId).then(function (workloads) {
-    return Promise.each(workloads, function (workloadResult) {
+    return arrayToPromise(workloads, function (workloadResult) {
       const workload = workloadResult.values
       const workloadId = workloadResult.id
       const getOffenderManagerTypePromise = getOffenderManagerTypeId(workload.workloadOwnerId)
@@ -57,7 +57,7 @@ module.exports.execute = function (task) {
           return getAppReductionsPromise.then(function (reductions) {
             return getCmsAdjustmentPointsPromise.then(function (cmsAdjustments) {
               return getGsAdjustmentPointsPromise.then(function (gsAdjustments) {
-                const totalPoints = workloadPointsBreakdown.total + cmsAdjustments + gsAdjustments
+                const totalPoints = Math.round(workloadPointsBreakdown.total + cmsAdjustments + gsAdjustments)
                 return getContractedHoursPromise.then(function (contractedHours) {
                   return getOffenderManagerTypePromise.then(function (offenderManagerTypeId) {
                     const nominalTarget = calculateNominalTarget(offenderManagerTypeId, caseTypeWeightings.pointsConfiguration.defaultNominalTargets)
