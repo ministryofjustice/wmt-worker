@@ -44,6 +44,14 @@ function putToS3 (file) {
   }))
 }
 
+function putEmptyToS3 (key) {
+  return s3Client.send(new PutObjectCommand({
+    Bucket: config.S3.BUCKET_NAME,
+    Key: `extract/${key}`,
+    Body: ''
+  }))
+}
+
 function tagFileRead (file) {
   return s3Client.send(new PutObjectTaggingCommand({
     Bucket: config.S3.BUCKET_NAME,
@@ -83,13 +91,15 @@ describe('etl does not run when only one file has been updated', function () {
   })
 })
 
-describe('etl runs when both files have been updated', function () {
+describe('etl runs when both excel files have been updated', function () {
   beforeEach(function () {
     expectedInputData = getExtractFileData()
     return cleanTables().then(function () {
-      return putToS3('WMP_PS.xlsx').then(function () {
-        return putToS3('WMP_CRC.xlsx').then(function () {
-          return pollAndCheck()
+      return putEmptyToS3('Readme.md').then(function () {
+        return putToS3('WMP_PS.xlsx').then(function () {
+          return putToS3('WMP_CRC.xlsx').then(function () {
+            return pollAndCheck()
+          })
         })
       })
     })
@@ -107,7 +117,9 @@ describe('etl runs when both files have been updated', function () {
 
   afterEach(function () {
     return deleteFromS3('extract/WMP_CRC.xlsx').then(function () {
-      return deleteFromS3('extract/WMP_PS.xlsx')
+      return deleteFromS3('extract/WMP_PS.xlsx').then(function () {
+        return deleteFromS3('extract/Readme.md')
+      })
     })
   })
 })

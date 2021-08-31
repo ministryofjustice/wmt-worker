@@ -24,8 +24,9 @@ module.exports = function () {
     if (data.Messages) {
       return deleteSqsMessage(sqsClient, queueURL, data.Messages[0].ReceiptHandle).then(function () {
         return listObjects(s3Client, S3.BUCKET_NAME).then(function (extracts) {
-          if (bothFilesPresent(extracts)) {
-            return Promise.all(extracts.map((extract) => getHasBeenRead(extract.Key)))
+          const excelExtracts = extracts.filter((extract) => extract.Key.endsWith('.xlsx'))
+          if (bothFilesPresent(excelExtracts)) {
+            return Promise.all(excelExtracts.map((extract) => getHasBeenRead(extract.Key)))
               .then(function ([first, second]) {
                 if (!first && !second) {
                   return runEtl()
