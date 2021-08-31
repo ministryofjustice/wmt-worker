@@ -40,5 +40,5 @@ module.exports = {
   SENTRY_DSN: process.env.SENTRY_DSN,
 
   // Environment
-  WMT_ENVIRONMENT: process.env.WMT_ENVIRONMENT
+  WMT_ENVIRONMENT: process.env.NODE_ENV
 }
