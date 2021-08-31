@@ -3,7 +3,7 @@ const insertGenericReduction = require('../data/insert-generic-reduction')
 const updateContractedHours = require('../data/update-contracted-hours')
 const recalculateWorkloadPoints = require('../data/recalculate-workload-points')
 const deleteAllReductions = require('../data/delete-all-reductions')
-const Promise = require('bluebird')
+const { arrayToPromise } = require('../helpers/promise-helper')
 const glob = require('glob')
 const config = require('../../../config')
 const fs = require('fs')
@@ -29,7 +29,7 @@ module.exports.execute = function (task) {
 
   return deleteAllReductions()
     .then(function () {
-      return Promise.each(reductionsAndContractedHours, function (result) {
+      return arrayToPromise(reductionsAndContractedHours, function (result) {
         return getWorkloadOwnerForTeamAndOm(result.omKey, result.teamCode)
           .then(function (workloadOwner) {
             if (workloadOwner) {

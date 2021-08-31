@@ -1,6 +1,5 @@
 const knex = require('../../../knex').appSchema
 const config = require('../../../config')
-const Promise = require('bluebird').Promise
 
 module.exports = function () {
   if (config.WMT_ENVIRONMENT !== 'production') {
