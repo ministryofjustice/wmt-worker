@@ -2,7 +2,12 @@ const knex = require('../../../knex').appSchema
 const { arrayToPromise } = require('../helpers/promise-helper')
 
 module.exports = function (contactId) {
-  return knex.schema.raw('SELECT count(*) AS theCount, contact_id AS contactId, workload_owner_id AS workloadOwnerId, points FROM app.adjustments WHERE contact_id = ' + contactId + ' GROUP BY contact_id, workload_owner_id, points HAVING count(*) > 1')
+  return knex.select(knex.raw('count(*) AS theCount'), 'contact_id AS contactId', 'workload_owner_id AS workloadOwnerId', 'points')
+    .from('adjustments')
+    .withSchema('app')
+    .where('contact_id', contactId)
+    .groupBy('contact_id', 'workload_owner_id', 'points')
+    .having(knex.raw('count(*)'), '>', 1)
     .then(function (results) {
       return arrayToPromise(results, function (result) {
         let count = 0

@@ -9,7 +9,7 @@ module.exports.execute = function (task) {
   return checkForDuplicateCMS()
     .then(function (duplicateCMSRecords) {
       return arrayToPromise(duplicateCMSRecords, function (duplicateCMS) {
-        return deleteDuplicateCMS(duplicateCMS.contactId)
+        return deleteDuplicateCMS(duplicateCMS.contactid)
       })
     })
     .then(function () {

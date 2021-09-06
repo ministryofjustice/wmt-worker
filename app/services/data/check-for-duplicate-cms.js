@@ -1,7 +1,13 @@
 const knex = require('../../../knex').appSchema
 
 module.exports = function () {
-  return knex.schema.raw(
-    'SELECT COUNT(*) AS theCount, cmsExport.contactId, cmsExport.contactPoints, cmsExport.omPoints FROM (SELECT contactRegionName, contactLduName, contactTeamName, contactDate, contactName, contactGradeCode, omRegionName, omLduName, omTeamName, contactCMS.contactId AS contactId, omName, omGradeCode, contactCMS.contactDescription, contactCMS.contactCode, contactCMS.contactPoints, omCMS.omPoints, contactCMS.caseRefNo FROM app.contact_cms_export_view AS contactCMS JOIN app.om_cms_export_view AS omCMS ON contactCMS.contactId = omCMS.contactId) AS cmsExport GROUP BY cmsExport.contactId, cmsExport.contactPoints, cmsExport.omPoints HAVING Count(*) > 1'
-  )
+  return knex.select(knex.raw('COUNT(*) AS theCount'), 'cmsExport.contactid').from(function () {
+    this.select('contact_cms_export_view.contactid', 'contact_cms_export_view.contactpoints', 'om_cms_export_view.ompoints')
+      .from('contact_cms_export_view')
+      .withSchema('app')
+      .join('om_cms_export_view', 'contact_cms_export_view.contactid', 'om_cms_export_view.contactid')
+      .as('cmsExport')
+  })
+    .groupBy('cmsExport.contactid', 'cmsExport.contactpoints', 'cmsExport.ompoints')
+    .having(knex.raw('count(*)'), '>', 1)
 }
