@@ -1,13 +1,13 @@
 const knex = require('../../../knex').appSchema
 
 module.exports = function () {
-  return knex.select(knex.raw('COUNT(*) AS theCount'), 'cmsExport.contactId').from(function () {
-    this.select('contact_cms_export_view.contactId', 'contact_cms_export_view.contactPoints', 'omCMS.omPoints')
-      .from('app.contact_cms_export_view')
+  return knex.select(knex.raw('COUNT(*) AS theCount'), 'cmsExport.contactid').from(function () {
+    this.select('contact_cms_export_view.contactid', 'contact_cms_export_view.contactpoints', 'om_cms_export_view.ompoints')
+      .from('contact_cms_export_view')
       .withSchema('app')
-      .join('om_cms_export_view', 'contact_cms_export_view.contactId', 'om_cms_export_view.contactId')
+      .join('om_cms_export_view', 'contact_cms_export_view.contactid', 'om_cms_export_view.contactid')
       .as('cmsExport')
   })
-    .groupBy('cmsExport.contactId', 'cmsExport.contactPoints', 'cmsExport.omPoints')
+    .groupBy('cmsExport.contactid', 'cmsExport.contactpoints', 'cmsExport.ompoints')
     .having(knex.raw('count(*)'), '>', 1)
 }
