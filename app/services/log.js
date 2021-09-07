@@ -50,6 +50,18 @@ if (ENABLE_SLACK_ALERTING) {
 }
 
 const logger = {
+  trackExecutionTime: function (jobName, timeTaken, status) {
+    if (appInsightsClient) {
+      appInsightsClient.trackDependency({
+        dependencyTypeName: 'myDependency',
+        name: jobName,
+        duration: timeTaken,
+        success: status
+      })
+    } else {
+      log.info('$jobName took $timeTaken')
+    }
+  },
   info: log.info.bind(log),
   jobError: function (jobName, error) {
     if (ENABLE_SLACK_ALERTING) {

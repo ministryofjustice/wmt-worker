@@ -34,7 +34,7 @@ describe('process-tasks', function () {
     getTaskInProgressCount = sinon.stub()
     createTasks = sinon.stub()
     checkTasksAreCompleteForWorkload = sinon.stub()
-    log = { info: function (message) {}, error: function (message) {}, jobError: sinon.stub() }
+    log = { trackExecutionTime: sinon.stub(), info: sinon.stub(), error: function (message) {}, jobError: sinon.stub() }
 
     processTasks = proxyquire('../../../app/process-tasks', {
       '../config': { ASYNC_WORKER_BATCH_SIZE: batchSize },
@@ -59,9 +59,7 @@ describe('process-tasks', function () {
     closePreviousWorkloadReport.resolves()
     getWorkerForTask.returns({
       execute: function () {
-        return new Promise(function (resolve) {
-          resolve('Done!')
-        })
+        return Promise.resolve('Done!')
       }
     })
     completeTaskWithStatus.resolves({})
@@ -72,6 +70,7 @@ describe('process-tasks', function () {
       expect(getWorkerForTask.calledWith('task2')).to.be.true
       expect(completeTaskWithStatus.calledWith(1, taskStatus.COMPLETE)).to.be.true
       expect(completeTaskWithStatus.calledWith(2, taskStatus.COMPLETE)).to.be.true
+      expect(log.trackExecutionTime.calledWith('task1', sinon.match.number, true)).to.be.true
     })
   })
 

@@ -59,9 +59,11 @@ function processTasks (batchSize) {
 
 function executeWorkerForTaskType (worker, task) {
   log.info(`started task: ${task.id}-${task.type}`)
+  const startTime = new Date().getMilliseconds
 
   return worker.execute(task)
     .then(function () {
+      log.trackExecutionTime(task.type, new Date().getMilliseconds - startTime, true)
       return completeTaskWithStatus(task.id, taskStatus.COMPLETE)
         .then(function () {
           if (task.type === taskType.CALCULATE_WORKLOAD_POINTS && task.additionalData.operationType === operationTypes.INSERT) {
