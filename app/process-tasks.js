@@ -117,6 +117,8 @@ function executeWorkerForTaskType (worker, task) {
           })
         })
     }).catch(function (error) {
+      log.trackExecutionTime(task.type, new Date().getMilliseconds - startTime, false)
+
       log.jobError(`${task.id}-${task.type}`, error)
       if (task.submitting_agent === 'WORKER') {
         updateWorkloadReportStatus(task.workloadReportId, workloadReportStatus.FAILED)
