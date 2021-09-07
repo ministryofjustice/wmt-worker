@@ -53,7 +53,7 @@ const logger = {
   trackExecutionTime: function (jobName, timeTaken, status) {
     if (appInsightsClient) {
       appInsightsClient.trackDependency({
-        dependencyTypeName: 'myDependency',
+        dependencyTypeName: 'WorkerTask',
         name: jobName,
         duration: timeTaken,
         success: status
