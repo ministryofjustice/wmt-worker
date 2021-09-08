@@ -7,14 +7,14 @@ const submittingAgent = require('../../constants/task-submitting-agent')
 const taskStatus = require('../../constants/task-status')
 const taskType = require('../../constants/task-type')
 
-module.exports.execute = function (task) {
+module.exports.execute = function () {
   return getDivisionsDisplayedCount()
     .then(function (results) {
       if (results[0].divisionCount !== parseInt(EXPECTED_DIVISION_COUNT)) {
         logger.error('ERROR: Check For Missing Divisions - Missing Divisions Found. Expected ' + EXPECTED_DIVISION_COUNT + ' but found ' + results[0].divisionCount)
       }
 
-      const processImportTask = new Task(
+      const dashboardTask = new Task(
         undefined,
         submittingAgent.WORKER,
         taskType.GENERATE_DASHBOARD,
@@ -24,6 +24,6 @@ module.exports.execute = function (task) {
         undefined,
         taskStatus.PENDING
       )
-      return createTasks([processImportTask])
+      return createTasks([dashboardTask])
     })
 }

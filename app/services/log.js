@@ -59,7 +59,7 @@ const logger = {
         success: status
       })
     } else {
-      log.info('$jobName took $timeTaken')
+      log.info(jobName + ' took ' + timeTaken)
     }
   },
   info: log.info.bind(log),

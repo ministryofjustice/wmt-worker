@@ -63,6 +63,8 @@ function executeWorkerForTaskType (worker, task) {
 
   return worker.execute(task)
     .then(function () {
+      log.trackExecutionTime(task.type, new Date().getMilliseconds() - startTime, true)
+      log.info(`completed task: ${task.id}-${task.type}`)
       return completeTaskWithStatus(task.id, taskStatus.COMPLETE)
         .then(function () {
           if (task.type === taskType.CALCULATE_WORKLOAD_POINTS && task.additionalData.operationType === operationTypes.INSERT) {
@@ -105,8 +107,7 @@ function executeWorkerForTaskType (worker, task) {
                 }
               })
           }
-          log.trackExecutionTime(task.type, new Date().getMilliseconds() - startTime, true)
-          log.info(`completed task: ${task.id}-${task.type}`)
+
           return checkWorkloadIsComplete(task.workloadReportId).then(function (result) {
             if (result) {
               return closePreviousWorkloadReport(task.workloadReportId)
