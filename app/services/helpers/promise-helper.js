@@ -10,22 +10,25 @@ module.exports.arrayToPromise = function (array, funct) {
   }, Promise.resolve([]))
 }
 
+async function doWork (iterator, funct) {
+  const results = []
+  for (const [item] of iterator) {
+    const result = await funct(item)
+    results.push(result)
+  }
+  return results
+}
+
 module.exports.parallelArrayToPromise = function (array, funct) {
   if (!array || !array.length) {
     return Promise.resolve([])
   }
 
-  const promises = []
-
-  for (let i = 0; i < array.length; i = i + 10) {
-    let end = i + 10
-    if (end > array.length) {
-      end = array.length
-    }
-    promises.push(module.exports.arrayToPromise(array.slice(i, end), funct))
-  }
-
-  return Promise.all(promises).then(function (values) {
-    return values.flat()
+  const iterator = array.entries()
+  const workers = new Array(5).fill(iterator).map(function (iterator) {
+    return doWork(iterator, funct)
+  })
+  return Promise.all(workers).then(function (results) {
+    return results.flat()
   })
 }
