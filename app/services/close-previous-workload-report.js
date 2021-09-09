@@ -1,5 +1,6 @@
 const getOpenWorkloadReports = require('./data/get-open-workload-reports')
 const updateWorkloadReportEffectiveEndDate = require('./data/update-workload-report-effective-to')
+const log = require('./log')
 
 module.exports = function (newWorkloadReportId) {
   return getOpenWorkloadReports()
@@ -14,6 +15,7 @@ module.exports = function (newWorkloadReportId) {
       if (newWorkload && newWorkload.length > 0) {
         effectiveFrom = newWorkload[0].effective_from
       }
+      log.trackExecutionTime('NART Extract', new Date().getTime() - new Date(effectiveFrom).getTime(), true)
       if (id) {
         return updateWorkloadReportEffectiveEndDate(id, effectiveFrom)
           .then(function () {

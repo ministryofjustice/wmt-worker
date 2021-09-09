@@ -5,6 +5,7 @@ const sinon = require('sinon')
 let getOpenWorkloadReports
 let updateWorkloadEffectiveTo
 let closePreviousWorkloadReport
+let log
 
 const now = new Date()
 const past = now.setMonth(now.getMonth() - 2)
@@ -26,10 +27,11 @@ describe('services/close-previous-workload-report', function () {
   before(function () {
     getOpenWorkloadReports = sinon.stub()
     updateWorkloadEffectiveTo = sinon.stub()
-
+    log = { trackExecutionTime: sinon.stub(), info: sinon.stub(), error: function (message) {}, jobError: sinon.stub() }
     closePreviousWorkloadReport = proxyquire('../../../../app/services/close-previous-workload-report', {
       './data/get-open-workload-reports': getOpenWorkloadReports,
-      './data/update-workload-report-effective-to': updateWorkloadEffectiveTo
+      './data/update-workload-report-effective-to': updateWorkloadEffectiveTo,
+      './log': log
     })
   })
 
@@ -39,6 +41,7 @@ describe('services/close-previous-workload-report', function () {
     return closePreviousWorkloadReport(newWorkloadReportId).then(function () {
       expect(getOpenWorkloadReports.called).to.be.true //eslint-disable-line
       expect(updateWorkloadEffectiveTo.calledWith(previousWorkloadReportId, now)).to.be.true //eslint-disable-line
+      return expect(log.trackExecutionTime.calledWith('NART Extract', sinon.match.number, true)).to.be.true
     })
   })
 })
