@@ -1,6 +1,7 @@
 const config = require('./config')
 const defaultConnection = {
   host: config.DATABASE_SERVER,
+  port: 5435,
   user: config.DATABASE_USERNAME,
   password: config.DATABASE_PASSWORD,
   database: config.DATABASE
