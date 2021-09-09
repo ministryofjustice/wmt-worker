@@ -12,8 +12,8 @@ module.exports.arrayToPromise = function (array, funct) {
 
 async function doWork (iterator, funct) {
   const results = []
-  for (const [item] of iterator) {
-    const result = await funct(item)
+  for (const item of iterator) {
+    const result = await funct(item[1])
     results.push(result)
   }
   return results
