@@ -3,8 +3,6 @@ const knex = require('../../../knex').appSchema
 module.exports = function (initialId, maxId, workloadReportId) {
   return knex('workload').withSchema('app')
     .leftJoin('tiers', 'workload.id', 'workload_id')
-    .leftJoin('workload_owner', 'workload.workload_owner_id', 'workload_owner.id')
-    .leftJoin('offender_manager', 'workload_owner.offender_manager_id', 'offender_manager.id')
     .whereBetween('workload.staging_id', [initialId, maxId])
     .andWhere('workload.workload_report_id', workloadReportId)
     .select('workload.id',
