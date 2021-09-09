@@ -59,11 +59,11 @@ function processTasks (batchSize) {
 
 function executeWorkerForTaskType (worker, task) {
   log.info(`started task: ${task.id}-${task.type}`)
-  const startTime = new Date().getMilliseconds()
+  const startTime = new Date().getTime()
 
   return worker.execute(task)
     .then(function () {
-      log.trackExecutionTime(task.type, new Date().getMilliseconds() - startTime, true)
+      log.trackExecutionTime(task.type, new Date().getTime() - startTime, true)
       log.info(`completed task: ${task.id}-${task.type}`)
       return completeTaskWithStatus(task.id, taskStatus.COMPLETE)
         .then(function () {
@@ -118,7 +118,7 @@ function executeWorkerForTaskType (worker, task) {
           })
         })
     }).catch(function (error) {
-      log.trackExecutionTime(task.type, new Date().getMilliseconds() - startTime, false)
+      log.trackExecutionTime(task.type, new Date().getTime() - startTime, false)
 
       log.jobError(`${task.id}-${task.type}`, error)
       if (task.submitting_agent === 'WORKER') {
