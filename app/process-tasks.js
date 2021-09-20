@@ -74,7 +74,7 @@ function executeWorkerForTaskType (worker, task) {
                   const removeDuplicatesTask = new Task(
                     undefined,
                     submittingAgent.WORKER,
-                    taskType.REMOVE_DUPLICATES,
+                    taskType.CHECK_FOR_MISSING_DIVISIONS,
                     undefined,
                     task.workloadReportId,
                     undefined,
