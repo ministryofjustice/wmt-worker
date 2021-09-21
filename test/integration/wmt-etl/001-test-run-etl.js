@@ -1,5 +1,8 @@
 const expect = require('chai').expect
+const sinon = require('sinon')
 const fs = require('fs')
+const proxyquire = require('proxyquire')
+
 const { PutObjectCommand, DeleteObjectCommand, PutObjectTaggingCommand } = require('@aws-sdk/client-s3')
 const cleanTables = require('../../../app/wmt-etl/clean-tables')
 
@@ -7,7 +10,11 @@ const knex = require('../../../knex').stagingSchema
 const config = require('../../../etl-config')
 
 const getExtractFileData = require('../../helpers/etl/get-extract-file-data')
-const pollSQS = require('../../../app/wmt-etl/poll-sqs')
+const log = { jobError: sinon.stub() }
+const pollSQS = proxyquire('../../../app/wmt-etl/poll-sqs', {
+  '../services/log': log
+}
+)
 
 const getS3Client = require('../../../app/services/aws/s3/get-s3-client')
 const s3Client = getS3Client({
@@ -18,7 +25,7 @@ const s3Client = getS3Client({
 })
 let expectedInputData
 
-function pollAndCheck (result) {
+function pollAndCheck () {
   // waiting for message to apear on queue
 
   return pollSQS().then(function (result) {
@@ -146,6 +153,39 @@ describe('etl does not run when One file has already been read', function () {
           expect(results.length).to.equal(0)
         })
     }))
+  })
+
+  afterEach(function () {
+    return deleteFromS3('extract/WMP_CRC.xlsx').then(function () {
+      return deleteFromS3('extract/WMP_PS.xlsx')
+    })
+  })
+})
+
+describe('etl does not run if it is already in progress', function () {
+  beforeEach(function () {
+    expectedInputData = getExtractFileData()
+
+    return cleanTables().then(function () {
+      return putToS3('WMP_PS.xlsx').then(function () {
+        return putToS3('WMP_CRC.xlsx').then(function () {
+          return pollAndCheck().then(function () {
+            return putToS3('WMP_PS.xlsx').then(function () {
+              return putToS3('WMP_CRC.xlsx')
+            })
+          })
+        })
+      })
+    })
+  })
+
+  it('should not run ETL twice', function () {
+    return pollAndCheck().then(function () {
+      expect(log.jobError.calledWith('RUN-ETL')).to.equal(true)
+      return knex('tasks').withSchema('app').count('*').where('type', 'PROCESS-IMPORT').then(function ([{ count }]) {
+        expect(count).to.equal(1)
+      })
+    })
   })
 
   afterEach(function () {
