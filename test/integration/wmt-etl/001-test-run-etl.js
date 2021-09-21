@@ -167,13 +167,11 @@ describe('etl does not run if it is already in progress', function () {
     expectedInputData = getExtractFileData()
 
     return cleanTables().then(function () {
-      return knex('tasks').withSchema('app').del().then(function () {
-        return putToS3('WMP_PS.xlsx').then(function () {
-          return putToS3('WMP_CRC.xlsx').then(function () {
-            return pollAndCheck().then(function () {
-              return putToS3('WMP_PS.xlsx').then(function () {
-                return putToS3('WMP_CRC.xlsx')
-              })
+      return putToS3('WMP_PS.xlsx').then(function () {
+        return putToS3('WMP_CRC.xlsx').then(function () {
+          return pollAndCheck().then(function () {
+            return putToS3('WMP_PS.xlsx').then(function () {
+              return putToS3('WMP_CRC.xlsx')
             })
           })
         })
@@ -187,6 +185,12 @@ describe('etl does not run if it is already in progress', function () {
       return knex('tasks').withSchema('app').count('*').where('type', 'PROCESS-IMPORT').then(function ([{ count }]) {
         expect(count).to.equal(1)
       })
+    })
+  })
+
+  afterEach(function () {
+    return deleteFromS3('extract/WMP_CRC.xlsx').then(function () {
+      return deleteFromS3('extract/WMP_PS.xlsx')
     })
   })
 })
