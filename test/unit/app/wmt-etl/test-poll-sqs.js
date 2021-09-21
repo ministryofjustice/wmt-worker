@@ -11,6 +11,7 @@ describe('poll-sqs', function () {
   let listObjects
   let runEtl
   let getHasBeenRead
+  let getTasksNotCompleteCount
 
   beforeEach(function () {
     log = { jobError: sinon.stub() }
@@ -20,13 +21,16 @@ describe('poll-sqs', function () {
     listObjects = sinon.stub()
     runEtl = sinon.stub()
     getHasBeenRead = sinon.stub()
+    getTasksNotCompleteCount = sinon.stub()
+    getTasksNotCompleteCount.resolves([{ theCount: 0 }])
     pollSqs = proxyquire('../../../../app/wmt-etl/poll-sqs', {
       '../services/log': log,
       '../services/aws/sqs/receive-sqs-message': receiveSqsMessage,
       '../services/aws/sqs/delete-sqs-message': deleteSqsMessage,
       '../services/aws/s3/list-s3-objects': listObjects,
       './get-has-been-read': getHasBeenRead,
-      './run-etl': runEtl
+      './run-etl': runEtl,
+      '../services/data/get-tasks-not-complete-count': getTasksNotCompleteCount
     })
   })
 

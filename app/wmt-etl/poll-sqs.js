@@ -9,7 +9,7 @@ const listObjects = require('../services/aws/s3/list-s3-objects')
 
 const runEtl = require('./run-etl')
 const getHasBeenRead = require('./get-has-been-read')
-const knex = require('../../knex')
+const getTasksNotCompleteCount = require('../services/data/get-tasks-not-complete-count')
 
 const sqsClient = getSqsClient({ region: SQS.REGION, accessKeyId: SQS.ACCESS_KEY_ID, secretAccessKey: SQS.SECRET_ACCESS_KEY, endpoint: SQS.ENDPOINT })
 const s3Client = getS3Client({ region: S3.REGION, accessKeyId: S3.ACCESS_KEY_ID, secretAccessKey: S3.SECRET_ACCESS_KEY, endpoint: S3.ENDPOINT })
@@ -23,8 +23,8 @@ const bothFilesPresent = function (extracts) {
 module.exports = function () {
   return receiveSqsMessage(sqsClient, queueURL).then(function (data) {
     if (data.Messages) {
-      return knex('tasks').withSchema('app').count('*').where('status', 'IN-PROGRESS').then(function ([{ count }]) {
-        if (count > 0) {
+      return getTasksNotCompleteCount().then(function ([{ theCount }]) {
+        if (theCount > 0) {
           throw new Error('ETL already running')
         }
         return deleteSqsMessage(sqsClient, queueURL, data.Messages[0].ReceiptHandle).then(function () {

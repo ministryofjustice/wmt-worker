@@ -162,7 +162,7 @@ describe('etl does not run when One file has already been read', function () {
   })
 })
 
-describe.only('etl does not run if it is already in progress', function () {
+describe('etl does not run if it is already in progress', function () {
   beforeEach(function () {
     expectedInputData = getExtractFileData()
 
@@ -183,7 +183,7 @@ describe.only('etl does not run if it is already in progress', function () {
 
   it('should not run ETL twice', function () {
     return pollAndCheck().then(function () {
-      expect(log.jobError.calledWith('RUN-ETL', 'ETL already running')).to.equal(true)
+      expect(log.jobError.calledWith('RUN-ETL')).to.equal(true)
       return knex('tasks').withSchema('app').count('*').where('type', 'PROCESS-IMPORT').then(function ([{ count }]) {
         expect(count).to.equal(1)
       })
