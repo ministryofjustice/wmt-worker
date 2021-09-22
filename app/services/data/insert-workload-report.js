@@ -6,9 +6,9 @@ module.exports = function () {
   return knex('workload_report')
     .withSchema('app')
     .insert(workloadReport)
-    .returning('id', 'effective_from')
-    .then(function (ids) {
-      return ids[0]
+    .returning(['id', 'effective_from'])
+    .then(function (result) {
+      return result[0]
     })
 }
 
