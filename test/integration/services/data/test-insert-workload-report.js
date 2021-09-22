@@ -9,16 +9,15 @@ const timeThreshold = require('../../../constants/time-threshold')
 const insertedIds = []
 
 describe('app/services/data/insert-workload-report', function () {
-  it('should insert return an id', function (done) {
-    insertWorkloadReport().then(function (id) {
+  it('should insert return an workload report', function () {
+    return insertWorkloadReport().then(function (id) {
       insertedIds.push(id)
       expect(id).to.be.a('number')
-      done()
     })
   })
 
-  it('should insert a new workload report record', function (done) {
-    insertWorkloadReport().then(function (id) {
+  it('should insert a new workload report record', function () {
+    return insertWorkloadReport().then(function (id) {
       insertedIds.push(id)
       return knex.table(tableName)
         .withSchema('app')
@@ -31,7 +30,6 @@ describe('app/services/data/insert-workload-report', function () {
           expect(result['date_created']).not.to.be.null // eslint-disable-line
           expect(moment().diff(result['effective_from'], 'seconds')).to.be.lt(timeThreshold.INSERT) // eslint-disable-line
           expect(result.records_total).to.eq(0)
-          done()
         })
     })
   })

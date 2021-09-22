@@ -1,19 +1,20 @@
 const knex = require('../../../knex').appSchema
 const workloadReportStatus = require('../../constants/workload-report-status')
 
-module.exports = function () {
-  const workloadReport = getDefaultWorkloadReport()
+module.exports = function (effectiveFrom) {
+  const workloadReport = getDefaultWorkloadReport(effectiveFrom)
   return knex('workload_report')
     .withSchema('app')
     .insert(workloadReport)
     .returning('id')
-    .then(function (ids) {
-      return ids[0]
+    .then(function (result) {
+      return result[0]
     })
 }
 
-function getDefaultWorkloadReport () {
+function getDefaultWorkloadReport (effectiveFrom) {
   return {
-    status: workloadReportStatus.INPROGRESS
+    status: workloadReportStatus.INPROGRESS,
+    effective_from: effectiveFrom
   }
 }
