@@ -15,6 +15,7 @@ let getWmtExtractRange
 let insertWorkloadReportStub
 let replaceStagingCourtReporters
 let getOmicTeamsIdRange
+let updateCloseOpenWorkloadReports
 
 const firstId = 1
 const lastId = 100
@@ -29,6 +30,7 @@ describe(relativeFilePath, function () {
     getCourtReportsWithNoWorkloads = sinon.stub().resolves(courtReporters)
     replaceStagingCourtReporters = sinon.stub()
     createNewTasksStub = sinon.stub().resolves()
+    updateCloseOpenWorkloadReports = sinon.stub().resolves()
     getOmicTeamsIdRange = sinon.stub().resolves(new IdRange(firstId, lastId))
     processImport = proxyquire('../../../../app/' + relativeFilePath, {
       '../log': { info: function (message) { } },
@@ -38,7 +40,8 @@ describe(relativeFilePath, function () {
       '../data/get-wmt-extract-id-range': getWmtExtractRange,
       '../data/create-tasks': createNewTasksStub,
       '../data/insert-workload-report': insertWorkloadReportStub,
-      '../data/get-omic-teams-id-range': getOmicTeamsIdRange
+      '../data/get-omic-teams-id-range': getOmicTeamsIdRange,
+      '../data/update-close-open-workload-reports': updateCloseOpenWorkloadReports
     })
   })
 
