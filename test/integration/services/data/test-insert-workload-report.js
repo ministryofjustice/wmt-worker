@@ -8,7 +8,7 @@ const timeThreshold = require('../../../constants/time-threshold')
 
 const insertedIds = []
 
-describe.only('app/services/data/insert-workload-report', function () {
+describe('app/services/data/insert-workload-report', function () {
   it('should insert return an workload report', function () {
     return insertWorkloadReport().then(function (id) {
       insertedIds.push(id)
