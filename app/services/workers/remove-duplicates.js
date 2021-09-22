@@ -19,10 +19,11 @@ const { parallelArrayToPromise } = require('../helpers/promise-helper')
 module.exports.execute = function (task) {
   return checkForDuplicateWorkloads()
     .then(function (duplicateWorkloads) {
-      logger.info('duplicates found: linkIds are')
-      logger.info(duplicateWorkloads)
-      throw new Error('Duplicates found where none expected')
-
+      if (duplicateWorkloads && duplicateWorkloads.length) {
+        logger.info('duplicates found: linkIds are')
+        logger.info(duplicateWorkloads)
+        throw new Error('Duplicates found where none expected')
+      }
       // return parallelArrayToPromise(duplicateWorkloads, function (duplicateWorkload) {
       //   return getDuplicateWorkloadIds(duplicateWorkload.link_id)
       //     .then(function (workloadIds) {
