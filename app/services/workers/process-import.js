@@ -11,6 +11,7 @@ const getOmicTeamsIdRange = require('../data/get-omic-teams-id-range')
 const getCourtReportersIdRange = require('../data/get-court-reporters-id-range')
 const createNewTasks = require('../data/create-tasks')
 const insertWorkloadReport = require('../data/insert-workload-report')
+const updateCloseOpenWorkloadReports = require('../data/update-close-open-workload-reports')
 
 const taskStatus = require('../../constants/task-status')
 const taskType = require('../../constants/task-type')
@@ -22,29 +23,30 @@ module.exports.execute = function (task) {
   const batchSize = parseInt(config.ASYNC_WORKER_BATCH_SIZE, 10)
   const tasks = []
   let workloadReportId
-
-  return insertWorkloadReport()
-    .then(function (insertedWorkloadReportId) {
-      workloadReportId = insertedWorkloadReportId
-      return populateStagingCourtReporters()
-    })
-    .then(function () {
-      return createAndGetCourtReportsTaskObjects(tasks, batchSize, workloadReportId)
-    })
-    .then(function (tasks) {
-      return createAndGetWorkloadTaskObjects(tasks, batchSize, workloadReportId)
-    })
-    .then(function (tasks) {
-      return createAndGetOmicTaskObjects(tasks, batchSize, workloadReportId)
-    })
-    .then(function (tasks) {
-      if (tasks.length > 0) {
-        return createNewTasks(tasks)
-          .then(function () {
-            logger.info('Tasks created')
-          })
-      }
-    })
+  return updateCloseOpenWorkloadReports().then(function () {
+    return insertWorkloadReport()
+      .then(function (insertedWorkloadReportId) {
+        workloadReportId = insertedWorkloadReportId
+        return populateStagingCourtReporters()
+      })
+      .then(function () {
+        return createAndGetCourtReportsTaskObjects(tasks, batchSize, workloadReportId)
+      })
+      .then(function (tasks) {
+        return createAndGetWorkloadTaskObjects(tasks, batchSize, workloadReportId)
+      })
+      .then(function (tasks) {
+        return createAndGetOmicTaskObjects(tasks, batchSize, workloadReportId)
+      })
+      .then(function (tasks) {
+        if (tasks.length > 0) {
+          return createNewTasks(tasks)
+            .then(function () {
+              logger.info('Tasks created')
+            })
+        }
+      })
+  })
 }
 
 const populateStagingCourtReporters = function () {
