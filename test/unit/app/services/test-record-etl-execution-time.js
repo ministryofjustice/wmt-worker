@@ -27,7 +27,7 @@ describe('services/record-etl-execution-time', function () {
     })
   })
 
-  it('should call get-open-workload-reports and update-workload-report-effective-to', function () {
+  it('should call get-workload-report-by-id and update-workload-report-effective-to', function () {
     getWorkloadReportById.resolves(currentWorkloads)
     return recordEtlExecutionTime(newWorkloadReportId).then(function () {
       expect(getWorkloadReportById.calledWith(newWorkloadReportId)).to.be.true
