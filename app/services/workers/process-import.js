@@ -26,7 +26,7 @@ module.exports.execute = function () {
   return insertWorkloadReport()
     .then(function (insertedWorkloadReport) {
       workloadReportId = insertedWorkloadReport.id
-      return updateCloseOpenWorkloadReports(insertedWorkloadReport.effective_from).then(function () {
+      return updateCloseOpenWorkloadReports(insertedWorkloadReport.effective_from, workloadReportId).then(function () {
         return populateStagingCourtReporters()
       })
     })
