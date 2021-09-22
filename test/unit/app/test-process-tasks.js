@@ -19,6 +19,7 @@ let getTaskInProgressCount
 let createTasks
 let log
 let checkTasksAreCompleteForWorkload
+let recordEtlExecutionTime
 const batchSize = 3
 
 describe('process-tasks', function () {
@@ -33,6 +34,7 @@ describe('process-tasks', function () {
     getTaskInProgressCount = sinon.stub()
     createTasks = sinon.stub()
     checkTasksAreCompleteForWorkload = sinon.stub()
+    recordEtlExecutionTime = sinon.stub()
     log = { trackExecutionTime: sinon.stub(), info: sinon.stub(), error: function (message) {}, jobError: sinon.stub() }
 
     processTasks = proxyquire('../../../app/process-tasks', {
@@ -46,7 +48,8 @@ describe('process-tasks', function () {
       './services/data/update-workload-report-effective-to': updateWorkloadReportEffectiveTo,
       './services/data/get-tasks-inprogress-count': getTaskInProgressCount,
       './services/data/check-tasks-are-complete-for-workload': checkTasksAreCompleteForWorkload,
-      './services/data/create-tasks': createTasks
+      './services/data/create-tasks': createTasks,
+      './services/record-etl-execution-time': recordEtlExecutionTime
     })
   })
 
@@ -92,6 +95,7 @@ describe('process-tasks', function () {
       numFailed: 0
     })
     updateWorkload.resolves({})
+    recordEtlExecutionTime.resolves()
     checkTasksAreCompleteForWorkload.resolves(true)
 
     return processTasks().then(function () {
@@ -102,6 +106,8 @@ describe('process-tasks', function () {
       expect(completeTaskWithStatus.calledWith(2, taskStatus.COMPLETE)).to.be.true
       expect(updateWorkload.calledWith(1, workloadReportStatus.COMPLETE)).to.be.true
       expect(updateWorkload.calledWith(3, workloadReportStatus.COMPLETE)).to.be.true
+      expect(recordEtlExecutionTime.calledWith(1)).to.be.true
+      expect(recordEtlExecutionTime.calledWith(3)).to.be.true
     })
   })
 
@@ -128,6 +134,7 @@ describe('process-tasks', function () {
     return processTasks().then(function () {
       expect(getWorkerForTask.calledWith('CALCULATE-WORKLOAD-POINTS')).to.be.true
       expect(completeTaskWithStatus.calledWith(2, taskStatus.COMPLETE)).to.be.true
+      expect(recordEtlExecutionTime.called).to.be.false
       expect(updateWorkload.calledWith(2, workloadReportStatus.COMPLETE)).to.be.false
     })
   })
@@ -191,6 +198,7 @@ describe('process-tasks', function () {
     return processTasks().then(function () {
       expect(completeTaskWithStatus.called).to.be.true
       expect(taskStatusCounter.called).to.be.false
+      expect(recordEtlExecutionTime.called).to.be.false
       expect(updateWorkload.called).to.be.false
     })
   })

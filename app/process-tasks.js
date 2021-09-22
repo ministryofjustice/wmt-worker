@@ -20,6 +20,7 @@ const checkWorkloadIsComplete = require('./services/data/check-tasks-are-complet
 const Task = require('./services/domain/task')
 const createNewTasks = require('./services/data/create-tasks')
 const submittingAgent = require('./constants/task-submitting-agent')
+const recordEtlExecutionTime = require('./services/record-etl-execution-time')
 
 module.exports = function () {
   const batchSize = parseInt(config.ASYNC_WORKER_BATCH_SIZE, 10)
@@ -109,7 +110,9 @@ function executeWorkerForTaskType (worker, task) {
 
           return checkWorkloadIsComplete(task.workloadReportId).then(function (result) {
             if (result) {
-              return updateWorkloadReportStatus(task.workloadReportId, workloadReportStatus.COMPLETE)
+              return recordEtlExecutionTime(task.workloadReportId).then(function () {
+                return updateWorkloadReportStatus(task.workloadReportId, workloadReportStatus.COMPLETE)
+              })
             }
           })
         })
