@@ -23,30 +23,30 @@ module.exports.execute = function (task) {
   const batchSize = parseInt(config.ASYNC_WORKER_BATCH_SIZE, 10)
   const tasks = []
   let workloadReportId
-  return updateCloseOpenWorkloadReports().then(function () {
-    return insertWorkloadReport()
-      .then(function (insertedWorkloadReportId) {
-        workloadReportId = insertedWorkloadReportId
+  return insertWorkloadReport()
+    .then(function (insertedWorkloadReport) {
+      workloadReportId = insertedWorkloadReport.id
+      return updateCloseOpenWorkloadReports(insertedWorkloadReport.effective_from).then(function () {
         return populateStagingCourtReporters()
       })
-      .then(function () {
-        return createAndGetCourtReportsTaskObjects(tasks, batchSize, workloadReportId)
-      })
-      .then(function (tasks) {
-        return createAndGetWorkloadTaskObjects(tasks, batchSize, workloadReportId)
-      })
-      .then(function (tasks) {
-        return createAndGetOmicTaskObjects(tasks, batchSize, workloadReportId)
-      })
-      .then(function (tasks) {
-        if (tasks.length > 0) {
-          return createNewTasks(tasks)
-            .then(function () {
-              logger.info('Tasks created')
-            })
-        }
-      })
-  })
+    })
+    .then(function () {
+      return createAndGetCourtReportsTaskObjects(tasks, batchSize, workloadReportId)
+    })
+    .then(function (tasks) {
+      return createAndGetWorkloadTaskObjects(tasks, batchSize, workloadReportId)
+    })
+    .then(function (tasks) {
+      return createAndGetOmicTaskObjects(tasks, batchSize, workloadReportId)
+    })
+    .then(function (tasks) {
+      if (tasks.length > 0) {
+        return createNewTasks(tasks)
+          .then(function () {
+            logger.info('Tasks created')
+          })
+      }
+    })
 }
 
 const populateStagingCourtReporters = function () {

@@ -1,8 +1,8 @@
 const knex = require('../../../knex').appSchema
 
-module.exports = function () {
+module.exports = function (effectiveTo) {
   return knex('workload_report')
     .withSchema('app')
-    .update('effective_to', new Date())
+    .update('effective_to', effectiveTo)
     .whereNull('effective_to')
 }

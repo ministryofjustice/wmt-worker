@@ -9,7 +9,6 @@ const updateWorkloadReportStatus = require('./services/data/update-workload-repo
 const countTaskStatuses = require('./services/task-status-counter')
 const completeTaskWithStatus = require('./services/data/complete-task-with-status')
 const getWorkerForTask = require('./services/get-worker-for-task')
-const closePreviousWorkloadReport = require('./services/close-previous-workload-report')
 const updateWorkloadReportEffectiveTo = require('./services/data/update-workload-report-effective-to')
 const operationTypes = require('./constants/calculation-tasks-operation-type')
 const getTaskInProgressCount = require('./services/data/get-tasks-inprogress-count')
@@ -110,10 +109,7 @@ function executeWorkerForTaskType (worker, task) {
 
           return checkWorkloadIsComplete(task.workloadReportId).then(function (result) {
             if (result) {
-              return closePreviousWorkloadReport(task.workloadReportId)
-                .then(function () {
-                  return updateWorkloadReportStatus(task.workloadReportId, workloadReportStatus.COMPLETE)
-                })
+              return updateWorkloadReportStatus(task.workloadReportId, workloadReportStatus.COMPLETE)
             }
           })
         })

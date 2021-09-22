@@ -14,7 +14,6 @@ let updateWorkload
 let taskStatusCounter
 let completeTaskWithStatus
 let getWorkerForTask
-let closePreviousWorkloadReport
 let updateWorkloadReportEffectiveTo
 let getTaskInProgressCount
 let createTasks
@@ -29,7 +28,7 @@ describe('process-tasks', function () {
     getWorkerForTask = sinon.stub()
     updateWorkload = sinon.stub()
     taskStatusCounter = sinon.stub()
-    closePreviousWorkloadReport = sinon.stub()
+
     updateWorkloadReportEffectiveTo = sinon.stub()
     getTaskInProgressCount = sinon.stub()
     createTasks = sinon.stub()
@@ -44,7 +43,6 @@ describe('process-tasks', function () {
       './services/task-status-counter': taskStatusCounter,
       './services/data/complete-task-with-status': completeTaskWithStatus,
       './services/get-worker-for-task': getWorkerForTask,
-      './services/close-previous-workload-report': closePreviousWorkloadReport,
       './services/data/update-workload-report-effective-to': updateWorkloadReportEffectiveTo,
       './services/data/get-tasks-inprogress-count': getTaskInProgressCount,
       './services/data/check-tasks-are-complete-for-workload': checkTasksAreCompleteForWorkload,
@@ -56,7 +54,6 @@ describe('process-tasks', function () {
     getTaskInProgressCount.resolves([{ theCount: 0 }])
     getPendingTasksAndMarkInProgress.resolves([{ id: 1, type: 'task1' }, { id: 2, type: 'task2' }])
     updateWorkload.resolves({})
-    closePreviousWorkloadReport.resolves()
     getWorkerForTask.returns({
       execute: function () {
         return Promise.resolve('Done!')
@@ -95,7 +92,6 @@ describe('process-tasks', function () {
       numFailed: 0
     })
     updateWorkload.resolves({})
-    closePreviousWorkloadReport.resolves(3)
     checkTasksAreCompleteForWorkload.resolves(true)
 
     return processTasks().then(function () {
@@ -104,8 +100,6 @@ describe('process-tasks', function () {
       expect(getWorkerForTask.calledWith('GENERATE-DASHBOARD')).to.be.true
       expect(completeTaskWithStatus.calledWith(1, taskStatus.COMPLETE)).to.be.true
       expect(completeTaskWithStatus.calledWith(2, taskStatus.COMPLETE)).to.be.true
-      expect(closePreviousWorkloadReport.calledWith(1)).to.be.true
-      expect(closePreviousWorkloadReport.calledWith(3)).to.be.true
       expect(updateWorkload.calledWith(1, workloadReportStatus.COMPLETE)).to.be.true
       expect(updateWorkload.calledWith(3, workloadReportStatus.COMPLETE)).to.be.true
     })
@@ -130,12 +124,10 @@ describe('process-tasks', function () {
       numFailed: 3
     })
     updateWorkload.resolves({})
-    closePreviousWorkloadReport.resolves()
 
     return processTasks().then(function () {
       expect(getWorkerForTask.calledWith('CALCULATE-WORKLOAD-POINTS')).to.be.true
       expect(completeTaskWithStatus.calledWith(2, taskStatus.COMPLETE)).to.be.true
-      expect(closePreviousWorkloadReport.called).to.be.false
       expect(updateWorkload.calledWith(2, workloadReportStatus.COMPLETE)).to.be.false
     })
   })
@@ -199,7 +191,6 @@ describe('process-tasks', function () {
     return processTasks().then(function () {
       expect(completeTaskWithStatus.called).to.be.true
       expect(taskStatusCounter.called).to.be.false
-      expect(closePreviousWorkloadReport.called).to.be.false
       expect(updateWorkload.called).to.be.false
     })
   })
