@@ -10,19 +10,18 @@ const insertedIds = []
 
 describe.only('app/services/data/insert-workload-report', function () {
   it('should insert return an workload report', function () {
-    return insertWorkloadReport().then(function (workloadReport) {
-      insertedIds.push(workloadReport.id)
-      expect(workloadReport).to.be.a('object')
-      expect(workloadReport.id).to.be.a('number')
+    return insertWorkloadReport().then(function (id) {
+      insertedIds.push(id)
+      expect(id).to.be.a('number')
     })
   })
 
   it('should insert a new workload report record', function () {
-    return insertWorkloadReport().then(function (workloadReport) {
-      insertedIds.push(workloadReport.id)
+    return insertWorkloadReport().then(function (id) {
+      insertedIds.push(id)
       return knex.table(tableName)
         .withSchema('app')
-        .where({ id: workloadReport.id })
+        .where({ id: id })
         .then(function (results) {
           expect(results.length).to.be.equal(1)
           const result = results[0]

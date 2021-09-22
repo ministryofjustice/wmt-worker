@@ -26,7 +26,7 @@ describe(relativeFilePath, function () {
   beforeEach(function () {
     getCourtReportersRange = sinon.stub().resolves(new IdRange(firstId, lastId))
     getWmtExtractRange = sinon.stub().resolves(new IdRange(firstId, lastId))
-    insertWorkloadReportStub = sinon.stub().resolves({ id: workloadReportId, effective_from: new Date() })
+    insertWorkloadReportStub = sinon.stub().resolves(workloadReportId)
     getCourtReportsWithNoWorkloads = sinon.stub().resolves(courtReporters)
     replaceStagingCourtReporters = sinon.stub()
     createNewTasksStub = sinon.stub().resolves()
