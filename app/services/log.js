@@ -1,6 +1,4 @@
 const { defaultClient: appInsightsClient } = require('applicationinsights')
-const { ENABLE_SLACK_ALERTING, SENTRY_DSN } = require('../../config')
-const Sentry = require('@sentry/node')
 const bunyan = require('bunyan')
 const PrettyStream = require('bunyan-prettystream')
 class JobError extends Error {
@@ -39,16 +37,6 @@ function errorSerializer (error) {
   }
 }
 
-if (ENABLE_SLACK_ALERTING) {
-  Sentry.init({
-    dsn: SENTRY_DSN,
-
-    // We recommend adjusting this value in production, or using tracesSampler
-    // for finer control
-    tracesSampleRate: 1.0
-  })
-}
-
 const logger = {
   trackExecutionTime: function (jobName, timeTaken, status) {
     if (appInsightsClient) {
@@ -64,9 +52,6 @@ const logger = {
   },
   info: log.info.bind(log),
   jobError: function (jobName, error) {
-    if (ENABLE_SLACK_ALERTING) {
-      Sentry.captureException(new JobError(jobName, error))
-    }
     if (appInsightsClient) {
       appInsightsClient.trackException({ exception: new JobError(jobName, error) })
     } else {
@@ -74,9 +59,6 @@ const logger = {
     }
   },
   error: function (e) {
-    if (ENABLE_SLACK_ALERTING) {
-      Sentry.captureException(e)
-    }
     if (appInsightsClient) {
       appInsightsClient.trackException({ exception: e })
     } else {
