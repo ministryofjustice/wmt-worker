@@ -19,7 +19,7 @@ const submittingAgent = require('../../constants/task-submitting-agent')
 const calculateNumberOfRecordsToProcess = require('../helpers/calculate-number-of-records-to-process')
 const calculateNumberOfTasksRequired = require('../helpers/calculate-number-of-tasks-required')
 
-module.exports.execute = function (task) {
+module.exports.execute = async function (task) {
   const batchSize = parseInt(config.ASYNC_WORKER_BATCH_SIZE, 10)
   const tasks = []
   let workloadReportId

@@ -8,7 +8,7 @@ const getOpenReductionsForCourtReporters = require('../data/get-open-reductions-
 const updateStatus = require('../update-adjustment-reduction-status')
 const operationType = require('../../constants/calculation-tasks-operation-type')
 
-module.exports.execute = function (task) {
+module.exports.execute = async function (task) {
   const courtReportStagingIdStart = task.additionalData.startingId
   const courtReportStagingIdEnd = courtReportStagingIdStart + task.additionalData.batchSize - 1
   const workloadReportId = task.workloadReportId

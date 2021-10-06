@@ -12,7 +12,7 @@ const operationTypes = require('../../constants/calculation-tasks-operation-type
 const checkForDuplicateOmicCalculation = require('../data/check-for-duplicate-omic-calculation')
 const { arrayToPromise } = require('../helpers/promise-helper')
 
-module.exports.execute = function (task) {
+module.exports.execute = async function (task) {
   const startingStagingId = task.additionalData.workloadBatch.startingId
   const batchSize = task.additionalData.workloadBatch.batchSize
   const reportId = task.workloadReportId

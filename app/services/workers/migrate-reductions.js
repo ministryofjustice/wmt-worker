@@ -7,7 +7,7 @@ const updateReductionsWorkloadOwnerId = require('../data/update-reductions-workl
 const duplicateWorkloads = []
 const oldAndNewCombined = []
 
-module.exports.execute = function (task) {
+module.exports.execute = async function (task) {
   const teamIds = task.additionalData.teamIds
   return getNewWorkloadOwnerIds(teamIds)
     .then(function (newWorkloadOwners) {

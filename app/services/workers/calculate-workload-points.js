@@ -16,7 +16,7 @@ const checkForDuplicateCalculation = require('../data/check-for-duplicate-calcul
 const adjustmentCategory = require('../../constants/adjustment-category')
 const { arrayToPromise } = require('../helpers/promise-helper')
 
-module.exports.execute = function (task) {
+module.exports.execute = async function (task) {
   const startingStagingId = task.additionalData.workloadBatch.startingId
   const batchSize = task.additionalData.workloadBatch.batchSize
   const reportId = task.workloadReportId

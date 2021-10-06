@@ -11,7 +11,7 @@ const insertCourtReports = require('../data/insert-app-court-reports')
 const createNewTasks = require('../data/create-tasks')
 const { arrayToPromise } = require('../helpers/promise-helper')
 
-module.exports.execute = function (task) {
+module.exports.execute = async function (task) {
   const batchSize = task.additionalData.batchSize
   const startingStagingId = task.additionalData.startingId
   const endingStagingId = startingStagingId + (batchSize - 1)

@@ -7,7 +7,7 @@ const submittingAgent = require('../../constants/task-submitting-agent')
 const getOpenReductions = require('../data/get-open-reductions')
 const updateStatus = require('../update-adjustment-reduction-status')
 
-module.exports.execute = function (task) {
+module.exports.execute = async function (task) {
   const workloadStagingIdStart = task.additionalData.startingId
   const workloadStagingIdEnd = workloadStagingIdStart + task.additionalData.batchSize - 1
   const workloadReportId = task.workloadReportId

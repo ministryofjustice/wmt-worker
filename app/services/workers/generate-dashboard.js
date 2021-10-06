@@ -1,7 +1,7 @@
 const logger = require('../log')
 const dashboard = require('../dashboard')
 
-module.exports.execute = function (task) {
+module.exports.execute = async function (task) {
   return dashboard()
     .then(function (fileDetails) {
       logger.info('GENERATE DASHBOARD - Dashboard Saved to', fileDetails.filepath, 'with id', fileDetails.fileId)

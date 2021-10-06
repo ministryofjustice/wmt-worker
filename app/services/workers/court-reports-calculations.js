@@ -8,7 +8,7 @@ const getContractedHours = require('../data/get-contracted-hours')
 const operationTypes = require('../../constants/calculation-tasks-operation-type')
 const { arrayToPromise } = require('../helpers/promise-helper')
 
-module.exports.execute = function (task) {
+module.exports.execute = async function (task) {
   const startingStagingId = task.additionalData.workloadBatch.startingId
   const batchSize = task.additionalData.workloadBatch.batchSize
   const reportId = task.workloadReportId

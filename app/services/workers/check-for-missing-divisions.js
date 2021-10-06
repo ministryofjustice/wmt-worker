@@ -7,7 +7,7 @@ const submittingAgent = require('../../constants/task-submitting-agent')
 const taskStatus = require('../../constants/task-status')
 const taskType = require('../../constants/task-type')
 
-module.exports.execute = function () {
+module.exports.execute = async function () {
   return getDivisionsDisplayedCount()
     .then(function (results) {
       if (results[0].divisionCount !== parseInt(EXPECTED_DIVISION_COUNT)) {

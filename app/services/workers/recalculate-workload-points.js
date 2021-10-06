@@ -1,7 +1,7 @@
 const recalculateWorkloadPoints = require('../data/recalculate-workload-points')
 const logger = require('../log')
 
-module.exports.execute = function (task) {
+module.exports.execute = async function (task) {
   const reportId = task.workloadReportId
   return recalculateWorkloadPoints(reportId)
     .catch(function (error) {

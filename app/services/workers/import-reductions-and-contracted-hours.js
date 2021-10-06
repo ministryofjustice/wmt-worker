@@ -8,7 +8,7 @@ const glob = require('glob')
 const config = require('../../../config')
 const fs = require('fs')
 
-module.exports.execute = function (task) {
+module.exports.execute = async function (task) {
   if (config.WMT_ENVIRONMENT === 'production') {
     throw new Error('IMPORT-REDUCTIONS-AND-CONTRACTED-HOURS: This task can only be used in a non-production environment')
   }

@@ -11,7 +11,7 @@ const insertWorkload = require('../data/insert-app-workload')
 const createNewTasks = require('../data/create-tasks')
 const { arrayToPromise } = require('../helpers/promise-helper')
 
-module.exports.execute = function (task) {
+module.exports.execute = async function (task) {
   const workloadBatchSize = task.additionalData.batchSize
   const startingStagingId = task.additionalData.startingId
   const endingStagingId = startingStagingId + (workloadBatchSize - 1)

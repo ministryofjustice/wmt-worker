@@ -58,8 +58,8 @@ describe('process-tasks', function () {
     getPendingTasksAndMarkInProgress.resolves([{ id: 1, type: 'task1' }, { id: 2, type: 'task2' }])
     updateWorkload.resolves({})
     getWorkerForTask.returns({
-      execute: function () {
-        return Promise.resolve('Done!')
+      execute: async function () {
+        return 'worker executed successfully!'
       }
     })
     completeTaskWithStatus.resolves({})
@@ -82,10 +82,8 @@ describe('process-tasks', function () {
       { id: 2, workloadReportId: 3, type: 'GENERATE-DASHBOARD', additionalData: { operationType: operationTypes.INSERT } }
     ])
     getWorkerForTask.returns({
-      execute: function () {
-        return new Promise(function (resolve) {
-          resolve('Done!')
-        })
+      execute: async function () {
+        return 'Done!'
       }
     })
     completeTaskWithStatus.resolves({})
@@ -117,10 +115,8 @@ describe('process-tasks', function () {
       { id: 2, workloadReportId: 2, type: 'CALCULATE-WORKLOAD-POINTS', additionalData: { operationType: operationTypes.INSERT } }
     ])
     getWorkerForTask.returns({
-      execute: function () {
-        return new Promise(function (resolve) {
-          resolve('Done!')
-        })
+      execute: async function () {
+        return 'Done!'
       }
     })
     completeTaskWithStatus.resolves({})
@@ -143,8 +139,8 @@ describe('process-tasks', function () {
     getTaskInProgressCount.resolves([{ theCount: 0 }])
     getPendingTasksAndMarkInProgress.resolves([{ id: 2, type: 'task2', submitting_agent: 'WEB' }])
     getWorkerForTask.returns({
-      execute: function () {
-        return Promise.reject(new Error('Fail'))
+      execute: async function () {
+        throw new Error('Fail')
       }
     })
     completeTaskWithStatus.resolves({})
@@ -158,12 +154,12 @@ describe('process-tasks', function () {
   it('should mark tasks as failed and update WR when worker execution fails', function () {
     getTaskInProgressCount.resolves([{ theCount: 0 }])
     getPendingTasksAndMarkInProgress.resolves([
-      { id: 1, workloadReportId: 1, type: 'task1', submitting_agent: 'WORKER' },
+      { id: 1, workloadReportId: 1, type: 'failingtask1', submitting_agent: 'WORKER' },
       { id: 2, workloadReportId: 2, type: taskTypes.GENERATE_DASHBOARD, additionalData: { operationType: operationTypes.INSERT }, submitting_agent: 'WORKER' }
     ])
     getWorkerForTask.returns({
-      execute: function () {
-        return Promise.reject(new Error('Fail'))
+      execute: async function () {
+        throw new Error('Fail')
       }
     })
     updateWorkloadReportEffectiveTo.resolves()
@@ -171,7 +167,7 @@ describe('process-tasks', function () {
 
     return processTasks().then(function () {
       expect(getPendingTasksAndMarkInProgress.calledWith(batchSize)).to.be.true
-      expect(getWorkerForTask.calledWith('task1')).to.be.true
+      expect(getWorkerForTask.calledWith('failingtask1')).to.be.true
       expect(getWorkerForTask.calledWith('GENERATE-DASHBOARD')).to.be.true
       expect(completeTaskWithStatus.calledWith(1, taskStatus.FAILED)).to.be.true
       expect(updateWorkload.calledWith(1, workloadReportStatus.FAILED)).to.be.true
@@ -187,10 +183,8 @@ describe('process-tasks', function () {
       { id: 2, workloadReportId: 2, type: 'CALCULATE-WORKLOAD-POINTS', additionalData: { operationType: operationTypes.UPDATE } }
     ])
     getWorkerForTask.returns({
-      execute: function () {
-        return new Promise(function (resolve) {
-          resolve('Done!')
-        })
+      execute: async function () {
+        return 'Done!'
       }
     })
     completeTaskWithStatus.resolves({})

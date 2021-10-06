@@ -15,7 +15,7 @@ const insertAdjustment = require('../data/insert-adjustment')
 const updateStatus = require('../update-adjustment-reduction-status')
 const updateAdjustmentCRN = require('../data/update-adjustment-crn')
 
-module.exports.execute = function (task) {
+module.exports.execute = async function (task) {
   const workloadStagingIdStart = task.additionalData.startingId
   const workloadStagingIdEnd = workloadStagingIdStart + task.additionalData.batchSize - 1
   const workloadReportId = task.workloadReportId

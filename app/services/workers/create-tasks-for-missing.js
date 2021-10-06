@@ -11,7 +11,7 @@ const taskStatus = require('../../constants/task-status')
 const taskType = require('../../constants/task-type')
 const submittingAgent = require('../../constants/task-submitting-agent')
 
-module.exports.execute = function (task) {
+module.exports.execute = async function (task) {
   const batchSize = 1
   let tasks = []
   let workloadReportId
