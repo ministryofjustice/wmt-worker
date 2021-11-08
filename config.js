@@ -27,7 +27,7 @@ module.exports = {
   WMT_REDUCTIONS_AND_CONTRACTED_HOURS_PATH: process.env.WMT_REDUCTIONS_AND_CONTRACTED_HOURS_PATH || '/usr/src/app/wmt-worker/data/reductions_and_contracted_hours/',
 
   // Expected values
-  EXPECTED_DIVISIONS_COUNT: process.env.WMT_EXPECTED_DIVISIONS_COUNT || '20',
+  EXPECTED_DIVISIONS_COUNT: process.env.WMT_EXPECTED_DIVISIONS_COUNT || '18',
 
   DASHBOARD_BUCKET: process.env.WMT_DASHBOARD_BUCKET || 'wmt-worker-dashboard',
   DASHBOARD_REGION: process.env.S3_REGION || 'eu-west-2',
