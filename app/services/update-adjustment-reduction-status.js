@@ -8,8 +8,9 @@ module.exports.updateReductionStatuses = function (reductions) {
   const statusMap = buildStatusMap(reductions)
 
   const updateReductionsPromises = []
-  for (const [status, { ids }] of statusMap) {
-    if (ids.length !== 0) {
+  for (const [status, records] of statusMap) {
+    if (records.length !== 0) {
+      const ids = records.map((record) => record.id)
       logger.info('Updating status to ' + status + ' for reductions with id in ' + ids)
       updateReductionsPromises.push(updateReductionStatusByIds(ids, status))
     }
@@ -21,8 +22,9 @@ module.exports.updateAdjustmentStatuses = function (adjustments) {
   const statusMap = buildStatusMap(adjustments)
 
   const updateAdjustmentsPromises = []
-  for (const [status, { ids }] of statusMap) {
-    if (ids.length > 0) {
+  for (const [status, records] of statusMap) {
+    if (records.length !== 0) {
+      const ids = records.map((record) => record.id)
       logger.info('Updating status to ' + status + ' for adjustments with id in ' + ids + '.')
       updateAdjustmentsPromises.push(updateAdjustmentStatusByIds(ids, status))
     }
@@ -31,21 +33,21 @@ module.exports.updateAdjustmentStatuses = function (adjustments) {
 }
 
 const buildStatusMap = function (records) {
-  const idsMap = new Map()
-  idsMap.set(status.ACTIVE, { ids: [] })
-  idsMap.set(status.SCHEDULED, { ids: [] })
-  idsMap.set(status.DELETED, { ids: [] })
-  idsMap.set(status.ARCHIVED, { ids: [] })
+  const newStatuses = new Map()
+  newStatuses.set(status.ACTIVE, [])
+  newStatuses.set(status.SCHEDULED, [])
+  newStatuses.set(status.DELETED, [])
+  newStatuses.set(status.ARCHIVED, [])
 
   records.forEach(function (record) {
     const currentStatus = getCurrentStatus(record)
     if (currentStatus !== record.status) {
-      const { ids } = idsMap.get(currentStatus)
-      ids.push(record.id)
-      idsMap.set(currentStatus, { ids })
+      const toUpdate = newStatuses.get(currentStatus)
+      toUpdate.push(record)
+      newStatuses.set(currentStatus, toUpdate)
     }
   })
-  return idsMap
+  return newStatuses
 }
 
 const getCurrentStatus = function (record) {
