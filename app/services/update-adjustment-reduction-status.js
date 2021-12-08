@@ -8,7 +8,7 @@ module.exports.updateReductionStatuses = function (reductions) {
   const statusMap = buildStatusMap(reductions)
 
   const updateReductionsPromises = []
-  for (const [status, ids] of statusMap) {
+  for (const [status, { ids }] of statusMap) {
     if (ids.length !== 0) {
       logger.info('Updating status to ' + status + ' for reductions with id in ' + ids)
       updateReductionsPromises.push(updateReductionStatusByIds(ids, status))
@@ -21,7 +21,7 @@ module.exports.updateAdjustmentStatuses = function (adjustments) {
   const statusMap = buildStatusMap(adjustments)
 
   const updateAdjustmentsPromises = []
-  for (const [status, ids] of statusMap) {
+  for (const [status, { ids }] of statusMap) {
     if (ids.length > 0) {
       logger.info('Updating status to ' + status + ' for adjustments with id in ' + ids + '.')
       updateAdjustmentsPromises.push(updateAdjustmentStatusByIds(ids, status))
@@ -32,17 +32,17 @@ module.exports.updateAdjustmentStatuses = function (adjustments) {
 
 const buildStatusMap = function (records) {
   const idsMap = new Map()
-  idsMap.set(status.ACTIVE, [])
-  idsMap.set(status.SCHEDULED, [])
-  idsMap.set(status.DELETED, [])
-  idsMap.set(status.ARCHIVED, [])
+  idsMap.set(status.ACTIVE, { ids: [] })
+  idsMap.set(status.SCHEDULED, { ids: [] })
+  idsMap.set(status.DELETED, { ids: [] })
+  idsMap.set(status.ARCHIVED, { ids: [] })
 
   records.forEach(function (record) {
     const currentStatus = getCurrentStatus(record)
     if (currentStatus !== record.status) {
-      const ids = idsMap.get(currentStatus)
+      const { ids } = idsMap.get(currentStatus)
       ids.push(record.id)
-      idsMap.set(currentStatus, ids)
+      idsMap.set(currentStatus, { ids })
     }
   })
   return idsMap
