@@ -9,6 +9,7 @@ const dateHelper = require('../../../helpers/data/date-helper')
 let statusUpdater
 let updateReductionStatusByIds
 let updateAdjustmentStatusByIds
+let auditReductionStatusChange
 
 const activeReduction = {
   id: 1,
@@ -88,10 +89,12 @@ describe('services/update-adjustment-reduction-status', function () {
   beforeEach(function () {
     updateReductionStatusByIds = sinon.stub()
     updateAdjustmentStatusByIds = sinon.stub()
+    auditReductionStatusChange = sinon.stub()
     statusUpdater = proxyquire('../../../../app/services/update-adjustment-reduction-status', {
       './log': { info: function (message) { } },
       './data/update-reduction-status-by-ids': updateReductionStatusByIds,
-      './data/update-adjustment-status-by-ids': updateAdjustmentStatusByIds
+      './data/update-adjustment-status-by-ids': updateAdjustmentStatusByIds,
+      './audit-service': { auditReductionStatusChange }
     })
   })
 
@@ -100,8 +103,11 @@ describe('services/update-adjustment-reduction-status', function () {
       updateReductionStatusByIds.resolves(1)
       return statusUpdater.updateReductionStatuses(reductions).then(function () {
         expect(updateReductionStatusByIds.calledWith([activeReduction.id], status.ACTIVE)).to.be.equal(true)
+        expect(auditReductionStatusChange.calledWith([activeReduction], status.ACTIVE)).to.equal(true)
         expect(updateReductionStatusByIds.calledWith([scheduledReduction.id], status.SCHEDULED)).to.be.equal(true)
+        expect(auditReductionStatusChange.calledWith([scheduledReduction], status.SCHEDULED)).to.equal(true)
         expect(updateReductionStatusByIds.calledWith([archivedReduction.id], status.ARCHIVED)).to.be.equal(true)
+        expect(auditReductionStatusChange.calledWith([archivedReduction], status.ARCHIVED)).to.equal(true)
       })
     })
   })

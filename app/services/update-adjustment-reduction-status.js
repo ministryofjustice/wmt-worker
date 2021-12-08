@@ -2,6 +2,7 @@ const logger = require('./log')
 const updateReductionStatusByIds = require('./data/update-reduction-status-by-ids')
 const updateAdjustmentStatusByIds = require('./data/update-adjustment-status-by-ids')
 const status = require('../constants/reduction-status')
+const { auditReductionStatusChange } = require('./audit-service')
 const moment = require('moment')
 
 module.exports.updateReductionStatuses = function (reductions) {
@@ -12,7 +13,7 @@ module.exports.updateReductionStatuses = function (reductions) {
     if (records.length !== 0) {
       const ids = records.map((record) => record.id)
       logger.info('Updating status to ' + status + ' for reductions with id in ' + ids)
-      updateReductionsPromises.push(updateReductionStatusByIds(ids, status))
+      updateReductionsPromises.push(updateReductionStatusByIds(ids, status).then(function () { return auditReductionStatusChange(records, status) }))
     }
   }
   return Promise.all(updateReductionsPromises)
