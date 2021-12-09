@@ -26,6 +26,23 @@ function messageFrom (record, status) {
     operationId: 'TODO',
     who: 'system worker',
     service: 'wmt',
-    details: JSON.stringify({ ...record, status })
+    details: JSON.stringify({
+      previousReason: record.reason,
+      newReason: record.reason,
+      previousHours: record.hours,
+      newHours: record.hours,
+      previousAdditionalNotes: record.additionalNotes,
+      newAdditionalNotes: record.additionalNotes,
+      previousEffectiveFrom: record.effectiveFrom,
+      newEffectiveFrom: record.effectiveFrom,
+      previousEffectiveTo: record.effectiveTo,
+      newEffectiveTo: record.effectiveTo,
+      previousStatus: record.status,
+      newStatus: status,
+      offenderManagerName: `${record.forename} ${record.surname}`,
+      team: `${record.teamCode} - ${record.teamDescription}`,
+      pdu: `${record.lduCode} - ${record.lduDescription}`,
+      region: `${record.regionCode} - ${record.regionDescription}`
+    })
   })
 }
