@@ -1,4 +1,4 @@
-const { defaultClient: appInsightsClient } = require('applicationinsights')
+const appinsights = require('applicationinsights')
 const bunyan = require('bunyan')
 const PrettyStream = require('bunyan-prettystream')
 class JobError extends Error {
@@ -39,8 +39,8 @@ function errorSerializer (error) {
 
 const logger = {
   trackExecutionTime: function (jobName, timeTaken, status) {
-    if (appInsightsClient) {
-      appInsightsClient.trackDependency({
+    if (appinsights.defaultClient) {
+      appinsights.defaultClient.trackDependency({
         dependencyTypeName: 'WorkerTask',
         name: jobName,
         duration: timeTaken,
@@ -52,15 +52,15 @@ const logger = {
   },
   info: log.info.bind(log),
   jobError: function (jobName, error) {
-    if (appInsightsClient) {
-      appInsightsClient.trackException({ exception: new JobError(jobName, error) })
+    if (appinsights.defaultClient) {
+      appinsights.defaultClient.trackException({ exception: new JobError(jobName, error) })
     } else {
       log.error(new JobError(jobName, error))
     }
   },
   error: function (e) {
-    if (appInsightsClient) {
-      appInsightsClient.trackException({ exception: e })
+    if (appinsights.defaultClient) {
+      appinsights.defaultClient.trackException({ exception: e })
     } else {
       log.error(e)
     }
