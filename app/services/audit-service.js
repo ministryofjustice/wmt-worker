@@ -15,39 +15,54 @@ const sqsClient = getSqsClient({ region: AUDIT_SQS.REGION, accessKeyId: AUDIT_SQ
 module.exports.auditReductionStatusChange = function (records, newStatus) {
   const audits = []
   records.forEach(function (record) {
-    audits.push(sendSqsMessage(sqsClient, AUDIT_SQS.QUEUE_URL, messageFrom(record, newStatus)))
+    audits.push(sendSqsMessage(sqsClient, AUDIT_SQS.QUEUE_URL, messageFrom(reductionStatusToAuditAction[newStatus], getDetailsForReduction(record, newStatus))))
   })
   return Promise.all(audits)
 }
 
-module.exports.auditContractedHoursCreate = function () {
-  return Promise.resolve()
+module.exports.auditContractedHoursCreate = function (forename, surname, teamCode, teamDescription, lduCode, lduDescription, regionCode, regionDescription, contractedHours) {
+  return sendSqsMessage(sqsClient, AUDIT_SQS.QUEUE_URL, messageFrom('CONTRACTED_HOURS_CREATED', getDetailsForContractedHours(forename, surname, teamCode, teamDescription, lduCode, lduDescription, regionCode, regionDescription, contractedHours)))
 }
 
-function messageFrom (record, status) {
+function getDetailsForContractedHours (forename, surname, teamCode, teamDescription, lduCode, lduDescription, regionCode, regionDescription, contractedHours) {
+  return {
+    offenderManagerName: `${forename} ${surname}`,
+    team: `${teamCode} - ${teamDescription}`,
+    pdu: `${lduCode} - ${lduDescription}`,
+    region: `${regionCode} - ${regionDescription}`,
+    newHours: contractedHours,
+    previousHours: 0
+  }
+}
+
+function getDetailsForReduction (record, status) {
+  return {
+    previousReason: record.reason,
+    newReason: record.reason,
+    previousHours: record.hours,
+    newHours: record.hours,
+    previousAdditionalNotes: record.additionalNotes,
+    newAdditionalNotes: record.additionalNotes,
+    previousEffectiveFrom: record.effectiveFrom,
+    newEffectiveFrom: record.effectiveFrom,
+    previousEffectiveTo: record.effectiveTo,
+    newEffectiveTo: record.effectiveTo,
+    previousStatus: record.status,
+    newStatus: status,
+    offenderManagerName: `${record.forename} ${record.surname}`,
+    team: `${record.teamCode} - ${record.teamDescription}`,
+    pdu: `${record.lduCode} - ${record.lduDescription}`,
+    region: `${record.regionCode} - ${record.regionDescription}`
+  }
+}
+
+function messageFrom (what, details) {
   return JSON.stringify({
-    what: reductionStatusToAuditAction[status],
+    what,
     when: new Date(),
     operationId: crypto.randomUUID(),
     who: 'system worker',
     service: 'wmt',
-    details: JSON.stringify({
-      previousReason: record.reason,
-      newReason: record.reason,
-      previousHours: record.hours,
-      newHours: record.hours,
-      previousAdditionalNotes: record.additionalNotes,
-      newAdditionalNotes: record.additionalNotes,
-      previousEffectiveFrom: record.effectiveFrom,
-      newEffectiveFrom: record.effectiveFrom,
-      previousEffectiveTo: record.effectiveTo,
-      newEffectiveTo: record.effectiveTo,
-      previousStatus: record.status,
-      newStatus: status,
-      offenderManagerName: `${record.forename} ${record.surname}`,
-      team: `${record.teamCode} - ${record.teamDescription}`,
-      pdu: `${record.lduCode} - ${record.lduDescription}`,
-      region: `${record.regionCode} - ${record.regionDescription}`
-    })
+    details: JSON.stringify(details)
   })
 }

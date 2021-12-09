@@ -71,4 +71,38 @@ describe('Audit Service', function () {
         })
       })
   })
+
+  it('must produce message after a contracted hours has been created', function () {
+    const forename = 'Offender'
+    const surname = 'Manager'
+    const teamCode = 'TC1'
+    const teamDescription = 'Team Description'
+    const lduCode = 'LDU1'
+    const lduDescription = 'LDU Description'
+    const regionCode = 'RG1'
+    const regionDescription = 'Region Description'
+    const contractedHours = 15
+
+    return auditService.auditContractedHoursCreate(forename, surname, teamCode, teamDescription, lduCode, lduDescription, regionCode, regionDescription, contractedHours)
+      .then(function () {
+        return pollAndCheck().then(function (data) {
+          const body = JSON.parse(data.Body)
+          const currentDate = new Date().getTime()
+          const whenDate = new Date(body.when).getTime()
+          expect(body.what).to.equal('CONTRACTED_HOURS_CREATED')
+          expect(body.who).to.equal('system worker')
+          expect(body.service).to.equal('wmt')
+          expect(whenDate).to.be.lessThan(currentDate)
+          expect(body.operationId).to.not.equal(null)
+
+          const actualDetails = JSON.parse(body.details)
+          expect(actualDetails.offenderManagerName).to.equal(`${forename} ${surname}`)
+          expect(actualDetails.team).to.equal(`${teamCode} - ${teamDescription}`)
+          expect(actualDetails.pdu).to.equal(`${lduCode} - ${lduDescription}`)
+          expect(actualDetails.region).to.equal(`${regionCode} - ${regionDescription}`)
+          expect(actualDetails.newHours).to.equal(contractedHours)
+          expect(actualDetails.previousHours).to.equal(0)
+        })
+      })
+  })
 })
