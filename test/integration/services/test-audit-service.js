@@ -38,8 +38,8 @@ describe('Audit Service', function () {
       hours: 10,
       additionalNotes: 'Some Notes'
     }
-    const operationId = 'ABC123'
-    return auditService.auditReductionStatusChange([reduction], reductionStatus.ACTIVE, operationId)
+
+    return auditService.auditReductionStatusChange([reduction], reductionStatus.ACTIVE)
       .then(function () {
         return pollAndCheck().then(function (data) {
           const body = JSON.parse(data.Body)
@@ -49,7 +49,7 @@ describe('Audit Service', function () {
           expect(body.who).to.equal('system worker')
           expect(body.service).to.equal('wmt')
           expect(whenDate).to.be.lessThan(currentDate)
-          expect(body.operationId).to.equal(operationId)
+          expect(body.operationId).to.not.equal(null)
 
           const actualDetails = JSON.parse(body.details)
           expect(actualDetails.previousReason).to.equal(reduction.reason)
@@ -68,8 +68,6 @@ describe('Audit Service', function () {
           expect(actualDetails.team).to.equal(`${reduction.teamCode} - ${reduction.teamDescription}`)
           expect(actualDetails.pdu).to.equal(`${reduction.lduCode} - ${reduction.lduDescription}`)
           expect(actualDetails.region).to.equal(`${reduction.regionCode} - ${reduction.regionDescription}`)
-
-          // details assertion
         })
       })
   })
