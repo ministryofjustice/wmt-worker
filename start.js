@@ -1,7 +1,6 @@
-const { initialiseAppInsights, buildAppInsightsClient } = require('./app/services/azure-appinsights')
+const { initialiseAppInsights } = require('./app/services/azure-appinsights')
 
 initialiseAppInsights()
-buildAppInsightsClient()
 
 const childProcess = require('child_process')
 const extractListener = require('./app/wmt-etl/extract-files-listener')

@@ -1,4 +1,4 @@
-const { setup, defaultClient, DistributedTracingModes } = require('applicationinsights')
+const appinsights = require('applicationinsights')
 const { APPINSIGHTS_INSTRUMENTATIONKEY } = require('../../config')
 const applicationVersion = require('./application-version')
 
@@ -18,20 +18,12 @@ function initialiseAppInsights () {
   if (APPINSIGHTS_INSTRUMENTATIONKEY) {
     console.log('Enabling azure application insights')
 
-    setup().setDistributedTracingMode(DistributedTracingModes.AI_AND_W3C).start()
+    appinsights.setup().setDistributedTracingMode(appinsights.DistributedTracingModes.AI_AND_W3C).start()
+    appinsights.defaultClient.context.tags['ai.cloud.role'] = defaultName()
+    appinsights.defaultClient.context.tags['ai.application.ver'] = version()
   }
-}
-
-function buildAppInsightsClient (name = defaultName()) {
-  if (APPINSIGHTS_INSTRUMENTATIONKEY) {
-    defaultClient.context.tags['ai.cloud.role'] = name
-    defaultClient.context.tags['ai.application.ver'] = version()
-    return defaultClient
-  }
-  return null
 }
 
 module.exports = {
-  initialiseAppInsights,
-  buildAppInsightsClient
+  initialiseAppInsights
 }
