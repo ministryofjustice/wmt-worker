@@ -11,19 +11,19 @@ const reductionStatusToAuditAction = {
 
 const sqsClient = getSqsClient({ region: AUDIT_SQS.REGION, accessKeyId: AUDIT_SQS.ACCESS_KEY_ID, secretAccessKey: AUDIT_SQS.SECRET_ACCESS_KEY, endpoint: AUDIT_SQS.ENDPOINT })
 
-module.exports.auditReductionStatusChange = function (records, newStatus) {
+module.exports.auditReductionStatusChange = function (records, newStatus, operationId) {
   const audits = []
   records.forEach(function (record) {
-    audits.push(sendSqsMessage(sqsClient, AUDIT_SQS.QUEUE_URL, messageFrom(record, newStatus)))
+    audits.push(sendSqsMessage(sqsClient, AUDIT_SQS.QUEUE_URL, messageFrom(record, newStatus, operationId)))
   })
   return Promise.all(audits)
 }
 
-function messageFrom (record, status) {
+function messageFrom (record, status, operationId) {
   return JSON.stringify({
     what: reductionStatusToAuditAction[status],
     when: new Date(),
-    operationId: 'TODO',
+    operationId,
     who: 'system worker',
     service: 'wmt',
     details: JSON.stringify({

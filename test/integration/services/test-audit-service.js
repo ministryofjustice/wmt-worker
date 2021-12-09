@@ -20,10 +20,7 @@ function pollAndCheck () {
 }
 
 describe('Audit Service', function () {
-  before(function () {
-
-  })
-  it.only('must produce message after a reduction status change', function () {
+  it('must produce message after a reduction status change', function () {
     const reduction = {
       id: 1,
       effectiveFrom: '2021-12-09T08:50:05.683Z',
@@ -41,7 +38,8 @@ describe('Audit Service', function () {
       hours: 10,
       additionalNotes: 'Some Notes'
     }
-    return auditService.auditReductionStatusChange([reduction], reductionStatus.ACTIVE)
+    const operationId = 'ABC123'
+    return auditService.auditReductionStatusChange([reduction], reductionStatus.ACTIVE, operationId)
       .then(function () {
         return pollAndCheck().then(function (data) {
           const body = JSON.parse(data.Body)
@@ -51,7 +49,7 @@ describe('Audit Service', function () {
           expect(body.who).to.equal('system worker')
           expect(body.service).to.equal('wmt')
           expect(whenDate).to.be.lessThan(currentDate)
-          // operation id
+          expect(body.operationId).to.equal(operationId)
 
           const actualDetails = JSON.parse(body.details)
           expect(actualDetails.previousReason).to.equal(reduction.reason)
@@ -70,6 +68,7 @@ describe('Audit Service', function () {
           expect(actualDetails.team).to.equal(`${reduction.teamCode} - ${reduction.teamDescription}`)
           expect(actualDetails.pdu).to.equal(`${reduction.lduCode} - ${reduction.lduDescription}`)
           expect(actualDetails.region).to.equal(`${reduction.regionCode} - ${reduction.regionDescription}`)
+
           // details assertion
         })
       })
