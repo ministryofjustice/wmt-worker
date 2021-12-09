@@ -20,6 +20,10 @@ module.exports.auditReductionStatusChange = function (records, newStatus) {
   return Promise.all(audits)
 }
 
+module.exports.auditContractedHoursCreate = function () {
+  return Promise.resolve()
+}
+
 function messageFrom (record, status) {
   return JSON.stringify({
     what: reductionStatusToAuditAction[status],
