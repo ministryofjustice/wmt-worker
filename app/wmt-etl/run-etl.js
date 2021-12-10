@@ -1,6 +1,6 @@
 
 const cleanTables = require('./clean-tables')
-const processFiles = require('./process-files')
+const processFile = require('./process-file')
 const createTasks = require('../services/data/create-tasks')
 const Task = require('../services/domain/task')
 const submittingAgent = require('../constants/task-submitting-agent')
@@ -14,7 +14,7 @@ const { S3 } = require('../../etl-config')
 module.exports = function () {
   return cleanTables()
     .then(function () {
-      return processFiles(S3.FILE_TO_PROCESS)
+      return processFile(S3.FILE_TO_PROCESS)
         .then(function () {
           const processImportTask = new Task(
             undefined,
