@@ -10,7 +10,8 @@ module.exports = {
     REGION: process.env.S3_REGION || 'eu-west-2',
     ENDPOINT: production ? null : 'http://localhost:4566',
     ACCESS_KEY_ID: process.env.ETL_S3_ACCESS_KEY_ID || 'foobar',
-    SECRET_ACCESS_KEY: process.env.ETL_S3_SECRET_ACCESS_KEY || 'foobar'
+    SECRET_ACCESS_KEY: process.env.ETL_S3_SECRET_ACCESS_KEY || 'foobar',
+    FILE_TO_PROCESS: process.env.ETL_S3_FILE_TO_PROCESS || 'extract/WMT_PS.xlsx'
   },
 
   SQS: {
