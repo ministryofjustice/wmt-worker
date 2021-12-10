@@ -17,7 +17,6 @@ let insertTeam
 let insertLdu
 let insertRegion
 let getDefaultContractedHours
-let auditContractedHoursCreate
 
 const omTypeId = 1
 const omId = 2
@@ -56,7 +55,6 @@ describe('services/insert-workload-owner-and-dependencies', function () {
     insertLdu = sinon.stub().resolves(lduId)
     insertRegion = sinon.stub().resolves(regionId)
     getDefaultContractedHours = sinon.stub().resolves(contractedHours)
-    auditContractedHoursCreate = sinon.stub().resolves()
 
     insertWoAndDependencies = proxyquire('../../../../app/services/insert-workload-owner-and-dependencies', {
       './data/insert-offender-manager-type-id': insertOffenderManagerTypeId,
@@ -65,13 +63,11 @@ describe('services/insert-workload-owner-and-dependencies', function () {
       './data/insert-workload-owner': insertWorkloadOwner,
       './data/insert-team': insertTeam,
       './data/insert-ldu': insertLdu,
-      './data/insert-region': insertRegion,
-      './audit-service': { auditContractedHoursCreate }
+      './data/insert-region': insertRegion
     })
   })
 
   it('should call on to data services', function () {
-    insertWorkloadOwner.resolves({ id: woId, type: 'CREATE' })
     return insertWoAndDependencies(caseSummary)
       .then(function (result) {
         expect(result).to.be.eql(woId)
@@ -81,15 +77,6 @@ describe('services/insert-workload-owner-and-dependencies', function () {
         expect(insertLdu.calledWith(expectedLdu)).to.be.equal(true)
         expect(insertTeam.calledWith(expectedTeam)).to.be.equal(true)
         expect(insertWorkloadOwner.calledWith(expectedWorkloadOwner)).to.be.equal(true)
-        expect(auditContractedHoursCreate.calledWith(caseSummary.omForename, caseSummary.omSurname, caseSummary.teamCode, caseSummary.teamDesc, caseSummary.lduCode, caseSummary.lduDesc, caseSummary.regionCode, caseSummary.regionDesc, contractedHours)).to.be.equal(true)
-      })
-  })
-
-  it('should not call audit when retrieving workload owner rather than creating', function () {
-    insertWorkloadOwner.resolves({ id: woId, type: 'RETRIEVE' })
-    return insertWoAndDependencies(caseSummary)
-      .then(function (result) {
-        expect(auditContractedHoursCreate.calledWith(caseSummary.omForename, caseSummary.omSurname, caseSummary.teamCode, caseSummary.teamDesc, caseSummary.lduCode, caseSummary.lduDesc, caseSummary.regionCode, caseSummary.regionDesc, contractedHours)).to.be.equal(false)
       })
   })
 })

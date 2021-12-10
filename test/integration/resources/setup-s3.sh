@@ -14,8 +14,6 @@ aws --endpoint-url=http://localhost:4566 s3api put-bucket-notification-configura
 
 aws --endpoint-url=http://localhost:4566 s3api create-bucket --bucket wmt-worker-dashboard
 
-aws --endpoint-url=http://localhost:4566 sqs create-queue --queue-name audit_event_queue
-
 echo "S3 created bucket"
 
 # to put a file using command line

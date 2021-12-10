@@ -9,47 +9,37 @@ const tableName = `${config.DB_APP_SCHEMA}.workload_owner`
 let inserts = []
 
 describe('app/services/data/insert-workload-owner', function () {
-  before(function () {
-    return workloadOwnerHelper.addDepenedenciesForWorkloadOwner()
+  before(function (done) {
+    workloadOwnerHelper.addDepenedenciesForWorkloadOwner()
       .then(function (insertedFields) {
         inserts = insertedFields
+        done()
       })
   })
 
-  it('should insert a new workload owner record', function () {
+  it('should insert a new workload owner record', function (done) {
     const offenderManagerId = inserts.filter((item) => item.table === 'offender_manager')[0].id
     const contractedHours = 37
     const teamId = inserts.filter((item) => item.table === 'team')[0].id
     const workloadOwner = new WorkloadOwner(undefined, offenderManagerId, undefined, teamId, contractedHours)
 
-    return insertWorkloadOwner(workloadOwner).then(function (workloadOwnerInsert) {
-      expect(workloadOwnerInsert.type).to.be.equal('CREATE')
+    insertWorkloadOwner(workloadOwner).then(function (workloadOwnerId) {
       return knex.table(tableName)
-        .where({ id: workloadOwnerInsert.id })
+        .where({ id: workloadOwnerId[0] })
         .first()
         .then(function (result) {
           expect(result['id']).to.not.be.null // eslint-disable-line
           expect(result['offender_manager_id']).to.eq(offenderManagerId) // eslint-disable-line
           expect(result['contracted_hours']).to.eq(contractedHours) // eslint-disable-line
           expect(result['team_id']).to.eq(teamId) // eslint-disable-line
-          inserts.push({ table: 'workload_owner', id: workloadOwnerInsert.id })
+          inserts.push({ table: 'workload_owner', id: workloadOwnerId[0] })
+          done()
         })
     })
   })
 
-  it('should retrieve existing workload owner record', function () {
-    return workloadOwnerHelper.addWorkloadOwnerToExistingLdu(inserts).then(function () {
-      const offenderManagerId = inserts.filter((item) => item.table === 'offender_manager')[0].id
-      const contractedHours = 37
-      const teamId = inserts.filter((item) => item.table === 'team')[0].id
-      const workloadOwner = new WorkloadOwner(undefined, offenderManagerId, undefined, teamId, contractedHours)
-      return insertWorkloadOwner(workloadOwner).then(function (workloadOwnerInsert) {
-        expect(workloadOwnerInsert.type).to.be.equal('RETRIEVE')
-      })
-    })
-  })
-
-  after(function () {
-    return workloadOwnerHelper.removeDependenciesForWorkloadOwner(inserts)
+  after(function (done) {
+    workloadOwnerHelper.removeDependenciesForWorkloadOwner(inserts)
+      .then(() => done())
   })
 })
