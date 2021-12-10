@@ -1,8 +1,9 @@
 const { ListObjectsCommand } = require('@aws-sdk/client-s3')
 
-module.exports = function (s3Client, bucketName) {
+module.exports = function (s3Client, bucketName, prefix) {
   return s3Client.send(new ListObjectsCommand({
-    Bucket: bucketName
+    Bucket: bucketName,
+    Prefix: prefix
   }))
     .then(function (data) {
       return data.Contents

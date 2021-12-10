@@ -74,11 +74,11 @@ function tagFileRead (file) {
   }))
 }
 
-describe('etl does not run when only one file has been updated', function () {
+describe('etl does not run when only CRC file has been uploaded', function () {
   beforeEach(function () {
     expectedInputData = getExtractFileData()
     return cleanTables().then(function () {
-      return putToS3('WMP_PS.xlsx').then(function () {
+      return putToS3('WMT_CRC.xlsx').then(function () {
         return pollAndCheck()
       })
     })
@@ -94,19 +94,17 @@ describe('etl does not run when only one file has been updated', function () {
   })
 
   this.afterEach(function () {
-    return deleteFromS3('extract/WMP_PS.xlsx')
+    return deleteFromS3('extract/WMT_CRC.xlsx')
   })
 })
 
-describe('etl runs when both excel files have been updated', function () {
+describe('etl runs when only PS file has been updated', function () {
   beforeEach(function () {
     expectedInputData = getExtractFileData()
     return cleanTables().then(function () {
       return putEmptyToS3('Readme.md').then(function () {
-        return putToS3('WMP_PS.xlsx').then(function () {
-          return putToS3('WMP_CRC.xlsx').then(function () {
-            return pollAndCheck()
-          })
+        return putToS3('WMT_PS.xlsx').then(function () {
+          return pollAndCheck()
         })
       })
     })
@@ -123,22 +121,20 @@ describe('etl runs when both excel files have been updated', function () {
   })
 
   afterEach(function () {
-    return deleteFromS3('extract/WMP_CRC.xlsx').then(function () {
-      return deleteFromS3('extract/WMP_PS.xlsx').then(function () {
-        return deleteFromS3('extract/Readme.md')
-      })
+    return deleteFromS3('extract/WMT_PS.xlsx').then(function () {
+      return deleteFromS3('extract/Readme.md')
     })
   })
 })
 
-describe('etl does not run when One file has already been read', function () {
+describe('etl does not run when only the CRC has been updated and existing PS is read', function () {
   beforeEach(function () {
     expectedInputData = getExtractFileData()
 
     return cleanTables().then(function () {
-      return putToS3('WMP_PS.xlsx').then(function () {
-        return tagFileRead('WMP_PS.xlsx').then(function () {
-          return putToS3('WMP_CRC.xlsx').then(function () {
+      return putToS3('WMT_PS.xlsx').then(function () {
+        return tagFileRead('WMT_PS.xlsx').then(function () {
+          return putToS3('WMT_CRC.xlsx').then(function () {
             return pollAndCheck()
           })
         })
@@ -156,8 +152,8 @@ describe('etl does not run when One file has already been read', function () {
   })
 
   afterEach(function () {
-    return deleteFromS3('extract/WMP_CRC.xlsx').then(function () {
-      return deleteFromS3('extract/WMP_PS.xlsx')
+    return deleteFromS3('extract/WMT_CRC.xlsx').then(function () {
+      return deleteFromS3('extract/WMT_PS.xlsx')
     })
   })
 })
@@ -167,13 +163,9 @@ describe('etl does not run if it is already in progress', function () {
     expectedInputData = getExtractFileData()
 
     return cleanTables().then(function () {
-      return putToS3('WMP_PS.xlsx').then(function () {
-        return putToS3('WMP_CRC.xlsx').then(function () {
-          return pollAndCheck().then(function () {
-            return putToS3('WMP_PS.xlsx').then(function () {
-              return putToS3('WMP_CRC.xlsx')
-            })
-          })
+      return putToS3('WMT_PS.xlsx').then(function () {
+        return pollAndCheck().then(function () {
+          return putToS3('WMT_PS.xlsx')
         })
       })
     })
@@ -189,8 +181,6 @@ describe('etl does not run if it is already in progress', function () {
   })
 
   afterEach(function () {
-    return deleteFromS3('extract/WMP_CRC.xlsx').then(function () {
-      return deleteFromS3('extract/WMP_PS.xlsx')
-    })
+    return deleteFromS3('extract/WMT_PS.xlsx')
   })
 })
