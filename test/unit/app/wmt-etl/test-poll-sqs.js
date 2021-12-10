@@ -2,6 +2,7 @@
 const sinon = require('sinon')
 const proxyquire = require('proxyquire')
 const { expect } = require('chai')
+const { S3 } = require('../../../../etl-config')
 
 describe('poll-sqs', function () {
   let pollSqs
@@ -41,27 +42,26 @@ describe('poll-sqs', function () {
     })
   })
 
-  it('must not run etl when only one file present', function () {
+  it('must not run etl when PS file is not present', function () {
     receiveSqsMessage.resolves({ Messages: [{ ReceiptHandle: {} }] })
-    listObjects.resolves([{ Key: 'one.xlsx' }])
+    listObjects.resolves(undefined)
     return pollSqs().then(function (result) {
-      return expect(result).to.equal('Only one file updated')
+      return expect(result).to.equal(`file ${S3.FILE_TO_PROCESS} does not exist in bucket`)
     })
   })
 
-  it('must not run when one file has already been read', function () {
+  it('must not run when PS file has already been read', function () {
     receiveSqsMessage.resolves({ Messages: [{ ReceiptHandle: {} }] })
-    listObjects.resolves([{ Key: '1.xlsx', LastModified: new Date() }, { Key: '2.xlsx', LastModified: new Date() }])
-    getHasBeenRead.withArgs('1.xlsx').resolves(true)
-    getHasBeenRead.withArgs('2.xlsx').resolves(false)
+    listObjects.resolves([{ Key: '1.xlsx', LastModified: new Date() }])
+    getHasBeenRead.withArgs(S3.FILE_TO_PROCESS).resolves(true)
     return pollSqs().then(function (result) {
-      return expect(result).to.equal('Files have been read')
+      return expect(result).to.equal('File has been read')
     })
   })
 
-  it('must run when both files have not been read', function () {
+  it('must run when PS file has not been read', function () {
     receiveSqsMessage.resolves({ Messages: [{ ReceiptHandle: {} }] })
-    listObjects.resolves([{ Key: '1.xlsx', LastModified: new Date() }, { Key: '2.xlsx', LastModified: new Date() }])
+    listObjects.resolves([{ Key: '1.xlsx', LastModified: new Date() }])
     getHasBeenRead.resolves(false)
     runEtl.resolves(true)
     return pollSqs().then(function (result) {
