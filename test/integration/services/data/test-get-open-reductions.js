@@ -6,11 +6,12 @@ let inserts = []
 let workloadReportId
 
 describe('services/data/get-open-reductions', function () {
-  before(function () {
-    return appReductionsHelper.insertDependencies(inserts)
+  before(function (done) {
+    appReductionsHelper.insertDependencies(inserts)
       .then(function (builtInserts) {
         inserts = builtInserts
         workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
+        done()
       })
   })
 
@@ -19,20 +20,16 @@ describe('services/data/get-open-reductions', function () {
     return getOpenReductions(startStagingId, startStagingId, workloadReportId)
       .then(function (results) {
         expect(results.length).to.be.eql(3)
+        const openIds = []
         results.forEach(function (result) {
           expect(['ACTIVE', 'SCHEDULED', null]).to.include(result.status)
-          expect(result.forename).to.be.equal('Offender')
-          expect(result.surname).to.be.equal('Manager')
-          expect(result.teamCode).to.be.equal('TEAM1')
-          expect(result.lduCode).to.be.equal('LDU1')
-          expect(result.regionCode).to.be.equal('RG1')
-          expect(result.reason).to.be.equal('Disability')
-          expect(result.additionalNotes).to.be.equal('Some Notes')
+          openIds.push(result.id)
         })
       })
   })
 
-  after(function () {
-    return appReductionsHelper.removeDependencies(inserts)
+  after(function (done) {
+    appReductionsHelper.removeDependencies(inserts)
+      .then(() => done())
   })
 })

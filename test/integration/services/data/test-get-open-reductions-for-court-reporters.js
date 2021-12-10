@@ -7,34 +7,36 @@ let inserts = []
 let workloadReportId
 
 describe('services/data/get-open-reductions-for-court-reporters', function () {
-  before(function () {
-    return courtReportsReductionsHelper.insertDependencies(inserts)
+  before(function (done) {
+    courtReportsReductionsHelper.insertDependencies(inserts)
       .then(function (builtInserts) {
         inserts = builtInserts
         workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
+        done()
       })
   })
 
   it('should retrieve the open reductions in system for a given range of active court reports\' staging ids -> workload owners -> reductions', function () {
     const startStagingId = 1
 
-    return getOpenReductionsForCourtReporters(startStagingId, startStagingId, workloadReportId)
+    return courtReportsReductionsHelper.getAllReductionStatusesForCourtReporters(startStagingId, startStagingId, workloadReportId)
+      .then(function (reductionStatuses) {
+        expect(reductionStatuses).to.include(reductionStatus.DELETED)
+        expect(reductionStatuses).to.include(reductionStatus.ARCHIVED)
+        return getOpenReductionsForCourtReporters(startStagingId, startStagingId, workloadReportId)
+      })
       .then(function (openReductions) {
         expect(openReductions.length).to.be.eql(3)
+        const openIds = []
         openReductions.forEach(function (openReduction) {
           expect([reductionStatus.ACTIVE, reductionStatus.SCHEDULED, null]).to.include(openReduction.status)
-          expect(openReduction.forename).to.be.equal('Offender')
-          expect(openReduction.surname).to.be.equal('Manager')
-          expect(openReduction.teamCode).to.be.equal('TEAM1')
-          expect(openReduction.lduCode).to.be.equal('LDU1')
-          expect(openReduction.regionCode).to.be.equal('RG1')
-          expect(openReduction.reason).to.be.equal('Disability')
-          expect(openReduction.additionalNotes).to.be.equal('Some Notes')
+          openIds.push(openReduction.id)
         })
       })
   })
 
-  after(function () {
-    return courtReportsReductionsHelper.removeDependencies(inserts)
+  after(function (done) {
+    courtReportsReductionsHelper.removeDependencies(inserts)
+      .then(() => done())
   })
 })

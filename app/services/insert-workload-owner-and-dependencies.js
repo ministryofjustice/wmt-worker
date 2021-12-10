@@ -4,7 +4,6 @@ const insertWorkloadOwner = require('./data/insert-workload-owner')
 const insertTeam = require('./data/insert-team')
 const insertLdu = require('./data/insert-ldu')
 const insertRegion = require('./data/insert-region')
-const { auditContractedHoursCreate } = require('./audit-service')
 
 const OffenderManager = require('./probation-rules').OffenderManager
 const Team = require('./probation-rules').Team
@@ -68,20 +67,7 @@ module.exports = function (caseSummary) {
                               parseInt(teamId),
                               parseInt(contractedHours)
                             )
-                          ).then(function (result) {
-                            if (result.type === 'CREATE') {
-                              return auditContractedHoursCreate(caseSummary.omForename,
-                                caseSummary.omSurname, caseSummary.teamCode,
-                                caseSummary.teamDesc, caseSummary.lduCode,
-                                caseSummary.lduDesc, caseSummary.regionCode,
-                                caseSummary.regionDesc, parseInt(contractedHours))
-                                .then(function () {
-                                  return result.id
-                                })
-                            } else {
-                              return result.id
-                            }
-                          })
+                          )
                         })
                     })
                 })

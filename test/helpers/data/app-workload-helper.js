@@ -9,19 +9,19 @@ module.exports.insertDependencies = function (inserts) {
     })
     .then(function (ids) {
       inserts.push({ table: 'offender_manager_type', id: ids[0] })
-      return knex('offender_manager').withSchema('app').returning('id').insert({ type_id: ids[0], forename: 'Offender', surname: 'Manager' })
+      return knex('offender_manager').withSchema('app').returning('id').insert({ type_id: ids[0] })
     })
     .then(function (ids) {
       inserts.push({ table: 'offender_manager', id: ids[0] })
-      return knex('region').withSchema('app').returning('id').insert({ code: 'RG1', description: 'Region Description' })
+      return knex('region').withSchema('app').returning('id').insert({})
     })
     .then(function (ids) {
       inserts.push({ table: 'region', id: ids[0] })
-      return knex('ldu').withSchema('app').returning('id').insert({ region_id: ids[0], code: 'LDU1', description: 'LDU Description' })
+      return knex('ldu').withSchema('app').returning('id').insert({ region_id: ids[0] })
     })
     .then(function (ids) {
       inserts.push({ table: 'ldu', id: ids[0] })
-      return knex('team').withSchema('app').returning('id').insert({ ldu_id: ids[0], code: 'TEAM1', description: 'Team Description' })
+      return knex('team').withSchema('app').returning('id').insert({ ldu_id: ids[0] })
     })
     .then(function (ids) {
       inserts.push({ table: 'team', id: ids[0] })
