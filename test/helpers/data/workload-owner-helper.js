@@ -26,6 +26,19 @@ module.exports.addDepenedenciesForWorkloadOwner = function () {
   return promise
 }
 
+module.exports.addWorkloadOwnerToExistingLdu = function (inserts) {
+  const lduId = inserts.filter((item) => item.table === 'ldu')[0].id
+  return knex('team').withSchema('app').returning('id').insert({ ldu_id: lduId })
+    .then(function ([id]) {
+      inserts.push({ table: 'team', id })
+      const offenderManagerId = inserts.filter((item) => item.table === 'offender_manager')[0].id
+      return knex('workload_owner').withSchema('app').returning('id').insert({ offender_manager_id: offenderManagerId, contracted_hours: 37, team_id: id })
+        .then(function ([id]) {
+          inserts.push({ table: 'workload_owner', id })
+        })
+    })
+}
+
 module.exports.removeDependenciesForWorkloadOwner = function (inserts) {
   inserts = inserts.reverse()
   return inserts.map((deletion) => {

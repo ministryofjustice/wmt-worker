@@ -22,6 +22,14 @@ module.exports = {
     QUEUE_URL: process.env.ETL_SQS_QUEUE_URL || 'http://localhost:4566/000000000000/s3_extract_event_queue'
   },
 
+  AUDIT_SQS: {
+    REGION: process.env.SQS_REGION || 'eu-west-2',
+    ENDPOINT: production ? null : 'http://localhost:4566',
+    ACCESS_KEY_ID: process.env.AUDIT_SQS_ACCESS_KEY_ID || 'foobar',
+    SECRET_ACCESS_KEY: process.env.AUDIT_SQS_SECRET_ACCESS_KEY || 'foobar',
+    QUEUE_URL: process.env.AUDIT_SQS_QUEUE_URL || 'http://localhost:4566/000000000000/audit_event_queue'
+  },
+
   // Extract valid source worksheet tabs
   VALID_SHEET_NAMES: [
     'wmt_extract',
