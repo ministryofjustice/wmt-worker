@@ -23,6 +23,23 @@ module.exports.insertDependencies = function (inserts = []) {
   return promise
 }
 
+module.exports.addReductionForWorkloadOwner = function (workloadOwnerId) {
+  const inserts = []
+  const reduction = { workload_owner_id: workloadOwnerId, hours: 7, effective_from: new Date(new Date().setDate(new Date().getDate() - 20)), effective_to: new Date(new Date().setDate(new Date().getDate() + 20)), reduction_reason_id: 1, status: null, notes: 'Some Notes' }
+  return knex('reductions').withSchema('app').returning('id').insert(reduction)
+    .then(function ([id]) {
+      inserts.push({ table: 'reductions', id: id })
+      return inserts
+    })
+}
+
+module.exports.getCountOfReductionsForWorkloadOwnerId = function (workloadOwnerId) {
+  return knex('reductions').withSchema('app').count('*').where('workload_owner_id', workloadOwnerId)
+    .then(function ([result]) {
+      return result.count
+    })
+}
+
 module.exports.removeDependencies = function (inserts) {
   return removeData(inserts)
 }

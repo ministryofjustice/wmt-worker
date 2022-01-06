@@ -28,6 +28,39 @@ module.exports.insertDependencies = function (inserts) {
     })
 }
 
+module.exports.addCountReportForWorkloadOwner = function (workloadOwnerId) {
+  const inserts = []
+
+  const workloadReports = [
+    { effective_from: '2017-02-01' }
+  ]
+
+  return knex('workload_report').withSchema('app').returning('id').insert(workloadReports)
+    .then(function ([workloadReportId]) {
+      inserts.push({ table: 'workload_report', id: workloadReportId })
+      const newCourtReport = {
+        workload_report_id: workloadReportId,
+        staging_id: 999,
+        workload_owner_id: workloadOwnerId,
+        total_sdrs: 1,
+        total_fdrs: 2,
+        total_oral_reports: 3
+      }
+      return knex('court_reports').withSchema('app').returning('id').insert(newCourtReport)
+        .then(function (ids) {
+          inserts.push({ table: 'court_reports', id: ids[0] })
+          return inserts
+        })
+    })
+}
+
+module.exports.getCountOfCourtReportsForWorkloadOwnerId = function (workloadOwnerId) {
+  return knex('court_reports').withSchema('app').count('*').where('workload_owner_id', workloadOwnerId)
+    .then(function ([result]) {
+      return result.count
+    })
+}
+
 module.exports.removeDependencies = function (inserts) {
   inserts = inserts.reverse()
   return inserts.map((deletion) => {
