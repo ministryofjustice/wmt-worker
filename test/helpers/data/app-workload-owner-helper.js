@@ -47,20 +47,6 @@ module.exports.insertDependencies = function (inserts) {
   return promise
 }
 
-module.exports.addDuplicateWorkloadOwner = function (inserts) {
-  const results = []
-  return knex('workload_owner').withSchema('app').returning('id')
-    .insert({
-      team_id: inserts.filter((item) => item.table === 'team')[0].id,
-      offender_manager_id: inserts.filter((item) => item.table === 'offender_manager')[0].id,
-      contracted_hours: null
-    })
-    .then(function (ids) {
-      results.push({ table: 'workload_owner', id: ids[0] })
-      return results
-    })
-}
-
 module.exports.removeDependencies = function (inserts) {
   inserts = inserts.reverse()
   return inserts.map((deletion) => {

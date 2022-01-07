@@ -27,23 +27,6 @@ module.exports.insertDependencies = function (inserts = []) {
   return promise
 }
 
-module.exports.addAdjustmentsForWorkloadOwner = function (workloadOwnerId) {
-  const inserts = []
-  const newAdjustment = { workload_owner_id: workloadOwnerId, points: 9, effective_from: new Date(new Date().setDate(new Date().getDate() - 20)), effective_to: new Date(new Date().setDate(new Date().getDate() + 20)), adjustment_reason_id: CMS_ADJUSTMENT_REASON_ID, status: adjustmentStatus.ACTIVE, contact_id: 321 }
-  return knex('adjustments').withSchema('app').returning('id').insert(newAdjustment)
-    .then(function (ids) {
-      inserts.push({ table: 'adjustments', id: ids[0] })
-      return inserts
-    })
-}
-
-module.exports.getCountOfAdjustmentsForWorkloadOwnerId = function (workloadOwnerId) {
-  return knex('adjustments').withSchema('app').count('*').where('workload_owner_id', workloadOwnerId)
-    .then(function ([result]) {
-      return result.count
-    })
-}
-
 module.exports.removeDependencies = function (inserts) {
   inserts = inserts.reverse()
   return inserts.map((deletion) => {
