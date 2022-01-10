@@ -33,11 +33,8 @@ module.exports.addReductionForWorkloadOwner = function (workloadOwnerId) {
     })
 }
 
-module.exports.getCountOfReductionsForWorkloadOwnerId = function (workloadOwnerId) {
-  return knex('reductions').withSchema('app').count('*').where('workload_owner_id', workloadOwnerId)
-    .then(function ([result]) {
-      return result.count
-    })
+module.exports.getReductionsForWorkloadOwnerId = function (workloadOwnerId) {
+  return knex('reductions').withSchema('app').where('workload_owner_id', workloadOwnerId)
 }
 
 module.exports.removeDependencies = function (inserts) {

@@ -20,6 +20,10 @@ module.exports.auditReductionStatusChange = function (records, newStatus) {
   return Promise.all(audits)
 }
 
+module.exports.auditReductionCopy = function (reduction, newWorkloadOwner) {
+  return sendSqsMessage(sqsClient, AUDIT_SQS.QUEUE_URL, messageFrom('REDUCTION_COPIED', getDetailsForReductionCopy(reduction, newWorkloadOwner)))
+}
+
 module.exports.auditContractedHoursCreate = function (forename, surname, teamCode, teamDescription, lduCode, lduDescription, regionCode, regionDescription, contractedHours) {
   return sendSqsMessage(sqsClient, AUDIT_SQS.QUEUE_URL, messageFrom('CONTRACTED_HOURS_CREATED', getDetailsForContractedHours(forename, surname, teamCode, teamDescription, lduCode, lduDescription, regionCode, regionDescription, contractedHours)))
 }
@@ -53,6 +57,21 @@ function getDetailsForReduction (record, status) {
     team: `${record.teamCode} - ${record.teamDescription}`,
     pdu: `${record.lduCode} - ${record.lduDescription}`,
     region: `${record.regionCode} - ${record.regionDescription}`
+  }
+}
+
+function getDetailsForReductionCopy (record, workloadOwner) {
+  return {
+    previousReason: record.reason,
+    previousHours: record.hours,
+    previousAdditionalNotes: record.additionalNotes,
+    previousEffectiveFrom: record.effectiveFrom,
+    previousEffectiveTo: record.effectiveTo,
+    previousStatus: record.status,
+    offenderManagerName: `${workloadOwner.forename} ${workloadOwner.surname}`,
+    team: `${workloadOwner.teamCode} - ${workloadOwner.teamDescription}`,
+    pdu: `${workloadOwner.lduCode} - ${workloadOwner.lduDescription}`,
+    region: `${workloadOwner.regionCode} - ${workloadOwner.regionDescription}`
   }
 }
 
