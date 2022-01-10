@@ -154,4 +154,41 @@ describe('Audit Service', function () {
       })
     })
   })
+
+  it('must produce message after a contracted hours copy', function () {
+    const newWorkloadOwner = {
+      contractedHours: 35,
+      forename: 'John',
+      lduCode: '14LDU',
+      lduDescription: 'Test Ldu 4',
+      regionCode: 'REG1',
+      regionDescription: 'A Region',
+      surname: 'Person',
+      teamCode: '14456',
+      teamDescription: 'A Team',
+      woId: 38
+    }
+
+    return auditService.auditContractedHoursUpdated(35, 40, newWorkloadOwner)
+      .then(function () {
+        return pollAndCheck().then(function (data) {
+          const body = JSON.parse(data.Body)
+          const currentDate = new Date().getTime()
+          const whenDate = new Date(body.when).getTime()
+          expect(body.what).to.equal('CONTRACTED_HOURS_COPIED')
+          expect(body.who).to.equal('system worker')
+          expect(body.service).to.equal('wmt')
+          expect(whenDate).to.be.lessThan(currentDate)
+          expect(body.operationId).to.not.equal(null)
+
+          const actualDetails = JSON.parse(body.details)
+          expect(actualDetails.offenderManagerName).to.equal(`${newWorkloadOwner.forename} ${newWorkloadOwner.surname}`)
+          expect(actualDetails.team).to.equal(`${newWorkloadOwner.teamCode} - ${newWorkloadOwner.teamDescription}`)
+          expect(actualDetails.pdu).to.equal(`${newWorkloadOwner.lduCode} - ${newWorkloadOwner.lduDescription}`)
+          expect(actualDetails.region).to.equal(`${newWorkloadOwner.regionCode} - ${newWorkloadOwner.regionDescription}`)
+          expect(actualDetails.newHours).to.equal(40)
+          expect(actualDetails.previousHours).to.equal(35)
+        })
+      })
+  })
 })

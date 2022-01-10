@@ -2,7 +2,8 @@ const getWorkloadOwnerForTeamAndOm = require('../data/get-workload-owner-for-tea
 const { arrayToPromise } = require('../helpers/promise-helper')
 const getReductionsByWorkloadOwnerId = require('../data/get-reductions-by-workload-owner-id')
 const insertReduction = require('../data/insert-reduction')
-const { auditReductionCopy } = require('../audit-service')
+const updateContractedHours = require('../data/update-contracted-hours')
+const { auditReductionCopy, auditContractedHoursUpdated } = require('../audit-service')
 
 module.exports.execute = async function (task) {
   return arrayToPromise(task.additionalData.restructureOffenderManagers, function (restructureOffenderManager) {
@@ -10,7 +11,7 @@ module.exports.execute = async function (task) {
       .then(function (previousWorkloadOwner) {
         return getWorkloadOwnerForTeamAndOm(restructureOffenderManager.offenderManagerKey, restructureOffenderManager.newTeamCode)
           .then(function (newWorkloadOwner) {
-            return getReductionsByWorkloadOwnerId(previousWorkloadOwner.woId)
+            return Promise.all([getReductionsByWorkloadOwnerId(previousWorkloadOwner.woId)
               .then(function (reductions) {
                 return arrayToPromise(reductions, function (toCopyReduction) {
                   const toCreateReduction = {
@@ -22,7 +23,12 @@ module.exports.execute = async function (task) {
                       return auditReductionCopy(toCreateReduction, newWorkloadOwner)
                     })
                 })
+              }),
+            updateContractedHours(newWorkloadOwner.woId, previousWorkloadOwner.contractedHours)
+              .then(function () {
+                return auditContractedHoursUpdated(newWorkloadOwner.contractedHours, previousWorkloadOwner.contractedHours, newWorkloadOwner)
               })
+            ])
           })
       })
   })

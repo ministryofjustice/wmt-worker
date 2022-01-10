@@ -57,6 +57,16 @@ describe('services/workers/restructure-offender-managers', function () {
       })
   })
 
+  it('must copy contracted hours of old team workload owner id to new team workload owner id', function () {
+    return appWorkloadOwnerHelper.getWorkloadOwnerById(oldTeamWorkloadOwnerId)
+      .then(function ([oldTeamWorkload]) {
+        return appWorkloadOwnerHelper.getWorkloadOwnerById(newTeamWorkloadOwnerId)
+          .then(function ([newTeamWorkload]) {
+            expect(oldTeamWorkload.contracted_hours).to.equal(newTeamWorkload.contracted_hours)
+          })
+      })
+  })
+
   after(function () {
     return appWorkloadOwnerHelper.removeDependencies(inserts)
   })

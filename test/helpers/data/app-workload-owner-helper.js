@@ -65,6 +65,10 @@ module.exports.addNewTeamWorkloadOwnerForExistingOffenderManager = function (ldu
     })
 }
 
+module.exports.getWorkloadOwnerById = function (workloadOwnerId) {
+  return knex('workload_owner').withSchema('app').where('id', workloadOwnerId)
+}
+
 module.exports.addDuplicateWorkloadOwner = function (inserts) {
   const results = []
   return knex('workload_owner').withSchema('app').returning('id')
