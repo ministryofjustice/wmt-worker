@@ -116,6 +116,51 @@ module.exports.insertDependencies = function (inserts) {
   return promise
 }
 
+module.exports.addWorkloadForWorkloadOwner = function (workloadOwnerId) {
+  const inserts = []
+  return knex('workload_report').withSchema('app').returning('id').insert({})
+    .then(function (ids) {
+      inserts.push({ table: 'workload_report', id: ids[0] })
+      const workload = {
+        total_cases: 8,
+        total_filtered_cases: 7,
+        total_custody_cases: 1,
+        total_community_cases: 2,
+        total_license_cases: 3,
+        total_filtered_custody_cases: 0,
+        total_filtered_community_cases: 1,
+        total_filtered_license_cases: 2,
+        total_t2a_cases: 9,
+        total_t2a_custody_cases: 2,
+        total_t2a_community_cases: 3,
+        total_t2a_license_cases: 4,
+        monthly_sdrs: 4,
+        sdr_due_next_30_days: 5,
+        sdr_conversions_last_30_days: 6,
+        paroms_completed_last_30_days: 7,
+        paroms_due_next_30_days: 8,
+        license_last_16_weeks: 9,
+        community_last_16_weeks: 10,
+        arms_community_cases: 11,
+        arms_license_cases: 12,
+        workload_report_id: ids[0],
+        staging_id: 1,
+        workload_owner_id: workloadOwnerId
+      }
+      return knex('workload').withSchema('app').returning('id').insert(workload)
+    }).then(function (ids) {
+      inserts.push({ table: 'workload', id: ids[0] })
+      return inserts
+    })
+}
+
+module.exports.getCountOfWorkloadsForWorkloadOwnerId = function (workloadOwnerId) {
+  return knex('workload').withSchema('app').count('*').where('workload_owner_id', workloadOwnerId)
+    .then(function ([result]) {
+      return result.count
+    })
+}
+
 module.exports.removeDependencies = function (inserts) {
   inserts = inserts.reverse()
   const groupedDeletions = [{ table: inserts[0].table, id: [inserts[0].id] }]
