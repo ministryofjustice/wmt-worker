@@ -18,6 +18,7 @@ const migrateContractedHours = require('./workers/migrate-contracted-hours')
 const recalculateWorkloadPoints = require('./workers/recalculate-workload-points')
 const importReductionsAndContractedHours = require('./workers/import-reductions-and-contracted-hours')
 const restructureOffenderManagers = require('./workers/restructure-offender-managers')
+const refreshViews = require('./workers/refresh-views')
 // ALL WORKERS SHOULD HAVE A METHOD `execute(task)` that returns a Promise
 module.exports = function (taskType) {
   switch (taskType) {
@@ -40,6 +41,7 @@ module.exports = function (taskType) {
     case taskTypes.RECALCULATE_WORKLOAD_POINTS: return recalculateWorkloadPoints
     case taskTypes.IMPORT_REDUCTIONS_AND_CONTRACTED_HOURS: return importReductionsAndContractedHours
     case taskTypes.RESTRUCTURE_OFFENDER_MANAGER: return restructureOffenderManagers
+    case taskTypes.REFRESH_VIEWS: return refreshViews
   }
 
   return null

@@ -71,17 +71,17 @@ function executeWorkerForTaskType (worker, task) {
             return countTaskStatuses(task)
               .then(function (totals) {
                 if (totals.numPending === 0 && totals.numInProgress === 0 && totals.numFailed === 0) {
-                  const removeDuplicatesTask = new Task(
+                  const refreshViewsTask = new Task(
                     undefined,
                     submittingAgent.WORKER,
-                    taskType.REMOVE_DUPLICATES,
+                    taskType.REFRESH_VIEWS,
                     undefined,
                     task.workloadReportId,
                     undefined,
                     undefined,
                     taskStatus.PENDING
                   )
-                  return createNewTasks([removeDuplicatesTask])
+                  return createNewTasks([refreshViewsTask])
                 }
               })
           } else if (Object.keys(triggerableTasks).includes(task.type)) {

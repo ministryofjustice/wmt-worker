@@ -1,4 +1,5 @@
 const knex = require('../../../knex').appSchema
+const { PENDING } = require('../../../app/constants/task-status')
 
 module.exports.insertDependencies = function (inserts) {
   return knex('workload_report').withSchema('app').returning('id').insert({})
@@ -25,6 +26,10 @@ module.exports.insertDependencies = function (inserts) {
       })
       return inserts
     })
+}
+
+module.exports.findAllPendingTasks = function () {
+  return knex('tasks').withSchema('app').where('status', PENDING)
 }
 
 module.exports.removeDependencies = function (inserts) {
