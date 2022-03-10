@@ -15,7 +15,8 @@ describe('app/services/data/update-workload-points-calculation', function () {
   })
 
   it('should update the correct workload points calculation record', function () {
-    const originalWpc = inserts.filter((item) => item.table === 'workload_points_calculations')[0].value
+    const insertedWorkloadPointsCalculation = inserts.filter((item) => item.table === 'workload_points_calculations')[0]
+    const originalWpc = insertedWorkloadPointsCalculation.value
     const workloadId = inserts.filter((item) => item.table === 'workload')[0].id
     const workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
     return updateWpc(
@@ -32,7 +33,7 @@ describe('app/services/data/update-workload-points-calculation', function () {
       originalWpc.reduction_hours,
       originalWpc.contracted_hours)
       .then(function () {
-        return knex('workload_points_calculations').withSchema('app').where('id', originalWpc.id).first()
+        return knex('workload_points_calculations').withSchema('app').where('id', insertedWorkloadPointsCalculation.id).first()
           .then(function (updatedWpc) {
             expect(originalWpc.id).to.eql(updatedWpc.id)
             expect(originalWpc.workload_report_id).to.eql(updatedWpc.workload_report_id)
