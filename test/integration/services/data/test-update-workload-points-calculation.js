@@ -35,7 +35,7 @@ describe('app/services/data/update-workload-points-calculation', function () {
       .then(function () {
         return knex('workload_points_calculations').withSchema('app').where('id', insertedWorkloadPointsCalculation.id).first()
           .then(function (updatedWpc) {
-            expect(originalWpc.id).to.eql(updatedWpc.id)
+            expect(insertedWorkloadPointsCalculation.id).to.eql(updatedWpc.id)
             expect(originalWpc.workload_report_id).to.eql(updatedWpc.workload_report_id)
             expect(originalWpc.workload_id).to.eql(updatedWpc.workload_id)
             expect(originalWpc.total_points + 1).to.eql(updatedWpc.total_points)
