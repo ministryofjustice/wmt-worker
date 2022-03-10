@@ -102,12 +102,13 @@ module.exports.addWorkloadPointsCalculation = function (inserts) {
     {
       workload_report_id: inserts.filter((item) => item.table === 'workload_report')[0].id,
       workload_points_id: inserts.filter((item) => item.table === 'workload_points')[0].id,
-      workload_id: inserts.filter((item) => item.table === 'workload')[0].id
+      workload_id: inserts.filter((item) => item.table === 'workload')[0].id,
+      last_updated_on: new Date()
     }
   )
   return knex('workload_points_calculations').withSchema('app').returning('id').insert(workloadPointsCalculation)
     .then(function (ids) {
-      inserts.push({ table: 'workload_points_calculations', id: ids[0] })
+      inserts.push({ table: 'workload_points_calculations', id: ids[0], value: workloadPointsCalculation })
       return inserts
     })
 }

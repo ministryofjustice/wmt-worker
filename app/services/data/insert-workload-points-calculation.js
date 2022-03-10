@@ -19,6 +19,7 @@ module.exports = function (workloadReportId, workloadPointsId, t2aWorkloadPoints
       cms_adjustment_points: cmsAdjustmentPoints,
       gs_adjustment_points: gsAdjustmentPoints,
       arms_total_cases: armsTotalCases,
-      t2a_workload_points_id: t2aWorkloadPointsId
+      t2a_workload_points_id: t2aWorkloadPointsId,
+      last_updated_on: new Date()
     }).returning('id')
 }

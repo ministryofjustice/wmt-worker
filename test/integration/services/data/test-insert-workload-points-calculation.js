@@ -6,7 +6,7 @@ const helper = require('../../../helpers/data/app-workload-points-calculation-he
 const insertWorkloadPointsCalculations = require('../../../../app/services/data/insert-workload-points-calculation')
 
 let inserts = []
-
+/* eslint-disable no-unused-expressions */
 describe('services/data/insert-workload-points-calculation', function () {
   before(function (done) {
     helper.insertDependencies(inserts)
@@ -54,6 +54,7 @@ describe('services/data/insert-workload-points-calculation', function () {
             expect(insertedObject.cms_adjustment_points).to.eql(cmsAdjustmentPoints)
             expect(insertedObject.gs_adjustment_points).to.eql(gsAdjustmentPoints)
             expect(insertedObject.contracted_hours).to.eql(contractedHours)
+            expect(insertedObject.last_updated_on).to.exist
             done()
           })
       })
