@@ -33,6 +33,12 @@ module.exports.addReductionForWorkloadOwner = function (workloadOwnerId) {
     })
 }
 
+module.exports.updateReductionReasonIsEnabled = function (reductionReasonId, isEnabled) {
+  return knex('reduction_reason').withSchema('app').where('id', reductionReasonId).update({
+    is_enabled: isEnabled
+  })
+}
+
 module.exports.getReductionsForWorkloadOwnerId = function (workloadOwnerId) {
   return knex('reductions').withSchema('app').where('workload_owner_id', workloadOwnerId)
 }
