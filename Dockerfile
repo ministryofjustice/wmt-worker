@@ -1,8 +1,7 @@
-# Stage: base image
-ARG BUILD_NUMBER
-ARG GIT_REF
-
 FROM node:16-buster-slim as base
+
+ARG BUILD_NUMBER=1_0_0
+ARG GIT_REF=not-available
 
 LABEL maintainer="HMPPS Digital Studio <info@digital.justice.gov.uk>"
 
@@ -14,17 +13,23 @@ RUN addgroup --gid 2000 --system appgroup && \
 
 WORKDIR /app
 
+ENV BUILD_NUMBER ${BUILD_NUMBER:-1_0_0}
+
 RUN apt-get update && \
-    apt-get upgrade -y
+        apt-get upgrade -y && \
+        apt-get autoremove -y && \
+        rm -rf /var/lib/apt/lists/*
 
 RUN npm i -g npm@8
 
 # Stage: build assets
 FROM base as build
-ARG BUILD_NUMBER
-ARG GIT_REF
 
-RUN apt-get install -y make python g++ git
+ARG BUILD_NUMBER=1_0_0
+ARG GIT_REF=not-available
+
+RUN apt-get update && \
+        apt-get install -y make python g++ git
 
 COPY package*.json ./
 RUN CYPRESS_INSTALL_BINARY=0 npm ci --no-audit
@@ -41,9 +46,6 @@ RUN npm prune --no-audit --production
 
 # Stage: copy production assets and dependencies
 FROM base
-
-RUN apt-get autoremove -y && \
-    rm -rf /var/lib/apt/lists/*
 
 COPY --from=build --chown=appuser:appgroup \
         /app/package.json \
