@@ -92,6 +92,8 @@ jobs:
         environment:
           - DATABASE_USERNAME=<< pipeline.parameters.database_user >>
           - DATABASE_PASSWORD=<< pipeline.parameters.database_password >>
+          - COMMUNITY_ENDPOINT_URL=http://localhost:8099
+          - HMPPS_TIER_ENDPOINT_URL=http://localhost:8099
         entrypoint: ["/bin/sh", "-c" , "sleep 10 && java -javaagent:/app/agent.jar -jar /app/app.jar"]
       - image: localstack/localstack:0.12.15
         environment:
