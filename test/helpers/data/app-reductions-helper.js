@@ -12,7 +12,7 @@ module.exports.insertDependencies = function (inserts = []) {
       return knex('reductions').withSchema('app').returning('id').insert(reductions)
     }).then(function (ids) {
       ids.forEach((id) => {
-        inserts.push({ table: 'reductions', id: id })
+        inserts.push({ table: 'reductions', id })
       })
       return inserts
     }).catch((error) => {
@@ -28,7 +28,7 @@ module.exports.addReductionForWorkloadOwner = function (workloadOwnerId) {
   const reduction = { workload_owner_id: workloadOwnerId, hours: 7, effective_from: new Date(new Date().setDate(new Date().getDate() - 20)), effective_to: new Date(new Date().setDate(new Date().getDate() + 20)), reduction_reason_id: 1, status: null, notes: 'Some Notes' }
   return knex('reductions').withSchema('app').returning('id').insert(reduction)
     .then(function ([id]) {
-      inserts.push({ table: 'reductions', id: id })
+      inserts.push({ table: 'reductions', id })
       return inserts
     })
 }

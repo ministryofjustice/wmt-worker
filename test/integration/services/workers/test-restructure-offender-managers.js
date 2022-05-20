@@ -29,7 +29,7 @@ describe('services/workers/restructure-offender-managers', function () {
                     restructureOffenderManagers: [{
                       offenderManagerKey: offenderManagerCode,
                       previousTeamCode: oldTeamCode,
-                      newTeamCode: newTeamCode
+                      newTeamCode
                     }]
                   }
                 })

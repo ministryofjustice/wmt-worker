@@ -51,7 +51,7 @@ describe('app/services/data/insert-app-workload', function () {
         caseDetails.push(buildCaseDetails(Locations.LICENSE, true))
         return insertAppWorkload(workload, caseDetails).then(function (id) {
           workloadId = id
-          inserts.push({ table: 'workload', id: id })
+          inserts.push({ table: 'workload', id })
         })
       })
   })

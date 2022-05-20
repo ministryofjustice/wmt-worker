@@ -20,8 +20,8 @@ const cmsAdjustmentToInsert = {
   adjustmentReasonId: 1,
   workloadOwnerId: 2,
   points: 10,
-  effectiveFrom: effectiveFrom,
-  effectiveTo: effectiveTo,
+  effectiveFrom,
+  effectiveTo,
   status: adjustmentStatus.ACTIVE,
   contactId: 4,
   crn: 'CMSTEST1000'
@@ -31,8 +31,8 @@ const gsAdjustmentToInsert = {
   adjustmentReasonId: 40,
   workloadOwnerId: 2,
   points: 10,
-  effectiveFrom: effectiveFrom,
-  effectiveTo: effectiveTo,
+  effectiveFrom,
+  effectiveTo,
   status: adjustmentStatus.ACTIVE,
   contactId: 12,
   crn: 'GSTEST1000'

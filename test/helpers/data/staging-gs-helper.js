@@ -32,7 +32,7 @@ module.exports.insertDependencies = function () {
     .returning('id')
     .then(function (ids) {
       ids.forEach((id) => {
-        inserts.push({ table: 'gs', id: id })
+        inserts.push({ table: 'gs', id })
       })
       return inserts
     })

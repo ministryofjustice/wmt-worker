@@ -5,7 +5,7 @@ module.exports = function (workloadReportId, status) {
     .withSchema('app')
     .where('id', workloadReportId)
     .update({
-      status: status,
+      status,
       status_description: status
     })
 }

@@ -7,8 +7,8 @@ module.exports = function () {
       return getDuplicateTeams()
         .then(function (duplicateTeams) {
           return {
-            duplicatePDUs: duplicatePDUs,
-            duplicateTeams: duplicateTeams
+            duplicatePDUs,
+            duplicateTeams
           }
         })
     })

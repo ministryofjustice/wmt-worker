@@ -30,7 +30,7 @@ module.exports.insertDependencies = function (inserts) {
       return knex('workload_points').withSchema('app').returning('id').insert(workloadPoints)
         .then(function (ids) {
           ids.forEach((id) => {
-            inserts.push({ table: 'workload_points', id: id })
+            inserts.push({ table: 'workload_points', id })
           })
           return inserts
         })

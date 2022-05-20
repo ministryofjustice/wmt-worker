@@ -27,10 +27,10 @@ module.exports = function (currentTask) {
       }
 
       return {
-        numPending: numPending,
-        numInProgress: numInProgress,
-        numFailed: numFailed,
-        numCompleted: numCompleted
+        numPending,
+        numInProgress,
+        numFailed,
+        numCompleted
       }
     })
 }

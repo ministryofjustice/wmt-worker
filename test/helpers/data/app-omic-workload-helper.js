@@ -39,7 +39,7 @@ module.exports.insertDependencies = function (inserts) {
     })
     .then(function (ids) {
       ids.forEach((id) => {
-        inserts.push({ table: 'workload_owner', id: id })
+        inserts.push({ table: 'workload_owner', id })
       })
 
       const defaultWorkload = {
@@ -79,7 +79,7 @@ module.exports.insertDependencies = function (inserts) {
       const locations = [Locations.COMMUNITY, Locations.CUSTODY, Locations.LICENSE]
       const cases = []
       ids.forEach((id) => {
-        inserts.push({ table: 'omic_workload', id: id })
+        inserts.push({ table: 'omic_workload', id })
         for (let i = 0; i < 3; i++) {
           for (let j = 0; j < 17; j++) {
             cases.push({
@@ -105,7 +105,7 @@ module.exports.insertDependencies = function (inserts) {
     })
     .then(function (ids) {
       ids.forEach((id) => {
-        inserts.push({ table: 'omic_tiers', id: id })
+        inserts.push({ table: 'omic_tiers', id })
       })
       return inserts
     }).catch((error) => {

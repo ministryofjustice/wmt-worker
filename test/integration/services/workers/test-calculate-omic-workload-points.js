@@ -29,7 +29,7 @@ describe('services/workers/calculate-omic-workload-points', function () {
         workloadBatch: new Batch(1, batchSize),
         operationType: operationTypes.INSERT
       },
-      workloadReportId: workloadReportId
+      workloadReportId
     }
 
     return calculateOmicPointsWorker.execute(task).then(() => {
