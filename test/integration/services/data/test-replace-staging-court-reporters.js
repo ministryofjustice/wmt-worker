@@ -25,7 +25,7 @@ describe('services/data/replace-staging-court-reporters', function () {
       })
       .then(function (ids) {
         ids.forEach((id) => {
-          inserts.push({ table: 'court_reporters', id: id })
+          inserts.push({ table: 'court_reporters', id })
         })
         return courtReportersHelper.getAllStagingCourtReporters()
       })

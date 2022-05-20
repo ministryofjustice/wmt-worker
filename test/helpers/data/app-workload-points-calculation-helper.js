@@ -32,7 +32,7 @@ module.exports.insertDependencies = function (inserts) {
       return knex('workload_points').withSchema('app').returning('id').insert(workloadPoints)
         .then(function (ids) {
           ids.forEach((id) => {
-            inserts.push({ table: 'workload_points', id: id })
+            inserts.push({ table: 'workload_points', id })
           })
         })
     })
@@ -43,7 +43,7 @@ module.exports.insertDependencies = function (inserts) {
     })
     .then(function (ids) {
       ids.forEach((id) => {
-        inserts.push({ table: 'reductions', id: id })
+        inserts.push({ table: 'reductions', id })
       })
       const workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
       const adjustments = adjustmentsHelper.getAdjustmentObjects(workloadOwnerId)
@@ -51,7 +51,7 @@ module.exports.insertDependencies = function (inserts) {
     })
     .then(function (ids) {
       ids.forEach((id) => {
-        inserts.push({ table: 'adjustments', id: id })
+        inserts.push({ table: 'adjustments', id })
       })
 
       return inserts

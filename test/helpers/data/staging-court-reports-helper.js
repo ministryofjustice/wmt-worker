@@ -4,13 +4,13 @@ module.exports.insertDependencies = function (inserts) {
   return knex('court_reports').withSchema('staging').returning('id').insert(getCourtReports())
     .then(function (ids) {
       ids.forEach((id) => {
-        inserts.push({ table: 'court_reports', id: id })
+        inserts.push({ table: 'court_reports', id })
       })
       return knex('wmt_extract').withSchema('staging').returning('id').insert(getWmtExtracts())
     })
     .then(function (ids) {
       ids.forEach((id) => {
-        inserts.push({ table: 'wmt_extract', id: id })
+        inserts.push({ table: 'wmt_extract', id })
       })
       return inserts
     })

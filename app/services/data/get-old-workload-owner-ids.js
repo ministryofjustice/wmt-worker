@@ -14,8 +14,8 @@ module.exports = function (teamId, forename, surname, teamName) {
     .join('offender_manager AS om', 'wo.offender_manager_id', 'om.id')
     .join('team AS t', 'wo.team_id', 't.id')
     .where({
-      forename: forename,
-      surname: surname,
+      forename,
+      surname,
       't.description': teamName
     })
     .whereNot('team_id', teamId)

@@ -30,7 +30,7 @@ describe('services/workers/calculate-workload-points', function () {
         workloadBatch: new Batch(initialWorkloadStagingId, batchSize),
         operationType: operationTypes.INSERT
       },
-      workloadReportId: workloadReportId
+      workloadReportId
     }
 
     return calculatePointsWorker.execute(task).then(() => {

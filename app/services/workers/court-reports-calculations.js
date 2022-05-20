@@ -44,8 +44,8 @@ module.exports.execute = async function (task) {
                           {
                             workloadReportId: reportId,
                             workloadPointsId: pointsConfiguration.id,
-                            courtReportsId: courtReportsId,
-                            contractedHours: contractedHours,
+                            courtReportsId,
+                            contractedHours,
                             reductionHours: reductions
                           }
                         )
@@ -54,8 +54,8 @@ module.exports.execute = async function (task) {
                           {
                             workloadReportId: reportId,
                             workloadPointsId: pointsConfiguration.id,
-                            courtReportsId: courtReportsId,
-                            contractedHours: contractedHours,
+                            courtReportsId,
+                            contractedHours,
                             reductionHours: reductions
                           }
                         )

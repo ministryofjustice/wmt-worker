@@ -16,7 +16,7 @@ module.exports.insertDependencies = function (inserts = []) {
       return knex('adjustments').withSchema('app').returning('id').insert(adjustments)
     }).then(function (ids) {
       ids.forEach((id) => {
-        inserts.push({ table: 'adjustments', id: id })
+        inserts.push({ table: 'adjustments', id })
       })
       return inserts
     }).catch((error) => {

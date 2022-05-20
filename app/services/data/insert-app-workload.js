@@ -83,7 +83,7 @@ const insertTiers = function (tiers, filteredTiers, t2aTiers, workloadId, locati
       t2a_warrants_total: currentT2aTier.warrants,
       t2a_unpaid_work_total: currentT2aTier.unpaidWork,
       t2a_total_cases: currentT2aTier.total,
-      location: location
+      location
     }
     tiersToInsert.push(tierToInsert)
   }
@@ -102,7 +102,7 @@ const insertCaseDetails = function (caseDetails, workloadId, location) {
         case_ref_no: caseDetail.caseRefNo,
         team_code: caseDetail.teamCode,
         grade_code: caseDetail.omGradeCode,
-        location: location
+        location
       }
       caseDetailsToInsert.push(caseDetailToInsert)
     }

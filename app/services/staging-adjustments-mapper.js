@@ -79,7 +79,7 @@ module.exports.mapGsAdjustments = function (workloadStagingIdStart, workloadStag
                     const result = []
                     const newGsAdjustment = {
                       contactId: gsAdjustment.contactId,
-                      workloadOwnerId: workloadOwnerId,
+                      workloadOwnerId,
                       points: adjustmentReason.points * -1,
                       adjustmentReasonId: adjustmentReason.id,
                       effectiveFrom: startDate,

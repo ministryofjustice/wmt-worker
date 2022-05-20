@@ -12,7 +12,7 @@ module.exports = function (results) {
   } else {
     const capacityPercentage = calculatePercentage(results.totalPoints, results.availablePoints)
     const cmsPercentage = calculatePercentage(results.cmsAdjustmentPoints, results.availablePoints)
-    totalsToReturn = Object.assign({}, results, { capacity: capacityPercentage, cmsPercentage: cmsPercentage })
+    totalsToReturn = Object.assign({}, results, { capacity: capacityPercentage, cmsPercentage })
   }
   return totalsToReturn
 }

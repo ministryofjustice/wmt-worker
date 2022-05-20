@@ -21,7 +21,7 @@ describe('app/services/data/insert-workload-report', function () {
       insertedIds.push(id)
       return knex.table(tableName)
         .withSchema('app')
-        .where({ id: id })
+        .where({ id })
         .then(function (results) {
           expect(results.length).to.be.equal(1)
           const result = results[0]

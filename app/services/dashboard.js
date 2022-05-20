@@ -27,7 +27,7 @@ module.exports = function () {
                         .then(function (fileId) {
                           return {
                             fileId: fileId[0],
-                            filepath: filepath
+                            filepath
                           }
                         })
                         .catch(function (error) {

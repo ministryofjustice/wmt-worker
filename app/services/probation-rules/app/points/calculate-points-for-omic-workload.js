@@ -40,18 +40,18 @@ module.exports = function (workload, caseTypeWeightings, t2aCaseTypeWeightings) 
 
   const pointsBreakdown = {
     total: totalWorkloadPoints,
-    communityTierPoints: communityTierPoints,
-    custodyTierPoints: custodyTierPoints,
-    licenseTierPoints: licenseTierPoints,
-    t2aCommunityTierPoints: t2aCommunityTierPoints,
-    t2aCustodyTierPoints: t2aCustodyTierPoints,
-    t2aLicenseTierPoints: t2aLicenseTierPoints,
+    communityTierPoints,
+    custodyTierPoints,
+    licenseTierPoints,
+    t2aCommunityTierPoints,
+    t2aCustodyTierPoints,
+    t2aLicenseTierPoints,
     sdrPoints: monthlySdrConversionPoints,
     sdrConversionPoints: sdrConversionPointsLast30Days,
-    paromsPoints: paromsPoints,
-    armsPoints: armsPoints,
-    projectedLicenseTierPoints: projectedLicenseTierPoints,
-    t2aProjectedLicenseTierPoints: t2aProjectedLicenseTierPoints
+    paromsPoints,
+    armsPoints,
+    projectedLicenseTierPoints,
+    t2aProjectedLicenseTierPoints
   }
   return pointsBreakdown
 }

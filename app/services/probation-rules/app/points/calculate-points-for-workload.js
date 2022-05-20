@@ -40,8 +40,8 @@ module.exports = function (workload, caseTypeWeightings, t2aCaseTypeWeightings) 
     total: totalWorkloadPoints,
     sdrPoints: monthlySdrConversionPoints,
     sdrConversionPoints: sdrConversionPointsLast30Days,
-    paromsPoints: paromsPoints,
-    armsPoints: armsPoints
+    paromsPoints,
+    armsPoints
   }
   return pointsBreakdown
 }
