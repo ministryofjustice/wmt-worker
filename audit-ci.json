@@ -1,5 +1,5 @@
 {
-  "moderate": true,
+  "critical": true,
   "package-manager": "auto",
   "registry": "https://registry.npmjs.org"
 }
