@@ -5,9 +5,6 @@ module.exports = function (date) {
   let startOfPeriod = now.minusDays(1).atSixThirty()
   let endOfPeriod = now.atSixThirty()
 
-  const nowAtSixThirty = new WMTDate(now.getTime())
-  nowAtSixThirty.setHours(18, 30, 0, 0)
-
   if (now.isAfterSixThirty()) {
     startOfPeriod = now.atSixThirty()
     endOfPeriod = now.plusDays(1).atSixThirty()
