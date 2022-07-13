@@ -1,44 +1,80 @@
 
-module.exports = function (now) {
-  let startOfPeriod = new Date(now.getTime())
-  startOfPeriod.setDate(now.getDate() - 1)
-  startOfPeriod.setHours(18, 30)
-  let endOfPeriod = new Date(now.getTime())
-  endOfPeriod.setHours(18, 30)
+module.exports = function (date) {
+  const now = new WMTDate(date)
 
-  const nowAtSixThirty = new Date(now.getTime())
+  let startOfPeriod = now.minusDays(1).atSixThirty()
+  let endOfPeriod = now.atSixThirty()
+
+  const nowAtSixThirty = new WMTDate(now.getTime())
   nowAtSixThirty.setHours(18, 30, 0, 0)
 
-  if (now > nowAtSixThirty) {
-    startOfPeriod = new Date(now.getTime())
-    startOfPeriod.setHours(18, 30)
-    endOfPeriod = new Date(now.getTime())
-    endOfPeriod.setDate(now.getDate() + 1)
-    endOfPeriod.setHours(18, 30)
-    if (now.getDay() === 2) {
-      endOfPeriod.setHours(19, 30)
+  if (now.isAfterSixThirty()) {
+    startOfPeriod = now.atSixThirty()
+    endOfPeriod = now.plusDays(1).atSixThirty()
+    if (now.isTuesday()) {
+      endOfPeriod = endOfPeriod.atSevenThirty()
     }
   }
 
-  if (now.getDay() === 3) {
-    const nowAtSevenThirty = new Date(now.getTime())
-    nowAtSevenThirty.setHours(19, 30, 0, 0)
-    if (now > nowAtSevenThirty) {
-      startOfPeriod = new Date(now.getTime())
-      startOfPeriod.setHours(19, 30)
+  if (now.isWednesday()) {
+    if (now.isAfterSevenThirty()) {
+      startOfPeriod = now.atSevenThirty()
     } else {
-      startOfPeriod = new Date(now.getTime())
-      startOfPeriod.setDate(now.getDate() - 1)
-      startOfPeriod.setHours(18, 30)
-      endOfPeriod = new Date(now.getTime())
-      endOfPeriod.setHours(19, 30)
+      startOfPeriod = now.minusDays(1).atSixThirty()
+      endOfPeriod = now.atSevenThirty()
     }
   }
 
-  return `${formatDate(startOfPeriod)} to ${formatDate(endOfPeriod)}`
+  return `${startOfPeriod.formatDate()} to ${endOfPeriod.formatDate()}`
 }
 
-function formatDate (date) {
-  return date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2) +
-    ' ' + ('0' + date.getHours()).slice(-2) + ':' + ('0' + date.getMinutes()).slice(-2)
+class WMTDate extends Date {
+  minusDays (days) {
+    const wmtDate = new WMTDate(this.getTime())
+    wmtDate.setDate(this.getDate() - days)
+    return wmtDate
+  }
+
+  plusDays (days) {
+    const wmtDate = new WMTDate(this.getTime())
+    wmtDate.setDate(this.getDate() + days)
+    return wmtDate
+  }
+
+  atSixThirty () {
+    const wmtDate = new WMTDate(this.getTime())
+    wmtDate.setHours(18, 30)
+    return wmtDate
+  }
+
+  atSevenThirty () {
+    const wmtDate = new WMTDate(this.getTime())
+    wmtDate.setHours(19, 30)
+    return wmtDate
+  }
+
+  isTuesday () {
+    return this.getDay() === 2
+  }
+
+  isWednesday () {
+    return this.getDay() === 3
+  }
+
+  isAfterSixThirty () {
+    const nowAtSixThirty = new WMTDate(this.getTime())
+    nowAtSixThirty.setHours(18, 30, 0, 0)
+    return this > nowAtSixThirty
+  }
+
+  isAfterSevenThirty () {
+    const nowAtSevenThirty = new WMTDate(this.getTime())
+    nowAtSevenThirty.setHours(19, 30, 0, 0)
+    return this > nowAtSevenThirty
+  }
+
+  formatDate () {
+    return this.getFullYear() + '-' + ('0' + (this.getMonth() + 1)).slice(-2) + '-' + ('0' + this.getDate()).slice(-2) +
+    ' ' + ('0' + this.getHours()).slice(-2) + ':' + ('0' + this.getMinutes()).slice(-2)
+  }
 }
