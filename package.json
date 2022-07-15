@@ -57,7 +57,7 @@
     "supertest": "^6.2.4"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.121.0",
+    "@aws-sdk/client-s3": "^3.129.0",
     "@aws-sdk/client-sqs": "^3.121.0",
     "applicationinsights": "^2.3.3",
     "bunyan": "^1.8.15",
