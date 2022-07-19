@@ -12,7 +12,7 @@ Node recycling maintenance occurs in cloud platform explained [here](https://use
 
 ## Decision
 
-Don't enable PodDisruption Budget
+Don't enable PodDisruptionBudget
 
 ## Consequences
 
