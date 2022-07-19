@@ -2,6 +2,8 @@
 generic-service:
   nameOverride: wmt-worker
   replicaCount: 1
+  poddisruptionbudget:
+    enabled: false
 
   image:
     repository: quay.io/hmpps/wmt-worker
