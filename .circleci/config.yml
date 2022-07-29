@@ -164,6 +164,8 @@ workflows:
       - hmpps/deploy_env:
           name: deploy_dev
           env: "dev"
+          jira_update: true
+          jira_env_type: development
           context: hmpps-common-vars
           filters:
             branches:
@@ -181,6 +183,8 @@ workflows:
       - hmpps/deploy_env:
           name: deploy_preprod
           env: "preprod"
+          jira_update: true
+          jira_env_type: staging
           context: 
             - hmpps-common-vars
             - hmpps-workload-preprod
@@ -193,6 +197,8 @@ workflows:
       - hmpps/deploy_env:
           name: deploy_prod
           env: "prod"
+          jira_update: true
+          jira_env_type: production
           slack_notification: true
           slack_channel_name: << pipeline.parameters.releases-slack-channel >>
           context: 
