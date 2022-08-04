@@ -3,6 +3,7 @@ const workloadHelper = require('./app-workload-helper')
 const workloadPointsHelper = require('./app-workload-points-helper')
 const reductionsHelper = require('./app-reductions-helper')
 const adjustmentsHelper = require('./app-adjustments-helper')
+const getWmtPeriod = require('../../../app/services/helpers/get-wmt-period')
 
 module.exports.defaultWorkloadPointsCalculation = {
   total_points: 99,
@@ -32,7 +33,7 @@ module.exports.insertDependencies = function (inserts) {
       return knex('workload_points').withSchema('app').returning('id').insert(workloadPoints)
         .then(function (ids) {
           ids.forEach((id) => {
-            inserts.push({ table: 'workload_points', id })
+            inserts.push({ table: 'workload_points', id, schema: 'app' })
           })
         })
     })
@@ -43,7 +44,7 @@ module.exports.insertDependencies = function (inserts) {
     })
     .then(function (ids) {
       ids.forEach((id) => {
-        inserts.push({ table: 'reductions', id })
+        inserts.push({ table: 'reductions', id, schema: 'app' })
       })
       const workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
       const adjustments = adjustmentsHelper.getAdjustmentObjects(workloadOwnerId)
@@ -51,13 +52,36 @@ module.exports.insertDependencies = function (inserts) {
     })
     .then(function (ids) {
       ids.forEach((id) => {
-        inserts.push({ table: 'adjustments', id })
+        inserts.push({ table: 'adjustments', id, schema: 'app' })
       })
 
       return inserts
     })
 
   return promise
+}
+
+module.exports.insertRealtimeWorkload = function (inserts) {
+  const offenderManagerCode = inserts.filter((item) => item.table === 'offender_manager')[0].code
+  const teamCode = inserts.filter((item) => item.table === 'team')[0].code
+  const providerCode = inserts.filter((item) => item.table === 'ldu')[0].code
+  const currentWmtPeriod = getWmtPeriod(new Date())
+  const dateInPreviousWmtPeriod = currentWmtPeriod.startOfPeriod.minusMinutes(5)
+  const workloadCalculationEntity = {
+    weekly_hours: 20.0,
+    reductions: 10.0,
+    available_points: 1500,
+    workload_points: 1350,
+    staff_code: offenderManagerCode,
+    team_code: teamCode,
+    provider_code: providerCode,
+    calculated_date: dateInPreviousWmtPeriod,
+    breakdown_data: '{}'
+  }
+  return knex('workload_calculation').withSchema('public').returning('calculation_id').insert(workloadCalculationEntity)
+    .then(function ([id]) {
+      return [{ table: 'workload_calculation', id, schema: 'public', idColumn: 'calculation_id' }]
+    })
 }
 
 module.exports.addWorkload = function (inserts) {
@@ -108,25 +132,25 @@ module.exports.addWorkloadPointsCalculation = function (inserts) {
   )
   return knex('workload_points_calculations').withSchema('app').returning('id').insert(workloadPointsCalculation)
     .then(function (ids) {
-      inserts.push({ table: 'workload_points_calculations', id: ids[0], value: workloadPointsCalculation })
+      inserts.push({ table: 'workload_points_calculations', id: ids[0], value: workloadPointsCalculation, schema: 'app' })
       return inserts
     })
 }
 
 module.exports.removeDependencies = function (inserts) {
   inserts = inserts.reverse()
-  const groupedDeletions = [{ table: inserts[0].table, id: [inserts[0].id] }]
+  const groupedDeletions = [{ table: inserts[0].table, id: [inserts[0].id], schema: inserts[0].schema ?? 'app', idColumn: inserts[0].idColumn ?? 'id' }]
 
   for (let i = 1; i < inserts.length; i++) {
     if (inserts[i].table === groupedDeletions[groupedDeletions.length - 1].table) {
       groupedDeletions[groupedDeletions.length - 1].id.push(inserts[i].id)
     } else {
-      groupedDeletions.push({ table: inserts[i].table, id: [inserts[i].id] })
+      groupedDeletions.push({ table: inserts[i].table, id: [inserts[i].id], schema: inserts[i].schema ?? 'app', idColumn: inserts[i].idColumn ?? 'id' })
     }
   }
 
   return groupedDeletions.map((deletion) => {
-    return knex(deletion.table).withSchema('app').whereIn('id', deletion.id).del()
+    return knex(deletion.table).withSchema(deletion.schema).whereIn(deletion.idColumn, deletion.id).del()
   }).reduce(function (prev, current) {
     return prev.then(function () {
       return current

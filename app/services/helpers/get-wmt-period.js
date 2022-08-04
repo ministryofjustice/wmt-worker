@@ -22,7 +22,7 @@ module.exports = function (date) {
     }
   }
 
-  return `${startOfPeriod.formatDate()} to ${endOfPeriod.formatDate()}`
+  return { startOfPeriod, endOfPeriod }
 }
 
 class WMTDate extends Date {
@@ -30,6 +30,11 @@ class WMTDate extends Date {
     const wmtDate = new WMTDate(this.getTime())
     wmtDate.setDate(this.getDate() - days)
     return wmtDate
+  }
+
+  minusMinutes (minutes) {
+    const millisecondsPerMinute = 60000
+    return new Date(this.getTime() - minutes * millisecondsPerMinute)
   }
 
   plusDays (days) {

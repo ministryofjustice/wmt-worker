@@ -26,3 +26,17 @@ processing them and recording the result.
 ```shell
 npm start
 ```
+
+## Testing
+
+To run the unit tests run:
+
+```shell
+npm run test
+```
+
+To run the integration tests run:
+```shell
+docker compose up -d
+npm run integration-test
+```

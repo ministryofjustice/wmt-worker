@@ -4,27 +4,27 @@ const Locations = require('../../../app/services/probation-rules').Locations
 module.exports.insertDependencies = function (inserts) {
   const promise = knex('workload_report').withSchema('app').returning('id').insert({})
     .then(function (ids) {
-      inserts.push({ table: 'workload_report', id: ids[0] })
+      inserts.push({ table: 'workload_report', id: ids[0], schema: 'app' })
       return knex('offender_manager_type').withSchema('app').returning('id').insert({ description: 'test' })
     })
     .then(function (ids) {
-      inserts.push({ table: 'offender_manager_type', id: ids[0] })
-      return knex('offender_manager').withSchema('app').returning('id').insert({ type_id: ids[0], forename: 'Offender', surname: 'Manager' })
+      inserts.push({ table: 'offender_manager_type', id: ids[0], schema: 'app' })
+      return knex('offender_manager').withSchema('app').returning('id').insert({ type_id: ids[0], forename: 'Offender', surname: 'Manager', key: 'OM123' })
     })
     .then(function (ids) {
-      inserts.push({ table: 'offender_manager', id: ids[0] })
+      inserts.push({ table: 'offender_manager', id: ids[0], schema: 'app', code: 'OM123' })
       return knex('region').withSchema('app').returning('id').insert({ code: 'RG1', description: 'Region Description' })
     })
     .then(function (ids) {
-      inserts.push({ table: 'region', id: ids[0] })
+      inserts.push({ table: 'region', id: ids[0], schema: 'app', code: 'RG1' })
       return knex('ldu').withSchema('app').returning('id').insert({ region_id: ids[0], code: 'LDU1', description: 'LDU Description' })
     })
     .then(function (ids) {
-      inserts.push({ table: 'ldu', id: ids[0] })
+      inserts.push({ table: 'ldu', id: ids[0], schema: 'app', code: 'LDU1' })
       return knex('team').withSchema('app').returning('id').insert({ ldu_id: ids[0], code: 'TEAM1', description: 'Team Description' })
     })
     .then(function (ids) {
-      inserts.push({ table: 'team', id: ids[0] })
+      inserts.push({ table: 'team', id: ids[0], schema: 'app', code: 'TEAM1' })
 
       const offenderManagers = inserts.filter((item) => item.table === 'offender_manager')
       const defaultWorkloadOwner = { team_id: inserts.filter((item) => item.table === 'team')[0].id, contracted_hours: 40, offender_manager_id: offenderManagers[0].id }
@@ -39,7 +39,7 @@ module.exports.insertDependencies = function (inserts) {
     })
     .then(function (ids) {
       ids.forEach((id) => {
-        inserts.push({ table: 'workload_owner', id })
+        inserts.push({ table: 'workload_owner', id, schema: 'app' })
       })
 
       const defaultWorkload = {
@@ -79,7 +79,7 @@ module.exports.insertDependencies = function (inserts) {
       const locations = [Locations.COMMUNITY, Locations.CUSTODY, Locations.LICENSE]
       const cases = []
       ids.forEach((id) => {
-        inserts.push({ table: 'workload', id })
+        inserts.push({ table: 'workload', id, schema: 'app' })
         for (let i = 0; i < 3; i++) {
           for (let j = 0; j < 17; j++) {
             cases.push({
@@ -105,7 +105,7 @@ module.exports.insertDependencies = function (inserts) {
     })
     .then(function (ids) {
       ids.forEach((id) => {
-        inserts.push({ table: 'tiers', id })
+        inserts.push({ table: 'tiers', id, schema: 'app' })
       })
       return inserts
     }).catch((error) => {
