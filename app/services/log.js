@@ -50,6 +50,36 @@ const logger = {
       log.info(jobName + ' took ' + timeTaken)
     }
   },
+  trackSameWorkload: function (realtimeWorkload) {
+    if (appinsights.defaultClient) {
+      appinsights.defaultClient.trackDependency({
+        dependencyTypeName: 'WorkloadMatchedReconciled',
+        staffCode: realtimeWorkload.staffCode,
+        teamCode: realtimeWorkload.teamCode,
+        providerCode: realtimeWorkload.providerCode,
+        availablePoints: realtimeWorkload.availablepoints,
+        workloadPoints: realtimeWorkload.workloadPoints
+      })
+    } else {
+      log.info(`${realtimeWorkload.staffCode} is the same in realtime as batch`)
+    }
+  },
+  trackDifferentWorkload: function (realtimeWorkload, batchWorkload) {
+    if (appinsights.defaultClient) {
+      appinsights.defaultClient.trackDependency({
+        dependencyTypeName: 'WorkloadDifferentReconciled',
+        staffCode: realtimeWorkload.staffCode,
+        teamCode: realtimeWorkload.teamCode,
+        providerCode: realtimeWorkload.providerCode,
+        realtimeAvailablePoints: realtimeWorkload.availablepoints,
+        realtimeWorkloadPoints: realtimeWorkload.workloadPoints,
+        batchAvailablePoints: batchWorkload.availablepoints,
+        batchWorkloadPoints: batchWorkload.totalPoints
+      })
+    } else {
+      log.info(`${realtimeWorkload.staffCode} is the different in realtime as batch`)
+    }
+  },
   info: log.info.bind(log),
   jobError: function (jobName, error) {
     if (appinsights.defaultClient) {

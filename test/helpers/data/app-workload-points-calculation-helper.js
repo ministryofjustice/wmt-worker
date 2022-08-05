@@ -26,6 +26,88 @@ module.exports.insertDependenciesForUpdate = function (inserts) {
     })
 }
 
+module.exports.insertMatchedWorkloadCalculations = function (inserts) {
+  // add offender manager
+  // add workload owner for offender manager to team in inserts
+  // add workload
+  // add workload points calculation for workload report in inserts
+  const matchedInserts = []
+  const workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
+  const offenderManagerTypeId = inserts.filter((item) => item.table === 'offender_manager_type')[0].id
+  const providerCode = inserts.filter((item) => item.table === 'ldu')[0].code
+  const teamCode = inserts.filter((item) => item.table === 'team')[0].code
+  const teamId = inserts.filter((item) => item.table === 'team')[0].id
+  return knex('offender_manager').withSchema('app').returning('id').insert({ type_id: offenderManagerTypeId, forename: 'Offender', surname: 'Manager', key: 'OM567' })
+    .then(function ([id]) {
+      matchedInserts.push({ table: 'offender_manager', id, schema: 'app', code: 'OM567' })
+      return knex('workload_owner').withSchema('app').returning('id').insert({ team_id: teamId, contracted_hours: 40, offender_manager_id: id })
+    }).then(function ([id]) {
+      matchedInserts.push({ table: 'workload_owner', id, schema: 'app' })
+      const workload = {
+        total_cases: 8,
+        total_filtered_cases: 7,
+        total_custody_cases: 1,
+        total_community_cases: 2,
+        total_license_cases: 3,
+        total_filtered_custody_cases: 0,
+        total_filtered_community_cases: 1,
+        total_filtered_license_cases: 2,
+        total_t2a_cases: 9,
+        total_t2a_custody_cases: 2,
+        total_t2a_community_cases: 3,
+        total_t2a_license_cases: 4,
+        monthly_sdrs: 4,
+        sdr_due_next_30_days: 5,
+        sdr_conversions_last_30_days: 6,
+        paroms_completed_last_30_days: 7,
+        paroms_due_next_30_days: 8,
+        license_last_16_weeks: 9,
+        community_last_16_weeks: 10,
+        arms_community_cases: 11,
+        arms_license_cases: 12,
+        workload_report_id: workloadReportId,
+        workload_owner_id: id,
+        staging_id: 8
+      }
+      return knex('workload').withSchema('app').returning('id').insert(workload)
+    }).then(function ([id]) {
+      matchedInserts.push({ table: 'workload', id, schema: 'app' })
+
+      const workloadPointsCalculation = Object.assign({}, module.exports.defaultWorkloadPointsCalculation,
+        {
+          workload_report_id: workloadReportId,
+          workload_points_id: inserts.filter((item) => item.table === 'workload_points')[0].id,
+          workload_id: id,
+          last_updated_on: new Date()
+        }
+
+      )
+      return knex('workload_points_calculations').withSchema('app').returning('id').insert(workloadPointsCalculation)
+    }).then(function ([id]) {
+      matchedInserts.push({ table: 'workload_points_calculations', id, schema: 'app' })
+
+      const offenderManagerCode = matchedInserts.filter((item) => item.table === 'offender_manager')[0].code
+      const currentWmtPeriod = getWmtPeriod(new Date())
+      const dateInPreviousWmtPeriod = currentWmtPeriod.startOfPeriod.minusMinutes(5)
+      const workloadCalculationEntity = {
+        weekly_hours: module.exports.defaultWorkloadPointsCalculation.contracted_hours,
+        reductions: module.exports.defaultWorkloadPointsCalculation.reduction_hours,
+        available_points: module.exports.defaultWorkloadPointsCalculation.available_points,
+        workload_points: module.exports.defaultWorkloadPointsCalculation.total_points,
+        staff_code: offenderManagerCode,
+        team_code: teamCode,
+        provider_code: providerCode,
+        calculated_date: dateInPreviousWmtPeriod,
+        breakdown_data: '{}'
+      }
+      return knex('workload_calculation').withSchema('public').returning('calculation_id').insert(workloadCalculationEntity)
+        .then(function ([id]) {
+          matchedInserts.push({ table: 'workload_calculation', id, schema: 'public', idColumn: 'calculation_id' })
+          return matchedInserts
+        })
+    })
+}
+
 module.exports.insertDependencies = function (inserts) {
   const promise = workloadHelper.insertDependencies(inserts)
     .then(function (inserts) {

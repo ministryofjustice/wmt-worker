@@ -4,9 +4,6 @@ const defaultConnection = {
   user: config.DATABASE_USERNAME,
   password: config.DATABASE_PASSWORD,
   database: config.DATABASE
-  // options: {
-
-  // }
 }
 
 module.exports = {
