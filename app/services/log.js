@@ -78,7 +78,7 @@ const logger = {
             providerCode: realtimeWorkload.providerCode,
             realtimeAvailablePoints: realtimeWorkload.availablepoints,
             realtimeWorkloadPoints: realtimeWorkload.workloadPoints,
-            batchAvailablePoints: batchWorkload.availablepoints,
+            batchAvailablePoints: batchWorkload.availablePoints,
             batchWorkloadPoints: batchWorkload.totalPoints
           }
         })
