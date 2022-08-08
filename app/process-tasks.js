@@ -21,6 +21,7 @@ const Task = require('./services/domain/task')
 const createNewTasks = require('./services/data/create-tasks')
 const submittingAgent = require('./constants/task-submitting-agent')
 const recordEtlExecutionTime = require('./services/record-etl-execution-time')
+const getTaskCountByType = require('./services/data/get-task-count-by-type')
 
 module.exports = function () {
   const batchSize = parseInt(config.ASYNC_WORKER_BATCH_SIZE, 10)
@@ -71,17 +72,22 @@ function executeWorkerForTaskType (worker, task) {
             return countTaskStatuses(task)
               .then(function (totals) {
                 if (totals.numPending === 0 && totals.numInProgress === 0 && totals.numFailed === 0) {
-                  const refreshViewsTask = new Task(
-                    undefined,
-                    submittingAgent.WORKER,
-                    taskType.REFRESH_VIEWS,
-                    undefined,
-                    task.workloadReportId,
-                    undefined,
-                    undefined,
-                    taskStatus.PENDING
-                  )
-                  return createNewTasks([refreshViewsTask])
+                  return getTaskCountByType(taskType.RECONCILE_WORKLOAD, task.workloadReportId)
+                    .then(function ([result]) {
+                      if (result.theCount === 0) {
+                        const reconcileTask = new Task(
+                          undefined,
+                          submittingAgent.WORKER,
+                          taskType.RECONCILE_WORKLOAD,
+                          undefined,
+                          task.workloadReportId,
+                          undefined,
+                          undefined,
+                          taskStatus.PENDING
+                        )
+                        return createNewTasks([reconcileTask])
+                      }
+                    })
                 }
               })
           } else if (Object.keys(triggerableTasks).includes(task.type)) {

@@ -34,7 +34,7 @@ class WMTDate extends Date {
 
   minusMinutes (minutes) {
     const millisecondsPerMinute = 60000
-    return new Date(this.getTime() - minutes * millisecondsPerMinute)
+    return new WMTDate(this.getTime() - minutes * millisecondsPerMinute)
   }
 
   plusDays (days) {
