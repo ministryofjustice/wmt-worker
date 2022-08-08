@@ -20,9 +20,9 @@ module.exports.execute = async function (task) {
       return getLatestBatchWorkloadCalculation(realtimeWorkload.teamCode, realtimeWorkload.staffCode, task.workloadReportId).then(function ([batchWorkloadResult]) {
         const batchWorkload = batchWorkloadResult ?? { availablePoints: -1, totalPoints: -1 }
         if (batchWorkload.availablePoints === realtimeWorkload.availablepoints && batchWorkload.totalPoints === realtimeWorkload.workloadPoints) {
-          log.trackSameWorkload(realtimeWorkload)
+          log.trackSameWorkload(realtimeWorkload, previousDayWmtPeriod)
         } else {
-          log.trackDifferentWorkload(realtimeWorkload, batchWorkload)
+          log.trackDifferentWorkload(realtimeWorkload, batchWorkload, previousDayWmtPeriod)
         }
       })
     })

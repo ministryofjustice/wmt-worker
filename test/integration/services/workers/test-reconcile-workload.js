@@ -4,6 +4,7 @@ const sinon = require('sinon')
 
 const workloadCalculationHelper = require('../../../helpers/data/app-workload-points-calculation-helper')
 const taskHelper = require('../../../helpers/data/app-tasks-helper')
+const getWmtPeriod = require('../../../../app/services/helpers/get-wmt-period')
 
 let inserts = []
 let reconcileWorkload, log
@@ -37,7 +38,9 @@ describe('services/workers/reconcile-workload', function () {
 
   it('must track workload', function () {
     const workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
-
+    const previousDay = new Date()
+    previousDay.setDate(previousDay.getDate() - 1)
+    const previousDayWmtPeriod = getWmtPeriod(previousDay)
     return reconcileWorkload.execute({ workloadReportId }).then(function () {
       const noBatchCalculation = log.trackDifferentWorkload.getCall(0).args
       expect(noBatchCalculation[0]).to.deep.equal({
@@ -51,6 +54,7 @@ describe('services/workers/reconcile-workload', function () {
         availablePoints: -1,
         totalPoints: -1
       })
+      expect(noBatchCalculation[2]).to.deep.equal(previousDayWmtPeriod)
 
       const args = log.trackDifferentWorkload.getCall(1).args
       expect(args[0]).to.deep.equal({
@@ -64,15 +68,17 @@ describe('services/workers/reconcile-workload', function () {
         availablePoints: 94,
         totalPoints: 99
       })
+      expect(args[2]).to.deep.equal(previousDayWmtPeriod)
 
-      const matchedArgument = log.trackSameWorkload.getCall(0).args[0]
-      expect(matchedArgument).to.deep.equal({
+      const matchedArgument = log.trackSameWorkload.getCall(0)
+      expect(matchedArgument.args[0]).to.deep.equal({
         availablepoints: 94,
         providerCode: 'LDU1',
         staffCode: 'OM567',
         teamCode: 'TEAM1',
         workloadPoints: 99
       })
+      expect(matchedArgument.args[1]).to.deep.equal(previousDayWmtPeriod)
     })
   })
 

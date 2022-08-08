@@ -50,7 +50,7 @@ const logger = {
       log.info(jobName + ' took ' + timeTaken)
     }
   },
-  trackSameWorkload: function (realtimeWorkload) {
+  trackSameWorkload: function (realtimeWorkload, wmtPeriod) {
     if (appinsights.defaultClient) {
       appinsights.defaultClient
         .trackEvent({
@@ -60,14 +60,15 @@ const logger = {
             teamCode: realtimeWorkload.teamCode,
             providerCode: realtimeWorkload.providerCode,
             availablePoints: realtimeWorkload.availablepoints,
-            workloadPoints: realtimeWorkload.workloadPoints
+            workloadPoints: realtimeWorkload.workloadPoints,
+            wmtPeriod: `${wmtPeriod.startOfPeriod.formatDate()} to ${wmtPeriod.endOfPeriod.formatDate()}`
           }
         })
     } else {
       log.info(`${realtimeWorkload.staffCode} is the same in realtime as batch`)
     }
   },
-  trackDifferentWorkload: function (realtimeWorkload, batchWorkload) {
+  trackDifferentWorkload: function (realtimeWorkload, batchWorkload, wmtPeriod) {
     if (appinsights.defaultClient) {
       appinsights.defaultClient
         .trackEvent({
@@ -79,7 +80,8 @@ const logger = {
             realtimeAvailablePoints: realtimeWorkload.availablepoints,
             realtimeWorkloadPoints: realtimeWorkload.workloadPoints,
             batchAvailablePoints: batchWorkload.availablePoints,
-            batchWorkloadPoints: batchWorkload.totalPoints
+            batchWorkloadPoints: batchWorkload.totalPoints,
+            wmtPeriod: `${wmtPeriod.startOfPeriod.formatDate()} to ${wmtPeriod.endOfPeriod.formatDate()}`
           }
         })
     } else {
