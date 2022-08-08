@@ -32,6 +32,10 @@ module.exports.findAllPendingTasks = function () {
   return knex('tasks').withSchema('app').where('status', PENDING)
 }
 
+module.exports.removeAll = function () {
+  return knex('tasks').withSchema('app').del()
+}
+
 module.exports.removeDependencies = function (inserts) {
   inserts = inserts.reverse()
   return inserts.map((deletion) => {

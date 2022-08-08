@@ -13,6 +13,10 @@ module.exports.insertDependencies = function (inserts) {
     })
 }
 
+module.exports.removeAll = function () {
+  return knex('workload_report').withSchema('app').del()
+}
+
 module.exports.removeDependencies = function (inserts) {
   inserts = inserts.reverse()
   return inserts.map((deletion) => {

@@ -15,7 +15,7 @@ module.exports.execute = async function (task) {
         WORKER,
         GENERATE_DASHBOARD,
         undefined,
-        undefined,
+        task.workloadReportId,
         undefined,
         undefined,
         PENDING
