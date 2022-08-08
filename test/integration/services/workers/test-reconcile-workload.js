@@ -76,8 +76,6 @@ describe('services/workers/reconcile-workload', function () {
     })
   })
 
-  // TODO: Write test for only real time calculation
-
   after(function () {
     return taskHelper.removeAll().then(function () {
       return workloadCalculationHelper.removeDependencies(inserts)

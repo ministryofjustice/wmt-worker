@@ -27,10 +27,6 @@ module.exports.insertDependenciesForUpdate = function (inserts) {
 }
 
 module.exports.insertMatchedWorkloadCalculations = function (inserts) {
-  // add offender manager
-  // add workload owner for offender manager to team in inserts
-  // add workload
-  // add workload points calculation for workload report in inserts
   const matchedInserts = []
   const workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
   const offenderManagerTypeId = inserts.filter((item) => item.table === 'offender_manager_type')[0].id
