@@ -53,7 +53,8 @@ const logger = {
   trackSameWorkload: function (realtimeWorkload) {
     if (appinsights.defaultClient) {
       appinsights.defaultClient.trackDependency({
-        dependencyTypeName: 'WorkloadMatchedReconciled',
+        dependencyTypeName: 'WorkerTask',
+        name: 'WorkloadMatchedReconciled',
         staffCode: realtimeWorkload.staffCode,
         teamCode: realtimeWorkload.teamCode,
         providerCode: realtimeWorkload.providerCode,
@@ -67,7 +68,8 @@ const logger = {
   trackDifferentWorkload: function (realtimeWorkload, batchWorkload) {
     if (appinsights.defaultClient) {
       appinsights.defaultClient.trackDependency({
-        dependencyTypeName: 'WorkloadDifferentReconciled',
+        dependencyTypeName: 'WorkerTask',
+        name: 'WorkloadDifferentReconciled',
         staffCode: realtimeWorkload.staffCode,
         teamCode: realtimeWorkload.teamCode,
         providerCode: realtimeWorkload.providerCode,
