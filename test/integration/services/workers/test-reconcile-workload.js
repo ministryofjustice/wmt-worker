@@ -29,7 +29,7 @@ describe('services/workers/reconcile-workload', function () {
   })
 
   beforeEach(function () {
-    log = { trackDifferentWorkload: sinon.spy(), trackSameWorkload: sinon.spy() }
+    log = { trackDifferentWorkload: sinon.spy(), trackSameWorkload: sinon.spy(), info: function () {} }
     reconcileWorkload = proxyquire('../../../../app/services/workers/reconcile-workload', {
       '../log': log
     })

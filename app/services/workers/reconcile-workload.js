@@ -13,8 +13,10 @@ module.exports.execute = async function (task) {
   const previousDay = new Date()
   previousDay.setDate(previousDay.getDate() - 1)
   const previousDayWmtPeriod = getWmtPeriod(previousDay)
+  log.info('getting all realtime workload calculations between ' + previousDayWmtPeriod.startOfPeriod.formatDate() + ' and ' + previousDayWmtPeriod.endOfPeriod.formatDate())
   return getLatestRealtimeWorkloadCalculations(previousDayWmtPeriod).then(function (results) {
     return arrayToPromise(results, function (realtimeWorkload) {
+      log.info('found realtime workload calculations for team ' + realtimeWorkload.teamCode + ' and staff ' + realtimeWorkload.staffCode)
       return getLatestBatchWorkloadCalculation(realtimeWorkload.teamCode, realtimeWorkload.staffCode, task.workloadReportId).then(function ([batchWorkloadResult]) {
         const batchWorkload = batchWorkloadResult ?? { availablePoints: -1, totalPoints: -1 }
         if (batchWorkload.availablePoints === realtimeWorkload.availablepoints && batchWorkload.totalPoints === realtimeWorkload.workloadPoints) {
