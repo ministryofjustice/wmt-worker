@@ -73,7 +73,7 @@ function executeWorkerForTaskType (worker, task) {
               .then(function (totals) {
                 if (totals.numPending === 0 && totals.numInProgress === 0 && totals.numFailed === 0) {
                   return getTaskCountByType(taskType.RECONCILE_WORKLOAD, task.workloadReportId)
-                    .then(function (result) {
+                    .then(function ([result]) {
                       if (result.theCount === 0) {
                         const reconcileTask = new Task(
                           undefined,

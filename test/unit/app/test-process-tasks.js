@@ -20,6 +20,7 @@ let createTasks
 let log
 let checkTasksAreCompleteForWorkload
 let recordEtlExecutionTime
+let getTaskCountByType
 const batchSize = 3
 
 describe('process-tasks', function () {
@@ -35,6 +36,7 @@ describe('process-tasks', function () {
     createTasks = sinon.stub()
     checkTasksAreCompleteForWorkload = sinon.stub()
     recordEtlExecutionTime = sinon.stub()
+    getTaskCountByType = sinon.stub()
     log = { trackExecutionTime: sinon.stub(), info: sinon.stub(), error: function (message) {}, jobError: sinon.stub() }
 
     processTasks = proxyquire('../../../app/process-tasks', {
@@ -49,7 +51,8 @@ describe('process-tasks', function () {
       './services/data/get-tasks-inprogress-count': getTaskInProgressCount,
       './services/data/check-tasks-are-complete-for-workload': checkTasksAreCompleteForWorkload,
       './services/data/create-tasks': createTasks,
-      './services/record-etl-execution-time': recordEtlExecutionTime
+      './services/record-etl-execution-time': recordEtlExecutionTime,
+      './services/data/get-task-count-by-type': getTaskCountByType
     })
   })
 
@@ -187,6 +190,7 @@ describe('process-tasks', function () {
         return 'Done!'
       }
     })
+
     completeTaskWithStatus.resolves({})
 
     return processTasks().then(function () {
@@ -197,5 +201,50 @@ describe('process-tasks', function () {
     })
   })
 
+  it('should create a reconcile workload after all workload calculations are complete', function () {
+    getTaskInProgressCount.resolves([{ theCount: 0 }])
+    getPendingTasksAndMarkInProgress.resolves([
+      { id: 2, workloadReportId: 2, type: 'CALCULATE-WORKLOAD-POINTS', additionalData: { operationType: operationTypes.INSERT } }
+    ])
+    getWorkerForTask.returns({
+      execute: async function () {
+        return 'Done!'
+      }
+    })
+
+    completeTaskWithStatus.resolves({})
+    taskStatusCounter.resolves({
+      numPending: 0,
+      numInProgress: 0,
+      numFailed: 0
+    })
+    getTaskCountByType.resolves([{ theCount: 0 }])
+
+    return processTasks().then(function () {
+      expect(createTasks.called).to.be.true
+    })
+  })
+
+  it('should not reconcile workload task after all workload calculations are complete if one already exists', function () {
+    getTaskInProgressCount.resolves([{ theCount: 0 }])
+    getPendingTasksAndMarkInProgress.resolves([
+      { id: 2, workloadReportId: 2, type: 'CALCULATE-WORKLOAD-POINTS', additionalData: { operationType: operationTypes.INSERT } }
+    ])
+    getWorkerForTask.returns({
+      execute: async function () {
+        return 'Done!'
+      }
+    })
+    taskStatusCounter.resolves({
+      numPending: 0,
+      numInProgress: 0,
+      numFailed: 0
+    })
+    getTaskCountByType.resolves([{ theCount: 1 }])
+
+    return processTasks().then(function () {
+      expect(createTasks.called).to.be.false
+    })
+  })
   // TODO: WRITE TEST FOR RECONCILE TASK
 })
