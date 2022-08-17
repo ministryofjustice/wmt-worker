@@ -18,8 +18,6 @@ let updateWorkloadReportEffectiveTo
 let getTaskInProgressCount
 let createTasks
 let log
-let checkTasksAreCompleteForWorkload
-let recordEtlExecutionTime
 let getTaskCountByType
 const batchSize = 3
 
@@ -34,8 +32,6 @@ describe('process-tasks', function () {
     updateWorkloadReportEffectiveTo = sinon.stub()
     getTaskInProgressCount = sinon.stub()
     createTasks = sinon.stub()
-    checkTasksAreCompleteForWorkload = sinon.stub()
-    recordEtlExecutionTime = sinon.stub()
     getTaskCountByType = sinon.stub()
     log = { trackExecutionTime: sinon.stub(), info: sinon.stub(), error: function (message) {}, jobError: sinon.stub() }
 
@@ -49,9 +45,7 @@ describe('process-tasks', function () {
       './services/get-worker-for-task': getWorkerForTask,
       './services/data/update-workload-report-effective-to': updateWorkloadReportEffectiveTo,
       './services/data/get-tasks-inprogress-count': getTaskInProgressCount,
-      './services/data/check-tasks-are-complete-for-workload': checkTasksAreCompleteForWorkload,
       './services/data/create-tasks': createTasks,
-      './services/record-etl-execution-time': recordEtlExecutionTime,
       './services/data/get-task-count-by-type': getTaskCountByType
     })
   })
@@ -74,67 +68,6 @@ describe('process-tasks', function () {
       expect(completeTaskWithStatus.calledWith(1, taskStatus.COMPLETE)).to.be.true
       expect(completeTaskWithStatus.calledWith(2, taskStatus.COMPLETE)).to.be.true
       expect(log.trackExecutionTime.calledWith('task1', sinon.match.number, true)).to.be.true
-    })
-  })
-
-  it('should update workload report as complete when there are no pending, in progress or failed tasks', function () {
-    createTasks.resolves()
-    getTaskInProgressCount.resolves([{ theCount: 0 }])
-    getPendingTasksAndMarkInProgress.resolves([
-      { id: 1, workloadReportId: 1, type: 'task1' },
-      { id: 2, workloadReportId: 3, type: 'GENERATE-DASHBOARD', additionalData: { operationType: operationTypes.INSERT } }
-    ])
-    getWorkerForTask.returns({
-      execute: async function () {
-        return 'Done!'
-      }
-    })
-    completeTaskWithStatus.resolves({})
-    taskStatusCounter.resolves({
-      numPending: 0,
-      numInProgress: 0,
-      numFailed: 0
-    })
-    updateWorkload.resolves({})
-    recordEtlExecutionTime.resolves()
-    checkTasksAreCompleteForWorkload.resolves(true)
-
-    return processTasks().then(function () {
-      expect(getPendingTasksAndMarkInProgress.calledWith(batchSize)).to.be.true
-      expect(getWorkerForTask.calledWith('task1')).to.be.true
-      expect(getWorkerForTask.calledWith('GENERATE-DASHBOARD')).to.be.true
-      expect(completeTaskWithStatus.calledWith(1, taskStatus.COMPLETE)).to.be.true
-      expect(completeTaskWithStatus.calledWith(2, taskStatus.COMPLETE)).to.be.true
-      expect(updateWorkload.calledWith(1, workloadReportStatus.COMPLETE)).to.be.true
-      expect(updateWorkload.calledWith(3, workloadReportStatus.COMPLETE)).to.be.true
-      expect(recordEtlExecutionTime.calledWith(1)).to.be.true
-      expect(recordEtlExecutionTime.calledWith(3)).to.be.true
-    })
-  })
-
-  it('should not update workload report as complete and refresh web hierarchy when there are pending, inprogress or failed tasks', function () {
-    getTaskInProgressCount.resolves([{ theCount: 0 }])
-    getPendingTasksAndMarkInProgress.resolves([
-      { id: 2, workloadReportId: 2, type: 'CALCULATE-WORKLOAD-POINTS', additionalData: { operationType: operationTypes.INSERT } }
-    ])
-    getWorkerForTask.returns({
-      execute: async function () {
-        return 'Done!'
-      }
-    })
-    completeTaskWithStatus.resolves({})
-    taskStatusCounter.resolves({
-      numPending: 1,
-      numInProgress: 2,
-      numFailed: 3
-    })
-    updateWorkload.resolves({})
-
-    return processTasks().then(function () {
-      expect(getWorkerForTask.calledWith('CALCULATE-WORKLOAD-POINTS')).to.be.true
-      expect(completeTaskWithStatus.calledWith(2, taskStatus.COMPLETE)).to.be.true
-      expect(recordEtlExecutionTime.called).to.be.false
-      expect(updateWorkload.calledWith(2, workloadReportStatus.COMPLETE)).to.be.false
     })
   })
 
@@ -177,27 +110,6 @@ describe('process-tasks', function () {
       expect(completeTaskWithStatus.calledWith(2, taskStatus.FAILED)).to.be.true
       expect(updateWorkload.calledWith(2, workloadReportStatus.FAILED)).to.be.true
       expect(updateWorkloadReportEffectiveTo.called).to.be.true
-    })
-  })
-
-  it('should not update the workload report for UPDATE CALCULATE-WORKLOAD-POINTS tasks', function () {
-    getTaskInProgressCount.resolves([{ theCount: 0 }])
-    getPendingTasksAndMarkInProgress.resolves([
-      { id: 2, workloadReportId: 2, type: 'CALCULATE-WORKLOAD-POINTS', additionalData: { operationType: operationTypes.UPDATE } }
-    ])
-    getWorkerForTask.returns({
-      execute: async function () {
-        return 'Done!'
-      }
-    })
-
-    completeTaskWithStatus.resolves({})
-
-    return processTasks().then(function () {
-      expect(completeTaskWithStatus.called).to.be.true
-      expect(taskStatusCounter.called).to.be.false
-      expect(recordEtlExecutionTime.called).to.be.false
-      expect(updateWorkload.called).to.be.false
     })
   })
 
