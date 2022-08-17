@@ -12,7 +12,7 @@ describe('services/workers/generate-dashboard', function () {
     })
   })
 
-  it.only('must update workload report status to complete', function () {
+  it('must update workload report status to complete', function () {
     const workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
     return generateDashboard.execute({ workloadReportId }).then(function () {
       return getWorkloadReportById(workloadReportId).then(function ([workloadReport]) {
