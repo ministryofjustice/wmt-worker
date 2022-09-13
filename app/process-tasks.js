@@ -16,11 +16,9 @@ const checkForDuplicateTasks = require('./services/data/check-for-duplicate-task
 const setTasksToPending = require('./services/data/set-tasks-to-pending')
 const deleteDuplicateTask = require('./services/data/delete-duplicate-task')
 const checkAllTasksForTypeAreComplete = require('./services/data/check-all-tasks-for-type-are-complete')
-const checkWorkloadIsComplete = require('./services/data/check-tasks-are-complete-for-workload')
 const Task = require('./services/domain/task')
 const createNewTasks = require('./services/data/create-tasks')
 const submittingAgent = require('./constants/task-submitting-agent')
-const recordEtlExecutionTime = require('./services/record-etl-execution-time')
 const getTaskCountByType = require('./services/data/get-task-count-by-type')
 
 module.exports = function () {
@@ -113,14 +111,6 @@ function executeWorkerForTaskType (worker, task) {
                 }
               })
           }
-
-          return checkWorkloadIsComplete(task.workloadReportId).then(function (result) {
-            if (result) {
-              return recordEtlExecutionTime(task.workloadReportId).then(function () {
-                return updateWorkloadReportStatus(task.workloadReportId, workloadReportStatus.COMPLETE)
-              })
-            }
-          })
         })
     }).catch(function (error) {
       log.trackExecutionTime(task.type, new Date().getTime() - startTime, false)
