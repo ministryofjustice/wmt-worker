@@ -1,4 +1,6 @@
 const logger = require('../log')
+const sqsSuccessUpdater = require('../sqs-success-updater')
+const getOffenderManagerByWorkownerId = require('../data/get-offender-manager-by-workowner-id')
 const calculateWorkloadPoints = require('../probation-rules').calculateWorkloadPoints
 const calculateNominalTarget = require('../probation-rules').calculateNominalTarget
 const calculateAvailablePoints = require('../probation-rules').calculateAvailablePoints
@@ -109,7 +111,11 @@ module.exports.execute = async function (task) {
                               reductions,
                               cmsAdjustments,
                               gsAdjustments,
-                              armsTotalCases)
+                              armsTotalCases).then(function () {
+                              return getOffenderManagerByWorkownerId(workload.workloadOwnerId).then(function (staffCode) {
+                                return sqsSuccessUpdater.staffAvailableHoursChange(staffCode, contractedHours, reductions)
+                              })
+                            })
                           default:
                             throw new Error('Operation type of ' + operationType + ' is not valid. Should be ' + operationTypes.INSERT + ' or ' + operationTypes.UPDATE)
                         }
