@@ -1,5 +1,5 @@
 const logger = require('../log')
-const sqsSuccessUpdater = require('../sqs-success-updater')
+const sqsSuccessUpdater = require('../sns-success-updater')
 const getOffenderManagerByWorkownerId = require('../data/get-offender-manager-key-by-workload-owner-id')
 const calculateWorkloadPoints = require('../probation-rules').calculateWorkloadPoints
 const calculateNominalTarget = require('../probation-rules').calculateNominalTarget

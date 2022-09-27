@@ -91,7 +91,7 @@ describe('services/workers/calculate-workload-points', function () {
       '../data/get-contracted-hours': getContractedHours,
       '../data/insert-workload-points-calculation': insertWorkloadPointsCalculationsStub,
       '../data/update-workload-points-calculation': updateWorkloadPointsCalculationsStub,
-      '../sqs-success-updater': { staffAvailableHoursChange: staffAvailableHoursChangeStub },
+      '../sns-success-updater': { staffAvailableHoursChange: staffAvailableHoursChangeStub },
       '../probation-rules': probationRulesStub,
       '../data/get-adjustment-points': getAdjustmentPoints,
       '../data/check-for-duplicate-calculation': checkForDuplicateCalculation

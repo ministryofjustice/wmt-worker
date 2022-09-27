@@ -30,12 +30,12 @@ module.exports = {
     QUEUE_URL: process.env.AUDIT_SQS_QUEUE_URL || 'http://localhost:4566/000000000000/audit_event_queue'
   },
 
-  STAFF_EVENT_SQS: {
+  STAFF_EVENT_SNS: {
     REGION: process.env.SQS_REGION || 'eu-west-2',
     ENDPOINT: production ? null : 'http://localhost:4566',
     ACCESS_KEY_ID: process.env.STAFF_EVENT_SQS_ACCESS_KEY_ID || 'foobar',
     SECRET_ACCESS_KEY: process.env.STAFF_EVENT_SQS_SECRET_ACCESS_KEY || 'foobar',
-    QUEUE_URL: process.env.STAFF_EVENT_SQS_QUEUE_URL || 'http://localhost:4566/000000000000/staff_event_queue'
+    TOPIC_ARN: process.env.STAFF_EVENT_SNS_TOPIC_ARN || 'arn:aws:sns:eu-west-2:000000000000:f5ebb929-0407-424b-b54e-3088dc801e77'
   },
 
   // Extract valid source worksheet tabs
