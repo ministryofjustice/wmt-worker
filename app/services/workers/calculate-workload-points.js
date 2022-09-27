@@ -1,5 +1,5 @@
 const logger = require('../log')
-const sqsSuccessUpdater = require('../sns-success-updater')
+const snsSuccessUpdater = require('../sns-success-updater')
 const getOffenderManagerByWorkownerId = require('../data/get-offender-manager-key-by-workload-owner-id')
 const calculateWorkloadPoints = require('../probation-rules').calculateWorkloadPoints
 const calculateNominalTarget = require('../probation-rules').calculateNominalTarget
@@ -113,7 +113,7 @@ module.exports.execute = async function (task) {
                               gsAdjustments,
                               armsTotalCases).then(function () {
                               return getOffenderManagerByWorkownerId(workload.workloadOwnerId).then(function (staffCode) {
-                                return sqsSuccessUpdater.staffAvailableHoursChange(staffCode, contractedHours, reductions)
+                                return snsSuccessUpdater.staffAvailableHoursChange(staffCode, contractedHours, reductions)
                               })
                             })
                           default:
