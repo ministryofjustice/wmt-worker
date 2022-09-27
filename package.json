@@ -58,6 +58,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.178.0",
+    "@aws-sdk/client-sns": "^3.179.0",
     "@aws-sdk/client-sqs": "^3.178.0",
     "applicationinsights": "^2.3.5",
     "bunyan": "^1.8.15",

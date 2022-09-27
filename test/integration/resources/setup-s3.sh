@@ -16,7 +16,7 @@ aws --endpoint-url=http://localhost:4566 s3api create-bucket --bucket wmt-worker
 
 aws --endpoint-url=http://localhost:4566 sqs create-queue --queue-name audit_event_queue
 
-aws --endpoint-url=http://localhost:4566 sqs create-queue --queue-name staff_event_queue
+aws --endpoint-url=http://localhost:4566 sns create-topic --name domain-events
 
 echo "S3 created bucket"
 

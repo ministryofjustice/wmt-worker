@@ -10,7 +10,7 @@ services:
           - "4571:4571"
           - 8999:8080
         environment:
-          - SERVICES=s3,sqs
+          - SERVICES=s3,sqs,sns
           - DEBUG=${DEBUG- }
           - DOCKER_HOST=unix:///var/run/docker.sock
           - DEFAULT_REGION=eu-west-2
