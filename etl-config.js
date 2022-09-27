@@ -35,7 +35,7 @@ module.exports = {
     ENDPOINT: production ? null : 'http://localhost:4566',
     ACCESS_KEY_ID: process.env.STAFF_EVENT_SQS_ACCESS_KEY_ID || 'foobar',
     SECRET_ACCESS_KEY: process.env.STAFF_EVENT_SQS_SECRET_ACCESS_KEY || 'foobar',
-    TOPIC_ARN: process.env.STAFF_EVENT_SNS_TOPIC_ARN || 'arn:aws:sns:eu-west-2:000000000000:f5ebb929-0407-424b-b54e-3088dc801e77'
+    TOPIC_ARN: process.env.STAFF_EVENT_SNS_TOPIC_ARN || 'arn:aws:sns:eu-west-2:000000000000:domain-events'
   },
 
   // Extract valid source worksheet tabs
