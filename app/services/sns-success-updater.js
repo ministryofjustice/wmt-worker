@@ -14,7 +14,7 @@ function messageFrom (staffCode, availableHours) {
     eventType: 'staff.available.hours.changed',
     version: 1,
     description: 'Staff Available hours changed',
-    detailUrl: null,
+    detailUrl: '',
     occurredAt: new Date(),
     additionalInformation: {
       availableHours
