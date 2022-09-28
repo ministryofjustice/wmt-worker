@@ -119,11 +119,11 @@ jobs:
           command: 'sudo npm install -g npm@latest'
       - hmpps/install_aws_cli
       - run:
-          name: Wait for s3 to be ready
+          name: Wait for localstack to be ready
           command: curl -4 --connect-timeout 30 --retry-connrefused --retry 20 --retry-delay 5 http://localhost:4566
       - run:
-          name: Set up s3 bucket
-          command: test/integration/resources/setup-s3.sh
+          name: Set up AWS
+          command: test/integration/resources/setup-aws.sh
       - restore_cache:
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
