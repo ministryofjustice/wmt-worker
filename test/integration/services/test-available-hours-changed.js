@@ -19,7 +19,7 @@ function pollAndCheck () {
 }
 
 describe('SNS update data', function () {
-  it('must produce message available hours changed', function () {
+  it.only('must produce message available hours changed', function () {
     const reductions = 5
     const contractedHours = 37
     const staffCode = 'STAFF_CODE'
@@ -35,6 +35,8 @@ describe('SNS update data', function () {
           const personReference = body.personReference
           const [identifiers] = personReference.identifiers
           expect(identifiers.value.staffCode).to.equal('STAFF_CODE')
+          const eventType = data.MessageAttributes.eventType.StringValue
+          expect(eventType).to.equal('staff.available.hours.changed')
         })
       })
   })
