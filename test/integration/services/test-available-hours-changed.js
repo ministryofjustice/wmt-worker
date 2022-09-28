@@ -19,7 +19,7 @@ function pollAndCheck () {
 }
 
 describe('SNS update data', function () {
-  it.only('must produce message available hours changed', function () {
+  it('must produce message available hours changed', function () {
     const reductions = 5
     const contractedHours = 37
     const staffCode = 'STAFF_CODE'
