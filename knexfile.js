@@ -10,9 +10,6 @@ module.exports = {
   staging: {
     client: 'pg',
     connection: defaultConnection,
-    migrations: {
-      directory: 'migrations/staging'
-    },
     debug: false,
     pool: {
       min: 0,
@@ -24,12 +21,6 @@ module.exports = {
   app: {
     client: 'pg',
     connection: defaultConnection,
-    migrations: {
-      directory: 'migrations/app'
-    },
-    seeds: {
-      directory: 'seed/data/ref'
-    },
     debug: false,
     pool: {
       min: 0,
@@ -37,21 +28,5 @@ module.exports = {
       idleTimeoutMillis: 5000
     },
     acquireConnectionTimeout: 150000
-  },
-  dev: {
-    client: 'pg',
-    connection: defaultConnection,
-    seeds: {
-      directory: 'seed/data/dev'
-    },
-    debug: false
-  },
-  views: {
-    client: 'pg',
-    connection: defaultConnection,
-    seeds: {
-      directory: 'seed/views'
-    },
-    debug: false
   }
 }
