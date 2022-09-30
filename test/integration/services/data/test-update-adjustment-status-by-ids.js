@@ -2,7 +2,7 @@ const expect = require('chai').expect
 
 const appAdjustmentsHelper = require('../../../helpers/data/app-adjustments-helper')
 const updateAdjustmentStatusByIds = require('../../../../app/services/data/update-adjustment-status-by-ids')
-const getOpenAdjustments = require('../../../../app/services/data/get-open-adjustments')
+const getOpenAdjustments = require('../../../helpers/data/get-open-adjustments')
 
 let inserts = []
 let workloadReportId
