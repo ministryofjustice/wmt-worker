@@ -21,7 +21,6 @@
   },
   "nyc": {
     "exclude": [
-      "seed/**",
       "test/**"
     ],
     "all": true
