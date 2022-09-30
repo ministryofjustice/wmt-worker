@@ -15,7 +15,7 @@ parameters:
     type: string
     default: 18.9-browsers
   postgres_tag:
-    default: "11"
+    default: "14"
     type: string
   database_user:
     default: "root"
