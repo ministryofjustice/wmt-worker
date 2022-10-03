@@ -30,7 +30,6 @@ module.exports.insertMatchedWorkloadCalculations = function (inserts) {
   const matchedInserts = []
   const workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
   const offenderManagerTypeId = inserts.filter((item) => item.table === 'offender_manager_type')[0].id
-  const providerCode = inserts.filter((item) => item.table === 'ldu')[0].code
   const teamCode = inserts.filter((item) => item.table === 'team')[0].code
   const teamId = inserts.filter((item) => item.table === 'team')[0].id
   return knex('offender_manager').withSchema('app').returning('id').insert({ type_id: offenderManagerTypeId, forename: 'Offender', surname: 'Manager', key: 'OM567' })
@@ -86,13 +85,10 @@ module.exports.insertMatchedWorkloadCalculations = function (inserts) {
       const currentWmtPeriod = getWmtPeriod(new Date())
       const dateInPreviousWmtPeriod = currentWmtPeriod.startOfPeriod.minusMinutes(5)
       const workloadCalculationEntity = {
-        weekly_hours: module.exports.defaultWorkloadPointsCalculation.contracted_hours,
-        reductions: module.exports.defaultWorkloadPointsCalculation.reduction_hours,
         available_points: module.exports.defaultWorkloadPointsCalculation.available_points,
         workload_points: module.exports.defaultWorkloadPointsCalculation.total_points,
         staff_code: offenderManagerCode,
         team_code: teamCode,
-        provider_code: providerCode,
         calculated_date: dateInPreviousWmtPeriod,
         breakdown_data: '{}'
       }
@@ -143,13 +139,10 @@ module.exports.insertRealtimeWorkload = function (offenderManagerCode, teamCode,
   const currentWmtPeriod = getWmtPeriod(new Date())
   const dateInPreviousWmtPeriod = currentWmtPeriod.startOfPeriod.minusMinutes(5)
   const workloadCalculationEntity = {
-    weekly_hours: 20.0,
-    reductions: 10.0,
     available_points: 1500,
     workload_points: 1350,
     staff_code: offenderManagerCode,
     team_code: teamCode,
-    provider_code: providerCode,
     calculated_date: dateInPreviousWmtPeriod,
     breakdown_data: '{}'
   }

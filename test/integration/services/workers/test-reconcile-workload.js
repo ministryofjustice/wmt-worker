@@ -15,12 +15,11 @@ describe('services/workers/reconcile-workload', function () {
       .then(function (builtInserts) {
         const offenderManagerCode = builtInserts.filter((item) => item.table === 'offender_manager')[0].code
         const teamCode = builtInserts.filter((item) => item.table === 'team')[0].code
-        const providerCode = builtInserts.filter((item) => item.table === 'ldu')[0].code
-        return workloadCalculationHelper.insertRealtimeWorkload(offenderManagerCode, teamCode, providerCode)
+        return workloadCalculationHelper.insertRealtimeWorkload(offenderManagerCode, teamCode)
           .then(function (realtimeInserts) {
             return workloadCalculationHelper.insertMatchedWorkloadCalculations(inserts)
               .then(function (matchedInserts) {
-                return workloadCalculationHelper.insertRealtimeWorkload('NOBATCH1', 'TEAM1', 'PROVIDER1')
+                return workloadCalculationHelper.insertRealtimeWorkload('NOBATCH1', 'TEAM1')
                   .then(function (onlyRealtimeWorkloadInsert) {
                     inserts = builtInserts.concat(realtimeInserts).concat(matchedInserts).concat(onlyRealtimeWorkloadInsert)
                   })
@@ -45,7 +44,6 @@ describe('services/workers/reconcile-workload', function () {
       const noBatchCalculation = log.trackDifferentWorkload.getCall(0).args
       expect(noBatchCalculation[0]).to.deep.equal({
         availablepoints: 1500,
-        providerCode: 'PROVIDER1',
         staffCode: 'NOBATCH1',
         teamCode: 'TEAM1',
         workloadPoints: 1350
@@ -59,7 +57,6 @@ describe('services/workers/reconcile-workload', function () {
       const args = log.trackDifferentWorkload.getCall(1).args
       expect(args[0]).to.deep.equal({
         availablepoints: 1500,
-        providerCode: 'LDU1',
         staffCode: 'OM123',
         teamCode: 'TEAM1',
         workloadPoints: 1350
@@ -73,7 +70,6 @@ describe('services/workers/reconcile-workload', function () {
       const matchedArgument = log.trackSameWorkload.getCall(0)
       expect(matchedArgument.args[0]).to.deep.equal({
         availablepoints: 94,
-        providerCode: 'LDU1',
         staffCode: 'OM567',
         teamCode: 'TEAM1',
         workloadPoints: 99
