@@ -58,7 +58,6 @@ const logger = {
           properties: {
             staffCode: realtimeWorkload.staffCode,
             teamCode: realtimeWorkload.teamCode,
-            providerCode: realtimeWorkload.providerCode,
             availablePoints: realtimeWorkload.availablepoints,
             workloadPoints: realtimeWorkload.workloadPoints,
             wmtPeriod: `${wmtPeriod.startOfPeriod.formatDate()} to ${wmtPeriod.endOfPeriod.formatDate()}`
@@ -76,7 +75,6 @@ const logger = {
           properties: {
             staffCode: realtimeWorkload.staffCode,
             teamCode: realtimeWorkload.teamCode,
-            providerCode: realtimeWorkload.providerCode,
             realtimeAvailablePoints: realtimeWorkload.availablepoints,
             realtimeWorkloadPoints: realtimeWorkload.workloadPoints,
             batchAvailablePoints: batchWorkload.availablePoints,

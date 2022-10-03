@@ -5,8 +5,7 @@ module.exports = function (wmtPeriod) {
     knex.raw('DISTINCT ON (staff_code) available_points as availablePoints'),
     'workload_points as workloadPoints',
     'staff_code as staffCode',
-    'team_code as teamCode',
-    'provider_code as providerCode'
+    'team_code as teamCode'
   ]
 
   return knex('workload_calculation')
