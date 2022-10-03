@@ -135,7 +135,7 @@ module.exports.insertDependencies = function (inserts) {
   return promise
 }
 
-module.exports.insertRealtimeWorkload = function (offenderManagerCode, teamCode, providerCode) {
+module.exports.insertRealtimeWorkload = function (offenderManagerCode, teamCode) {
   const currentWmtPeriod = getWmtPeriod(new Date())
   const dateInPreviousWmtPeriod = currentWmtPeriod.startOfPeriod.minusMinutes(5)
   const workloadCalculationEntity = {
