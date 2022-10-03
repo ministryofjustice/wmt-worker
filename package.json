@@ -18,7 +18,7 @@
     "record-build-info": "node ./bin/record-build-info",
     "security_audit": "npx audit-ci --config audit-ci.json",
     "lint": "standard",
-    "unimported": "npx unimported"
+    "unimported": "unimported"
   },
   "nyc": {
     "exclude": [
