@@ -39,7 +39,7 @@ let getPointsConfigurationStub
 let getOffenderManagerTypeIdStub
 let insertWorkloadPointsCalculationsStub
 let updateWorkloadPointsCalculationsStub
-let getOffenderManagerKeyByWorkloadOwnerIdStub
+let getOffenderManagerByWorkloadOwnerIdStub
 let staffAvailableHoursChangeStub
 let getAppReductions
 let getAdjustmentPoints
@@ -57,7 +57,7 @@ describe('services/workers/calculate-workload-points', function () {
     getContractedHours = sinon.stub()
     getPointsConfigurationStub = sinon.stub()
     getOffenderManagerTypeIdStub = sinon.stub()
-    getOffenderManagerKeyByWorkloadOwnerIdStub = sinon.stub()
+    getOffenderManagerByWorkloadOwnerIdStub = sinon.stub()
     insertWorkloadPointsCalculationsStub = sinon.stub()
     updateWorkloadPointsCalculationsStub = sinon.stub()
     checkForDuplicateCalculation = sinon.stub()
@@ -87,7 +87,7 @@ describe('services/workers/calculate-workload-points', function () {
       '../data/get-app-reduction-hours': getAppReductions,
       '../data/get-workload-points-configuration': getPointsConfigurationStub,
       '../data/get-offender-manager-type-id': getOffenderManagerTypeIdStub,
-      '../data/get-offender-manager-key-by-workload-owner-id': getOffenderManagerKeyByWorkloadOwnerIdStub,
+      '../data/get-offender-manager-key-by-workload-owner-id': getOffenderManagerByWorkloadOwnerIdStub,
       '../data/get-contracted-hours': getContractedHours,
       '../data/insert-workload-points-calculation': insertWorkloadPointsCalculationsStub,
       '../data/update-workload-points-calculation': updateWorkloadPointsCalculationsStub,
@@ -107,7 +107,7 @@ describe('services/workers/calculate-workload-points', function () {
     probationRulesStub.calculateNominalTarget.returns(NOMINAL_TARGET)
     probationRulesStub.calculateAvailablePoints.returns(AVAILABLE_POINTS)
     updateWorkloadPointsCalculationsStub.resolves(0)
-    getOffenderManagerKeyByWorkloadOwnerIdStub.resolves('String')
+    getOffenderManagerByWorkloadOwnerIdStub.resolves({ staffCode: 'STAFF1', teamCode: 'TM1' })
   })
 
   it('calls the get workloads promise correctly', function () {
@@ -213,8 +213,9 @@ describe('services/workers/calculate-workload-points', function () {
   })
 
   it('should emit available points change events when it is an UPDATE', function () {
-    const STAFF_CODE = 'STAFFCODE1'
-    getOffenderManagerKeyByWorkloadOwnerIdStub.withArgs(workloads.workloadOwnerId).resolves(STAFF_CODE)
+    const staffCode = 'STAFFCODE1'
+    const teamCode = 'TM1'
+    getOffenderManagerByWorkloadOwnerIdStub.withArgs(workloads.workloadOwnerId).resolves({ staffCode, teamCode })
 
     task = {
       id: 1,
@@ -227,7 +228,7 @@ describe('services/workers/calculate-workload-points', function () {
 
     return calculateWorkloadPoints.execute(task).then(function () {
       expect(
-        staffAvailableHoursChangeStub.calledWith(STAFF_CODE, CONTRACTED_HOURS, REDUCTION_HOURS)
+        staffAvailableHoursChangeStub.calledWith(staffCode, teamCode, CONTRACTED_HOURS, REDUCTION_HOURS)
       ).to.equal(true)
     })
   })
