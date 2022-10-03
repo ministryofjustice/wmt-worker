@@ -7,7 +7,6 @@ const reductionsWorkerCourtReporters = require('./workers/court-reporters-reduct
 const adjustmentsWorker = require('./workers/adjustments-worker')
 const createCourtReports = require('./workers/create-court-reports')
 const courtReportsCalculation = require('./workers/court-reports-calculations')
-const createTasksForMissing = require('./workers/create-tasks-for-missing')
 const generateDashboard = require('./workers/generate-dashboard')
 const removeDuplicates = require('./workers/remove-duplicates')
 const checkForMissingDivisions = require('./workers/check-for-missing-divisions')
@@ -31,7 +30,6 @@ module.exports = function (taskType) {
     case taskTypes.PROCESS_ADJUSTMENTS: return adjustmentsWorker
     case taskTypes.CREATE_COURT_REPORTS: return createCourtReports
     case taskTypes.COURT_REPORTS_CALCULATION: return courtReportsCalculation
-    case taskTypes.CREATE_TASKS_FOR_MISSING: return createTasksForMissing
     case taskTypes.GENERATE_DASHBOARD: return generateDashboard
     case taskTypes.REMOVE_DUPLICATES: return removeDuplicates
     case taskTypes.CHECK_FOR_MISSING_DIVISIONS: return checkForMissingDivisions
