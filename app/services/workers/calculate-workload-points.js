@@ -112,8 +112,8 @@ module.exports.execute = async function (task) {
                               cmsAdjustments,
                               gsAdjustments,
                               armsTotalCases).then(function () {
-                              return getOffenderManagerByWorkownerId(workload.workloadOwnerId).then(function (staffCode) {
-                                return snsSuccessUpdater.staffAvailableHoursChange(staffCode, contractedHours, reductions)
+                              return getOffenderManagerByWorkownerId(workload.workloadOwnerId).then(function (staff) {
+                                return snsSuccessUpdater.staffAvailableHoursChange(staff.staffCode, staff.teamCode, contractedHours, reductions)
                               })
                             })
                           default:

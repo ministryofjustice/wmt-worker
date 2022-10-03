@@ -23,7 +23,8 @@ describe('SNS update data', function () {
     const reductions = 5
     const contractedHours = 37
     const staffCode = 'STAFF_CODE'
-    const staffAvailableHoursChange = snsSuccessUpdater.staffAvailableHoursChange(staffCode, contractedHours, reductions)
+    const teamCode = 'TEAM1'
+    const staffAvailableHoursChange = snsSuccessUpdater.staffAvailableHoursChange(staffCode, teamCode, contractedHours, reductions)
 
     return staffAvailableHoursChange
       .then(function () {
@@ -33,8 +34,10 @@ describe('SNS update data', function () {
           expect(additionalInformation.availableHours).to.equal(32)
 
           const personReference = body.personReference
-          const [identifiers] = personReference.identifiers
-          expect(identifiers.value.staffCode).to.equal('STAFF_CODE')
+          const staffCodeIdentifier = personReference.identifiers.find((identifier) => identifier.type === 'staffCode')
+          expect(staffCodeIdentifier.value).to.equal(staffCode)
+          const teamCodeIdentifier = personReference.identifiers.find((identifier) => identifier.type === 'teamCode')
+          expect(teamCodeIdentifier.value).to.equal(teamCode)
           const eventType = data.MessageAttributes.eventType.StringValue
           expect(eventType).to.equal('staff.available.hours.changed')
         })
