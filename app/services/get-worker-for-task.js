@@ -10,8 +10,6 @@ const courtReportsCalculation = require('./workers/court-reports-calculations')
 const generateDashboard = require('./workers/generate-dashboard')
 const createOmicWorkload = require('./workers/create-omic-workload')
 const calculateOmicWorkloadPoints = require('./workers/calculate-omic-workload-points')
-const migrateReductions = require('./workers/migrate-reductions')
-const migrateContractedHours = require('./workers/migrate-contracted-hours')
 const recalculateWorkloadPoints = require('./workers/recalculate-workload-points')
 const importReductionsAndContractedHours = require('./workers/import-reductions-and-contracted-hours')
 const restructureOffenderManagers = require('./workers/restructure-offender-managers')
@@ -29,8 +27,6 @@ module.exports = function (taskType) {
     case taskTypes.CREATE_COURT_REPORTS: return createCourtReports
     case taskTypes.COURT_REPORTS_CALCULATION: return courtReportsCalculation
     case taskTypes.GENERATE_DASHBOARD: return generateDashboard
-    case taskTypes.MIGRATE_REDUCTIONS: return migrateReductions
-    case taskTypes.MIGRATE_CONTRACTED_HOURS: return migrateContractedHours
     case taskTypes.CREATE_OMIC_WORKLOAD: return createOmicWorkload
     case taskTypes.CALCULATE_OMIC_WORKLOAD_POINTS: return calculateOmicWorkloadPoints
     case taskTypes.RECALCULATE_WORKLOAD_POINTS: return recalculateWorkloadPoints
