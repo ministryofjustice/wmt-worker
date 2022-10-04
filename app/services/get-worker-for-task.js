@@ -8,7 +8,6 @@ const adjustmentsWorker = require('./workers/adjustments-worker')
 const createCourtReports = require('./workers/create-court-reports')
 const courtReportsCalculation = require('./workers/court-reports-calculations')
 const generateDashboard = require('./workers/generate-dashboard')
-const checkForMissingDivisions = require('./workers/check-for-missing-divisions')
 const createOmicWorkload = require('./workers/create-omic-workload')
 const calculateOmicWorkloadPoints = require('./workers/calculate-omic-workload-points')
 const migrateReductions = require('./workers/migrate-reductions')
@@ -30,7 +29,6 @@ module.exports = function (taskType) {
     case taskTypes.CREATE_COURT_REPORTS: return createCourtReports
     case taskTypes.COURT_REPORTS_CALCULATION: return courtReportsCalculation
     case taskTypes.GENERATE_DASHBOARD: return generateDashboard
-    case taskTypes.CHECK_FOR_MISSING_DIVISIONS: return checkForMissingDivisions
     case taskTypes.MIGRATE_REDUCTIONS: return migrateReductions
     case taskTypes.MIGRATE_CONTRACTED_HOURS: return migrateContractedHours
     case taskTypes.CREATE_OMIC_WORKLOAD: return createOmicWorkload
