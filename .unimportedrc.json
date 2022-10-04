@@ -1,5 +1,0 @@
-{
-    "entry": ["start.js", "start-server.js"],
-    "extensions": [".js"],
-    "ignorePatterns": ["**/node_modules/**", "test/**"]
-  }
