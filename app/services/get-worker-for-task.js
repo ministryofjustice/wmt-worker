@@ -11,8 +11,6 @@ const generateDashboard = require('./workers/generate-dashboard')
 const createOmicWorkload = require('./workers/create-omic-workload')
 const calculateOmicWorkloadPoints = require('./workers/calculate-omic-workload-points')
 const recalculateWorkloadPoints = require('./workers/recalculate-workload-points')
-const importReductionsAndContractedHours = require('./workers/import-reductions-and-contracted-hours')
-const restructureOffenderManagers = require('./workers/restructure-offender-managers')
 const refreshViews = require('./workers/refresh-views')
 const reconcileWorkload = require('./workers/reconcile-workload')
 // ALL WORKERS SHOULD HAVE A METHOD `execute(task)` that returns a Promise
@@ -30,8 +28,6 @@ module.exports = function (taskType) {
     case taskTypes.CREATE_OMIC_WORKLOAD: return createOmicWorkload
     case taskTypes.CALCULATE_OMIC_WORKLOAD_POINTS: return calculateOmicWorkloadPoints
     case taskTypes.RECALCULATE_WORKLOAD_POINTS: return recalculateWorkloadPoints
-    case taskTypes.IMPORT_REDUCTIONS_AND_CONTRACTED_HOURS: return importReductionsAndContractedHours
-    case taskTypes.RESTRUCTURE_OFFENDER_MANAGER: return restructureOffenderManagers
     case taskTypes.REFRESH_VIEWS: return refreshViews
     case taskTypes.RECONCILE_WORKLOAD: return reconcileWorkload
   }
