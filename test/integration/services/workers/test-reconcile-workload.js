@@ -54,7 +54,7 @@ describe('services/workers/reconcile-workload', function () {
       })
       expect(noBatchCalculation[2].startOfPeriod.formatDate()).to.equal(previousDayWmtPeriod.startOfPeriod.formatDate())
       expect(noBatchCalculation[2].endOfPeriod.formatDate()).to.equal(previousDayWmtPeriod.endOfPeriod.formatDate())
-   
+
       const args = log.trackDifferentWorkload.getCall(1).args
       expect(args[0]).to.deep.equal({
         availablepoints: 1500,
