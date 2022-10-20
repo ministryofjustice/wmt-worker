@@ -52,8 +52,9 @@ describe('services/workers/reconcile-workload', function () {
         availablePoints: -1,
         totalPoints: -1
       })
-      expect(JSON.stringify(noBatchCalculation[2])).to.equal(JSON.stringify(previousDayWmtPeriod))
-
+      expect(noBatchCalculation[2].startOfPeriod.formatDate()).to.equal(previousDayWmtPeriod.startOfPeriod.formatDate())
+      expect(noBatchCalculation[2].endOfPeriod.formatDate()).to.equal(previousDayWmtPeriod.endOfPeriod.formatDate())
+   
       const args = log.trackDifferentWorkload.getCall(1).args
       expect(args[0]).to.deep.equal({
         availablepoints: 1500,
@@ -65,7 +66,8 @@ describe('services/workers/reconcile-workload', function () {
         availablePoints: 94,
         totalPoints: 99
       })
-      expect(JSON.stringify(args[2])).to.equal(JSON.stringify(previousDayWmtPeriod))
+      expect(args[2].startOfPeriod.formatDate()).to.equal(previousDayWmtPeriod.startOfPeriod.formatDate())
+      expect(args[2].endOfPeriod.formatDate()).to.equal(previousDayWmtPeriod.endOfPeriod.formatDate())
 
       const matchedArgument = log.trackSameWorkload.getCall(0)
       expect(matchedArgument.args[0]).to.deep.equal({
@@ -74,7 +76,8 @@ describe('services/workers/reconcile-workload', function () {
         teamCode: 'TEAM1',
         workloadPoints: 99
       })
-      expect(JSON.stringify(matchedArgument.args[1])).to.deep.equal(JSON.stringify(previousDayWmtPeriod))
+      expect(matchedArgument.args[1].startOfPeriod.formatDate()).to.equal(previousDayWmtPeriod.startOfPeriod.formatDate())
+      expect(matchedArgument.args[1].endOfPeriod.formatDate()).to.equal(previousDayWmtPeriod.endOfPeriod.formatDate())
     })
   })
 
