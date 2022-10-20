@@ -50,6 +50,19 @@ const logger = {
       log.info(jobName + ' took ' + timeTaken)
     }
   },
+  trackTotalCases: function (totalCaseCount) {
+    if (appinsights.defaultClient) {
+      appinsights.defaultClient
+        .trackEvent({
+          name: 'totalCaseCount',
+          properties: {
+            totalCaseCount
+          }
+        })
+    } else {
+      log.info('Total case count: ' + totalCaseCount)
+    }
+  },
   trackSameWorkload: function (realtimeWorkload, wmtPeriod) {
     if (appinsights.defaultClient) {
       appinsights.defaultClient
