@@ -20,10 +20,13 @@ const currentWorkloads = [
 describe('services/record-etl-execution-time', function () {
   before(function () {
     getWorkloadReportById = sinon.stub()
-    log = { trackExecutionTime: sinon.stub(), info: sinon.stub(), error: function (message) {}, jobError: sinon.stub() }
+    const getTotalCaseCount = sinon.stub()
+    getTotalCaseCount.resolves({})
+    log = { trackExecutionTime: sinon.stub(), trackTotalCases: sinon.stub(), info: sinon.stub(), error: function (message) {}, jobError: sinon.stub() }
     recordEtlExecutionTime = proxyquire('../../../../app/services/record-etl-execution-time', {
       './data/get-workload-report-by-id': getWorkloadReportById,
-      './log': log
+      './log': log,
+      './data/get-total-case-count': getTotalCaseCount
     })
   })
 
