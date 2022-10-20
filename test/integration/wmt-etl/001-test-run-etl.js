@@ -3,7 +3,7 @@ const sinon = require('sinon')
 const fs = require('fs')
 const proxyquire = require('proxyquire')
 
-const { PutObjectCommand, DeleteObjectCommand, PutObjectTaggingCommand } = require('@aws-sdk/client-s3')
+const { PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3')
 const cleanTables = require('../../../app/wmt-etl/clean-tables')
 
 const knex = require('../../../knex').stagingSchema
@@ -59,45 +59,6 @@ function putEmptyToS3 (key) {
   }))
 }
 
-function tagFileRead (file) {
-  return s3Client.send(new PutObjectTaggingCommand({
-    Bucket: config.S3.BUCKET_NAME,
-    Key: `extract/${file}`,
-    Tagging: {
-      TagSet: [
-        {
-          Key: config.READ_TAG_KEY,
-          Value: 'true'
-        }
-      ]
-    }
-  }))
-}
-
-describe('etl does not run when only CRC file has been uploaded', function () {
-  beforeEach(function () {
-    expectedInputData = getExtractFileData()
-    return cleanTables().then(function () {
-      return putToS3('WMT_CRC.xlsx').then(function () {
-        return pollAndCheck()
-      })
-    })
-  })
-
-  it('should not run ETL', function () {
-    return Promise.all(config.VALID_SHEET_NAMES.map(function (sheetName) {
-      return knex(sheetName).withSchema('staging').column(config.VALID_COLUMNS[sheetName])
-        .then(function (results) {
-          expect(results.length).to.equal(0)
-        })
-    }))
-  })
-
-  this.afterEach(function () {
-    return deleteFromS3('extract/WMT_CRC.xlsx')
-  })
-})
-
 describe('etl runs when only PS file has been updated', function () {
   beforeEach(function () {
     expectedInputData = getExtractFileData()
@@ -123,37 +84,6 @@ describe('etl runs when only PS file has been updated', function () {
   afterEach(function () {
     return deleteFromS3('extract/WMT_PS.xlsx').then(function () {
       return deleteFromS3('extract/Readme.md')
-    })
-  })
-})
-
-describe('etl does not run when only the CRC has been updated and existing PS is read', function () {
-  beforeEach(function () {
-    expectedInputData = getExtractFileData()
-
-    return cleanTables().then(function () {
-      return putToS3('WMT_PS.xlsx').then(function () {
-        return tagFileRead('WMT_PS.xlsx').then(function () {
-          return putToS3('WMT_CRC.xlsx').then(function () {
-            return pollAndCheck()
-          })
-        })
-      })
-    })
-  })
-
-  it('should not run ETL', function () {
-    return Promise.all(config.VALID_SHEET_NAMES.map(function (sheetName) {
-      return knex(sheetName).withSchema('staging').column(config.VALID_COLUMNS[sheetName])
-        .then(function (results) {
-          expect(results.length).to.equal(0)
-        })
-    }))
-  })
-
-  afterEach(function () {
-    return deleteFromS3('extract/WMT_CRC.xlsx').then(function () {
-      return deleteFromS3('extract/WMT_PS.xlsx')
     })
   })
 })

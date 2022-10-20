@@ -26,4 +26,4 @@ aws --endpoint-url=http://localhost:4566 sns subscribe --topic-arn arn:aws:sns:e
 echo "S3 created bucket"
 
 # to put a file using command line
-# aws --endpoint-url=http://localhost:4566 s3api put-object --bucket wmt-worker --key extract/WMP_CRC.xlsx --body test/integration/resources/WMP_CRC.xlsx
+# aws --endpoint-url=http://localhost:4566 s3api put-object --bucket wmt-worker --key extract/WMP_PS.xlsx --body test/integration/resources/WMP_PS.xlsx
