@@ -55,10 +55,10 @@ generic-service:
       DASHBOARD_S3_ACCESS_KEY_ID: "access_key_id"
       DASHBOARD_S3_SECRET_ACCESS_KEY: "secret_access_key"
       WMT_DASHBOARD_BUCKET: "bucket_name"
-    hmpps-workload-s3-extract-sqs-output:
+    hmpps-reductions-completed-sqs-instance-output:
       ETL_SQS_ACCESS_KEY_ID: "access_key_id"
       ETL_SQS_SECRET_ACCESS_KEY: "secret_access_key"
-      ETL_SQS_QUEUE_URL: "sqs_url"
+      ETL_SQS_QUEUE_URL: "sqs_queue_url"
     sqs-hmpps-audit-secret:
       AUDIT_SQS_ACCESS_KEY_ID: "access_key_id"
       AUDIT_SQS_SECRET_ACCESS_KEY: "secret_access_key"
