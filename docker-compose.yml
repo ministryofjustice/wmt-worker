@@ -35,7 +35,7 @@ services:
       depends_on:
           - "postgres"
     postgres:
-      image: postgres:14
+      image: postgres:15
       networks:
         - hmpps
       container_name: hmpps-workload-postgres
