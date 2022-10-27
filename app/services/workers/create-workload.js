@@ -31,19 +31,19 @@ module.exports.execute = async function (task) {
       return Promise.resolve()
     })
       .then(function () {
-        const reductionsWorkerTask = new Task(
+        const processAdjustments = new Task(
           undefined,
           submittingAgent.WORKER,
-          taskType.PROCESS_REDUCTIONS,
+          taskType.PROCESS_ADJUSTMENTS,
           task.additionalData,
           workloadReportId,
           undefined,
           undefined,
           taskStatus.AWAITING_DUPLICATE_CHECK
         )
-        return createNewTasks([reductionsWorkerTask])
+        return createNewTasks([processAdjustments])
           .then(function () {
-            logger.info('Reduction Worker Task created')
+            logger.info('Process adjustments task created')
           })
       })
   })

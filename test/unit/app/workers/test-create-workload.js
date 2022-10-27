@@ -37,7 +37,7 @@ const appWorkload = 'This is a fake app workload'
 const nextTask = new Task(
   undefined,
   submittingAgent.WORKER,
-  taskType.PROCESS_REDUCTIONS,
+  taskType.PROCESS_ADJUSTMENTS,
   task.additionalData,
   task.workloadReportId,
   undefined,
