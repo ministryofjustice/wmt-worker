@@ -43,6 +43,10 @@ module.exports.getReductionsForWorkloadOwnerId = function (workloadOwnerId) {
   return knex('reductions').withSchema('app').where('workload_owner_id', workloadOwnerId)
 }
 
+module.exports.getReductionsByIds = function (ids) {
+  return knex('reductions').withSchema('app').whereIn('id', ids)
+}
+
 module.exports.removeDependencies = function (inserts) {
   return removeData(inserts)
 }
