@@ -1,4 +1,4 @@
-FROM node:18.10-bullseye-slim as base
+FROM node:18.12-bullseye-slim as base
 
 ARG BUILD_NUMBER=1_0_0
 ARG GIT_REF=not-available

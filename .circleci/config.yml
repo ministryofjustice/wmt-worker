@@ -13,7 +13,7 @@ parameters:
     default: manage_a_workforce_dev
   node-version:
     type: string
-    default: 18.9-browsers
+    default: 18.12-browsers
   postgres_tag:
     default: "14"
     type: string
