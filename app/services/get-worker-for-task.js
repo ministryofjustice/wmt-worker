@@ -2,7 +2,6 @@ const taskTypes = require('../constants/task-type')
 const calculateWorkloadPoints = require('./workers/calculate-workload-points')
 const processImport = require('./workers/process-import')
 const createWorkload = require('./workers/create-workload')
-const reductionsWorkerCourtReporters = require('./workers/court-reporters-reductions-worker')
 const adjustmentsWorker = require('./workers/adjustments-worker')
 const createCourtReports = require('./workers/create-court-reports')
 const courtReportsCalculation = require('./workers/court-reports-calculations')
@@ -18,7 +17,6 @@ module.exports = function (taskType) {
     case taskTypes.CALCULATE_WORKLOAD_POINTS: return calculateWorkloadPoints
     case taskTypes.PROCESS_IMPORT: return processImport
     case taskTypes.CREATE_WORKLOAD: return createWorkload
-    case taskTypes.PROCESS_REDUCTIONS_COURT_REPORTERS: return reductionsWorkerCourtReporters
     case taskTypes.PROCESS_ADJUSTMENTS: return adjustmentsWorker
     case taskTypes.CREATE_COURT_REPORTS: return createCourtReports
     case taskTypes.COURT_REPORTS_CALCULATION: return courtReportsCalculation
