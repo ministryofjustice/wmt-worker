@@ -7,9 +7,7 @@ const status = require('../../../../app/constants/reduction-status')
 const dateHelper = require('../../../helpers/data/date-helper')
 
 let statusUpdater
-let updateReductionStatusByIds
 let updateAdjustmentStatusByIds
-let auditReductionStatusChange
 
 const activeReduction = {
   id: 1,
@@ -87,34 +85,15 @@ const reductions = [activeReduction, scheduledReduction, archivedReduction, exis
 
 describe('services/update-adjustment-reduction-status', function () {
   beforeEach(function () {
-    updateReductionStatusByIds = sinon.stub()
     updateAdjustmentStatusByIds = sinon.stub()
-    auditReductionStatusChange = sinon.stub()
     statusUpdater = proxyquire('../../../../app/services/update-adjustment-reduction-status', {
       './log': { info: function (message) { } },
-      './data/update-reduction-status-by-ids': updateReductionStatusByIds,
-      './data/update-adjustment-status-by-ids': updateAdjustmentStatusByIds,
-      './audit-service': { auditReductionStatusChange }
-    })
-  })
-
-  describe('updateReductionStatuses', function () {
-    it('should update the reduction statuses and call the database update service', function () {
-      updateReductionStatusByIds.resolves(1)
-      return statusUpdater.updateReductionStatuses(reductions).then(function () {
-        expect(updateReductionStatusByIds.calledWith([activeReduction.id], status.ACTIVE)).to.be.equal(true)
-        expect(auditReductionStatusChange.calledWith([activeReduction], status.ACTIVE)).to.equal(true)
-        expect(updateReductionStatusByIds.calledWith([scheduledReduction.id], status.SCHEDULED)).to.be.equal(true)
-        expect(auditReductionStatusChange.calledWith([scheduledReduction], status.SCHEDULED)).to.equal(true)
-        expect(updateReductionStatusByIds.calledWith([archivedReduction.id], status.ARCHIVED)).to.be.equal(true)
-        expect(auditReductionStatusChange.calledWith([archivedReduction], status.ARCHIVED)).to.equal(true)
-      })
+      './data/update-adjustment-status-by-ids': updateAdjustmentStatusByIds
     })
   })
 
   describe('updateAdjustmentStatuses', function () {
     it('should update the adjustment statuses and call the database update service', function () {
-      updateReductionStatusByIds.resolves(1)
       return statusUpdater.updateAdjustmentStatuses(reductions).then(function () {
         expect(updateAdjustmentStatusByIds.calledWith([activeReduction.id], status.ACTIVE)).to.be.equal(true)
         expect(updateAdjustmentStatusByIds.calledWith([scheduledReduction.id], status.SCHEDULED)).to.be.equal(true)

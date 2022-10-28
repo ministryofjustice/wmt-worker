@@ -40,8 +40,8 @@ const appCourtReports = 'This is a fake app court reports'
 const nextTask = new Task(
   undefined,
   submittingAgent.WORKER,
-  taskType.PROCESS_REDUCTIONS_COURT_REPORTERS,
-  task.additionalData,
+  taskType.COURT_REPORTS_CALCULATION,
+  { workloadBatch: task.additionalData, operationType: 'INSERT' },
   task.workloadReportId,
   undefined,
   undefined,

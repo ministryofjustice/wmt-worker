@@ -10,6 +10,7 @@ const insertWorkloadOwnerAndDependencies = require('../insert-workload-owner-and
 const insertCourtReports = require('../data/insert-app-court-reports')
 const createNewTasks = require('../data/create-tasks')
 const { arrayToPromise } = require('../helpers/promise-helper')
+const operationType = require('../../constants/calculation-tasks-operation-type')
 
 module.exports.execute = async function (task) {
   const batchSize = task.additionalData.batchSize
@@ -35,17 +36,21 @@ module.exports.execute = async function (task) {
         return Promise.resolve()
       })
         .then(function () {
-          const reductionsWorkerTask = new Task(
+          const courtReportsCalculationAdditionalData = {
+            workloadBatch: task.additionalData,
+            operationType: operationType.INSERT
+          }
+          const courtReportsCalculationTask = new Task(
             undefined,
             submittingAgent.WORKER,
-            taskType.PROCESS_REDUCTIONS_COURT_REPORTERS,
-            task.additionalData,
+            taskType.COURT_REPORTS_CALCULATION,
+            courtReportsCalculationAdditionalData,
             workloadReportId,
             undefined,
             undefined,
             taskStatus.AWAITING_DUPLICATE_CHECK
           )
-          return createNewTasks([reductionsWorkerTask])
+          return createNewTasks([courtReportsCalculationTask])
             .then(function () {
               logger.info('Court Reporters Reduction Worker Task created')
             })
