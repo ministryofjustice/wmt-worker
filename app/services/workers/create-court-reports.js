@@ -52,7 +52,7 @@ module.exports.execute = async function (task) {
           )
           return createNewTasks([courtReportsCalculationTask])
             .then(function () {
-              logger.info('Court Reporters Reduction Worker Task created')
+              logger.info('Court Reporters calculation Worker Task created')
             })
         })
     })
