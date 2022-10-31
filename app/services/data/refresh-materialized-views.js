@@ -7,6 +7,6 @@ module.exports = function () {
     .then(function () {
       return knex
         .schema
-        .raw('REFRESH MATERIALIZED VIEW app.cms_export_view')
+        .raw('REFRESH MATERIALIZED VIEW app.enriched_cms_export_view')
     })
 }
