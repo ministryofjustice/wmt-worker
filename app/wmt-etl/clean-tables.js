@@ -7,8 +7,8 @@ module.exports = function () {
   }).then(function () {
     return knex('tasks').withSchema('app').del()
   }).then(function () {
-    return knex('tiers').withSchema('app').del()
+    return knex('tiers').withSchema('app').truncate()
   }).then(function () {
-    return knex('case_details').withSchema('app').del()
+    return knex('case_details').withSchema('app').truncate()
   })
 }
