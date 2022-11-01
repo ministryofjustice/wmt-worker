@@ -6,5 +6,9 @@ module.exports = function () {
     return knex(table).withSchema('staging').del()
   }).then(function () {
     return knex('tasks').withSchema('app').del()
+  }).then(function () {
+    return knex('tiers').withSchema('app').del()
+  }).then(function () {
+    return knex('case_details').withSchema('app').del()
   })
 }
