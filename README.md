@@ -1,15 +1,15 @@
 # Workload Management Tool - Worker application
 
 ## Pre-requisites
-- Node v14 (managed using [nvm](https://github.com/creationix/nvm))
+- Node v18 (managed using [nvm](https://github.com/creationix/nvm))
 
 On OSX (using [homebrew](https://brew.sh/)):
 
 - `brew install nvm`
 - Follow the instructions in the brew installer output
 
-Install Node version 14
-- `nvm install 14`
+Install Node version 18
+- `nvm install 18`
 
 Install Husky
 - `npm install -g husky`
@@ -19,7 +19,7 @@ Run prepare task
 
 ## Getting Started
 
-This is the asynchronis worker for the WMT project. It is responsible for
+This is the asynchronous worker for the WMT project. It is responsible for
 polling the `app.tasks` table, picking up tasks which are marked as `PENDING`,
 processing them and recording the result.
 
@@ -32,7 +32,7 @@ npm start
 To run the unit tests run:
 
 ```shell
-npm run test
+npm test
 ```
 
 To run the integration tests run:
