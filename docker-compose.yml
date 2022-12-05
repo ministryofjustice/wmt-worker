@@ -15,7 +15,7 @@ services:
           - DOCKER_HOST=unix:///var/run/docker.sock
           - DEFAULT_REGION=eu-west-2
         volumes:
-          - "${TMPDIR:-/tmp/localstack}:/tmp/localstack"
+          - "${TMPDIR:-/tmp/localstack}:/var/lib/localstack"
           - "/var/run/docker.sock:/var/run/docker.sock"
           - $PWD/test/integration/resources:/docker-entrypoint-initaws.d
     hmpps-workload:
@@ -35,7 +35,7 @@ services:
       depends_on:
           - "postgres"
     postgres:
-      image: postgres:14
+      image: postgres:11
       networks:
         - hmpps
       container_name: hmpps-workload-postgres
