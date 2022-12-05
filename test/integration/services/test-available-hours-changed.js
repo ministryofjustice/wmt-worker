@@ -3,8 +3,8 @@ const getSqsClient = require('../../../app/services/aws/sqs/get-sqs-client')
 const receiveSqsMessage = require('../../../app/services/aws/sqs/receive-sqs-message')
 const deleteSqsMessage = require('../../../app/services/aws/sqs/delete-sqs-message')
 const snsSuccessUpdater = require('../../../app/services/sns-success-updater')
-const sqsClient = getSqsClient({ region: 'eu-west-2', accessKeyId: 'foobar', secretAccessKey: 'foobar', endpoint: 'http://localhost:4566' })
-const queueURL = 'http://localhost:4566/000000000000/domain_event_queue'
+const sqsClient = getSqsClient({ region: 'eu-west-2', accessKeyId: 'foobar', secretAccessKey: 'foobar', endpoint: 'http://127.0.0.1:4566' })
+const queueURL = 'http://127.0.0.1:4566/000000000000/domain_event_queue'
 
 function pollAndCheck () {
   return receiveSqsMessage(sqsClient, queueURL).then(function (data) {
