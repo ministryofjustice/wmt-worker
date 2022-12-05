@@ -7,18 +7,39 @@ const deleteSqsMessage = require('../../../app/services/aws/sqs/delete-sqs-messa
 const sqsClient = getSqsClient({ region: AUDIT_SQS.REGION, accessKeyId: AUDIT_SQS.ACCESS_KEY_ID, secretAccessKey: AUDIT_SQS.SECRET_ACCESS_KEY, endpoint: AUDIT_SQS.ENDPOINT })
 const queueURL = AUDIT_SQS.QUEUE_URL
 
-function pollAndCheck () {
+function deleteFromQueue () {
   return receiveSqsMessage(sqsClient, queueURL).then(function (data) {
     if (data.Messages) {
       return deleteSqsMessage(sqsClient, queueURL, data.Messages[0].ReceiptHandle).then(function () {
-        return data.Messages[0]
+        console.log('deleting a message')
+        return deleteFromQueue()
+      })
+    } else {
+      console.log('no messages left on queue')
+    }
+  })
+}
+
+function pollAndCheck (what) {
+  return receiveSqsMessage(sqsClient, queueURL).then(function (data) {
+    if (data.Messages) {
+      return deleteSqsMessage(sqsClient, queueURL, data.Messages[0].ReceiptHandle).then(function () {
+        const body = JSON.parse(data.Messages[0].Body)
+        if (body.what === what) {
+          return body
+        }
+        return pollAndCheck(what)
       })
     }
-    return pollAndCheck()
+    return pollAndCheck(what)
   })
 }
 
 describe('Audit Service', function () {
+  before(() => {
+    return deleteFromQueue()
+  })
+
   it('must produce message after a contracted hours has been created', function () {
     const forename = 'Offender'
     const surname = 'Manager'
@@ -32,8 +53,7 @@ describe('Audit Service', function () {
 
     return auditService.auditContractedHoursCreate(forename, surname, teamCode, teamDescription, lduCode, lduDescription, regionCode, regionDescription, contractedHours)
       .then(function () {
-        return pollAndCheck().then(function (data) {
-          const body = JSON.parse(data.Body)
+        return pollAndCheck('CONTRACTED_HOURS_CREATED').then(function (body) {
           const currentDate = new Date().getTime()
           const whenDate = new Date(body.when).getTime()
           expect(body.what).to.equal('CONTRACTED_HOURS_CREATED')
@@ -77,8 +97,7 @@ describe('Audit Service', function () {
     }
 
     return auditService.auditReductionCopy(reduction, newWorkloadOwner).then(function () {
-      return pollAndCheck().then(function (data) {
-        const body = JSON.parse(data.Body)
+      return pollAndCheck('REDUCTION_COPIED').then(function (body) {
         const currentDate = new Date().getTime()
         const whenDate = new Date(body.when).getTime()
         expect(body.what).to.equal('REDUCTION_COPIED')
@@ -118,8 +137,7 @@ describe('Audit Service', function () {
 
     return auditService.auditContractedHoursUpdated(35, 40, newWorkloadOwner)
       .then(function () {
-        return pollAndCheck().then(function (data) {
-          const body = JSON.parse(data.Body)
+        return pollAndCheck('CONTRACTED_HOURS_COPIED').then(function (body) {
           const currentDate = new Date().getTime()
           const whenDate = new Date(body.when).getTime()
           expect(body.what).to.equal('CONTRACTED_HOURS_COPIED')

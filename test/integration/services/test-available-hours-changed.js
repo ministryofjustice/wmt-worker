@@ -9,7 +9,6 @@ const queueURL = 'http://127.0.0.1:4566/000000000000/domain_event_queue'
 function pollAndCheck () {
   return receiveSqsMessage(sqsClient, queueURL).then(function (data) {
     if (data.Messages) {
-      console.log('message received' + data.Messages[0])
       return deleteSqsMessage(sqsClient, queueURL, data.Messages[0].ReceiptHandle).then(function () {
         return data.Messages[0]
       })
