@@ -175,6 +175,10 @@ workflows:
           context: 
             - hmpps-common-vars
             - hmpps-workload-preprod
+          filters:
+            branches:
+              only:
+                - main
           requires:
             - helm_lint
             - unit_test
