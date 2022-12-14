@@ -7,6 +7,7 @@ const TierCounts = require('../../../../app/services/probation-rules').TierCount
 const Locations = require('../../../../app/services/probation-rules').Locations
 const CaseDetails = require('../../../../app/services/probation-rules').CaseDetails
 const workloadOwnerHelper = require('../../../helpers/data/app-workload-owner-helper')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 
 const inserts = []
 
@@ -172,11 +173,7 @@ describe('app/services/data/insert-app-workload', function () {
   })
 
   after(function () {
-    return knex('tiers').withSchema('app').where('workload_id', workloadId).del().then(function () {
-      return knex('case_details').withSchema('app').where('workload_id', workloadId).del().then(function () {
-        return workloadOwnerHelper.removeDependencies(inserts)
-      })
-    })
+    return removeIntegrationTestData()
   })
 })
 

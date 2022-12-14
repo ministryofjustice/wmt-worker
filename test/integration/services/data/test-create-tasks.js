@@ -2,16 +2,19 @@ const expect = require('chai').expect
 const knex = require('../../../../knex').appSchema
 const createTasks = require('../../../../app/services/data/create-tasks')
 const workloadReportHelper = require('../../../helpers/data/app-workload-report-helper')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 const moment = require('moment')
 const Task = require('../../../../app/services/domain/task')
 const TASK_STATUS = require('../../../../app/constants/task-status')
 const timeThreshold = require('../../../constants/time-threshold')
 
-const inserts = []
+let inserts = []
 
 describe('app/services/data/create-tasks', function () {
   before(function () {
-    return workloadReportHelper.insertDependencies(inserts)
+    return workloadReportHelper.insertDependencies([]).then(function (workloadReportInserts) {
+      inserts = workloadReportInserts
+    })
   })
 
   it('should insert a new task correctly', function (done) {
@@ -42,6 +45,6 @@ describe('app/services/data/create-tasks', function () {
   })
 
   after(function () {
-    return workloadReportHelper.removeDependencies(inserts)
+    return removeIntegrationTestData()
   })
 })

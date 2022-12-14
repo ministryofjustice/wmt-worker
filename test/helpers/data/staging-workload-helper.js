@@ -208,19 +208,6 @@ module.exports.insertArms = function (arms, inserts) {
     })
 }
 
-module.exports.deleteAll = function () {
-  return knex(institutionalReportsTable).withSchema('staging').del()
-    .then(function () {
-      return knex(courtReportsTable).withSchema('staging').del()
-        .then(function () {
-          return knex(t2aTable).withSchema('staging').del()
-            .then(function () {
-              return knex(wmtExtractTable).withSchema('staging').del()
-            })
-        })
-    })
-}
-
 function mapForInsert (record) {
   const row = {}
   for (const key in record) {

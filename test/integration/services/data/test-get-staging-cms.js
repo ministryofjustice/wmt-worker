@@ -2,6 +2,7 @@ const expect = require('chai').expect
 
 const getStagingCms = require('../../../../app/services/data/get-staging-cms')
 const cmsHelper = require('../../../helpers/data/staging-cms-helper')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 
 const cmsRecords = [{
   contact_id: Number.MAX_SAFE_INTEGER,
@@ -50,6 +51,6 @@ describe('services/data/get-staging-cms', function () {
   })
 
   after(function () {
-    return cmsHelper.removeDependencies(insertedRecords)
+    return removeIntegrationTestData()
   })
 })

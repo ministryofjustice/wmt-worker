@@ -2,6 +2,7 @@ const expect = require('chai').expect
 const knex = require('../../../../knex').appSchema
 
 const appWorkloadOwnerHelper = require('../../../helpers/data/app-workload-owner-helper')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 
 const getWorkloadOwnerId = require('../../../../app/services/data/get-app-workload-owner-id')
 
@@ -33,6 +34,6 @@ describe('services/data/get-workload-owner-id', function () {
   })
 
   after(function () {
-    return appWorkloadOwnerHelper.removeDependencies(inserts)
+    return removeIntegrationTestData()
   })
 })

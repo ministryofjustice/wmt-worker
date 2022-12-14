@@ -3,6 +3,7 @@ const expect = require('chai').expect
 const refreshViews = require('../../../../app/services/workers/refresh-views')
 const appTasksHelper = require('../../../helpers/data/app-tasks-helper')
 const workloadReportHelper = require('../../../helpers/data/app-workload-report-helper')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 const { GENERATE_DASHBOARD } = require('../../../../app/constants/task-type')
 
 describe('services/workers/refresh-views', function () {
@@ -16,8 +17,6 @@ describe('services/workers/refresh-views', function () {
     })
   })
   after(function () {
-    return appTasksHelper.removeAll().then(function () {
-      return workloadReportHelper.removeAll()
-    })
+    return removeIntegrationTestData()
   })
 })

@@ -1,5 +1,6 @@
 const expect = require('chai').expect
 const workloadReportHelper = require('../../../helpers/data/app-workload-report-helper')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 const generateDashboard = require('../../../../app/services/workers/generate-dashboard')
 const getWorkloadReportById = require('../../../../app/services/data/get-workload-report-by-id')
 const { COMPLETE } = require('../../../../app/constants/workload-report-status')
@@ -22,6 +23,6 @@ describe('services/workers/generate-dashboard', function () {
   })
 
   after(function () {
-    return workloadReportHelper.removeDependencies(inserts)
+    return removeIntegrationTestData()
   })
 })

@@ -4,6 +4,7 @@ const expect = require('chai').expect
 
 const helper = require('../../../helpers/data/app-workload-points-calculation-helper')
 const insertWorkloadPointsCalculations = require('../../../../app/services/data/insert-workload-points-calculation')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 
 let inserts = []
 /* eslint-disable no-unused-expressions */
@@ -60,8 +61,7 @@ describe('services/data/insert-workload-points-calculation', function () {
       })
   })
 
-  after(function (done) {
-    helper.removeDependencies(inserts)
-      .then(() => done())
+  after(function () {
+    return removeIntegrationTestData()
   })
 })

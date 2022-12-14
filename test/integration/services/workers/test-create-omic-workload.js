@@ -3,7 +3,7 @@ const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
 const insertStagingOmicWorkload = require('../../../helpers/data/insert-staging-omic-workload-helper')
-const removeDependencies = require('../../../helpers/data/remove-omic-workload-integration-test-dependencies')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 const knex = require('../../../../knex').appSchema
 
 let createWorkload
@@ -155,6 +155,6 @@ describe('services/workers/create-omic-workload', function () {
   })
 
   after(function () {
-    return removeDependencies()
+    return removeIntegrationTestData()
   })
 })

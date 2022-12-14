@@ -4,6 +4,7 @@ const workloadHelper = require('../../../helpers/data/app-workload-helper')
 const adjustmentsHelper = require('../../../helpers/data/app-adjustments-helper')
 const insertAdjustment = require('../../../../app/services/data/insert-adjustment')
 const adjustmentStatus = require('../../../../app/constants/adjustment-status')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 
 let inserts = []
 
@@ -48,6 +49,6 @@ describe('app/services/data/insert-adjustment', function () {
   })
 
   after(function () {
-    return workloadHelper.removeDependencies(inserts)
+    return removeIntegrationTestData()
   })
 })

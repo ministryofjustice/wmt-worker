@@ -2,6 +2,7 @@ const expect = require('chai').expect
 const knex = require('../../../../knex').appSchema
 const updateWorkloadReportEffectiveTo = require('../../../../app/services/data/update-workload-report-effective-to')
 const helper = require('../../../helpers/data/app-workload-report-helper')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 
 let inserts = []
 
@@ -33,8 +34,7 @@ describe('app/services/data/update-workload-report-effective-to', function () {
       })
   })
 
-  after(function (done) {
-    helper.removeDependencies(inserts)
-      .then(() => done())
+  after(function () {
+    return removeIntegrationTestData()
   })
 })
