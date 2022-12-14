@@ -43,13 +43,9 @@ module.exports.execute = async function (task) {
 const processAdjustments = function (workloadStagingIdStart, workloadStagingIdEnd, workloadReportId) {
   return getAllStgAdjustmentsForBatch(workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
     .then(function (stgAdjustments) {
-      const insertAdjustments = []
-
-      stgAdjustments.forEach(function (stgAdjustment) {
-        insertAdjustments.push(insertAdjustment(stgAdjustment))
-      })
-
-      return Promise.all(insertAdjustments)
+      return Promise.all(stgAdjustments.map(function (stgAdjustment) {
+        return insertAdjustment(stgAdjustment)
+      }))
     })
 }
 
