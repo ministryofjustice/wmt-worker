@@ -39,9 +39,6 @@ module.exports.insertDependencies = function (inserts) {
     .then(function (ids) {
       inserts.push({ table: 'workload_owner', id: ids[0] })
       return inserts
-    }).catch((error) => {
-      console.error(error)
-      exports.removeDependencies(inserts)
     })
 
   return promise
@@ -81,15 +78,4 @@ module.exports.addDuplicateWorkloadOwner = function (inserts) {
       results.push({ table: 'workload_owner', id: ids[0] })
       return results
     })
-}
-
-module.exports.removeDependencies = function (inserts) {
-  inserts = inserts.reverse()
-  return inserts.map((deletion) => {
-    return knex(deletion.table).withSchema('app').whereIn('id', [deletion.id]).del()
-  }).reduce(function (prev, current) {
-    return prev.then(function () {
-      return current
-    })
-  }, Promise.resolve())
 }

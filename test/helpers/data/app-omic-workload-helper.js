@@ -108,31 +108,7 @@ module.exports.insertDependencies = function (inserts) {
         inserts.push({ table: 'omic_tiers', id })
       })
       return inserts
-    }).catch((error) => {
-      console.error(error)
-      exports.removeDependencies(inserts)
     })
 
   return promise
-}
-
-module.exports.removeDependencies = function (inserts) {
-  inserts = inserts.reverse()
-  const groupedDeletions = [{ table: inserts[0].table, id: [inserts[0].id] }]
-
-  for (let i = 1; i < inserts.length; i++) {
-    if (inserts[i].table === groupedDeletions[groupedDeletions.length - 1].table) {
-      groupedDeletions[groupedDeletions.length - 1].id.push(inserts[i].id)
-    } else {
-      groupedDeletions.push({ table: inserts[i].table, id: [inserts[i].id] })
-    }
-  }
-
-  return groupedDeletions.map((deletion) => {
-    return knex(deletion.table).withSchema('app').whereIn('id', [deletion.id]).del()
-  }).reduce(function (prev, current) {
-    return prev.then(function () {
-      return current
-    })
-  }, Promise.resolve())
 }

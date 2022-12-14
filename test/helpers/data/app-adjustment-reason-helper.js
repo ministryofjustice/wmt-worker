@@ -3,28 +3,18 @@ const knex = require('../../../knex').appSchema
 const testAdjustmentReason = {
   contact_description: 'Test Reason',
   contact_code: 'TST',
-  category_id: 1
+  category_id: 1,
+  points: 10
 }
-const inserts = []
 
-module.exports.insertDependencies = function (workloadOwnerId) {
+module.exports.insertDependencies = function () {
+  const inserts = []
   return knex('adjustment_reason')
     .withSchema('app')
     .insert(testAdjustmentReason)
     .returning('id')
-    .then(function (id) {
-      inserts.push({ table: 'adjustment_reason', id: id[0] })
+    .then(function ([id]) {
+      inserts.push({ table: 'adjustment_reason', id, data: { ...testAdjustmentReason, id } })
       return inserts
     })
-}
-
-module.exports.removeDependencies = function (inserts) {
-  inserts = inserts.reverse()
-  return inserts.map((deletion) => {
-    return knex(deletion.table).withSchema('app').whereIn('id', [deletion.id]).del()
-  }).reduce(function (prev, current) {
-    return prev.then(function () {
-      return current
-    })
-  }, Promise.resolve())
 }

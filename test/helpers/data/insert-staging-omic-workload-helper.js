@@ -1,10 +1,10 @@
 const knex = require('../../../knex').stagingSchema
 const omicWmtExtract = require('../../constants/omic-wmt-extract')
-const deleteStagingOmicRecords = require('./delete-staging-omic-records')
+const deleteStagingRecords = require('./delete-staging-records')
 let stagingId
 
 module.exports = function () {
-  return deleteStagingOmicRecords()
+  return deleteStagingRecords()
     .then(function () {
       return knex('omic_teams')
         .withSchema('staging')

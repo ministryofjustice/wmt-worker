@@ -1,6 +1,7 @@
 const expect = require('chai').expect
 
 const helper = require('../../../helpers/data/staging-court-reporters-helper')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 const getCourtReportersIdRange = require('../../../../app/services/data/get-court-reporters-id-range')
 
 let inserts = []
@@ -23,6 +24,6 @@ describe('services/data/get-court-reporters-id-range', function () {
   })
 
   after(function () {
-    return helper.removeDependencies(inserts)
+    return removeIntegrationTestData()
   })
 })

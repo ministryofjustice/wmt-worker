@@ -1,6 +1,7 @@
 const expect = require('chai').expect
 const knex = require('../../../knex').appSchema
 const insertWorkloadOwnerAndDependencies = require('../../../app/services/insert-workload-owner-and-dependencies')
+const removeIntegrationTestData = require('../../helpers/data/remove-integration-test-data')
 const CasesSummary = require('../../../app/services/probation-rules').CasesSummary
 
 describe('app/services/insert-workload-owner-and-dependencies', function () {
@@ -234,24 +235,6 @@ describe('app/services/insert-workload-owner-and-dependencies', function () {
   })
 
   after(function () {
-    return knex('workload_owner').withSchema('app').where('offender_manager_id', offenderManagerId).del()
-      .then(function () {
-        return knex('offender_manager').withSchema('app').where('id', offenderManagerId).del()
-          .then(function () {
-            return knex('team').withSchema('app').where('code', teamCode).del()
-              .then(function () {
-                return knex('ldu').withSchema('app').where('code', lduCode).del()
-                  .then(function () {
-                    return knex('region').withSchema('app').where('code', regionCode).del()
-                      .then(function () {
-                        return knex('ldu').withSchema('app').where('code', secondLduCode).del()
-                          .then(function () {
-                            return knex('region').withSchema('app').where('code', secondRegionCode).del()
-                          })
-                      })
-                  })
-              })
-          })
-      })
+    return removeIntegrationTestData()
   })
 })

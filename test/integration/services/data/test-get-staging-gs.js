@@ -2,6 +2,7 @@ const expect = require('chai').expect
 
 const getStagingGs = require('../../../../app/services/data/get-staging-gs')
 const gsHelper = require('../../../helpers/data/staging-gs-helper')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 
 describe('services/data/get-staging-gs', function () {
   let insertedRecords = []
@@ -32,6 +33,6 @@ describe('services/data/get-staging-gs', function () {
   })
 
   after(function () {
-    return gsHelper.removeDependencies(insertedRecords)
+    return removeIntegrationTestData()
   })
 })

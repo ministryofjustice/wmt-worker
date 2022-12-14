@@ -4,6 +4,7 @@ const insertLdu = require('../../../../app/services/data/insert-ldu')
 const Ldu = require('../../../../app/services/probation-rules').Ldu
 const moment = require('moment')
 const lduHelper = require('../../../helpers/data/app-ldu-helper')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 const timeThreshold = require('../../../constants/time-threshold')
 
 let inserts = []
@@ -88,8 +89,7 @@ describe('app/services/data/insert-ldu', function () {
     })
   })
 
-  after(function (done) {
-    lduHelper.removeDependenciesForLdu(inserts)
-      .then(() => done())
+  after(function () {
+    return removeIntegrationTestData()
   })
 })

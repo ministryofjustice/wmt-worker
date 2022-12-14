@@ -63,22 +63,6 @@ module.exports.insertPriority = function (inserts) {
     })
 }
 
-module.exports.deleteAll = function (inserts) {
-  inserts = inserts.reverse()
-
-  return inserts.map((deletion) => {
-    if (deletion.id instanceof Array) {
-      return knex(deletion.table).withSchema('staging').whereIn('id', deletion.id).del()
-    } else {
-      return knex(deletion.table).withSchema('staging').where('id', deletion.id).del()
-    }
-  }).reduce(function (prev, current) {
-    return prev.then(function () {
-      return current
-    })
-  }, Promise.resolve())
-}
-
 function getTestCaseDetails (caseRefNo, omKey, location) {
   return stagingHelper.getTestCaseDetails(caseRefNo, omKey, location)
 }

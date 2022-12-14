@@ -5,6 +5,7 @@ const Team = require('../../../../app/services/probation-rules').Team
 const moment = require('moment')
 const teamHelper = require('../../../helpers/data/app-team-helper')
 const timeThreshold = require('../../../constants/time-threshold')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 
 let inserts = []
 let teamUniqueIdentifier
@@ -86,8 +87,7 @@ describe('app/services/data/insert-team', function () {
     })
   })
 
-  after(function (done) {
-    teamHelper.removeDependenciesForTeam(inserts)
-      .then(() => done())
+  after(function () {
+    return removeIntegrationTestData()
   })
 })

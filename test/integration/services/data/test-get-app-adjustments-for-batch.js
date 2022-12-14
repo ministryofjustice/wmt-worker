@@ -1,6 +1,7 @@
 const expect = require('chai').expect
 
 const adjustmentsHelper = require('../../../helpers/data/app-adjustments-helper')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 const getAdjustments = require('../../../../app/services/data/get-app-adjustments-for-batch')
 const getGsAdjustments = require('../../../../app/services/data/get-app-gs-adjustments-for-batch')
 const adjustmentCategory = require('../../../../app/constants/adjustment-category')
@@ -68,6 +69,6 @@ describe('services/data/get-app-adjustments-for-batch', function () {
   })
 
   after(function () {
-    return adjustmentsHelper.removeDependencies(inserts)
+    return removeIntegrationTestData()
   })
 })

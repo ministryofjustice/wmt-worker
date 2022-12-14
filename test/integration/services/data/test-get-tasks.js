@@ -2,6 +2,7 @@ const expect = require('chai').expect
 
 const helper = require('../../../helpers/data/app-tasks-helper')
 const getTasks = require('../../../../app/services/data/get-tasks')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 
 let inserts = []
 
@@ -25,8 +26,7 @@ describe('services/data/get-tasks', function () {
     })
   })
 
-  after(function (done) {
-    helper.removeDependencies(inserts)
-      .then(() => done())
+  after(function () {
+    return removeIntegrationTestData()
   })
 })

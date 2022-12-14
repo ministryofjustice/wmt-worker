@@ -1,6 +1,7 @@
 const expect = require('chai').expect
 
 const helper = require('../../../helpers/data/app-workload-helper')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 const getWorkloadOwnerInWorkloadRange = require('../../../../app/services/data/get-workload-owners-in-workload-range')
 
 let inserts = []
@@ -27,6 +28,6 @@ describe('services/data/get-workload-owners-in-workload-range', function () {
   })
 
   after(function () {
-    return helper.removeDependencies(inserts)
+    return removeIntegrationTestData()
   })
 })

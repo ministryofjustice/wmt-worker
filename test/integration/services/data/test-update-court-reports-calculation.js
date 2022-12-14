@@ -2,6 +2,7 @@ const knex = require('../../../../knex').appSchema
 const expect = require('chai').expect
 
 const helper = require('../../../helpers/data/app-court-reports-helper')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 const insertCourtReportsCalculations = require('../../../../app/services/data/insert-court-reports-calculation')
 const updateCourtReportsCalculations = require('../../../../app/services/data/update-court-reports-calculation')
 
@@ -56,8 +57,7 @@ describe('services/data/update-court-reports-calculation', function () {
       })
   })
 
-  after(function (done) {
-    helper.removeDependencies(inserts)
-      .then(() => done())
+  after(function () {
+    return removeIntegrationTestData()
   })
 })

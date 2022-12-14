@@ -204,24 +204,3 @@ module.exports.addWorkloadPointsCalculation = function (inserts) {
       return inserts
     })
 }
-
-module.exports.removeDependencies = function (inserts) {
-  inserts = inserts.reverse()
-  const groupedDeletions = [{ table: inserts[0].table, id: [inserts[0].id], schema: inserts[0].schema ?? 'app', idColumn: inserts[0].idColumn ?? 'id' }]
-
-  for (let i = 1; i < inserts.length; i++) {
-    if (inserts[i].table === groupedDeletions[groupedDeletions.length - 1].table) {
-      groupedDeletions[groupedDeletions.length - 1].id.push(inserts[i].id)
-    } else {
-      groupedDeletions.push({ table: inserts[i].table, id: [inserts[i].id], schema: inserts[i].schema ?? 'app', idColumn: inserts[i].idColumn ?? 'id' })
-    }
-  }
-
-  return groupedDeletions.map((deletion) => {
-    return knex(deletion.table).withSchema(deletion.schema).whereIn(deletion.idColumn, deletion.id).del()
-  }).reduce(function (prev, current) {
-    return prev.then(function () {
-      return current
-    })
-  }, Promise.resolve())
-}

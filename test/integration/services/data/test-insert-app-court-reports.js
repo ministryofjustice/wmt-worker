@@ -3,6 +3,7 @@ const knex = require('../../../../knex').appSchema
 const CourtReports = require('../../../../app/services/probation-rules').CourtReports
 const workloadOwnerHelper = require('../../../helpers/data/app-workload-owner-helper')
 const insertAppCourtReports = require('../../../../app/services/data/insert-app-court-reports')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 
 let workloadOwnerId
 let workloadReportId
@@ -51,6 +52,6 @@ describe('app/services/data/insert-app-court-reports', function () {
   })
 
   after(function () {
-    workloadOwnerHelper.removeDependencies(inserts)
+    return removeIntegrationTestData()
   })
 })

@@ -3,6 +3,7 @@ const knex = require('../../../../knex').appSchema
 const workloadReportStatus = require('../../../../app/constants/workload-report-status')
 const updateWorkloadReport = require('../../../../app/services/data/update-workload-report-with-status')
 const helper = require('../../../helpers/data/app-workload-report-helper')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 
 let inserts = []
 
@@ -37,8 +38,7 @@ describe('app/services/data/update-workload-report-with-status', function () {
     })
   })
 
-  after(function (done) {
-    helper.removeDependencies(inserts)
-      .then(() => done())
+  after(function () {
+    return removeIntegrationTestData()
   })
 })

@@ -2,6 +2,7 @@ const expect = require('chai').expect
 
 const getAdjustmentPoints = require('../../../../app/services/data/get-adjustment-points')
 const appAdjustmentsHelper = require('../../../helpers/data/app-adjustments-helper')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 const adjustmentCategory = require('../../../../app/constants/adjustment-category')
 
 let inserts = []
@@ -31,8 +32,7 @@ describe('services/data/get-adjustment-points', function () {
     })
   })
 
-  after(function (done) {
-    appAdjustmentsHelper.removeDependencies(inserts)
-      .then(() => done())
+  after(function () {
+    return removeIntegrationTestData()
   })
 })

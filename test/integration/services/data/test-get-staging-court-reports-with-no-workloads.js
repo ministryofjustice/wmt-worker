@@ -2,6 +2,7 @@ const expect = require('chai').expect
 
 const getCourtReportsWithNoWorkloads = require('../../../../app/services/data/get-staging-court-reports-with-no-workloads')
 const courtReportsHelper = require('../../../helpers/data/staging-court-reports-helper')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 
 describe('services/data/get-staging-court-reports-wth-no-workloads', function () {
   let inserts = []
@@ -24,6 +25,6 @@ describe('services/data/get-staging-court-reports-wth-no-workloads', function ()
   })
 
   after(function () {
-    return courtReportsHelper.removeDependencies(inserts)
+    return removeIntegrationTestData()
   })
 })
