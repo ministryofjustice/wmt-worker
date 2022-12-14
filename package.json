@@ -17,8 +17,7 @@
     "test": "npm run lint && nyc mocha --recursive test/unit/ --timeout 6000 --exit --reporter mocha-simple-html-reporter --reporter-options output=test_results/unit-test-reports.html",
     "record-build-info": "node ./bin/record-build-info",
     "security_audit": "npx audit-ci --config audit-ci.json",
-    "lint": "standard",
-    "unimported": "unimported"
+    "lint": "standard"
   },
   "nyc": {
     "exclude": [
@@ -50,8 +49,7 @@
     "sinon": "15.0.0",
     "standard": "17.0.0",
     "supertest": "6.3.2",
-    "glob": "8.0.3",
-    "unimported": "1.22.0"
+    "glob": "8.0.3"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.180.0",
