@@ -1,7 +1,5 @@
 const knex = require('../../../knex').appSchema
-const moment = require('moment')
 
-const getAppAdjustmentsForBatch = require('../../../app/services/data/get-app-adjustments-for-batch')
 const adjustmentStatus = require('../../../app/constants/adjustment-status')
 const helper = require('./app-workload-helper')
 
@@ -38,25 +36,8 @@ module.exports.removeDependencies = function (inserts) {
   }, Promise.resolve())
 }
 
-module.exports.getAdjustmentsForTest = function (adjustmentCategory, minWorkloadId, maxWorkloadId, workloadReportId) {
-  return getAppAdjustmentsForBatch(adjustmentCategory, minWorkloadId, maxWorkloadId, workloadReportId)
-    .then(function (results) {
-      const formattedResults = []
-      results.forEach(function (adjustment) {
-        formattedResults.push({
-          id: adjustment.id,
-          workloadOwnerId: adjustment.workloadOwnerId,
-          contactId: adjustment.contactId,
-          points: adjustment.points,
-          adjustmentReasonId: adjustment.adjustmentReasonId,
-          effectiveFrom: moment(adjustment.effectiveFrom).format('YYYY-MM-DDTHH:mm:ss'),
-          effectiveTo: moment(adjustment.effectiveFrom).format('YYYY-MM-DDTHH:mm:ss'),
-          status: adjustment.status,
-          case_ref_no: adjustment.case_ref_no
-        })
-      })
-      return formattedResults
-    })
+module.exports.getAllAdjustments = function () {
+  return knex('adjustments').withSchema('app').select()
 }
 
 module.exports.getAdjustmentObjects = function (workloadOwnerId) {
