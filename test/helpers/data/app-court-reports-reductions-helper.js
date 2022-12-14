@@ -24,17 +24,6 @@ module.exports.insertDependencies = function (inserts) {
     })
 }
 
-module.exports.removeDependencies = function (inserts) {
-  inserts = inserts.reverse()
-  return inserts.map((deletion) => {
-    return knex(deletion.table).withSchema('app').whereIn('id', [deletion.id]).del()
-  }).reduce(function (prev, current) {
-    return prev.then(function () {
-      return current
-    })
-  }, Promise.resolve())
-}
-
 module.exports.getAllReductionStatusesForCourtReporters = function (courtReportStagingIdStart, courtReportStagingIdEnd, workloadReportId) {
   return knex('reductions')
     .withSchema('app')

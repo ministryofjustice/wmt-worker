@@ -3,7 +3,7 @@ const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
 const insertStagingWorkload = require('../../../helpers/data/insert-staging-workload-helper')
-const removeDependencies = require('../../../helpers/data/remove-workload-integration-test-dependencies')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 const knex = require('../../../../knex').appSchema
 
 let createWorkload
@@ -209,6 +209,6 @@ describe('services/workers/create-workload', function () {
   })
 
   after(function () {
-    return removeDependencies()
+    return removeIntegrationTestData()
   })
 })

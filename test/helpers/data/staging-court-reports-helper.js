@@ -16,17 +16,6 @@ module.exports.insertDependencies = function (inserts) {
     })
 }
 
-module.exports.removeDependencies = function (inserts) {
-  inserts = inserts.reverse()
-  return inserts.map((deletion) => {
-    return knex(deletion.table).withSchema('staging').whereIn('id', [deletion.id]).del()
-  }).reduce(function (prev, current) {
-    return prev.then(function () {
-      return current
-    })
-  }, Promise.resolve())
-}
-
 const getCourtReports = function () {
   return [
     Object.assign({}, module.exports.defaultCourtReport, { om_key: 'OM01', team_code: 'TM01', om_team_staff_grade: 'om_team_staff_grade' }),

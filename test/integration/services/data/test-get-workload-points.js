@@ -1,6 +1,7 @@
 const expect = require('chai').expect
 
 const helper = require('../../../helpers/data/app-workload-points-helper')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 const getWorkloadPoints = require('../../../../app/services/data/get-workload-points-configuration')
 
 const CaseTypeWeightings = require('../../../../app/services/probation-rules').CaseTypeWeightings
@@ -93,6 +94,6 @@ describe('services/data/get-workload-points', function () {
   })
 
   after(function () {
-    return helper.removeDependencies(inserts)
+    return removeIntegrationTestData()
   })
 })

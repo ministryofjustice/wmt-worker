@@ -4,6 +4,7 @@ const CasesSummay = require('../../../../app/services/probation-rules').CasesSum
 const CourtReport = require('../../../../app/services/probation-rules').CourtReport
 const OmCourtReports = require('../../../../app/services/probation-rules').OmCourtReports
 const helper = require('../../../helpers/data/staging-court-reporters-helper')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 
 let inserts = []
 describe('services/data/get-staging-court-reporters', function () {
@@ -58,6 +59,6 @@ describe('services/data/get-staging-court-reporters', function () {
   })
 
   after(function () {
-    return helper.removeDependencies(inserts)
+    return removeIntegrationTestData()
   })
 })

@@ -2,6 +2,7 @@ const expect = require('chai').expect
 
 const appWorkloadOwnerHelper = require('../../../helpers/data/app-workload-owner-helper')
 const getContractedHours = require('../../../../app/services/data/get-contracted-hours')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 
 let inserts = []
 
@@ -21,8 +22,7 @@ describe('services/data/get-contracted-hours', function () {
     })
   })
 
-  after(function (done) {
-    appWorkloadOwnerHelper.removeDependencies(inserts)
-      .then(() => done())
+  after(function () {
+    return removeIntegrationTestData()
   })
 })

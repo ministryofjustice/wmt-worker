@@ -3,6 +3,7 @@ const knex = require('../../../../knex').appSchema
 const expect = require('chai').expect
 
 const appWorkloadPointsCalculationHelper = require('../../../helpers/data/app-workload-points-calculation-helper')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 const calculatePointsWorker = require('../../../../app/services/workers/calculate-workload-points')
 const operationTypes = require('../../../../app/constants/calculation-tasks-operation-type')
 
@@ -59,6 +60,6 @@ describe('services/workers/calculate-workload-points', function () {
   })
 
   after(function () {
-    return appWorkloadPointsCalculationHelper.removeDependencies(inserts)
+    return removeIntegrationTestData()
   })
 })

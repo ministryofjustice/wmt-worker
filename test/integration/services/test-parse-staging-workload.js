@@ -1,6 +1,7 @@
 const expect = require('chai').expect
 const parseStagingWorkload = require('../../../app/services/parse-staging-workload')
 const workloadHelper = require('../../helpers/data/staging-workload-helper')
+const removeIntegrationTestData = require('../../helpers/data/remove-integration-test-data')
 const caseDetailsHelper = require('../../helpers/data/staging-case-details-helper')
 
 describe('services/parse-staging-workload', function () {
@@ -62,6 +63,6 @@ describe('services/parse-staging-workload', function () {
   })
 
   after(function () {
-    return caseDetailsHelper.deleteAll(insertedRecords)
+    return removeIntegrationTestData()
   })
 })

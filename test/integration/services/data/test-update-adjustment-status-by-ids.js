@@ -1,6 +1,7 @@
 const expect = require('chai').expect
 
 const appAdjustmentsHelper = require('../../../helpers/data/app-adjustments-helper')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 const updateAdjustmentStatusByIds = require('../../../../app/services/data/update-adjustment-status-by-ids')
 const getOpenAdjustments = require('../../../helpers/data/get-open-adjustments')
 
@@ -39,8 +40,7 @@ describe('services/data/update-adjustment-status-by-ids', function () {
       })
   })
 
-  after(function (done) {
-    appAdjustmentsHelper.removeDependencies(inserts)
-      .then(() => done())
+  after(function () {
+    return removeIntegrationTestData()
   })
 })

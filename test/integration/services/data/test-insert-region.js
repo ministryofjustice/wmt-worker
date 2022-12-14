@@ -2,6 +2,7 @@ const expect = require('chai').expect
 const knex = require('../../../../knex').appSchema
 const insertRegion = require('../../../../app/services/data/insert-region')
 const Region = require('../../../../app/services/probation-rules').Region
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 
 describe('app/services/data/insert-region', function () {
   let regionId
@@ -46,6 +47,6 @@ describe('app/services/data/insert-region', function () {
   })
 
   after(function () {
-    return knex('region').withSchema('app').where('id', regionId).del()
+    return removeIntegrationTestData()
   })
 })

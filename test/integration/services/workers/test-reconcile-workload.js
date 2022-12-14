@@ -3,7 +3,7 @@ const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
 const workloadCalculationHelper = require('../../../helpers/data/app-workload-points-calculation-helper')
-const taskHelper = require('../../../helpers/data/app-tasks-helper')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 const getWmtPeriod = require('../../../../app/services/helpers/get-wmt-period')
 
 let inserts = []
@@ -82,8 +82,6 @@ describe('services/workers/reconcile-workload', function () {
   })
 
   after(function () {
-    return taskHelper.removeAll().then(function () {
-      return workloadCalculationHelper.removeDependencies(inserts)
-    })
+    return removeIntegrationTestData()
   })
 })

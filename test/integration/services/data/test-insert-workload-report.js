@@ -2,6 +2,7 @@ const expect = require('chai').expect
 const knex = require('../../../../knex').appSchema
 const workloadReportStatus = require('../../../../app/constants/workload-report-status')
 const insertWorkloadReport = require('../../../../app/services/data/insert-workload-report')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 const tableName = 'workload_report'
 const moment = require('moment')
 const timeThreshold = require('../../../constants/time-threshold')
@@ -35,6 +36,6 @@ describe('app/services/data/insert-workload-report', function () {
   })
 
   after(function () {
-    return knex(tableName).withSchema('app').whereIn('id', insertedIds).del()
+    return removeIntegrationTestData()
   })
 })

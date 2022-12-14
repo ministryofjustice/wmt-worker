@@ -2,6 +2,7 @@ const expect = require('chai').expect
 const knex = require('../../../../knex').appSchema
 
 const helper = require('../../../helpers/data/app-court-reports-helper')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 const getAppCourtReports = require('../../../../app/services/data/get-app-court-reports')
 
 let inserts = []
@@ -30,6 +31,6 @@ describe('services/data/get-app-court-reports', function () {
   })
 
   after(function () {
-    return helper.removeDependencies(inserts)
+    return removeIntegrationTestData()
   })
 })

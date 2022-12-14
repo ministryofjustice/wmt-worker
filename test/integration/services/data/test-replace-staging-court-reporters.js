@@ -2,6 +2,7 @@ const expect = require('chai').expect
 
 const replaceStagingCourtReporters = require('../../../../app/services/data/replace-staging-court-reporters')
 const courtReportersHelper = require('../../../helpers/data/staging-court-reporters-helper')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 
 describe('services/data/replace-staging-court-reporters', function () {
   let inserts = []
@@ -51,6 +52,6 @@ describe('services/data/replace-staging-court-reporters', function () {
   })
 
   after(function () {
-    return courtReportersHelper.removeDependencies(inserts)
+    return removeIntegrationTestData()
   })
 })

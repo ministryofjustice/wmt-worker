@@ -1,6 +1,7 @@
 const expect = require('chai').expect
 
 const getAppReductions = require('../../../../app/services/data/get-app-reduction-hours')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 const appReductionsHelper = require('../../../helpers/data/app-reductions-helper')
 
 let inserts = []
@@ -32,6 +33,6 @@ describe('services/data/get-app-reduction-hours', function () {
   })
 
   after(function () {
-    return appReductionsHelper.removeDependencies(inserts)
+    return removeIntegrationTestData()
   })
 })

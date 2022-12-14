@@ -3,7 +3,7 @@ const knex = require('../../../../knex').appSchema
 const expect = require('chai').expect
 
 const appOmicWorkloadPointsCalculationHelper = require('../../../helpers/data/app-omic-workload-points-calculation-helper')
-const removeData = require('../../../helpers/data/remove-data')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 const calculateOmicPointsWorker = require('../../../../app/services/workers/calculate-omic-workload-points')
 const operationTypes = require('../../../../app/constants/calculation-tasks-operation-type')
 
@@ -53,6 +53,6 @@ describe('services/workers/calculate-omic-workload-points', function () {
   })
 
   after(function () {
-    return removeData(inserts)
+    return removeIntegrationTestData()
   })
 })

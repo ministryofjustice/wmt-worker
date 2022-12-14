@@ -2,6 +2,7 @@ const expect = require('chai').expect
 const knex = require('../../../../knex').appSchema
 const appAdjustmentsHelper = require('../../../helpers/data/app-adjustments-helper')
 const updateAdjustmentEffectiveTo = require('../../../../app/services/data/update-adjustment-effective-to')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 
 let inserts = []
 const newDate = new Date(2020, 11, 17)
@@ -27,6 +28,6 @@ describe('services/data/update-adjustment-effective-to', function () {
   })
 
   after(function () {
-    return appAdjustmentsHelper.removeDependencies(inserts)
+    return removeIntegrationTestData()
   })
 })

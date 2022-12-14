@@ -2,6 +2,7 @@ const expect = require('chai').expect
 const knex = require('../../../../knex').appSchema
 const config = require('../../../../config')
 const workloadOwnerHelper = require('../../../helpers/data/workload-owner-helper')
+const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 const insertWorkloadOwner = require('../../../../app/services/data/insert-workload-owner')
 const WorkloadOwner = require('../../../../app/services/probation-rules').WorkloadOwner
 const tableName = `${config.DB_APP_SCHEMA}.workload_owner`
@@ -50,6 +51,6 @@ describe('app/services/data/insert-workload-owner', function () {
   })
 
   after(function () {
-    return workloadOwnerHelper.removeDependenciesForWorkloadOwner(inserts)
+    return removeIntegrationTestData()
   })
 })
