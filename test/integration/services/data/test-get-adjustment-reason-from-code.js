@@ -17,7 +17,6 @@ describe('services/data/get-adjustment-reason-from-code', function () {
   it('should retrieve the adjustment reason for given code', function () {
     return getAdjustmentReasonsFromCode('TST')
       .then(function (adjustmentReason) {
-        expect(adjustmentReason.points)
         const expected = inserts.filter((item) => item.table === 'adjustment_reason')[0].data
         expect(adjustmentReason.points).to.equal(expected.points)
       })
