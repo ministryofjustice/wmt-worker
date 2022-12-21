@@ -73,6 +73,7 @@ function executeWorkerForTaskType (worker, task) {
                   return getTaskCountByType(taskType.RECONCILE_WORKLOAD, task.workloadReportId)
                     .then(function ([result]) {
                       if (result.theCount === 0) {
+                        log.info(`Start reconcile workload - Time: ${new Date().toLocaleTimeString()}`)
                         const reconcileTask = new Task(
                           undefined,
                           submittingAgent.WORKER,
