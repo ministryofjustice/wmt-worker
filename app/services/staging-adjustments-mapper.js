@@ -20,16 +20,16 @@ module.exports.mapCmsAdjustments = function (workloadStagingIdStart, workloadSta
                     return getWorkloadOwnerId(cmsRecord.omKey, cmsRecord.omTeamKey)
                       .then(function (omWorkloadOwnerId) {
                         const startDate = moment(cmsRecord.contactDate).format('YYYY-MM-DD')
-                        const endDate = moment(startDate).add(30, 'days').format('YYYY-MM-DD')
+                        const endDate = moment(startDate).add(7, 'days')
                         const result = []
-                        if (adjustmentReason) {
+                        if (adjustmentReason && (endDate.isSameOrAfter(moment(), 'day'))) {
                           const contactAdjustment = {
                             contactId: cmsRecord.contactId,
                             workloadOwnerId: contactWorkloadOwnerId,
                             points: adjustmentReason.points,
                             adjustmentReasonId: adjustmentReason.id,
                             effectiveFrom: startDate,
-                            effectiveTo: endDate,
+                            effectiveTo: endDate.format('YYYY-MM-DD'),
                             status: adjustmentStatus.ACTIVE,
                             crn: cmsRecord.crn
                           }
@@ -40,7 +40,7 @@ module.exports.mapCmsAdjustments = function (workloadStagingIdStart, workloadSta
                             points: adjustmentReason.points * -1,
                             adjustmentReasonId: adjustmentReason.id,
                             effectiveFrom: startDate,
-                            effectiveTo: endDate,
+                            effectiveTo: endDate.format('YYYY-MM-DD'),
                             status: adjustmentStatus.ACTIVE,
                             crn: cmsRecord.crn
                           }
@@ -75,7 +75,7 @@ module.exports.mapGsAdjustments = function (workloadStagingIdStart, workloadStag
                 return getWorkloadOwnerId(gsAdjustment.omKey, gsAdjustment.omTeamKey)
                   .then(function (workloadOwnerId) {
                     const startDate = moment(gsAdjustment.contactDate).format('YYYY-MM-DD')
-                    const endDate = moment(startDate).add(30, 'days').format('YYYY-MM-DD')
+                    const endDate = moment(startDate).add(7, 'days').format('YYYY-MM-DD')
                     const result = []
                     const newGsAdjustment = {
                       contactId: gsAdjustment.contactId,
