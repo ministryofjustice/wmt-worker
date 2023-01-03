@@ -22,7 +22,7 @@ module.exports.mapCmsAdjustments = function (workloadStagingIdStart, workloadSta
                         const startDate = moment(cmsRecord.contactDate).format('YYYY-MM-DD')
                         const endDate = moment(startDate).add(7, 'days')
                         const result = []
-                        if (adjustmentReason && (endDate.isSameOrAfter(moment(), 'day'))) {
+                        if (adjustmentReason && endDate.isSameOrAfter(moment(), 'day')) {
                           const contactAdjustment = {
                             contactId: cmsRecord.contactId,
                             workloadOwnerId: contactWorkloadOwnerId,
