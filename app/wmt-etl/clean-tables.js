@@ -10,5 +10,7 @@ module.exports = function () {
     return knex('tiers').withSchema('app').truncate()
   }).then(function () {
     return knex('case_details').withSchema('app').truncate()
+  }).then(function () {
+    return knex('adjustments').withSchema('app').truncate()
   })
 }
