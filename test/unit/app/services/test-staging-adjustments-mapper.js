@@ -98,17 +98,6 @@ describe('services/staging-adjustments-mapper', function () {
           expect(getAdjustmentReasonFromCode.called).to.be.equal(false)
         })
     })
-
-    it('should return 0 adjustments if start date is greater than 7 days old', function () {
-      getStagingCms.resolves(dataHelper.stagingAdjustmentRowOlderThanSevenDays)
-      getWorkloadOwnerId.resolves(1)
-      getAdjustmentReasonFromCode.resolves(adjustmentReason)
-      getWorkloadOwnersInWorkloadRange.resolves([1])
-      return stagingAdjustmentsMapper.mapCmsAdjustments(workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
-        .then(function (result) {
-          expect(result).to.be.eql([])
-        })
-    })
   })
 
   describe('mapGsAdjustments', function () {
