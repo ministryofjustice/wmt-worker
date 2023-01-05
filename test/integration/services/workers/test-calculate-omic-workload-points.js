@@ -42,7 +42,7 @@ describe('services/workers/calculate-omic-workload-points', function () {
           expect(workloadPointsCalculations[0].workload_report_id).to.equal(workloadReportId)
           expect(workloadPointsCalculations[0].omic_workload_id).to.equal(insertedWorkloads[0].id)
           expect(workloadPointsCalculations[0].contracted_hours).to.equal(40)
-          expect(workloadPointsCalculations[0].arms_total_cases).to.equal(23)
+          expect(workloadPointsCalculations[0].arms_total_cases).to.equal(0)
           expect(workloadPointsCalculations[1].workload_report_id).to.equal(workloadReportId)
           expect(workloadPointsCalculations[2].workload_report_id).to.equal(workloadReportId)
           workloadPointsCalculations.forEach(function (insertedCalculation) {
