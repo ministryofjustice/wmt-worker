@@ -1,7 +1,5 @@
 const calculatePointsForTiers = require('../../app/points/calculate-points-for-tiers')
 const calculateSdrConversionPoints = require('../../app/points/calculate-sdr-conversion-points')
-const calculateParomPoints = require('../../app/points/calculate-parom-points')
-const calculateArmsPoints = require('../../app/points/calculate-arms-points')
 
 const Workload = require('../../app/points/domain/workload')
 const CaseTypeWeightings = require('../../app/points/domain/case-type-weightings')
@@ -22,8 +20,6 @@ module.exports = function (workload, caseTypeWeightings, t2aCaseTypeWeightings) 
 
   const sdrConversionPointsLast30Days = calculateSdrConversionPoints(workload.sdrConversionsLast30Days, caseTypeWeightings.pointsConfiguration.sdrConversion)
   const monthlySdrConversionPoints = calculateSdrConversionPoints(workload.monthlySdrs, caseTypeWeightings.pointsConfiguration.sdr)
-  const paromsPoints = calculateParomPoints(workload.paromsCompletedLast30Days, caseTypeWeightings.pointsConfiguration.parom, caseTypeWeightings.pointsConfiguration.paromsEnabled)
-  const armsPoints = calculateArmsPoints(workload.armsLicenseCases, workload.armsCommunityCases, caseTypeWeightings.armsLicense, caseTypeWeightings.armsCommunity)
 
   const totalWorkloadPoints = communityTierPoints +
                                 custodyTierPoints +
@@ -32,16 +28,13 @@ module.exports = function (workload, caseTypeWeightings, t2aCaseTypeWeightings) 
                                 t2aCustodyTierPoints +
                                 t2aLicenseTierPoints +
                                 sdrConversionPointsLast30Days +
-                                monthlySdrConversionPoints +
-                                paromsPoints +
-                                armsPoints
+                                monthlySdrConversionPoints
+                              
 
   const pointsBreakdown = {
     total: totalWorkloadPoints,
     sdrPoints: monthlySdrConversionPoints,
-    sdrConversionPoints: sdrConversionPointsLast30Days,
-    paromsPoints,
-    armsPoints
+    sdrConversionPoints: sdrConversionPointsLast30Days
   }
   return pointsBreakdown
 }
