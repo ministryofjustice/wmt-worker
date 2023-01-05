@@ -29,7 +29,6 @@ module.exports = function (workload, caseTypeWeightings, t2aCaseTypeWeightings) 
                                 t2aLicenseTierPoints +
                                 sdrConversionPointsLast30Days +
                                 monthlySdrConversionPoints
-                              
 
   const pointsBreakdown = {
     total: totalWorkloadPoints,
