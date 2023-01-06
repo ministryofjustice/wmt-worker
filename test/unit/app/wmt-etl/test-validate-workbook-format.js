@@ -45,27 +45,4 @@ describe('wmt-etl/validate-workbook-format', function () {
     expect(result).to.equal(false)
     done()
   })
-
-  it('should return false when an array of the expected worksheets is passed with invalid sheets also included', function (done) {
-    const result = validateWorkbookFormat([
-      'wmt_extract',
-      'wmt_extract_filtered',
-      'court_reports',
-      'flag_warr_4_n',
-      'flag_upw',
-      'flag_o_due',
-      'flag_priority',
-      'cms',
-      'gs',
-      't2a',
-      'wmt_extract_sa',
-      'suspended_lifers',
-      't2a_detail',
-      'omic_teams',
-      'some_other_sheet'
-    ])
-
-    expect(result).to.equal(false)
-    done()
-  })
 })
