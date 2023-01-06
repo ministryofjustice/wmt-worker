@@ -31,6 +31,20 @@ module.exports.stagingAdjustmentRows = [
   }
 ]
 
+module.exports.stagingAdjustmentRowOlderThanSevenDays = [
+  {
+    contactId: 123,
+    contactCode: 'abc',
+    contactTypeDesc: 'def',
+    contactDate: dateHelper.eightDaysAgo,
+    contactStaffKey: 12,
+    contactTeamKey: 13,
+    omKey: 14,
+    omTeamKey: 15,
+    crn: 'Z6000000'
+  }
+]
+
 module.exports.expectedCmsAdjustments = [
   {
     contactId: module.exports.stagingAdjustmentRows[0].contactId,
@@ -38,7 +52,7 @@ module.exports.expectedCmsAdjustments = [
     points: module.exports.adjustmentReason.points,
     adjustmentReasonId: module.exports.adjustmentReason.id,
     effectiveFrom: moment(dateHelper.today).format('YYYY-MM-DD'),
-    effectiveTo: moment(dateHelper.thirtyDays).format('YYYY-MM-DD'),
+    effectiveTo: moment(dateHelper.sevenDays).format('YYYY-MM-DD'),
     status: adjustmentStatus.ACTIVE,
     crn: module.exports.stagingAdjustmentRows[0].crn
   },
@@ -48,7 +62,7 @@ module.exports.expectedCmsAdjustments = [
     points: module.exports.adjustmentReason.points * -1,
     adjustmentReasonId: module.exports.adjustmentReason.id,
     effectiveFrom: moment(dateHelper.today).format('YYYY-MM-DD'),
-    effectiveTo: moment(dateHelper.thirtyDays).format('YYYY-MM-DD'),
+    effectiveTo: moment(dateHelper.sevenDays).format('YYYY-MM-DD'),
     status: adjustmentStatus.ACTIVE,
     crn: module.exports.stagingAdjustmentRows[0].crn
   },
@@ -58,7 +72,7 @@ module.exports.expectedCmsAdjustments = [
     points: module.exports.adjustmentReason.points,
     adjustmentReasonId: module.exports.adjustmentReason.id,
     effectiveFrom: moment(dateHelper.today).format('YYYY-MM-DD'),
-    effectiveTo: moment(dateHelper.thirtyDays).format('YYYY-MM-DD'),
+    effectiveTo: moment(dateHelper.sevenDays).format('YYYY-MM-DD'),
     status: adjustmentStatus.ACTIVE,
     crn: module.exports.stagingAdjustmentRows[1].crn
   },
@@ -68,7 +82,7 @@ module.exports.expectedCmsAdjustments = [
     points: module.exports.adjustmentReason.points * -1,
     adjustmentReasonId: module.exports.adjustmentReason.id,
     effectiveFrom: moment(dateHelper.today).format('YYYY-MM-DD'),
-    effectiveTo: moment(dateHelper.thirtyDays).format('YYYY-MM-DD'),
+    effectiveTo: moment(dateHelper.sevenDays).format('YYYY-MM-DD'),
     status: adjustmentStatus.ACTIVE,
     crn: module.exports.stagingAdjustmentRows[1].crn
   }
@@ -81,7 +95,7 @@ module.exports.expectedGsAdjustments = [
     points: module.exports.adjustmentReason.points * -1,
     adjustmentReasonId: module.exports.adjustmentReason.id,
     effectiveFrom: moment(dateHelper.today).format('YYYY-MM-DD'),
-    effectiveTo: moment(dateHelper.thirtyDays).format('YYYY-MM-DD'),
+    effectiveTo: moment(dateHelper.sevenDays).format('YYYY-MM-DD'),
     status: adjustmentStatus.ACTIVE,
     crn: module.exports.stagingAdjustmentRows[0].crn
   },
@@ -91,7 +105,7 @@ module.exports.expectedGsAdjustments = [
     points: module.exports.adjustmentReason.points * -1,
     adjustmentReasonId: module.exports.adjustmentReason.id,
     effectiveFrom: moment(dateHelper.today).format('YYYY-MM-DD'),
-    effectiveTo: moment(dateHelper.thirtyDays).format('YYYY-MM-DD'),
+    effectiveTo: moment(dateHelper.sevenDays).format('YYYY-MM-DD'),
     status: adjustmentStatus.ACTIVE,
     crn: module.exports.stagingAdjustmentRows[1].crn
   }

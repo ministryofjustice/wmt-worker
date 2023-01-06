@@ -154,7 +154,7 @@ workflows:
       - hmpps/deploy_env:
           name: deploy_dev
           env: "dev"
-          jira_update: true
+          jira_update: false
           jira_env_type: development
           context: hmpps-common-vars
           filters:
@@ -167,10 +167,14 @@ workflows:
             - integration_test
             - build_docker
           helm_timeout: 5m
+      - request-preprod-approval:
+          type: approval
+          requires:
+            - deploy_dev
       - hmpps/deploy_env:
           name: deploy_preprod
           env: "preprod"
-          jira_update: true
+          jira_update: false
           jira_env_type: staging
           context: 
             - hmpps-common-vars
@@ -180,10 +184,7 @@ workflows:
               only:
                 - main
           requires:
-            - helm_lint
-            - unit_test
-            - integration_test
-            - build_docker
+            - request-preprod-approval
           helm_timeout: 5m
       - request-prod-approval:
           type: approval
@@ -193,7 +194,7 @@ workflows:
       - hmpps/deploy_env:
           name: deploy_prod
           env: "prod"
-          jira_update: true
+          jira_update: false
           jira_env_type: production
           slack_notification: true
           slack_channel_name: << pipeline.parameters.releases-slack-channel >>

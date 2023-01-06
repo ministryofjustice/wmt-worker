@@ -76,7 +76,7 @@ describe('etl runs when only PS file has been updated', function () {
       return knex(sheetName).withSchema('staging').column(config.VALID_COLUMNS[sheetName])
         .then(function (results) {
           expect(results.length, sheetName + ' table should contain ' + expectedInputData[sheetName].length + ' entries').to.equal(expectedInputData[sheetName].length)
-          expect(results).to.have.deep.members(expectedInputData[sheetName])
+          expect(results, sheetName + ' table should have expected members').to.have.deep.members(expectedInputData[sheetName])
         })
     }))
   })
