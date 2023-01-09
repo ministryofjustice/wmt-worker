@@ -1,5 +1,4 @@
 const getStagingCms = require('./data/get-staging-cms')
-const getStagingGs = require('./data/get-staging-gs')
 const getWorkloadOwnerId = require('./data/get-app-workload-owner-id')
 const getAdjustmentReasonFromCode = require('./data/get-adjustment-reason-from-code')
 const getWorkloadOwnersInWorkloadRange = require('./data/get-workload-owners-in-workload-range')
@@ -55,42 +54,6 @@ module.exports.mapCmsAdjustments = function (workloadStagingIdStart, workloadSta
                         }
                         return result
                       })
-                  })
-              })
-          }).then(function (result) {
-            return result.flat()
-          })
-        })
-    })
-}
-
-module.exports.mapGsAdjustments = function (workloadStagingIdStart, workloadStagingIdEnd, workloadReportId) {
-  return getWorkloadOwnersInWorkloadRange(workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
-    .then(function (workloadOwnerIds) {
-      return getStagingGs()
-        .then(function (stagingGsAdjustments) {
-          return arrayToPromise(stagingGsAdjustments, function (gsAdjustment) {
-            return getAdjustmentReasonFromCode(gsAdjustment.contactCode)
-              .then(function (adjustmentReason) {
-                return getWorkloadOwnerId(gsAdjustment.omKey, gsAdjustment.omTeamKey)
-                  .then(function (workloadOwnerId) {
-                    const startDate = moment(gsAdjustment.contactDate).format('YYYY-MM-DD')
-                    const endDate = moment(startDate).add(7, 'days').format('YYYY-MM-DD')
-                    const result = []
-                    const newGsAdjustment = {
-                      contactId: gsAdjustment.contactId,
-                      workloadOwnerId,
-                      points: adjustmentReason.points * -1,
-                      adjustmentReasonId: adjustmentReason.id,
-                      effectiveFrom: startDate,
-                      effectiveTo: endDate,
-                      status: adjustmentStatus.ACTIVE,
-                      crn: gsAdjustment.crn
-                    }
-                    if (workloadOwnerIds.includes(newGsAdjustment.workloadOwnerId)) {
-                      result.push(newGsAdjustment)
-                    }
-                    return result
                   })
               })
           }).then(function (result) {
