@@ -68,7 +68,6 @@ module.exports.execute = async function (task) {
                     if (availablePoints === null) {
                       availablePoints = 0
                     }
-                    const armsTotalCases = workload.armsCommunityCases + workload.armsLicenseCases
                     return checkForDuplicateCalculation(reportId, workloadId)
                       .then(function (result) {
                         // check if calculation already exists when the operatioType is INSERT
@@ -86,14 +85,12 @@ module.exports.execute = async function (task) {
                               totalPoints,
                               workloadPointsBreakdown.sdrPoints,
                               workloadPointsBreakdown.sdrConversionPoints,
-                              workloadPointsBreakdown.paromsPoints,
                               nominalTarget,
                               availablePoints,
                               contractedHours,
                               reductions,
                               cmsAdjustments,
-                              gsAdjustments,
-                              armsTotalCases)
+                              gsAdjustments)
 
                           case operationTypes.UPDATE:
                             return updateWorkloadPointsCalculations(
@@ -104,14 +101,12 @@ module.exports.execute = async function (task) {
                               totalPoints,
                               workloadPointsBreakdown.sdrPoints,
                               workloadPointsBreakdown.sdrConversionPoints,
-                              workloadPointsBreakdown.paromsPoints,
                               nominalTarget,
                               availablePoints,
                               contractedHours,
                               reductions,
                               cmsAdjustments,
-                              gsAdjustments,
-                              armsTotalCases).then(function () {
+                              gsAdjustments).then(function () {
                               return getOffenderManagerByWorkownerId(workload.workloadOwnerId).then(function (staff) {
                                 return snsSuccessUpdater.staffAvailableHoursChange(staff.staffCode, staff.teamCode, contractedHours, reductions)
                               })

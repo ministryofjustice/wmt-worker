@@ -1,8 +1,7 @@
 const knex = require('../../../knex').appSchema
 
 module.exports = function (workloadReportId, workloadPointsId, t2aWorkloadPointsId, workloadId, totalPoints, sdrPoints, sdrPointsConversion,
-  paromsPoints, nominalTarget, availablePoints, contractedHours, reductionHours, cmsAdjustmentPoints, gsAdjustmentPoints,
-  armsTotalCases) {
+  nominalTarget, availablePoints, contractedHours, reductionHours, cmsAdjustmentPoints, gsAdjustmentPoints) {
   return knex('workload_points_calculations')
     .withSchema('app')
     .where('workload_report_id', workloadReportId)
@@ -12,14 +11,12 @@ module.exports = function (workloadReportId, workloadPointsId, t2aWorkloadPoints
       total_points: totalPoints,
       sdr_points: sdrPoints,
       sdr_conversion_points: sdrPointsConversion,
-      paroms_points: paromsPoints,
       nominal_target: nominalTarget,
       available_points: availablePoints,
       reduction_hours: reductionHours,
       cms_adjustment_points: cmsAdjustmentPoints,
       contracted_hours: contractedHours,
       gs_adjustment_points: gsAdjustmentPoints,
-      arms_total_cases: armsTotalCases,
       t2a_workload_points_id: t2aWorkloadPointsId,
       last_updated_on: new Date()
     })

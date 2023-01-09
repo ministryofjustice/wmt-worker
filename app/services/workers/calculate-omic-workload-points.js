@@ -56,7 +56,6 @@ module.exports.execute = async function (task) {
               if (availablePoints === null) {
                 availablePoints = 0
               }
-              const armsTotalCases = workload.armsCommunityCases + workload.armsLicenseCases
               return checkForDuplicateOmicCalculation(reportId, workloadId)
                 .then(function (result) {
                   // check if calculation already exists when the operatioType is INSERT
@@ -75,11 +74,9 @@ module.exports.execute = async function (task) {
                         workloadPointsBreakdown.projectedLicenseTierPoints,
                         workloadPointsBreakdown.sdrPoints,
                         workloadPointsBreakdown.sdrConversionPoints,
-                        workloadPointsBreakdown.paromsPoints,
                         nominalTarget,
                         availablePoints,
-                        contractedHours,
-                        armsTotalCases)
+                        contractedHours)
 
                     case operationTypes.UPDATE:
                       return updateOmicWorkloadPointsCalculations(
@@ -91,11 +88,9 @@ module.exports.execute = async function (task) {
                         workloadPointsBreakdown.projectedLicenseTierPoints,
                         workloadPointsBreakdown.sdrPoints,
                         workloadPointsBreakdown.sdrConversionPoints,
-                        workloadPointsBreakdown.paromsPoints,
                         nominalTarget,
                         availablePoints,
-                        contractedHours,
-                        armsTotalCases)
+                        contractedHours)
                     default:
                       throw new Error('Operation type of ' + operationType + ' is not valid. Should be ' + operationTypes.INSERT + ' or ' + operationTypes.UPDATE)
                   }

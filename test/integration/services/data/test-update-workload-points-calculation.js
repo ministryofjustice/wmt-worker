@@ -28,7 +28,6 @@ describe('app/services/data/update-workload-points-calculation', function () {
       originalWpc.total_points + 1,
       originalWpc.sdr_points + 1,
       originalWpc.sdr_conversion_points + 1,
-      originalWpc.paroms_points,
       originalWpc.nominal_target,
       originalWpc.available_points,
       originalWpc.reduction_hours,
