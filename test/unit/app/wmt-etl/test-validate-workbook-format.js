@@ -12,7 +12,6 @@ describe('wmt-etl/validate-workbook-format', function () {
       'flag_o_due',
       'flag_priority',
       'cms',
-      'gs',
       't2a',
       'wmt_extract_sa',
       'suspended_lifers',
@@ -27,7 +26,6 @@ describe('wmt-etl/validate-workbook-format', function () {
   it('should return false when an array of only some of the expected worksheets is passed', function (done) {
     const result = validateWorkbookFormat([
       'cms',
-      'gs',
       't2a',
       'wmt_extract_sa',
       'suspended_lifers',

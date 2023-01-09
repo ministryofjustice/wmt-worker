@@ -24,14 +24,6 @@ describe('services/data/get-adjustment-points', function () {
     })
   })
 
-  it('should retrieve the total GS active adjustment points for a given workload owner', function (done) {
-    const workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
-    getAdjustmentPoints(workloadOwnerId, adjustmentCategory.GS).then(function (points) {
-      expect(points).to.equal(4)
-      done()
-    })
-  })
-
   after(function () {
     return removeIntegrationTestData()
   })

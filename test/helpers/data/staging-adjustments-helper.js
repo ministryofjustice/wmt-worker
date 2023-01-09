@@ -87,26 +87,3 @@ module.exports.expectedCmsAdjustments = [
     crn: module.exports.stagingAdjustmentRows[1].crn
   }
 ]
-
-module.exports.expectedGsAdjustments = [
-  {
-    contactId: module.exports.stagingAdjustmentRows[0].contactId,
-    workloadOwnerId: 1,
-    points: module.exports.adjustmentReason.points * -1,
-    adjustmentReasonId: module.exports.adjustmentReason.id,
-    effectiveFrom: moment(dateHelper.today).format('YYYY-MM-DD'),
-    effectiveTo: moment(dateHelper.sevenDays).format('YYYY-MM-DD'),
-    status: adjustmentStatus.ACTIVE,
-    crn: module.exports.stagingAdjustmentRows[0].crn
-  },
-  {
-    contactId: module.exports.stagingAdjustmentRows[1].contactId,
-    workloadOwnerId: 1,
-    points: module.exports.adjustmentReason.points * -1,
-    adjustmentReasonId: module.exports.adjustmentReason.id,
-    effectiveFrom: moment(dateHelper.today).format('YYYY-MM-DD'),
-    effectiveTo: moment(dateHelper.sevenDays).format('YYYY-MM-DD'),
-    status: adjustmentStatus.ACTIVE,
-    crn: module.exports.stagingAdjustmentRows[1].crn
-  }
-]

@@ -27,7 +27,6 @@ const WORKLOAD_POINTS_BREAKDOWN = {
   sdrConversionPoints: SDR_POINTS,
   sdrPoints: SDR_POINTS
 }
-const GS_POINTS = -10
 
 let calculateWorkloadPoints
 let parseWorkloadsStub
@@ -142,7 +141,6 @@ describe('services/workers/calculate-workload-points', function () {
   it('should call insertWorkloadPointsCalculations with the correct params when positive CMS adjustments are applied', function () {
     checkForDuplicateCalculation.resolves(undefined)
     getAdjustmentPoints.withArgs(workloads.workloadOwnerId, adjustmentCategory.CMS).resolves(CMS_POINTS_POSITIVE)
-    getAdjustmentPoints.withArgs(workloads.workloadOwnerId, adjustmentCategory.GS).resolves(0)
 
     const expectedTotalPoints = (WORKLOAD_POINTS + CMS_POINTS_POSITIVE)
 
@@ -157,7 +155,6 @@ describe('services/workers/calculate-workload-points', function () {
   it('should call insertWorkloadPointsCalculations with the correct params when negative CMS adjustments are applied', function () {
     checkForDuplicateCalculation.resolves(undefined)
     getAdjustmentPoints.withArgs(workloads.workloadOwnerId, adjustmentCategory.CMS).resolves(CMS_POINTS_NEGATIVE)
-    getAdjustmentPoints.withArgs(workloads.workloadOwnerId, adjustmentCategory.GS).resolves(0)
 
     const expectedTotalPoints = (WORKLOAD_POINTS + CMS_POINTS_NEGATIVE)
 
@@ -165,45 +162,6 @@ describe('services/workers/calculate-workload-points', function () {
       expect(
         insertWorkloadPointsCalculationsStub.calledWith(REPORT_ID, WORKLOAD_POINTS_ID, T2A_WORKLOAD_POINTS_ID, WORKLOAD_ID, expectedTotalPoints, SDR_POINTS, SDR_POINTS,
           NOMINAL_TARGET, AVAILABLE_POINTS, CONTRACTED_HOURS, REDUCTION_HOURS, CMS_POINTS_NEGATIVE, 0)
-      ).to.equal(true)
-    })
-  })
-
-  it('should call insertWorkloadPointsCalculations with the correct params when GS adjustments are applied', function () {
-    checkForDuplicateCalculation.resolves(undefined)
-    getAdjustmentPoints.withArgs(workloads.workloadOwnerId, adjustmentCategory.CMS).resolves(0)
-    getAdjustmentPoints.withArgs(workloads.workloadOwnerId, adjustmentCategory.GS).resolves(GS_POINTS)
-
-    const expectedTotalPoints = (WORKLOAD_POINTS + GS_POINTS)
-
-    return calculateWorkloadPoints.execute(task).then(function () {
-      expect(
-        insertWorkloadPointsCalculationsStub.calledWith(REPORT_ID, WORKLOAD_POINTS_ID, T2A_WORKLOAD_POINTS_ID, WORKLOAD_ID, expectedTotalPoints, SDR_POINTS, SDR_POINTS,
-          NOMINAL_TARGET, AVAILABLE_POINTS, CONTRACTED_HOURS, REDUCTION_HOURS, 0, GS_POINTS)
-      ).to.equal(true)
-    })
-  })
-
-  it('should call updateWorkloadPointsCalculations when the task type is updated', function () {
-    checkForDuplicateCalculation.resolves(0)
-    getAdjustmentPoints.withArgs(workloads.workloadOwnerId, adjustmentCategory.CMS).resolves(0)
-    getAdjustmentPoints.withArgs(workloads.workloadOwnerId, adjustmentCategory.GS).resolves(GS_POINTS)
-
-    task = {
-      id: 1,
-      workloadReportId: REPORT_ID,
-      additionalData: {
-        workloadBatch: new Batch(WORKLOAD_ID, 1),
-        operationType: operationTypes.UPDATE
-      }
-    }
-
-    const expectedTotalPoints = (WORKLOAD_POINTS + GS_POINTS)
-
-    return calculateWorkloadPoints.execute(task).then(function () {
-      expect(
-        updateWorkloadPointsCalculationsStub.calledWith(REPORT_ID, WORKLOAD_POINTS_ID, T2A_WORKLOAD_POINTS_ID, WORKLOAD_ID, expectedTotalPoints, SDR_POINTS, SDR_POINTS,
-          NOMINAL_TARGET, AVAILABLE_POINTS, CONTRACTED_HOURS, REDUCTION_HOURS, 0, GS_POINTS)
       ).to.equal(true)
     })
   })

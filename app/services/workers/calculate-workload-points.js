@@ -48,7 +48,6 @@ module.exports.execute = async function (task) {
       const getOffenderManagerTypePromise = getOffenderManagerTypeId(workload.workloadOwnerId)
       const getAppReductionsPromise = getAppReductions(workload.workloadOwnerId)
       const getCmsAdjustmentPointsPromise = getAdjustmentPoints(workload.workloadOwnerId, adjustmentCategory.CMS)
-      const getGsAdjustmentPointsPromise = getAdjustmentPoints(workload.workloadOwnerId, adjustmentCategory.GS)
       const getContractedHoursPromise = getContractedHours(workload.workloadOwnerId)
 
       return pointsConfigurationPromise.then(function (pointsConfiguration) {
@@ -58,64 +57,60 @@ module.exports.execute = async function (task) {
           const workloadPointsBreakdown = calculateWorkloadPoints(workload, caseTypeWeightings, t2aCaseTypeWeightings)
           return getAppReductionsPromise.then(function (reductions) {
             return getCmsAdjustmentPointsPromise.then(function (cmsAdjustments) {
-              return getGsAdjustmentPointsPromise.then(function (gsAdjustments) {
-                const totalPoints = Math.round(workloadPointsBreakdown.total + cmsAdjustments + gsAdjustments)
-                return getContractedHoursPromise.then(function (contractedHours) {
-                  return getOffenderManagerTypePromise.then(function (offenderManagerTypeId) {
-                    const nominalTarget = calculateNominalTarget(offenderManagerTypeId, caseTypeWeightings.pointsConfiguration.defaultNominalTargets)
-                    let availablePoints = calculateAvailablePoints(nominalTarget, offenderManagerTypeId, contractedHours,
-                      reductions, caseTypeWeightings.pointsConfiguration.defaultContractedHours)
-                    if (availablePoints === null) {
-                      availablePoints = 0
-                    }
-                    return checkForDuplicateCalculation(reportId, workloadId)
-                      .then(function (result) {
-                        // check if calculation already exists when the operatioType is INSERT
-                        // no need to do this change anything if the operationType is UPDATE
-                        if (operationType === operationTypes.INSERT && result !== undefined) {
-                          operationType = operationTypes.UPDATE
-                        }
-                        switch (operationType) {
-                          case operationTypes.INSERT:
-                            return insertWorkloadPointsCalculations(
-                              reportId,
-                              pointsConfiguration.id,
-                              t2aPointsConfiguration.id,
-                              workloadId,
-                              totalPoints,
-                              workloadPointsBreakdown.sdrPoints,
-                              workloadPointsBreakdown.sdrConversionPoints,
-                              nominalTarget,
-                              availablePoints,
-                              contractedHours,
-                              reductions,
-                              cmsAdjustments,
-                              gsAdjustments)
+              const totalPoints = Math.round(workloadPointsBreakdown.total + cmsAdjustments)
+              return getContractedHoursPromise.then(function (contractedHours) {
+                return getOffenderManagerTypePromise.then(function (offenderManagerTypeId) {
+                  const nominalTarget = calculateNominalTarget(offenderManagerTypeId, caseTypeWeightings.pointsConfiguration.defaultNominalTargets)
+                  let availablePoints = calculateAvailablePoints(nominalTarget, offenderManagerTypeId, contractedHours,
+                    reductions, caseTypeWeightings.pointsConfiguration.defaultContractedHours)
+                  if (availablePoints === null) {
+                    availablePoints = 0
+                  }
+                  return checkForDuplicateCalculation(reportId, workloadId)
+                    .then(function (result) {
+                      // check if calculation already exists when the operatioType is INSERT
+                      // no need to do this change anything if the operationType is UPDATE
+                      if (operationType === operationTypes.INSERT && result !== undefined) {
+                        operationType = operationTypes.UPDATE
+                      }
+                      switch (operationType) {
+                        case operationTypes.INSERT:
+                          return insertWorkloadPointsCalculations(
+                            reportId,
+                            pointsConfiguration.id,
+                            t2aPointsConfiguration.id,
+                            workloadId,
+                            totalPoints,
+                            workloadPointsBreakdown.sdrPoints,
+                            workloadPointsBreakdown.sdrConversionPoints,
+                            nominalTarget,
+                            availablePoints,
+                            contractedHours,
+                            reductions,
+                            cmsAdjustments)
 
-                          case operationTypes.UPDATE:
-                            return updateWorkloadPointsCalculations(
-                              reportId,
-                              pointsConfiguration.id,
-                              t2aPointsConfiguration.id,
-                              workloadId,
-                              totalPoints,
-                              workloadPointsBreakdown.sdrPoints,
-                              workloadPointsBreakdown.sdrConversionPoints,
-                              nominalTarget,
-                              availablePoints,
-                              contractedHours,
-                              reductions,
-                              cmsAdjustments,
-                              gsAdjustments).then(function () {
-                              return getOffenderManagerByWorkownerId(workload.workloadOwnerId).then(function (staff) {
-                                return snsSuccessUpdater.staffAvailableHoursChange(staff.staffCode, staff.teamCode, contractedHours, reductions)
-                              })
+                        case operationTypes.UPDATE:
+                          return updateWorkloadPointsCalculations(
+                            reportId,
+                            pointsConfiguration.id,
+                            t2aPointsConfiguration.id,
+                            workloadId,
+                            totalPoints,
+                            workloadPointsBreakdown.sdrPoints,
+                            workloadPointsBreakdown.sdrConversionPoints,
+                            nominalTarget,
+                            availablePoints,
+                            contractedHours,
+                            reductions,
+                            cmsAdjustments).then(function () {
+                            return getOffenderManagerByWorkownerId(workload.workloadOwnerId).then(function (staff) {
+                              return snsSuccessUpdater.staffAvailableHoursChange(staff.staffCode, staff.teamCode, contractedHours, reductions)
                             })
-                          default:
-                            throw new Error('Operation type of ' + operationType + ' is not valid. Should be ' + operationTypes.INSERT + ' or ' + operationTypes.UPDATE)
-                        }
-                      })
-                  })
+                          })
+                        default:
+                          throw new Error('Operation type of ' + operationType + ' is not valid. Should be ' + operationTypes.INSERT + ' or ' + operationTypes.UPDATE)
+                      }
+                    })
                 })
               })
             })
