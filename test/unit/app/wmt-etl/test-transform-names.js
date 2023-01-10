@@ -13,12 +13,11 @@ describe('wmt-etl/transform-names', function () {
       'Flag_O_Due',
       'Flag_Priority',
       'CMS',
-      'Gs',
       't2A',
       'Wmt_Extract_SA',
       'Suspended_Lifers',
       'T2a_Detail',
-      'Omic_Teams     '
+      'Omic_Teams'
     ])
 
     expect(result).to.deep.equal(config.VALID_SHEET_NAMES)

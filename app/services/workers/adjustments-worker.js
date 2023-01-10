@@ -51,12 +51,4 @@ const processAdjustments = function (workloadStagingIdStart, workloadStagingIdEn
 
 const getAllStgAdjustmentsForBatch = function (workloadStagingIdStart, workloadStagingIdEnd, workloadReportId) {
   return stagingAdjustmentsMapper.mapCmsAdjustments(workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
-    .then(function (stgCmsAdjustments) {
-      return stagingAdjustmentsMapper.mapGsAdjustments(workloadStagingIdStart, workloadStagingIdEnd, workloadReportId)
-        .then(function (stgGsAdjustments) {
-          let stgAdjustments = []
-          stgAdjustments = stgCmsAdjustments.concat(stgGsAdjustments)
-          return stgAdjustments
-        })
-    })
 }
