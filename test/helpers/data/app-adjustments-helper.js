@@ -4,7 +4,6 @@ const adjustmentStatus = require('../../../app/constants/adjustment-status')
 const helper = require('./app-workload-helper')
 
 const CMS_ADJUSTMENT_REASON_ID = 1
-const GS_ADJUSTMENT_REASON_ID = 40
 
 module.exports.insertDependencies = function (inserts = []) {
   const promise = helper.insertDependencies(inserts)
@@ -35,12 +34,6 @@ module.exports.getAdjustmentObjects = function (workloadOwnerId) {
     { workload_owner_id: workloadOwnerId, points: 7, effective_from: effectiveFrom, effective_to: effectiveTo, adjustment_reason_id: CMS_ADJUSTMENT_REASON_ID, status: null, contact_id: 123 },
     { workload_owner_id: workloadOwnerId, points: 9, effective_from: effectiveFrom, effective_to: effectiveTo, adjustment_reason_id: CMS_ADJUSTMENT_REASON_ID, status: adjustmentStatus.ACTIVE, contact_id: 321 },
     { workload_owner_id: workloadOwnerId, points: 4, effective_from: effectiveFrom, effective_to: effectiveTo, adjustment_reason_id: CMS_ADJUSTMENT_REASON_ID, status: adjustmentStatus.SCHEDULED, contact_id: null },
-    { workload_owner_id: workloadOwnerId, points: 5, effective_from: effectiveFrom, effective_to: effectiveTo, adjustment_reason_id: CMS_ADJUSTMENT_REASON_ID, status: adjustmentStatus.ARCHIVED, contact_id: 312 },
-    // GS
-    { workload_owner_id: workloadOwnerId, points: 1, effective_from: effectiveFrom, effective_to: effectiveTo, adjustment_reason_id: GS_ADJUSTMENT_REASON_ID, status: null, contact_id: 222 },
-    { workload_owner_id: workloadOwnerId, points: 2, effective_from: effectiveFrom, effective_to: effectiveTo, adjustment_reason_id: GS_ADJUSTMENT_REASON_ID, status: adjustmentStatus.ACTIVE, contact_id: 333 },
-    { workload_owner_id: workloadOwnerId, points: 3, effective_from: effectiveFrom, effective_to: effectiveTo, adjustment_reason_id: GS_ADJUSTMENT_REASON_ID, status: adjustmentStatus.SCHEDULED, contact_id: null },
-    { workload_owner_id: workloadOwnerId, points: 4, effective_from: effectiveFrom, effective_to: effectiveTo, adjustment_reason_id: GS_ADJUSTMENT_REASON_ID, status: adjustmentStatus.ARCHIVED, contact_id: 444 },
-    { workload_owner_id: workloadOwnerId, points: 2, effective_from: effectiveFrom, effective_to: effectiveTo, adjustment_reason_id: GS_ADJUSTMENT_REASON_ID, status: adjustmentStatus.ACTIVE, contact_id: 111 }
+    { workload_owner_id: workloadOwnerId, points: 5, effective_from: effectiveFrom, effective_to: effectiveTo, adjustment_reason_id: CMS_ADJUSTMENT_REASON_ID, status: adjustmentStatus.ARCHIVED, contact_id: 312 }
   ]
 }
