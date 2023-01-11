@@ -174,7 +174,7 @@ workflows:
           jira_env_type: staging
           context: 
             - hmpps-common-vars
-            - hmpps-workload-preprod
+            - wmt-worker-preprod
           filters:
             branches:
               only:
@@ -199,7 +199,7 @@ workflows:
           slack_channel_name: << pipeline.parameters.releases-slack-channel >>
           context: 
             - hmpps-common-vars
-            - hmpps-workload-prod
+            - wmt-worker-prod
           requires:
             - request-prod-approval
           helm_timeout: 5m
