@@ -1,13 +1,9 @@
 const expect = require('chai').expect
-const proxyquire = require('proxyquire')
-const sinon = require('sinon')
 
 const insertStagingOmicWorkload = require('../../../helpers/data/insert-staging-omic-workload-helper')
 const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
+const createWorkload = require('../../../../app/services/workers/create-omic-workload')
 const knex = require('../../../../knex').appSchema
-
-let createWorkload
-let createNewTasks
 
 const task = {
   additionalData: {
@@ -18,19 +14,14 @@ const task = {
 
 describe('services/workers/create-omic-workload', function () {
   beforeEach(function () {
-    createNewTasks = sinon.stub()
-
-    createWorkload = proxyquire('../../../../app/services/workers/create-omic-workload', {
-      '../data/create-tasks': createNewTasks
-    })
     return insertStagingOmicWorkload()
-      .then(function (stagingId) {
-        task.additionalData.startingId = stagingId
+      .then(function (result) {
+        task.additionalData.startingId = result.stagingId
+        task.workloadReportId = result.workloadReportId
       })
   })
 
   it('should insert the correct omic tiers with the correct totals per tier', function () {
-    createNewTasks.resolves()
     return createWorkload.execute(task)
       .then(function () {
         return knex('omic_workload').withSchema('app').where('offender_manager.key', 'OMKEY01')

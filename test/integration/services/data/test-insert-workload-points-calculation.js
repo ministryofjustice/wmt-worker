@@ -9,15 +9,14 @@ const removeIntegrationTestData = require('../../../helpers/data/remove-integrat
 let inserts = []
 /* eslint-disable no-unused-expressions */
 describe('services/data/insert-workload-points-calculation', function () {
-  before(function (done) {
-    helper.insertDependencies(inserts)
+  before(function () {
+    return helper.insertDependencies(inserts)
       .then(function (builtInserts) {
         inserts = builtInserts
-        done()
       })
   })
 
-  it('inserts the workload points calculations with the supplied values', function (done) {
+  it('inserts the workload points calculations with the supplied values', function () {
     const workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
     const workloadPointIds = inserts.filter((item) => item.table === 'workload_points')
     const workloadPointsId = workloadPointIds[0].id
@@ -32,7 +31,7 @@ describe('services/data/insert-workload-points-calculation', function () {
     const contractedHours = 38.5
     const cmsAdjustmentPoints = 15
 
-    insertWorkloadPointsCalculations(workloadReportId, workloadPointsId, t2aWorkloadPointsId, workloadId, totalPoints, sdrPoints, sdrConversionPoints,
+    return insertWorkloadPointsCalculations(workloadReportId, workloadPointsId, t2aWorkloadPointsId, workloadId, totalPoints, sdrPoints, sdrConversionPoints,
       nominalTarget, availablePoints, contractedHours, reductionHours, cmsAdjustmentPoints)
       .then(function (ids) {
         const insertedId = ids[0]
@@ -54,7 +53,6 @@ describe('services/data/insert-workload-points-calculation', function () {
             expect(insertedObject.gs_adjustment_points).to.eql(0)
             expect(insertedObject.contracted_hours).to.eql(contractedHours)
             expect(insertedObject.last_updated_on).to.exist
-            done()
           })
       })
   })

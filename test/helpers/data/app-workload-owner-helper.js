@@ -2,21 +2,21 @@ const knex = require('../../../knex').appSchema
 
 module.exports.insertDependencies = function (inserts) {
   const promise = knex('offender_manager_type').withSchema('app').returning('id').insert({ description: 'test' })
-    .then(function (ids) {
-      inserts.push({ table: 'offender_manager_type', id: ids[0] })
-      return knex('offender_manager').withSchema('app').returning(['id', 'key']).insert({ type_id: ids[0], key: ids[0] + 'abc' })
+    .then(function ([ids]) {
+      inserts.push({ table: 'offender_manager_type', id: ids.id })
+      return knex('offender_manager').withSchema('app').returning(['id', 'key']).insert({ type_id: ids.id, key: ids.id + 'abc' })
     })
     .then(function ([offenderManager]) {
       inserts.push({ table: 'offender_manager', id: offenderManager.id, offender_manager_code: offenderManager.key })
       return knex('region').withSchema('app').returning('id').insert({})
     })
-    .then(function (ids) {
-      inserts.push({ table: 'region', id: ids[0] })
-      return knex('ldu').withSchema('app').returning('id').insert({ region_id: ids[0], description: 'Test Ldu 4', code: ids[0] + 'LDU' })
+    .then(function ([ids]) {
+      inserts.push({ table: 'region', id: ids.id })
+      return knex('ldu').withSchema('app').returning('id').insert({ region_id: ids.id, description: 'Test Ldu 4', code: ids.id + 'LDU' })
     })
-    .then(function (ids) {
-      inserts.push({ table: 'ldu', id: ids[0] })
-      return knex('team').withSchema('app').returning(['id', 'code']).insert({ ldu_id: ids[0], code: ids[0] + '123' })
+    .then(function ([ids]) {
+      inserts.push({ table: 'ldu', id: ids.id })
+      return knex('team').withSchema('app').returning(['id', 'code']).insert({ ldu_id: ids.id, code: ids.id + '123' })
     })
     .then(function ([team]) {
       inserts.push({ table: 'team', id: team.id, teamCode: team.code })
@@ -27,8 +27,8 @@ module.exports.insertDependencies = function (inserts) {
           contracted_hours: 40
         })
     })
-    .then(function (ids) {
-      inserts.push({ table: 'workload_owner', id: ids[0] })
+    .then(function ([ids]) {
+      inserts.push({ table: 'workload_owner', id: ids.id })
       return knex('workload_owner').withSchema('app').returning('id')
         .insert({
           team_id: inserts.filter((item) => item.table === 'team')[0].id,
@@ -36,8 +36,8 @@ module.exports.insertDependencies = function (inserts) {
           contracted_hours: null
         })
     })
-    .then(function (ids) {
-      inserts.push({ table: 'workload_owner', id: ids[0] })
+    .then(function ([ids]) {
+      inserts.push({ table: 'workload_owner', id: ids.id })
       return inserts
     })
 
@@ -74,8 +74,8 @@ module.exports.addDuplicateWorkloadOwner = function (inserts) {
       offender_manager_id: inserts.filter((item) => item.table === 'offender_manager')[0].id,
       contracted_hours: null
     })
-    .then(function (ids) {
-      results.push({ table: 'workload_owner', id: ids[0] })
+    .then(function ([ids]) {
+      results.push({ table: 'workload_owner', id: ids.id })
       return results
     })
 }

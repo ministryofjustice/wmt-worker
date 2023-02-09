@@ -20,7 +20,9 @@ module.exports = function (team) {
         return knex(teamTable)
           .withSchema('app')
           .insert(teamDbObject)
-          .returning('id')
+          .returning('id').then(function (results) {
+            return results.map((result) => result.id)
+          })
       } else {
         // check if team name is still the same
         // if it isn't, update

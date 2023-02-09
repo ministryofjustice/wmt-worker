@@ -7,12 +7,12 @@ module.exports.insertDependencies = function (inserts) {
   ]
 
   return knex('workload_report').withSchema('app').returning('id').insert(workloadReports)
-    .then(function (workloadReportId) {
-      inserts.push({ table: 'workload_report', id: workloadReportId[0] })
+    .then(function ([workloadReportId]) {
+      inserts.push({ table: 'workload_report', id: workloadReportId.id })
       return workloadOwnerHelper.insertDependencies(inserts)
         .then(function (inserts) {
           const newCourtReport = {
-            workload_report_id: workloadReportId[0],
+            workload_report_id: workloadReportId.id,
             staging_id: 999,
             workload_owner_id: inserts.filter((item) => item.table === 'workload_owner')[0].id,
             total_sdrs: 1,
@@ -20,8 +20,8 @@ module.exports.insertDependencies = function (inserts) {
             total_oral_reports: 3
           }
           return knex('court_reports').withSchema('app').returning('id').insert(newCourtReport)
-            .then(function (ids) {
-              inserts.push({ table: 'court_reports', id: ids[0] })
+            .then(function ([ids]) {
+              inserts.push({ table: 'court_reports', id: ids.id })
               return inserts
             })
         })

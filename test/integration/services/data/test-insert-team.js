@@ -11,14 +11,13 @@ let inserts = []
 let teamUniqueIdentifier
 
 describe('app/services/data/insert-team', function () {
-  before(function (done) {
-    teamHelper.addDependenciesForTeam()
+  before(function () {
+    return teamHelper.addDependenciesForTeam()
       .then(function (insertedFields) {
         inserts = insertedFields
-        teamHelper.addDependenciesForTeam()
+        return teamHelper.addDependenciesForTeam()
           .then(function (insertedFields2) {
             inserts = inserts.concat(insertedFields2)
-            done()
           })
       })
   })

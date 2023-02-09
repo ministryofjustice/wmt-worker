@@ -7,5 +7,7 @@ module.exports = function (team) {
     .update('description', team.description)
     .update('ldu_id', team.ldu_id)
     .where({ code: team.code })
-    .returning('id')
+    .returning('id').then(function (results) {
+      return results.map((result) => result.id)
+    })
 }

@@ -8,7 +8,9 @@ module.exports = function (courtReportsCalculation) {
     .where('workload_report_id', dbObject.workload_report_id)
     .where('court_reports_id', dbObject.court_reports_id)
     .returning('id')
-    .update(dbObject)
+    .update(dbObject).then(function (results) {
+      return results.map((result) => result.id)
+    })
 }
 
 const mapToDbObject = function (courtReportCalculation) {

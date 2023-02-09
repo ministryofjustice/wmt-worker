@@ -7,8 +7,8 @@ module.exports = function (effectiveFrom) {
     .withSchema('app')
     .insert(workloadReport)
     .returning('id')
-    .then(function (result) {
-      return result[0]
+    .then(function ([result]) {
+      return result.id
     })
 }
 

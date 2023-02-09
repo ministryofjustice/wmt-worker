@@ -18,7 +18,7 @@ module.exports = function (workloadOwner) {
           .withSchema('app')
           .insert(workloadOwnerDatabaseObject)
           .returning('id').then(function ([id]) {
-            return { id, type: 'CREATE' }
+            return { id: id.id, type: 'CREATE' }
           })
       } else {
         return { id: result.id, type: 'RETRIEVE' }

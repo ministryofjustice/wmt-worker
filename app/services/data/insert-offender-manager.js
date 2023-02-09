@@ -20,8 +20,8 @@ module.exports = function (offenderManager) {
           .withSchema('app')
           .insert(offenderManagerDbObject)
           .returning('id')
-          .then(function (id) {
-            return id
+          .then(function (results) {
+            return results.map((result) => result.id)
           })
       } else {
         // check if staff grade, forename or surname is still the same

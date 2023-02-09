@@ -20,5 +20,7 @@ module.exports = function (workloadReportId, workloadPointsId, t2aWorkloadPoints
       arms_total_cases: 0,
       t2a_workload_points_id: t2aWorkloadPointsId,
       last_updated_on: new Date()
-    }).returning('id')
+    }).returning('id').then(function (results) {
+    return results.map((result) => result.id)
+  })
 }

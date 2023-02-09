@@ -1,7 +1,6 @@
 const knex = require('../../../knex').stagingSchema
 const omicWmtExtract = require('../../constants/omic-wmt-extract')
 const deleteStagingRecords = require('./delete-staging-records')
-let stagingId
 
 module.exports = function () {
   return deleteStagingRecords()
@@ -10,9 +9,16 @@ module.exports = function () {
         .withSchema('staging')
         .insert(omicWmtExtract)
         .returning('id')
-        .then(function (id) {
-          stagingId = id[0]
-          return stagingId
+        .then(function ([stagingId]) {
+          return stagingId.id
+        })
+        .then(function (stagingId) {
+          return knex('workload_report').withSchema('app').returning('id').insert({}).then(function ([result]) {
+            return {
+              stagingId,
+              workloadReportId: result.id
+            }
+          })
         })
     })
 }

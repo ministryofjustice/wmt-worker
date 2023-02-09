@@ -7,11 +7,10 @@ const removeIntegrationTestData = require('../../../helpers/data/remove-integrat
 let inserts = []
 
 describe('services/data/get-contracted-hours', function () {
-  before(function (done) {
-    appWorkloadOwnerHelper.insertDependencies(inserts)
+  before(function () {
+    return appWorkloadOwnerHelper.insertDependencies(inserts)
       .then(function (builtInserts) {
         inserts = builtInserts
-        done()
       })
   })
 

@@ -45,9 +45,6 @@ describe('services/workers/calculate-omic-workload-points', function () {
           expect(workloadPointsCalculations[0].arms_total_cases).to.equal(0)
           expect(workloadPointsCalculations[1].workload_report_id).to.equal(workloadReportId)
           expect(workloadPointsCalculations[2].workload_report_id).to.equal(workloadReportId)
-          workloadPointsCalculations.forEach(function (insertedCalculation) {
-            inserts.push({ table: 'omic_workload_points_calculations', id: insertedCalculation.id })
-          })
         })
     })
   })

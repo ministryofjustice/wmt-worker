@@ -145,8 +145,8 @@ module.exports.insertT2aCaseSummaryReport = function (caseSummary, inserts) {
     .withSchema('staging')
     .insert(mapT2aForInsert(caseSummary))
     .returning('id')
-    .then(function (id) {
-      inserts.push({ table: t2aTable, id: id[0] })
+    .then(function ([id]) {
+      inserts.push({ table: t2aTable, id: id.id })
       return inserts
     })
 }
@@ -156,8 +156,8 @@ module.exports.insertFilteredCaseSummaryReport = function (caseSummary, inserts)
     .withSchema('staging')
     .insert(mapFilteredForInsert(caseSummary))
     .returning('id')
-    .then(function (id) {
-      inserts.push({ table: wmtExtractFilteredTable, id: id[0] })
+    .then(function ([id]) {
+      inserts.push({ table: wmtExtractFilteredTable, id: id.id })
       return inserts
     })
 }
@@ -167,8 +167,8 @@ module.exports.insertCaseSummaryReport = function (caseSummary, inserts) {
     .withSchema('staging')
     .insert(mapForInsert(caseSummary))
     .returning('id')
-    .then(function (id) {
-      inserts.push({ table: wmtExtractTable, id: id[0] })
+    .then(function ([id]) {
+      inserts.push({ table: wmtExtractTable, id: id.id })
       return inserts
     })
 }
@@ -179,8 +179,8 @@ module.exports.insertCourtReport = function (courtReport, inserts) {
     .withSchema('staging')
     .insert(mapForInsert(courtReportToInsert))
     .returning('id')
-    .then(function (id) {
-      inserts.push({ table: courtReportsTable, id: id[0] })
+    .then(function ([id]) {
+      inserts.push({ table: courtReportsTable, id: id.id })
       return inserts
     })
 }
@@ -191,8 +191,8 @@ module.exports.insertInstitutionalReport = function (institutionalReport, insert
     .withSchema('staging')
     .insert(mapForInsert(instReportToInsert))
     .returning('id')
-    .then(function (id) {
-      inserts.push({ table: institutionalReportsTable, id: id[0] })
+    .then(function ([id]) {
+      inserts.push({ table: institutionalReportsTable, id: id.id })
       return inserts
     })
 }
@@ -202,8 +202,8 @@ module.exports.insertArms = function (arms, inserts) {
     .withSchema('staging')
     .insert(arms.map(mapForInsert))
     .returning('id')
-    .then(function (id) {
-      inserts.push({ table: armsTable, id: id[0] })
+    .then(function ([id]) {
+      inserts.push({ table: armsTable, id: id.id })
       return inserts
     })
 }

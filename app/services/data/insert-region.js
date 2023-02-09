@@ -17,7 +17,9 @@ module.exports = function (region) {
         return knex(regionTable)
           .withSchema('app')
           .insert(regionDbObject)
-          .returning('id')
+          .returning('id').then(function (results) {
+            return results.map((result) => result.id)
+          })
       } else {
         // check if region name is still the same
         // if it isn't, update

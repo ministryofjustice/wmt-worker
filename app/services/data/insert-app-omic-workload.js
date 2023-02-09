@@ -18,18 +18,18 @@ module.exports = function (workload, caseDetails) {
     .withSchema('app')
     .insert(workloadDbObj)
     .returning('id')
-    .then(function (workloadId) {
+    .then(function ([workloadId]) {
       const promises = []
-      promises.push(insertTiers(workload.communityTiers, workload.filteredCommunityTiers, workload.t2aCommunityTiers, workloadId[0], Locations.COMMUNITY))
-      promises.push(insertTiers(workload.custodyTiers, workload.filteredCustodyTiers, workload.t2aCustodyTiers, workloadId[0], Locations.CUSTODY))
-      promises.push(insertTiers(workload.licenseTiers, workload.filteredLicenseTiers, workload.t2aLicenseTiers, workloadId[0], Locations.LICENSE))
+      promises.push(insertTiers(workload.communityTiers, workload.filteredCommunityTiers, workload.t2aCommunityTiers, workloadId.id, Locations.COMMUNITY))
+      promises.push(insertTiers(workload.custodyTiers, workload.filteredCustodyTiers, workload.t2aCustodyTiers, workloadId.id, Locations.CUSTODY))
+      promises.push(insertTiers(workload.licenseTiers, workload.filteredLicenseTiers, workload.t2aLicenseTiers, workloadId.id, Locations.LICENSE))
       const communityCaseDetails = caseDetails.filter((caseDetail) => { return caseDetail.location.toUpperCase() === Locations.COMMUNITY })
       const custodyCaseDetails = caseDetails.filter((caseDetail) => { return caseDetail.location.toUpperCase() === Locations.CUSTODY })
       const licenseCaseDetails = caseDetails.filter((caseDetail) => { return caseDetail.location.toUpperCase() === Locations.LICENSE })
-      promises.push(insertCaseDetails(communityCaseDetails, workloadId[0], Locations.COMMUNITY))
-      promises.push(insertCaseDetails(custodyCaseDetails, workloadId[0], Locations.CUSTODY))
-      promises.push(insertCaseDetails(licenseCaseDetails, workloadId[0], Locations.LICENSE))
-      return Promise.all(promises).then(function () { return workloadId[0] })
+      promises.push(insertCaseDetails(communityCaseDetails, workloadId.id, Locations.COMMUNITY))
+      promises.push(insertCaseDetails(custodyCaseDetails, workloadId.id, Locations.CUSTODY))
+      promises.push(insertCaseDetails(licenseCaseDetails, workloadId.id, Locations.LICENSE))
+      return Promise.all(promises).then(function () { return workloadId.id })
     })
 }
 

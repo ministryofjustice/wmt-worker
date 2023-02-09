@@ -3,12 +3,12 @@ const { PENDING } = require('../../../app/constants/task-status')
 
 module.exports.insertDependencies = function (inserts) {
   return knex('workload_report').withSchema('app').returning('id').insert({})
-    .then(function (ids) {
-      inserts.push({ table: 'workload_report', id: ids[0] })
+    .then(function ([ids]) {
+      inserts.push({ table: 'workload_report', id: ids.id })
       return knex('workload_report').withSchema('app').returning('id').insert({})
     })
-    .then(function (ids) {
-      inserts.push({ table: 'workload_report', id: ids[0] })
+    .then(function ([ids]) {
+      inserts.push({ table: 'workload_report', id: ids.id })
 
       const workloadReports = inserts.filter((item) => item.table === 'workload_report')
 
@@ -21,7 +21,7 @@ module.exports.insertDependencies = function (inserts) {
       return knex('tasks').withSchema('app').returning('id').insert(tasks)
     })
     .then(function (ids) {
-      ids.forEach((id) => {
+      ids.forEach(({ id }) => {
         inserts.push({ table: 'tasks', id })
       })
       return inserts

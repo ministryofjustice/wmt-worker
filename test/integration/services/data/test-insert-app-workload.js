@@ -57,8 +57,8 @@ describe('app/services/data/insert-app-workload', function () {
       })
   })
 
-  it('should insert a new workload record', function (done) {
-    knex('workload').withSchema('app')
+  it('should insert a new workload record', function () {
+    return knex('workload').withSchema('app')
       .join('tiers', 'workload.id', 'tiers.workload_id')
       .join('case_details', 'workload.id', 'case_details.workload_id')
       .where({ 'workload.id': workloadId })
@@ -74,7 +74,7 @@ describe('app/services/data/insert-app-workload', function () {
         'workload.arms_license_cases AS arms_license_cases', 'workload.staging_id AS staging_id',
         'workload.workload_report_id AS workload_report_id', 'case_details.case_ref_no AS case_ref_no')
       .then(function (result) {
-        knex('tiers').withSchema('app')
+        return knex('tiers').withSchema('app')
           .where('workload_id', workloadId)
           .select()
           .then(function (tiers) {
@@ -95,7 +95,6 @@ describe('app/services/data/insert-app-workload', function () {
             expect(result[0].arms_license_cases).to.equal(12)
             expect(result[0].staging_id).to.equal(13)
             expect(result[0].workload_report_id).to.equal(14)
-            done()
           })
       })
   })

@@ -6,5 +6,7 @@ module.exports = function (region) {
     .withSchema('app')
     .update('description', region.description)
     .where({ code: region.code })
-    .returning('id')
+    .returning('id').then(function (results) {
+      return results.map((result) => result.id)
+    })
 }

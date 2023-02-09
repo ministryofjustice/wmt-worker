@@ -5,8 +5,8 @@ module.exports.insertDependencies = function (inserts) {
     .withSchema('staging')
     .returning('id')
     .insert(module.exports.defaultCourtReporter)
-    .then(function (insertedId) {
-      inserts.push({ table: 'court_reporters', id: insertedId[0] })
+    .then(function ([insertedId]) {
+      inserts.push({ table: 'court_reporters', id: insertedId.id })
       return inserts
     })
 }
