@@ -12,6 +12,8 @@ module.exports = function (courtReporters) {
   return knex('court_reporters').withSchema('staging').del()
     .then(function () {
       return knex.batchInsert('staging.court_reporters', courtReporters, batchSize)
-        .returning('id')
+        .returning('id').then(function ([result]) {
+          return result.id
+        })
     })
 }
