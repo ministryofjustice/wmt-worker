@@ -5,14 +5,10 @@ const courtReportersHelper = require('../../../helpers/data/staging-court-report
 const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
 
 describe('services/data/replace-staging-court-reporters', function () {
-  let inserts = []
   const newCourtReporters = courtReportersHelper.newCourtReporters
 
   before(function () {
-    return courtReportersHelper.insertDependencies(inserts)
-      .then(function (builtInserts) {
-        inserts = builtInserts
-      })
+    return courtReportersHelper.insertDependencies([])
   })
 
   it('should remove any court reporters records and replace them with the passed in records', function () {
@@ -24,10 +20,7 @@ describe('services/data/replace-staging-court-reporters', function () {
         })
         return replaceStagingCourtReporters(newCourtReporters)
       })
-      .then(function (ids) {
-        ids.forEach((id) => {
-          inserts.push({ table: 'court_reporters', id })
-        })
+      .then(function () {
         return courtReportersHelper.getAllStagingCourtReporters()
       })
       .then(function (insertedCourtReporters) {
