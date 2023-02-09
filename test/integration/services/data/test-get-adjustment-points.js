@@ -8,19 +8,17 @@ const adjustmentCategory = require('../../../../app/constants/adjustment-categor
 let inserts = []
 
 describe('services/data/get-adjustment-points', function () {
-  before(function (done) {
-    appAdjustmentsHelper.insertDependencies(inserts)
+  before(function () {
+    return appAdjustmentsHelper.insertDependencies(inserts)
       .then(function (builtInserts) {
         inserts = builtInserts
-        done()
       })
   })
 
-  it('should retrieve the total CMS active adjustment points for a given workload owner', function (done) {
+  it('should retrieve the total CMS active adjustment points for a given workload owner', function () {
     const workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
-    getAdjustmentPoints(workloadOwnerId, adjustmentCategory.CMS).then(function (points) {
+    return getAdjustmentPoints(workloadOwnerId, adjustmentCategory.CMS).then(function (points) {
       expect(points).to.equal(9)
-      done()
     })
   })
 

@@ -17,7 +17,7 @@ describe('app/services/data/create-tasks', function () {
     })
   })
 
-  it('should insert a new task correctly', function (done) {
+  it('should insert a new task correctly', function () {
     const submittingAgent = 'submittingAgent'
     const type = 'type'
     const additionalData = 'additionalData'
@@ -25,7 +25,7 @@ describe('app/services/data/create-tasks', function () {
 
     const task = new Task(undefined, submittingAgent, type, additionalData, workloadReportId)
 
-    createTasks([task]).then(function (ids) {
+    return createTasks([task]).then(function (ids) {
       return knex.table('tasks').withSchema('app')
         .where({ id: ids[0] })
         .then(function (results) {
@@ -39,7 +39,6 @@ describe('app/services/data/create-tasks', function () {
           expect(moment().diff(result.date_created, 'seconds')).to.be.lt(timeThreshold.INSERT)
           expect(result.effective_to).to.be.undefined // eslint-disable-line
           inserts.push({ table: 'tasks', id: ids[0] })
-          done()
         })
     })
   })

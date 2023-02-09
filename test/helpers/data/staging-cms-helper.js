@@ -27,7 +27,7 @@ module.exports.insertDependencies = function (omKey = 'yza', teamKey = 'efg') {
         .insert({ ...cmsRecord, om_key: omKey, om_team_key: teamKey })
         .returning('id')
         .then(function ([id]) {
-          return { ...cmsRecord, id, stagingId }
+          return { ...cmsRecord, id: id.id, stagingId: stagingId.id }
         })
     })
 }

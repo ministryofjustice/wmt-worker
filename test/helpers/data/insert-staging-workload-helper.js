@@ -19,8 +19,8 @@ module.exports = function () {
         .withSchema('staging')
         .insert(wmtExtract)
         .returning('id')
-        .then(function (id) {
-          stagingId = id[0]
+        .then(function ([id]) {
+          stagingId = id.id
           return knex('wmt_extract_filtered')
             .withSchema('staging')
             .insert(wmtExtractFiltered)

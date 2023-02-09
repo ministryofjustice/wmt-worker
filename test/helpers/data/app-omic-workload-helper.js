@@ -3,28 +3,28 @@ const Locations = require('../../../app/services/probation-rules').Locations
 
 module.exports.insertDependencies = function (inserts) {
   const promise = knex('workload_report').withSchema('app').returning('id').insert({})
-    .then(function (ids) {
-      inserts.push({ table: 'workload_report', id: ids[0] })
+    .then(function ([ids]) {
+      inserts.push({ table: 'workload_report', id: ids.id })
       return knex('offender_manager_type').withSchema('app').returning('id').insert({ description: 'test' })
     })
-    .then(function (ids) {
-      inserts.push({ table: 'offender_manager_type', id: ids[0] })
-      return knex('offender_manager').withSchema('app').returning('id').insert({ type_id: ids[0] })
+    .then(function ([ids]) {
+      inserts.push({ table: 'offender_manager_type', id: ids.id })
+      return knex('offender_manager').withSchema('app').returning('id').insert({ type_id: ids.id })
     })
-    .then(function (ids) {
-      inserts.push({ table: 'offender_manager', id: ids[0] })
+    .then(function ([ids]) {
+      inserts.push({ table: 'offender_manager', id: ids.id })
       return knex('region').withSchema('app').returning('id').insert({})
     })
-    .then(function (ids) {
-      inserts.push({ table: 'region', id: ids[0] })
-      return knex('ldu').withSchema('app').returning('id').insert({ region_id: ids[0] })
+    .then(function ([ids]) {
+      inserts.push({ table: 'region', id: ids.id })
+      return knex('ldu').withSchema('app').returning('id').insert({ region_id: ids.id })
     })
-    .then(function (ids) {
-      inserts.push({ table: 'ldu', id: ids[0] })
-      return knex('team').withSchema('app').returning('id').insert({ ldu_id: ids[0] })
+    .then(function ([ids]) {
+      inserts.push({ table: 'ldu', id: ids.id })
+      return knex('team').withSchema('app').returning('id').insert({ ldu_id: ids.id })
     })
-    .then(function (ids) {
-      inserts.push({ table: 'team', id: ids[0] })
+    .then(function ([ids]) {
+      inserts.push({ table: 'team', id: ids.id })
 
       const offenderManagers = inserts.filter((item) => item.table === 'offender_manager')
       const defaultWorkloadOwner = { team_id: inserts.filter((item) => item.table === 'team')[0].id, contracted_hours: 40, offender_manager_id: offenderManagers[0].id }
@@ -38,7 +38,7 @@ module.exports.insertDependencies = function (inserts) {
       return knex('workload_owner').withSchema('app').returning('id').insert(workloadOwners)
     })
     .then(function (ids) {
-      ids.forEach((id) => {
+      ids.forEach(({ id }) => {
         inserts.push({ table: 'workload_owner', id })
       })
 
@@ -68,9 +68,9 @@ module.exports.insertDependencies = function (inserts) {
       }
 
       const workloads = [
-        Object.assign({}, defaultWorkload, { total_cases: 20, total_filtered_cases: 19, total_t2a_cases: 10, staging_id: 1, workload_owner_id: ids[0] }),
-        Object.assign({}, defaultWorkload, { total_cases: 30, total_filtered_cases: 29, total_t2a_cases: 15, staging_id: 2, workload_owner_id: ids[1] }),
-        Object.assign({}, defaultWorkload, { total_cases: 30, total_filtered_cases: 17, total_t2a_cases: 20, staging_id: 3, workload_owner_id: ids[2] })
+        Object.assign({}, defaultWorkload, { total_cases: 20, total_filtered_cases: 19, total_t2a_cases: 10, staging_id: 1, workload_owner_id: ids[0].id }),
+        Object.assign({}, defaultWorkload, { total_cases: 30, total_filtered_cases: 29, total_t2a_cases: 15, staging_id: 2, workload_owner_id: ids[1].id }),
+        Object.assign({}, defaultWorkload, { total_cases: 30, total_filtered_cases: 17, total_t2a_cases: 20, staging_id: 3, workload_owner_id: ids[2].id })
       ]
 
       return knex('omic_workload').withSchema('app').returning('id').insert(workloads)
@@ -78,7 +78,7 @@ module.exports.insertDependencies = function (inserts) {
     .then(function (ids) {
       const locations = [Locations.COMMUNITY, Locations.CUSTODY, Locations.LICENSE]
       const cases = []
-      ids.forEach((id) => {
+      ids.forEach(({ id }) => {
         inserts.push({ table: 'omic_workload', id })
         for (let i = 0; i < 3; i++) {
           for (let j = 0; j < 17; j++) {
@@ -104,7 +104,7 @@ module.exports.insertDependencies = function (inserts) {
       return knex.batchInsert('app.omic_tiers', cases, 149).returning('id')
     })
     .then(function (ids) {
-      ids.forEach((id) => {
+      ids.forEach(({ id }) => {
         inserts.push({ table: 'omic_tiers', id })
       })
       return inserts

@@ -29,7 +29,7 @@ module.exports.insertDependencies = function (inserts) {
       const workloadPoints = workloadPointsHelper.getWorkloadPoints()
       return knex('workload_points').withSchema('app').returning('id').insert(workloadPoints)
         .then(function (ids) {
-          ids.forEach((id) => {
+          ids.forEach(({ id }) => {
             inserts.push({ table: 'workload_points', id })
           })
           return inserts
@@ -48,8 +48,8 @@ module.exports.addWorkloadPointsCalculation = function (inserts) {
     }
   )
   return knex('omic_workload_points_calculations').withSchema('app').returning('id').insert(workloadPointsCalculation)
-    .then(function (ids) {
-      inserts.push({ table: 'omic_workload_points_calculations', id: ids[0] })
+    .then(function ([ids]) {
+      inserts.push({ table: 'omic_workload_points_calculations', id: ids.id })
       return inserts
     })
 }

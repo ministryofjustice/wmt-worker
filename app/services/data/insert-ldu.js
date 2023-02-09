@@ -19,7 +19,9 @@ module.exports = function (ldu) {
       if (result === undefined) {
         return knex(lduTable).withSchema('app')
           .insert(lduDbObject)
-          .returning('id')
+          .returning('id').then(function (results) {
+            return results.map((result) => result.id)
+          })
       } else {
         // check if ldu name is still the same
         // if it isn't, update

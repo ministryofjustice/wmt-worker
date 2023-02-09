@@ -21,9 +21,9 @@ describe('app/services/data/insert-app-court-reports', function () {
         workloadOwnerId = inserts.filter((item) => item.table === 'workload_owner')[0].id
 
         return knex('workload_report').withSchema('app').insert({ effective_from: new Date(), effective_to: null }).returning('id')
-          .then(function (insertedId) {
-            inserts.push({ table: 'workload_report', id: insertedId })
-            workloadReportId = parseInt(insertedId)
+          .then(function ([insertedId]) {
+            inserts.push({ table: 'workload_report', id: insertedId.id })
+            workloadReportId = parseInt(insertedId.id)
           })
       })
   })

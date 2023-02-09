@@ -12,7 +12,7 @@ module.exports.insertDependencies = function (inserts = []) {
       const adjustments = module.exports.getAdjustmentObjects(workloadOwnerId)
       return knex('adjustments').withSchema('app').returning('id').insert(adjustments)
     }).then(function (ids) {
-      ids.forEach((id) => {
+      ids.forEach(({ id }) => {
         inserts.push({ table: 'adjustments', id })
       })
       return inserts

@@ -20,5 +20,7 @@ module.exports = function (tasks) {
   if (dbTasks.length > 40) {
     batchSize = Math.floor(dbTasks.length / 7) + 1
   }
-  return knex.batchInsert('app.tasks', dbTasks, batchSize).returning('id')
+  return knex.batchInsert('app.tasks', dbTasks, batchSize).returning('id').then(function (results) {
+    return results.map((result) => result.id)
+  })
 }

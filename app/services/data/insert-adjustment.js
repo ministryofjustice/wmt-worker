@@ -15,6 +15,6 @@ module.exports = function (adjustment) {
     })
     .returning('id')
     .then(function (result) {
-      return result[0]
+      return result[0].id
     })
 }

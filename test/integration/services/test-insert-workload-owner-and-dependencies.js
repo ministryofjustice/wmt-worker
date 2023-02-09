@@ -24,7 +24,7 @@ describe('app/services/insert-workload-owner-and-dependencies', function () {
   let workloadOwnerId
   let lduCode
 
-  it('should insert a new offender manager record', function (done) {
+  it('should insert a new offender manager record', function () {
     omGradeCode = 'D'
     omKey = 'N63D897'
     omForename = 'INTEGRATION'
@@ -39,7 +39,7 @@ describe('app/services/insert-workload-owner-and-dependencies', function () {
 
     const caseSummary = new CasesSummary(null, regionDesc, regionCode, lduDesc, lduCode, teamDesc, teamCode, omSurname, omForename, omGradeCode, omKey)
 
-    insertWorkloadOwnerAndDependencies(caseSummary).then(function () {
+    return insertWorkloadOwnerAndDependencies(caseSummary).then(function () {
       return knex.table('offender_manager')
         .withSchema('app')
         .where({ key: omKey })
@@ -85,7 +85,6 @@ describe('app/services/insert-workload-owner-and-dependencies', function () {
                           expect(woRecord.offender_manager_id).to.eq(omRecord.id)
                           expect(woRecord.contracted_hours).to.eq(contractedHours)
                           expect(woRecord.team_id).to.eq(teamRecord.id)
-                          done()
                         })
                     })
                 })
@@ -94,7 +93,7 @@ describe('app/services/insert-workload-owner-and-dependencies', function () {
     })
   })
 
-  it('should update an existing offender manager record', function (done) {
+  it('should update an existing offender manager record', function () {
     omGradeCode = 'D'
     omKey = 'N63D897'
     omForename = 'INTEGRATION NEW'
@@ -109,7 +108,7 @@ describe('app/services/insert-workload-owner-and-dependencies', function () {
 
     const caseSummary = new CasesSummary(null, regionDesc, regionCode, lduDesc, lduCode, teamDesc, teamCode, omSurname, omForename, omGradeCode, omKey)
 
-    insertWorkloadOwnerAndDependencies(caseSummary).then(function () {
+    return insertWorkloadOwnerAndDependencies(caseSummary).then(function () {
       return knex.table('offender_manager')
         .withSchema('app')
         .where({ key: omKey })
@@ -154,7 +153,6 @@ describe('app/services/insert-workload-owner-and-dependencies', function () {
                           expect(woRecord.offender_manager_id).to.eq(omRecord.id)
                           expect(woRecord.contracted_hours).to.eq(contractedHours)
                           expect(woRecord.team_id).to.eq(teamRecord.id)
-                          done()
                         })
                     })
                 })
@@ -163,7 +161,7 @@ describe('app/services/insert-workload-owner-and-dependencies', function () {
     })
   })
 
-  it('should move a team to a different ldu cluster and move an ldu cluster to a different region', function (done) {
+  it('should move a team to a different ldu cluster and move an ldu cluster to a different region', function () {
     omGradeCode = 'D'
     omKey = 'N63D897'
     omForename = 'INTEGRATION NEW'
@@ -178,7 +176,7 @@ describe('app/services/insert-workload-owner-and-dependencies', function () {
 
     const caseSummary = new CasesSummary(null, regionDesc, secondRegionCode, lduDesc, secondLduCode, teamDesc, teamCode, omSurname, omForename, omGradeCode, omKey)
 
-    insertWorkloadOwnerAndDependencies(caseSummary).then(function () {
+    return insertWorkloadOwnerAndDependencies(caseSummary).then(function () {
       return knex.table('offender_manager')
         .withSchema('app')
         .where({ key: omKey })
@@ -225,7 +223,6 @@ describe('app/services/insert-workload-owner-and-dependencies', function () {
                           expect(woRecord.offender_manager_id).to.eq(omRecord.id)
                           expect(woRecord.contracted_hours).to.eq(contractedHours)
                           expect(woRecord.team_id).to.eq(teamRecord.id)
-                          done()
                         })
                     })
                 })

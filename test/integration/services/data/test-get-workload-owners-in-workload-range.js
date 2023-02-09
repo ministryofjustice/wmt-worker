@@ -9,13 +9,12 @@ let initialWorkloadStagingId
 let workloadReportId
 
 describe('services/data/get-workload-owners-in-workload-range', function () {
-  before(function (done) {
-    helper.insertDependencies(inserts)
+  before(function () {
+    return helper.insertDependencies(inserts)
       .then(function (builtInserts) {
         inserts = builtInserts
         initialWorkloadStagingId = 1
         workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
-        done()
       })
   })
 

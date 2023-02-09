@@ -8,5 +8,7 @@ module.exports = function (offenderManager) {
     .update('forename', offenderManager.forename)
     .update('surname', offenderManager.surname)
     .where({ key: offenderManager.key })
-    .returning('id')
+    .returning('id').then(function (results) {
+      return results.map((result) => result.id)
+    })
 }

@@ -6,7 +6,9 @@ module.exports = function (courtReportCalculation) {
   return knex('court_reports_calculations')
     .withSchema('app')
     .returning('id')
-    .insert(dbObject)
+    .insert(dbObject).then(function (results) {
+      return results.map((result) => result.id)
+    })
 }
 
 const mapToDbObject = function (courtReportCalculation) {

@@ -8,19 +8,18 @@ const removeIntegrationTestData = require('../../../helpers/data/remove-integrat
 let inserts = []
 
 describe('app/services/data/update-workload-report-with-status', function () {
-  before(function (done) {
-    helper.insertDependencies(inserts)
+  before(function () {
+    return helper.insertDependencies(inserts)
       .then(function (builtInserts) {
         inserts = builtInserts
-        done()
       })
   })
 
-  it('should update the correct workload report record, with updated effected_to and status', function (done) {
+  it('should update the correct workload report record, with updated effected_to and status', function () {
     const workloadReportId = inserts.filter((item) => item.table === 'workload_report')[0].id
     const newStatus = workloadReportStatus.FAILED
 
-    knex('workload_report').withSchema('app').where({ id: workloadReportId }).first().then(function (result) {
+    return knex('workload_report').withSchema('app').where({ id: workloadReportId }).first().then(function (result) {
       const oldWorkloadReport = result
       updateWorkloadReport(workloadReportId, newStatus).then(function () {
         knex('workload_report').withSchema('app').where({ id: workloadReportId }).first()
@@ -32,7 +31,6 @@ describe('app/services/data/update-workload-report-with-status', function () {
             expect(updatedWorkloadReport.status).to.eql(workloadReportStatus.FAILED)
             expect(updatedWorkloadReport.status_description).to.eql(workloadReportStatus.FAILED)
             expect(updatedWorkloadReport.records_total).to.eq(0)
-            done()
           })
       })
     })

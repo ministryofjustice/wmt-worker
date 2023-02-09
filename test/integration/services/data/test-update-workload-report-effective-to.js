@@ -7,11 +7,10 @@ const removeIntegrationTestData = require('../../../helpers/data/remove-integrat
 let inserts = []
 
 describe('app/services/data/update-workload-report-effective-to', function () {
-  before(function (done) {
-    helper.insertDependencies(inserts)
+  before(function () {
+    return helper.insertDependencies(inserts)
       .then(function (builtInserts) {
         inserts = builtInserts
-        done()
       })
   })
 
