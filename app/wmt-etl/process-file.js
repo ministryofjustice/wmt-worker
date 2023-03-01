@@ -8,6 +8,7 @@ const insertToStaging = require('./insert-to-staging')
 const cleanName = require('./clean-name')
 const getEtlFile = require('./get-etl-file')
 const { arrayToPromise } = require('../services/helpers/promise-helper')
+const MeasurementError = require('../constants/measurement-error')
 
 module.exports = function (extractFile) {
   return getEtlFile(extractFile).then(function (getObject) {
@@ -22,7 +23,7 @@ module.exports = function (extractFile) {
     const caseTotal = getCrnTotal(getParameterCaseInsensitive(workbook.Sheets, 'wmt_extract_filtered'))
 
     if (t2aTotal >= caseTotal) {
-      throw new Error('T2A case count is greater than or equal to case count')
+      throw new MeasurementError('T2A case count is greater than or equal to case count', { t2aTotal, caseTotal })
     }
     return arrayToPromise(Object.keys(workbook.Sheets), function (sheet) {
       if (config.VALID_SHEET_NAMES.includes(cleanName(sheet))) {
