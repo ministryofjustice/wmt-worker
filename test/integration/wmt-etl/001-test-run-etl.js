@@ -46,7 +46,7 @@ function deleteFromS3 (file) {
 function putToS3 (file) {
   return s3Client.send(new PutObjectCommand({
     Bucket: config.S3.BUCKET_NAME,
-    Key: `extract/${file}`,
+    Key: 'extract/WMT_PS.xlsx',
     Body: fs.readFileSync(`test/integration/resources/${file}`)
   }))
 }
@@ -108,6 +108,29 @@ describe('etl does not run if it is already in progress', function () {
         expect(count).to.equal(1)
       })
     })
+  })
+
+  afterEach(function () {
+    return deleteFromS3('extract/WMT_PS.xlsx')
+  })
+})
+
+describe('etl does not run if the total T2A cases is greater than or equal to Extract Filtered cases', function () {
+  beforeEach(function () {
+    return cleanTables().then(function () {
+      return putToS3('WMT_PS_MORE_T2a.xlsx').then(function () {
+        return pollAndCheck()
+      })
+    })
+  })
+
+  it('no data loaded in staging tables', function () {
+    return Promise.all(config.VALID_SHEET_NAMES.map(function (sheetName) {
+      return knex(sheetName).withSchema('staging').column(config.VALID_COLUMNS[sheetName])
+        .then(function (results) {
+          expect(results.length, sheetName + ' table should contain no entries').to.equal(0)
+        })
+    }))
   })
 
   afterEach(function () {

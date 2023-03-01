@@ -37,9 +37,6 @@ module.exports = function () {
             log.info(`file ${S3.FILE_TO_PROCESS} does not exist in bucket`)
             return `file ${S3.FILE_TO_PROCESS} does not exist in bucket`
           })
-        }).catch(function (err) {
-          log.error(err)
-          log.error('Error deleting message from queue')
         })
       })
     }

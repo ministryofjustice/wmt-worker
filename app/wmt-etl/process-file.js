@@ -16,6 +16,14 @@ module.exports = function (extractFile) {
     if (!validateWorkbookFormat(Object.keys(workbook.Sheets))) {
       throw new Error('Workbook does not contain the expected worksheets')
     }
+    // validation for T2A case count should be here
+
+    const t2aTotal = getCrnTotal(getParameterCaseInsensitive(workbook.Sheets, 't2a'))
+    const caseTotal = getCrnTotal(getParameterCaseInsensitive(workbook.Sheets, 'wmt_extract_filtered'))
+
+    if (t2aTotal >= caseTotal) {
+      throw new Error('T2A case count is greater than or equal to case count')
+    }
     return arrayToPromise(Object.keys(workbook.Sheets), function (sheet) {
       if (config.VALID_SHEET_NAMES.includes(cleanName(sheet))) {
         const worksheet = workbook.Sheets[sheet]
@@ -29,4 +37,16 @@ module.exports = function (extractFile) {
         log.info(`Successfully processed file ${extractFile}`)
       })
   })
+}
+
+function getCrnTotal (worksheet) {
+  const worksheetDataAsJSON = XLSX.utils.sheet_to_json(worksheet, { raw: false, defval: null, dateNF: 'yyyy-mm-dd hh:mm:ss' })
+  return worksheetDataAsJSON.map((row) => Number(getParameterCaseInsensitive(row, 'v-crn_count'))).reduce((a, b) => a + b, 0)
+}
+
+function getParameterCaseInsensitive (object, key) {
+  const asLowercase = key.toLowerCase()
+  return object[Object.keys(object)
+    .find(k => k.toLowerCase() === asLowercase)
+  ]
 }
