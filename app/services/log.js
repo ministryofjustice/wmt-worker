@@ -102,7 +102,7 @@ const logger = {
   info: log.info.bind(log),
   jobError: function (jobName, error) {
     if (appinsights.defaultClient) {
-      appinsights.defaultClient.trackException({ exception: new JobError(jobName, error) })
+      appinsights.defaultClient.trackException({ exception: new JobError(jobName, error), measurements: error.measurements })
     } else {
       log.error(new JobError(jobName, error))
     }
