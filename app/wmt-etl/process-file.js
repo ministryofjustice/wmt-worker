@@ -24,7 +24,6 @@ module.exports = function (extractFile) {
     if (!validateWorkbookFormat(Object.keys(workbook.Sheets))) {
       throw new Error('Workbook does not contain the expected worksheets')
     }
-    // validation for T2A case count should be here
 
     const t2aTotal = getCrnTotal(getParameterCaseInsensitive(workbook.Sheets, 't2a'))
     const caseTotal = getCrnTotal(getParameterCaseInsensitive(workbook.Sheets, 'wmt_extract_filtered'))
