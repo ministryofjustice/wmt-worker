@@ -118,7 +118,7 @@ describe('etl does not run if it is already in progress', function () {
 describe('etl does not run if the total T2A cases is greater than or equal to Extract Filtered cases', function () {
   beforeEach(function () {
     return cleanTables().then(function () {
-      return putToS3('WMT_PS_MORE_T2a.xlsx').then(function () {
+      return putToS3('WMT_PS_MORE_T2A.xlsx').then(function () {
         return pollAndCheck()
       })
     })
