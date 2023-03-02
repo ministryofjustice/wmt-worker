@@ -3,6 +3,6 @@ generic-service:
   env:
     NODE_ENV: "production"
     PGSSLMODE: "no-verify"
-    EXTRACT_LISTENER_CRON: "0/10 * * * * *"
+    EXTRACT_LISTENER_CRON: "0 5 31 2 *"
 
 
