@@ -1,9 +1,9 @@
-const glob = require('glob')
+const globSync = require('glob')
 const XLSX = require('xlsx')
 const config = require('../../../etl-config')
 
 module.exports = function () {
-  const extractFiles = glob.sync('./test/integration/resources/WMT_PS.xlsx', {})
+  const extractFiles = globSync('./test/integration/resources/WMT_PS.xlsx', {})
   const workbooks = []
   const worksheets = {}
 
