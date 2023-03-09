@@ -1,13 +1,18 @@
-const glob = require('glob')
+const globSync = require('glob')
 const XLSX = require('xlsx')
 const config = require('../../../etl-config')
 
 module.exports = function () {
-  const extractFiles = glob.sync('./test/integration/resources/WMT_PS.xlsx', {})
+  return globSync('./test/integration/resources/WMT_PS.xlsx', {}).then(function (results) {
+    return getWorksheets(results)
+  })
+}
+
+const getWorksheets = function (extractFileItems) {
   const workbooks = []
   const worksheets = {}
 
-  extractFiles.forEach(function (extractFile) {
+  extractFileItems.forEach(function (extractFile) {
     const workbook = XLSX.readFile(extractFile, { type: 'binary', cellText: false, cellDates: true })
     const lowercaseSheets = Object.entries(workbook.Sheets).reduce(
       function (acc, [key, val]) {
