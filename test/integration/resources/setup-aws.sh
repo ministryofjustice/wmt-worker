@@ -20,7 +20,7 @@ aws --endpoint-url=http://localhost:4566 sns create-topic --name domain-events
 
 aws --endpoint-url=http://localhost:4566 sqs create-queue --queue-name domain_event_queue
 
-aws --endpoint-url=http://localhost:4566 sns subscribe --topic-arn arn:aws:sns:eu-west-2:000000000000:domain-events --protocol sqs --notification-endpoint http://localhost:4566/000000000000/domain_event_queue --attributes '{"FilterPolicy":"{\"eventType\":[\"staff.available.hours.changed\"]}", "RawMessageDelivery": "true"}'
+aws --endpoint-url=http://localhost:4566 sns subscribe --topic-arn arn:aws:sns:eu-west-2:000000000000:domain-events --protocol sqs --notification-endpoint arn:aws:sqs:eu-west-2:000000000000:domain_event_queue --attributes '{"FilterPolicy":"{\"eventType\":[\"staff.available.hours.changed\"]}", "RawMessageDelivery": "true"}'
 
 
 echo "S3 created bucket"
