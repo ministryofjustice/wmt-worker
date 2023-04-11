@@ -13,14 +13,10 @@ module.exports = {
     debug: false,
     pool: {
       min: 0,
-      max: 10,
-      createTimeoutMillis: 8000,
-      acquireTimeoutMillis: 8000,
-      idleTimeoutMillis: 8000,
-      reapIntervalMillis: 1000,
-      createRetryIntervalMillis: 100
+      max: 50,
+      idleTimeoutMillis: 5000
     },
-    acquireConnectionTimeout: 5000
+    acquireConnectionTimeout: 1200000
   },
   app: {
     client: 'pg',
@@ -28,13 +24,9 @@ module.exports = {
     debug: false,
     pool: {
       min: 0,
-      max: 10,
-      createTimeoutMillis: 8000,
-      acquireTimeoutMillis: 8000,
-      idleTimeoutMillis: 8000,
-      reapIntervalMillis: 1000,
-      createRetryIntervalMillis: 100
+      max: 50,
+      idleTimeoutMillis: 5000
     },
-    acquireConnectionTimeout: 5000
+    acquireConnectionTimeout: 150000
   }
 }
