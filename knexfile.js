@@ -14,7 +14,8 @@ module.exports = {
     pool: {
       min: 0,
       max: 25,
-      idleTimeoutMillis: 5000
+      idleTimeoutMillis: 5000,
+      propagateCreateError: false
     },
     acquireConnectionTimeout: 1200000
   },
@@ -25,7 +26,8 @@ module.exports = {
     pool: {
       min: 0,
       max: 25,
-      idleTimeoutMillis: 5000
+      idleTimeoutMillis: 5000,
+      propagateCreateError: false
     },
     acquireConnectionTimeout: 150000
   }
