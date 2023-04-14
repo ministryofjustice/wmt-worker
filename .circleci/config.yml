@@ -96,7 +96,7 @@ jobs:
           - SPRING_PROFILES_ACTIVE=dev,docker
           - HMPPS_SQS_LOCALSTACK_URL=http://localhost:4566
         entrypoint: ["/bin/sh", "-c" , "sleep 10 && java -javaagent:/app/agent.jar -jar /app/app.jar"]
-      - image: localstack/localstack:2.0.0
+      - image: localstack/localstack:2.0.1
         environment:
           - SERVICES=s3,sqs,sns
           - DEBUG=${DEBUG- }
