@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "chai": "4.3.7",
-    "glob": "9.3.4",
+    "glob": "9.3.5",
     "husky": "8.0.3",
     "mocha": "10.2.0",
     "mocha-simple-html-reporter": "2.0.0",
