@@ -1,4 +1,4 @@
-const globSync = require('glob')
+const { globSync } = require('glob')
 const XLSX = require('xlsx')
 const config = require('../../../etl-config')
 
