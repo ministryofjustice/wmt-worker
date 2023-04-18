@@ -3,9 +3,8 @@ const XLSX = require('xlsx')
 const config = require('../../../etl-config')
 
 module.exports = function () {
-  return globSync('./test/integration/resources/WMT_PS.xlsx', {}).then(function (results) {
-    return getWorksheets(results)
-  })
+  const extractFileItems = globSync('./test/integration/resources/WMT_PS.xlsx', {})
+  return getWorksheets(extractFileItems)
 }
 
 const getWorksheets = function (extractFileItems) {
