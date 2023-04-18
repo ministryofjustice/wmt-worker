@@ -61,13 +61,11 @@ function putEmptyToS3 (key) {
 
 describe('etl runs when only PS file has been updated', function () {
   beforeEach(function () {
-    return getExtractFileData().then(function (workloadData) {
-      expectedInputData = workloadData
-      return cleanTables().then(function () {
-        return putEmptyToS3('Readme.md').then(function () {
-          return putToS3('WMT_PS.xlsx').then(function () {
-            return pollAndCheck()
-          })
+    expectedInputData = getExtractFileData()
+    return cleanTables().then(function () {
+      return putEmptyToS3('Readme.md').then(function () {
+        return putToS3('WMT_PS.xlsx').then(function () {
+          return pollAndCheck()
         })
       })
     })
