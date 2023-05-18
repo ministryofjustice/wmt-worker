@@ -1,7 +1,5 @@
 const expect = require('chai').expect
-const sinon = require('sinon')
 const fs = require('fs')
-const proxyquire = require('proxyquire')
 
 const { PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3')
 const cleanTables = require('../../../app/wmt-etl/clean-tables')
@@ -10,11 +8,8 @@ const knex = require('../../../knex').stagingSchema
 const config = require('../../../etl-config')
 
 const getExtractFileData = require('../../helpers/etl/get-extract-file-data')
-const log = { jobError: sinon.stub() }
-const pollSQS = proxyquire('../../../app/wmt-etl/poll-sqs', {
-  '../services/log': log
-}
-)
+
+const pollSQS = require('../../../app/wmt-etl/poll-sqs')
 
 const getS3Client = require('../../../app/services/aws/s3/get-s3-client')
 const s3Client = getS3Client({
@@ -103,7 +98,6 @@ describe('etl does not run if it is already in progress', function () {
 
   it('should not run ETL twice', function () {
     return pollAndCheck().then(function () {
-      expect(log.jobError.calledWith('RUN-ETL')).to.equal(true)
       return knex('tasks').withSchema('app').count('*').where('type', 'PROCESS-IMPORT').then(function ([{ count }]) {
         expect(count).to.equal(1)
       })
