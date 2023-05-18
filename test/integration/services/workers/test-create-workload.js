@@ -1,13 +1,11 @@
 const expect = require('chai').expect
-const proxyquire = require('proxyquire')
-const sinon = require('sinon')
 
 const insertStagingWorkload = require('../../../helpers/data/insert-staging-workload-helper')
 const removeIntegrationTestData = require('../../../helpers/data/remove-integration-test-data')
+const workloadReportHelper = require('../../../helpers/data/app-workload-report-helper')
 const knex = require('../../../../knex').appSchema
 
-let createWorkload
-let createNewTasks
+const createWorkload = require('../../../../app/services/workers/create-workload')
 
 const task = {
   additionalData: {
@@ -18,19 +16,17 @@ const task = {
 
 describe('services/workers/create-workload', function () {
   beforeEach(function () {
-    createNewTasks = sinon.stub()
-
-    createWorkload = proxyquire('../../../../app/services/workers/create-workload', {
-      '../data/create-tasks': createNewTasks
-    })
     return insertStagingWorkload()
       .then(function (stagingId) {
         task.additionalData.startingId = stagingId
+        return workloadReportHelper.insertDependencies([])
+          .then(function ([workloadReportInsert]) {
+            task.workloadReportId = workloadReportInsert.id
+          })
       })
   })
 
   it('should insert the correct tiers with the correct filtered totals and t2a totals per tier', function () {
-    createNewTasks.resolves()
     return createWorkload.execute(task)
       .then(function () {
         return knex('workload').withSchema('app').where('offender_manager.key', 'OMKEY01')

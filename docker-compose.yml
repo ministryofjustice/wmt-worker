@@ -17,7 +17,7 @@ services:
         volumes:
           - "${TMPDIR:-/tmp/localstack}:/var/lib/localstack"
           - "/var/run/docker.sock:/var/run/docker.sock"
-          - $PWD/test/integration/resources:/docker-entrypoint-initaws.d
+          - $PWD/test/integration/resources:/etc/localstack/init/ready.d
     hmpps-workload:
       image: quay.io/hmpps/hmpps-workload:latest
       networks:
