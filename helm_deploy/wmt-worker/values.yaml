@@ -42,7 +42,6 @@ generic-service:
   namespace_secrets:
     wmt-worker:
       APPINSIGHTS_INSTRUMENTATIONKEY: "APPINSIGHTS_INSTRUMENTATIONKEY"
-      APPLICATIONINSIGHTS_CONNECTION_STRING: "APPLICATIONINSIGHTS_CONNECTION_STRING"
     rds-live-instance-output:
       WMT_DB_USERNAME: "database_username"
       WMT_DB_PASSWORD: "database_password"
