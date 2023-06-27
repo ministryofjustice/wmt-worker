@@ -1,4 +1,3 @@
-
 const refreshMaterializedViews = require('../data/refresh-materialized-views')
 
 const Task = require('../domain/task')

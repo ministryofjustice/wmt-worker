@@ -1,4 +1,3 @@
-
 const sinon = require('sinon')
 const proxyquire = require('proxyquire')
 const { expect } = require('chai')
