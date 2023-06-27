@@ -1,4 +1,3 @@
-
 module.exports = function (date) {
   const now = new WMTDate(date)
 

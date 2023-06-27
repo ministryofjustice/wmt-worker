@@ -1,4 +1,3 @@
-
 module.exports.arrayToPromise = function (array, funct) {
   if (!array || !array.length) {
     return Promise.resolve([])
