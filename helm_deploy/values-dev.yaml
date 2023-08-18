@@ -6,8 +6,6 @@ generic-service:
   HMPPS_SQS_USE_WEB_TOKEN: "true"
 
   namespace_secrets:
-    wmt-worker:
-      APPINSIGHTS_INSTRUMENTATIONKEY: "APPINSIGHTS_INSTRUMENTATIONKEY"
     s3-extract-bucket-output:
       ETL_S3_BUCKET_NAME: "bucket_name"
     s3-dashboard-bucket-output:
