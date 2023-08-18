@@ -38,6 +38,7 @@ generic-service:
   # namespace_secrets:
   #   [name of kubernetes secret]:
   #     [name of environment variable as seen by app]: [key of kubernetes secret to load]
+  serviceAccountName: hmpps-workload
 
   namespace_secrets:
     wmt-worker:
