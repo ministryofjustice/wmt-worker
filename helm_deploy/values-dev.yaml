@@ -2,3 +2,17 @@
 generic-service:
   scheduledDowntime:
     enabled: true
+
+  HMPPS_SQS_USE_WEB_TOKEN: "true"
+
+  namespace_secrets:
+    s3-extract-bucket-output:
+      ETL_S3_BUCKET_NAME: "bucket_name"
+    s3-dashboard-bucket-output:
+      WMT_DASHBOARD_BUCKET: "bucket_name"
+    hmpps-reductions-completed-sqs-instance-output:
+      ETL_SQS_QUEUE_URL: "sqs_queue_url"
+    sqs-hmpps-audit-secret:
+      AUDIT_SQS_QUEUE_URL: "sqs_queue_url"
+    wmt-hmpps-domain-events-topic:
+      STAFF_EVENT_SNS_TOPIC_ARN: "topic_arn"
