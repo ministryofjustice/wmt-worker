@@ -4,7 +4,7 @@ const crypto = require('crypto')
 const getSqsClient = require('./aws/sqs/get-sqs-client')
 const sendSqsMessage = require('./aws/sqs/send-sqs-message')
 
-const sqsClient = getSqsClient({ region: AUDIT_SQS.REGION, accessKeyId: AUDIT_SQS.ACCESS_KEY_ID, secretAccessKey: AUDIT_SQS.SECRET_ACCESS_KEY, endpoint: AUDIT_SQS.ENDPOINT })
+const sqsClient = getSqsClient({ region: AUDIT_SQS.REGION, accessKeyId: AUDIT_SQS.ACCESS_KEY_ID ? AUDIT_SQS.ACCESS_KEY_ID : null, secretAccessKey: AUDIT_SQS.SECRET_ACCESS_KEY ? AUDIT_SQS.SECRET_ACCESS_KEY : null, endpoint: AUDIT_SQS.ENDPOINT })
 
 module.exports.auditReductionCopy = function (reduction, workloadOwner) {
   return sendSqsMessage(sqsClient, AUDIT_SQS.QUEUE_URL, messageFrom('REDUCTION_COPIED', getDetailsForReductionCopy(reduction, workloadOwner)))
