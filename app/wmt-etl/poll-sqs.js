@@ -11,8 +11,8 @@ const runEtl = require('./run-etl')
 const getHasBeenRead = require('./get-has-been-read')
 const getTasksNotCompleteCount = require('../services/data/get-tasks-not-complete-count')
 
-const sqsClient = getSqsClient({ region: SQS.REGION, accessKeyId: SQS.ACCESS_KEY_ID ? SQS.ACCESS_KEY_ID : null, secretAccessKey: SQS.SECRET_ACCESS_KEY ? SQS.SECRET_ACCESS_KEY : null, endpoint: SQS.ENDPOINT })
-const s3Client = getS3Client({ region: S3.REGION, accessKeyId: S3.ACCESS_KEY_ID ? S3.ACCESS_KEY_ID : null, secretAccessKey: S3.SECRET_ACCESS_KEY ? S3.SECRET_ACCESS_KEY : null, endpoint: S3.ENDPOINT })
+const sqsClient = getSqsClient({ region: SQS.REGION, accessKeyId: SQS.ACCESS_KEY_ID, secretAccessKey: SQS.SECRET_ACCESS_KEY, endpoint: SQS.ENDPOINT })
+const s3Client = getS3Client({ region: S3.REGION, accessKeyId: S3.ACCESS_KEY_ID, secretAccessKey: S3.SECRET_ACCESS_KEY, endpoint: S3.ENDPOINT })
 const queueURL = SQS.QUEUE_URL
 
 module.exports = function () {
