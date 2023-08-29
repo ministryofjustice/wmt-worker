@@ -12,7 +12,7 @@ module.exports = function (config) {
       : undefined
   return new S3Client({
     region: config.region,
-    credentials: credentials,
+    credentials,
     endpoint: config.endpoint,
     forcePathStyle: true
   })

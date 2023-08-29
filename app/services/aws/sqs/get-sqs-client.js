@@ -12,7 +12,7 @@ module.exports = function (config) {
       : undefined
   return new SQSClient({
     region: config.region,
-    credentials: credentials,
+    credentials,
     endpoint: config.endpoint
   })
 }
