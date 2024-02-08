@@ -4,3 +4,6 @@ generic-service:
   namespace_secrets:
     hmpps-workload:
       APPINSIGHTS_INSTRUMENTATIONKEY: "APPINSIGHTS_INSTRUMENTATIONKEY"
+
+generic-prometheus-alerts:
+  alertSeverity: hmpps-workload-prod-alerts
