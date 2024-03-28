@@ -28,12 +28,24 @@ module.exports = function (range) {
       'omic_teams.commtierb0', 'omic_teams.commtierb1', 'omic_teams.commtierb2', 'omic_teams.commtierb3',
       'omic_teams.commtiera0', 'omic_teams.commtiera1', 'omic_teams.commtiera2', 'omic_teams.commtiera3',
 
+      // OMIC Teams Community cases Suspended
+      'omic_teams.commtierd0_s', 'omic_teams.commtierd1_s', 'omic_teams.commtierd2_s', 'omic_teams.commtierd3_s',
+      'omic_teams.commtierc0_s', 'omic_teams.commtierc1_s', 'omic_teams.commtierc2_s', 'omic_teams.commtierc3_s',
+      'omic_teams.commtierb0_s', 'omic_teams.commtierb1_s', 'omic_teams.commtierb2_s', 'omic_teams.commtierb3_s',
+      'omic_teams.commtiera0_s', 'omic_teams.commtiera1_s', 'omic_teams.commtiera2_s', 'omic_teams.commtiera3_s',
+
       // OMIC Teams Licence cases
       'omic_teams.licencetier0',
       'omic_teams.licencetierd0', 'omic_teams.licencetierd1', 'omic_teams.licencetierd2', 'omic_teams.licencetierd3',
       'omic_teams.licencetierc0', 'omic_teams.licencetierc1', 'omic_teams.licencetierc2', 'omic_teams.licencetierc3',
       'omic_teams.licencetierb0', 'omic_teams.licencetierb1', 'omic_teams.licencetierb2', 'omic_teams.licencetierb3',
       'omic_teams.licencetiera0', 'omic_teams.licencetiera1', 'omic_teams.licencetiera2', 'omic_teams.licencetiera3',
+
+      // OMIC Teams Licence cases Suspended
+      'omic_teams.licencetierd0_s', 'omic_teams.licencetierd1_s', 'omic_teams.licencetierd2_s', 'omic_teams.licencetierd3_s',
+      'omic_teams.licencetierc0_s', 'omic_teams.licencetierc1_s', 'omic_teams.licencetierc2_s', 'omic_teams.licencetierc3_s',
+      'omic_teams.licencetierb0_s', 'omic_teams.licencetierb1_s', 'omic_teams.licencetierb2_s', 'omic_teams.licencetierb3_s',
+      'omic_teams.licencetiera0_s', 'omic_teams.licencetiera1_s', 'omic_teams.licencetiera2_s', 'omic_teams.licencetiera3_s',
 
       // OMIC Teams Custody cases
       'omic_teams.custtier0',
@@ -42,6 +54,12 @@ module.exports = function (range) {
       'omic_teams.custtierb0', 'omic_teams.custtierb1', 'omic_teams.custtierb2', 'omic_teams.custtierb3',
       'omic_teams.custtiera0', 'omic_teams.custtiera1', 'omic_teams.custtiera2', 'omic_teams.custtiera3',
 
+      // OMIC Teams Custody cases Suspended
+      'omic_teams.custtierd0_s', 'omic_teams.custtierd1_s', 'omic_teams.custtierd2_s', 'omic_teams.custtierd3_s',
+      'omic_teams.custtierc0_s', 'omic_teams.custtierc1_s', 'omic_teams.custtierc2_s', 'omic_teams.custtierc3_s',
+      'omic_teams.custtierb0_s', 'omic_teams.custtierb1_s', 'omic_teams.custtierb2_s', 'omic_teams.custtierb3_s',
+      'omic_teams.custtiera0_s', 'omic_teams.custtiera1_s', 'omic_teams.custtiera2_s', 'omic_teams.custtiera3_s',
+
       // T2A Community cases
       't2a.commtier0 AS t2a_commtier0',
       't2a.commtierd0 AS t2a_commtierd0', 't2a.commtierd1 AS t2a_commtierd1', 't2a.commtierd2 AS t2a_commtierd2', 't2a.commtierd3 AS t2a_commtierd3',
@@ -49,12 +67,24 @@ module.exports = function (range) {
       't2a.commtierb0 AS t2a_commtierb0', 't2a.commtierb1 AS t2a_commtierb1', 't2a.commtierb2 AS t2a_commtierb2', 't2a.commtierb3 AS t2a_commtierb3',
       't2a.commtiera0 AS t2a_commtiera0', 't2a.commtiera1 AS t2a_commtiera1', 't2a.commtiera2 AS t2a_commtiera2', 't2a.commtiera3 AS t2a_commtiera3',
 
+      // T2A Community cases Suspended
+      't2a.commtierd0 AS t2a_commtierd0_s', 't2a.commtierd1 AS t2a_commtierd1_s', 't2a.commtierd2 AS t2a_commtierd2_s', 't2a.commtierd3 AS t2a_commtierd3_s',
+      't2a.commtierc0 AS t2a_commtierc0_s', 't2a.commtierc1 AS t2a_commtierc1_s', 't2a.commtierc2 AS t2a_commtierc2_s', 't2a.commtierc3 AS t2a_commtierc3_s',
+      't2a.commtierb0 AS t2a_commtierb0_s', 't2a.commtierb1 AS t2a_commtierb1_s', 't2a.commtierb2 AS t2a_commtierb2_s', 't2a.commtierb3 AS t2a_commtierb3_s',
+      't2a.commtiera0 AS t2a_commtiera0_s', 't2a.commtiera1 AS t2a_commtiera1_s', 't2a.commtiera2 AS t2a_commtiera2_s', 't2a.commtiera3 AS t2a_commtiera3_s',
+
       // T2A Licence cases
-      't2a.licencetier0 AS t2a_licencetier0',
+      't2a.licencetier0 AS t2a_licencetier0_s',
       't2a.licencetierd0 AS t2a_licencetierd0', 't2a.licencetierd1 AS t2a_licencetierd1', 't2a.licencetierd2 AS t2a_licencetierd2', 't2a.licencetierd3 AS t2a_licencetierd3',
       't2a.licencetierc0 AS t2a_licencetierc0', 't2a.licencetierc1 AS t2a_licencetierc1', 't2a.licencetierc2 AS t2a_licencetierc2', 't2a.licencetierc3 AS t2a_licencetierc3',
       't2a.licencetierb0 AS t2a_licencetierb0', 't2a.licencetierb1 AS t2a_licencetierb1', 't2a.licencetierb2 AS t2a_licencetierb2', 't2a.licencetierb3 AS t2a_licencetierb3',
       't2a.licencetiera0 AS t2a_licencetiera0', 't2a.licencetiera1 AS t2a_licencetiera1', 't2a.licencetiera2 AS t2a_licencetiera2', 't2a.licencetiera3 AS t2a_licencetiera3',
+
+      // T2A Licence cases Suspended
+      't2a.licencetierd0_s AS t2a_licencetierd0_s', 't2a.licencetierd1_s AS t2a_licencetierd1_s', 't2a.licencetierd2_s AS t2a_licencetierd2_s', 't2a.licencetierd3_s AS t2a_licencetierd3_s',
+      't2a.licencetierc0_s AS t2a_licencetierc0_s', 't2a.licencetierc1_s AS t2a_licencetierc1_s', 't2a.licencetierc2_s AS t2a_licencetierc2_s', 't2a.licencetierc3_s AS t2a_licencetierc3_s',
+      't2a.licencetierb0_s AS t2a_licencetierb0_s', 't2a.licencetierb1_s AS t2a_licencetierb1_s', 't2a.licencetierb2_s AS t2a_licencetierb2_s', 't2a.licencetierb3_s AS t2a_licencetierb3_s',
+      't2a.licencetiera0_s AS t2a_licencetiera0_s', 't2a.licencetiera1_s AS t2a_licencetiera1_s', 't2a.licencetiera2_s AS t2a_licencetiera2_s', 't2a.licencetiera3_s AS t2a_licencetiera3_s',
 
       // T2A Custody cases
       't2a.custtier0 AS t2a_custtier0',
@@ -62,6 +92,12 @@ module.exports = function (range) {
       't2a.custtierc0 AS t2a_custtierc0', 't2a.custtierc1 AS t2a_custtierc1', 't2a.custtierc2 AS t2a_custtierc2', 't2a.custtierc3 AS t2a_custtierc3',
       't2a.custtierb0 AS t2a_custtierb0', 't2a.custtierb1 AS t2a_custtierb1', 't2a.custtierb2 AS t2a_custtierb2', 't2a.custtierb3 AS t2a_custtierb3',
       't2a.custtiera0 AS t2a_custtiera0', 't2a.custtiera1 AS t2a_custtiera1', 't2a.custtiera2 AS t2a_custtiera2', 't2a.custtiera3 AS t2a_custtiera3',
+
+      // T2A Custody cases Suspended
+      't2a.custtierd0_s AS t2a_custtierd0_s', 't2a.custtierd1_s AS t2a_custtierd1_s', 't2a.custtierd2_s AS t2a_custtierd2_s', 't2a.custtierd3_s AS t2a_custtierd3_s',
+      't2a.custtierc0_s AS t2a_custtierc0_s', 't2a.custtierc1_s AS t2a_custtierc1_s', 't2a.custtierc2_s AS t2a_custtierc2_s', 't2a.custtierc3_s AS t2a_custtierc3_s',
+      't2a.custtierb0_s AS t2a_custtierb0_s', 't2a.custtierb1_s AS t2a_custtierb1_s', 't2a.custtierb2_s AS t2a_custtierb2_s', 't2a.custtierb3_s AS t2a_custtierb3_s',
+      't2a.custtiera0_s AS t2a_custtiera0_s', 't2a.custtiera1_s AS t2a_custtiera1_s', 't2a.custtiera2_s AS t2a_custtiera2_s', 't2a.custtiera3_s AS t2a_custtiera3_s',
 
       'court_reports.om_team_staff_grade', 'court_reports.sdr_last_30',
       'court_reports.sdr_due_next_30', 'court_reports.sdr_conv_last_30',
