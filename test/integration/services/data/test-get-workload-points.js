@@ -25,10 +25,10 @@ describe('services/data/get-workload-points', function () {
       const custodyPointsConf = points.pointsConfiguration.custodyTierPointsConfig
       const licensePointsConf = points.pointsConfiguration.licenseTierPointsConfig
 
-      const expectedCommPointsConf = [206, 158, 146, 110, 146, 115, 102, 72, 79, 63, 50, 35, 51, 41, 29, 29]
-      const expectedCustPointsConf = [75, 60, 59, 0, 59, 48, 47, 0, 30, 24, 23, 0, 17, 14, 13, 0]
-      const expectedLicPointsConf = [219, 175, 163, 0, 161, 132, 119, 0, 77, 65, 52, 0, 51, 43, 31, 0]
-      for (let i = 1; i < 17; i++) {
+      const expectedCommPointsConf = [206, 158, 146, 110, 146, 115, 102, 72, 79, 63, 50, 35, 51, 41, 29, 29, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      const expectedCustPointsConf = [75, 60, 59, 0, 59, 48, 47, 0, 30, 24, 23, 0, 17, 14, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      const expectedLicPointsConf = [219, 175, 163, 0, 161, 132, 119, 0, 77, 65, 52, 0, 51, 43, 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      for (let i = 1; i < 33; i++) {
         expect(commPointsConf['tier' + i], 'Community Tier ' + i + ' weighting should equal ' + expectedCommPointsConf[i - 1]).to.equal(expectedCommPointsConf[i - 1])
         expect(custodyPointsConf['tier' + i], 'Custody Tier ' + i + ' weighting should equal ' + expectedCustPointsConf[i - 1]).to.equal(expectedCustPointsConf[i - 1])
         expect(licensePointsConf['tier' + i], 'Licence Tier ' + i + ' weighting should equal ' + expectedLicPointsConf[i - 1]).to.equal(expectedLicPointsConf[i - 1])
@@ -64,10 +64,10 @@ describe('services/data/get-workload-points', function () {
       const custodyPointsConf = points.pointsConfiguration.custodyTierPointsConfig
       const licensePointsConf = points.pointsConfiguration.licenseTierPointsConfig
 
-      const expectedCommPointsConf = [75, 60, 59, 0, 59, 48, 47, 0, 30, 24, 23, 0, 17, 14, 13, 0]
-      const expectedCustPointsConf = [75, 60, 59, 0, 59, 48, 47, 0, 30, 24, 23, 0, 17, 14, 13, 0]
-      const expectedLicPointsConf = [75, 60, 59, 0, 59, 48, 47, 0, 30, 24, 23, 0, 17, 14, 13, 0]
-      for (let i = 1; i < 17; i++) {
+      const expectedCommPointsConf = [75, 60, 59, 0, 59, 48, 47, 0, 30, 24, 23, 0, 17, 14, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      const expectedCustPointsConf = [75, 60, 59, 0, 59, 48, 47, 0, 30, 24, 23, 0, 17, 14, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      const expectedLicPointsConf = [75, 60, 59, 0, 59, 48, 47, 0, 30, 24, 23, 0, 17, 14, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      for (let i = 1; i < 33; i++) {
         expect(commPointsConf['tier' + i], 'Community Tier ' + i + ' weighting should equal ' + expectedCommPointsConf[i - 1]).to.equal(expectedCommPointsConf[i - 1])
         expect(custodyPointsConf['tier' + i], 'Custody Tier ' + i + ' weighting should equal ' + expectedCustPointsConf[i - 1]).to.equal(expectedCustPointsConf[i - 1])
         expect(licensePointsConf['tier' + i], 'Licence Tier ' + i + ' weighting should equal ' + expectedLicPointsConf[i - 1]).to.equal(expectedLicPointsConf[i - 1])
