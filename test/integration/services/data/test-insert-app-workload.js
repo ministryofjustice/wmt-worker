@@ -188,7 +188,7 @@ function buildTier (location) {
     buildTierCount(21), buildTierCount(22), buildTierCount(23),
     buildTierCount(24), buildTierCount(25), buildTierCount(26),
     buildTierCount(27), buildTierCount(28), buildTierCount(29),
-    buildTierCount(30), buildTierCount(31), buildTierCount(32)
+    buildTierCount(30), buildTierCount(31), buildTierCount(32), 136
   )
 }
 
@@ -204,7 +204,7 @@ function buildFilteredTier (location, extra = 0) {
     new TierCounts(0 + extra, 0, 0, 0, 0, 0, 21), new TierCounts(0 + extra, 0, 0, 0, 0, 0, 22), new TierCounts(0 + extra, 0, 0, 0, 0, 0, 23),
     new TierCounts(0 + extra, 0, 0, 0, 0, 0, 24), new TierCounts(0 + extra, 0, 0, 0, 0, 0, 25), new TierCounts(0 + extra, 0, 0, 0, 0, 0, 26),
     new TierCounts(0 + extra, 0, 0, 0, 0, 0, 27), new TierCounts(0 + extra, 0, 0, 0, 0, 0, 28), new TierCounts(0 + extra, 0, 0, 0, 0, 0, 29),
-    new TierCounts(0 + extra, 0, 0, 0, 0, 0, 30), new TierCounts(0 + extra, 0, 0, 0, 0, 0, 31), new TierCounts(0 + extra, 0, 0, 0, 0, 0, 32))
+    new TierCounts(0 + extra, 0, 0, 0, 0, 0, 30), new TierCounts(0 + extra, 0, 0, 0, 0, 0, 31), new TierCounts(0 + extra, 0, 0, 0, 0, 0, 32), 136)
 }
 
 function buildTierCount (tierCode) {
