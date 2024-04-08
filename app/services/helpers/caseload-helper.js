@@ -88,7 +88,7 @@ module.exports.getCaseloadTotalSummary = function (caseloads) {
   Used to create the bottom most row in the table
 */
 module.exports.calculateTotalsRow = function (caseloads) {
-  const totals = { a3: 0, a2: 0, a1: 0, a0: 0, b3: 0, b2: 0, b1: 0, b0: 0, c3: 0, c2: 0, c1: 0, c0: 0, d3: 0, d2: 0, d1: 0, d0: 0, untiered: 0, overall: 0 }
+  const totals = { a3: 0, a2: 0, a1: 0, a0: 0, b3: 0, b2: 0, b1: 0, b0: 0, c3: 0, c2: 0, c1: 0, c0: 0, d3: 0, d2: 0, d1: 0, d0: 0, a3s: 0, a2s: 0, a1s: 0, a0s: 0, b3s: 0, b2s: 0, b1s: 0, b0s: 0, c3s: 0, c2s: 0, c1s: 0, c0s: 0, d3s: 0, d2s: 0, d1s: 0, d0s: 0, untiered: 0, overall: 0 }
   caseloads.forEach(function (val, key) {
     totals.a3 += val.a3
     totals.a2 += val.a2
@@ -106,6 +106,22 @@ module.exports.calculateTotalsRow = function (caseloads) {
     totals.d2 += val.d2
     totals.d1 += val.d1
     totals.d0 += val.d0
+    totals.a3s += val.a3s
+    totals.a2s += val.a2s
+    totals.a1s += val.a1s
+    totals.a0s += val.a0s
+    totals.b3s += val.b3s
+    totals.b2s += val.b2s
+    totals.b1s += val.b1s
+    totals.b0s += val.b0s
+    totals.c3s += val.c3s
+    totals.c2s += val.c2s
+    totals.c1s += val.c1s
+    totals.c0s += val.c0s
+    totals.d3s += val.d3s
+    totals.d2s += val.d2s
+    totals.d1s += val.d1s
+    totals.d0s += val.d0s
     totals.untiered += val.untiered
     totals.overall += val.totalCases
   })
@@ -183,6 +199,22 @@ const transform = function (caseloadTotalsByGrade, calculatePercentage = false, 
           d2: percentageCalculator.calculatePercentage(teamGradeRecords[record].d2, caseloadTotalsByTeam[team].d2),
           d1: percentageCalculator.calculatePercentage(teamGradeRecords[record].d1, caseloadTotalsByTeam[team].d1),
           d0: percentageCalculator.calculatePercentage(teamGradeRecords[record].d0, caseloadTotalsByTeam[team].d0),
+          a3s: percentageCalculator.calculatePercentage(teamGradeRecords[record].a3s, caseloadTotalsByTeam[team].a3s),
+          a2s: percentageCalculator.calculatePercentage(teamGradeRecords[record].a2s, caseloadTotalsByTeam[team].a2s),
+          a1s: percentageCalculator.calculatePercentage(teamGradeRecords[record].a1s, caseloadTotalsByTeam[team].a1s),
+          a0s: percentageCalculator.calculatePercentage(teamGradeRecords[record].a0s, caseloadTotalsByTeam[team].a0s),
+          b3s: percentageCalculator.calculatePercentage(teamGradeRecords[record].b3s, caseloadTotalsByTeam[team].b3s),
+          b2s: percentageCalculator.calculatePercentage(teamGradeRecords[record].b2s, caseloadTotalsByTeam[team].b2s),
+          b1s: percentageCalculator.calculatePercentage(teamGradeRecords[record].b1s, caseloadTotalsByTeam[team].b1s),
+          b0s: percentageCalculator.calculatePercentage(teamGradeRecords[record].b0s, caseloadTotalsByTeam[team].b0s),
+          c3s: percentageCalculator.calculatePercentage(teamGradeRecords[record].c3s, caseloadTotalsByTeam[team].c3s),
+          c2s: percentageCalculator.calculatePercentage(teamGradeRecords[record].c2s, caseloadTotalsByTeam[team].c2s),
+          c1s: percentageCalculator.calculatePercentage(teamGradeRecords[record].c1s, caseloadTotalsByTeam[team].c1s),
+          c0s: percentageCalculator.calculatePercentage(teamGradeRecords[record].c0s, caseloadTotalsByTeam[team].c0s),
+          d3s: percentageCalculator.calculatePercentage(teamGradeRecords[record].d3s, caseloadTotalsByTeam[team].d3s),
+          d2s: percentageCalculator.calculatePercentage(teamGradeRecords[record].d2s, caseloadTotalsByTeam[team].d2s),
+          d1s: percentageCalculator.calculatePercentage(teamGradeRecords[record].d1s, caseloadTotalsByTeam[team].d1s),
+          d0s: percentageCalculator.calculatePercentage(teamGradeRecords[record].d0s, caseloadTotalsByTeam[team].d0s),
           untiered: percentageCalculator.calculatePercentage(teamGradeRecords[record].untiered, caseloadTotalsByTeam[team].untiered),
           totalCases: percentageCalculator.calculatePercentage(teamGradeRecords[record].totalCases, caseloadTotalsByTeam[team].totalCases)
         }
@@ -208,6 +240,22 @@ const transform = function (caseloadTotalsByGrade, calculatePercentage = false, 
           d2: teamGradeRecords[record].d2,
           d1: teamGradeRecords[record].d1,
           d0: teamGradeRecords[record].d0,
+          a3s: teamGradeRecords[record].a3s,
+          a2s: teamGradeRecords[record].a2s,
+          a1s: teamGradeRecords[record].a1s,
+          a0s: teamGradeRecords[record].a0s,
+          b3s: teamGradeRecords[record].b3s,
+          b2s: teamGradeRecords[record].b2s,
+          b1s: teamGradeRecords[record].b1s,
+          b0s: teamGradeRecords[record].b0s,
+          c3s: teamGradeRecords[record].c3s,
+          c2s: teamGradeRecords[record].c2s,
+          c1s: teamGradeRecords[record].c1s,
+          c0s: teamGradeRecords[record].c0s,
+          d3s: teamGradeRecords[record].d3s,
+          d2s: teamGradeRecords[record].d2s,
+          d1s: teamGradeRecords[record].d1s,
+          d0s: teamGradeRecords[record].d0s,
           untiered: teamGradeRecords[record].untiered,
           totalCases: teamGradeRecords[record].totalCases
         }
@@ -238,6 +286,22 @@ const transform = function (caseloadTotalsByGrade, calculatePercentage = false, 
       gradeTotals[key].d2 = gradeTotals[key].d2 / gradeTotals[key].numberOfType
       gradeTotals[key].d1 = gradeTotals[key].d1 / gradeTotals[key].numberOfType
       gradeTotals[key].d0 = gradeTotals[key].d0 / gradeTotals[key].numberOfType
+      gradeTotals[key].a3s = gradeTotals[key].a3s / gradeTotals[key].numberOfType
+      gradeTotals[key].a2s = gradeTotals[key].a2s / gradeTotals[key].numberOfType
+      gradeTotals[key].a1s = gradeTotals[key].a1s / gradeTotals[key].numberOfType
+      gradeTotals[key].a0s = gradeTotals[key].a0s / gradeTotals[key].numberOfType
+      gradeTotals[key].b3s = gradeTotals[key].b3s / gradeTotals[key].numberOfType
+      gradeTotals[key].b2s = gradeTotals[key].b2s / gradeTotals[key].numberOfType
+      gradeTotals[key].b1s = gradeTotals[key].b1s / gradeTotals[key].numberOfType
+      gradeTotals[key].b0s = gradeTotals[key].b0s / gradeTotals[key].numberOfType
+      gradeTotals[key].c3s = gradeTotals[key].c3s / gradeTotals[key].numberOfType
+      gradeTotals[key].c2s = gradeTotals[key].c2s / gradeTotals[key].numberOfType
+      gradeTotals[key].c1s = gradeTotals[key].c1s / gradeTotals[key].numberOfType
+      gradeTotals[key].c0s = gradeTotals[key].c0s / gradeTotals[key].numberOfType
+      gradeTotals[key].d3s = gradeTotals[key].d3s / gradeTotals[key].numberOfType
+      gradeTotals[key].d2s = gradeTotals[key].d2s / gradeTotals[key].numberOfType
+      gradeTotals[key].d1s = gradeTotals[key].d1s / gradeTotals[key].numberOfType
+      gradeTotals[key].d0s = gradeTotals[key].d0s / gradeTotals[key].numberOfType
       gradeTotals[key].untiered = gradeTotals[key].untiered / gradeTotals[key].numberOfType
       gradeTotals[key].totalCases = gradeTotals[key].totalCases / gradeTotals[key].numberOfType
     }
@@ -272,6 +336,22 @@ const addGradeTotals = function (gradeTotals, newGradeRecord) {
     gradeTotals[newGradeRecord.grade].d2 += newGradeRecord.d2
     gradeTotals[newGradeRecord.grade].d1 += newGradeRecord.d1
     gradeTotals[newGradeRecord.grade].d0 += newGradeRecord.d0
+    gradeTotals[newGradeRecord.grade].a3s += newGradeRecord.a3s
+    gradeTotals[newGradeRecord.grade].a2s += newGradeRecord.a2s
+    gradeTotals[newGradeRecord.grade].a1s += newGradeRecord.a1s
+    gradeTotals[newGradeRecord.grade].a0s += newGradeRecord.a0s
+    gradeTotals[newGradeRecord.grade].b3s += newGradeRecord.b3s
+    gradeTotals[newGradeRecord.grade].b2s += newGradeRecord.b2s
+    gradeTotals[newGradeRecord.grade].b1s += newGradeRecord.b1s
+    gradeTotals[newGradeRecord.grade].b0s += newGradeRecord.b0s
+    gradeTotals[newGradeRecord.grade].c3s += newGradeRecord.c3s
+    gradeTotals[newGradeRecord.grade].c2s += newGradeRecord.c2s
+    gradeTotals[newGradeRecord.grade].c1s += newGradeRecord.c1s
+    gradeTotals[newGradeRecord.grade].c0s += newGradeRecord.c0s
+    gradeTotals[newGradeRecord.grade].d3s += newGradeRecord.d3s
+    gradeTotals[newGradeRecord.grade].d2s += newGradeRecord.d2s
+    gradeTotals[newGradeRecord.grade].d1s += newGradeRecord.d1s
+    gradeTotals[newGradeRecord.grade].d0s += newGradeRecord.d0s
     gradeTotals[newGradeRecord.grade].untiered += newGradeRecord.untiered
     gradeTotals[newGradeRecord.grade].totalCases += newGradeRecord.totalCases
     gradeTotals[newGradeRecord.grade].numberOfType++
@@ -313,6 +393,22 @@ const groupCaseload = function (caseloads, splitByGrade = false) {
       existingValue.a1 += caseloads[idx].a1
       existingValue.a2 += caseloads[idx].a2
       existingValue.a3 += caseloads[idx].a3
+      existingValue.d0s += caseloads[idx].d0s
+      existingValue.d1s += caseloads[idx].d1s
+      existingValue.d2s += caseloads[idx].d2s
+      existingValue.d3s += caseloads[idx].d3s
+      existingValue.c0s += caseloads[idx].c0s
+      existingValue.c1s += caseloads[idx].c1s
+      existingValue.c2s += caseloads[idx].c2s
+      existingValue.c3s += caseloads[idx].c3s
+      existingValue.b0s += caseloads[idx].b0s
+      existingValue.b1s += caseloads[idx].b1s
+      existingValue.b2s += caseloads[idx].b2s
+      existingValue.b3s += caseloads[idx].b3s
+      existingValue.a0s += caseloads[idx].a0s
+      existingValue.a1s += caseloads[idx].a1s
+      existingValue.a2s += caseloads[idx].a2s
+      existingValue.a3s += caseloads[idx].a3s
       existingValue.totalCases += caseloads[idx].totalCases
     }
   }
@@ -348,6 +444,22 @@ const groupOverallCaseloadByGrade = function (caseloads) {
       existingValue.a1 += caseloads[idx].a1
       existingValue.a2 += caseloads[idx].a2
       existingValue.a3 += caseloads[idx].a3
+      existingValue.d0s += caseloads[idx].d0s
+      existingValue.d1s += caseloads[idx].d1s
+      existingValue.d2s += caseloads[idx].d2s
+      existingValue.d3s += caseloads[idx].d3s
+      existingValue.c0s += caseloads[idx].c0s
+      existingValue.c1s += caseloads[idx].c1s
+      existingValue.c2s += caseloads[idx].c2s
+      existingValue.c3s += caseloads[idx].c3s
+      existingValue.b0s += caseloads[idx].b0s
+      existingValue.b1s += caseloads[idx].b1s
+      existingValue.b2s += caseloads[idx].b2s
+      existingValue.b3s += caseloads[idx].b3s
+      existingValue.a0s += caseloads[idx].a0s
+      existingValue.a1s += caseloads[idx].a1s
+      existingValue.a2s += caseloads[idx].a2s
+      existingValue.a3s += caseloads[idx].a3s
       existingValue.totalCases += caseloads[idx].totalCases
     }
   }
@@ -356,7 +468,7 @@ const groupOverallCaseloadByGrade = function (caseloads) {
 }
 
 const totalWholeCaseload = function (caseloads) {
-  const tierTotals = { a3: 0, a2: 0, a1: 0, a0: 0, b3: 0, b2: 0, b1: 0, b0: 0, c3: 0, c2: 0, c1: 0, c0: 0, d3: 0, d2: 0, d1: 0, d0: 0, untiered: 0, totalCases: 0 }
+  const tierTotals = { a3: 0, a2: 0, a1: 0, a0: 0, b3: 0, b2: 0, b1: 0, b0: 0, c3: 0, c2: 0, c1: 0, c0: 0, d3: 0, d2: 0, d1: 0, d0: 0, a3s: 0, a2s: 0, a1s: 0, a0s: 0, b3s: 0, b2s: 0, b1s: 0, b0s: 0, c3s: 0, c2s: 0, c1s: 0, c0s: 0, d3s: 0, d2s: 0, d1s: 0, d0s: 0, untiered: 0, totalCases: 0 }
   if (caseloads.length > 0) {
     caseloads.forEach(function (caseload) {
       tierTotals.a3 += caseload.a3
@@ -375,6 +487,22 @@ const totalWholeCaseload = function (caseloads) {
       tierTotals.d2 += caseload.d2
       tierTotals.d1 += caseload.d1
       tierTotals.d0 += caseload.d0
+      tierTotals.a3s += caseload.a3s
+      tierTotals.a2s += caseload.a2s
+      tierTotals.a1s += caseload.a1s
+      tierTotals.a0s += caseload.a0s
+      tierTotals.b3s += caseload.b3s
+      tierTotals.b2s += caseload.b2s
+      tierTotals.b1s += caseload.b1s
+      tierTotals.b0s += caseload.b0s
+      tierTotals.c3s += caseload.c3s
+      tierTotals.c2s += caseload.c2s
+      tierTotals.c1s += caseload.c1s
+      tierTotals.c0s += caseload.c0s
+      tierTotals.d3s += caseload.d3s
+      tierTotals.d2s += caseload.d2s
+      tierTotals.d1s += caseload.d1s
+      tierTotals.d0s += caseload.d0s
       tierTotals.untiered += caseload.untiered
       tierTotals.totalCases += caseload.totalCases
     })
@@ -407,6 +535,22 @@ const calculateOverallPercentages = function (overallTotals, overallGradeTotals)
     existingValue.a2 = percentageCalculator.calculatePercentage(existingValue.a2, overallTotals.a2)
     existingValue.a1 = percentageCalculator.calculatePercentage(existingValue.a1, overallTotals.a1)
     existingValue.a0 = percentageCalculator.calculatePercentage(existingValue.a0, overallTotals.a0)
+    existingValue.d3s = percentageCalculator.calculatePercentage(existingValue.d3s, overallTotals.d3s)
+    existingValue.d2s = percentageCalculator.calculatePercentage(existingValue.d2s, overallTotals.d2s)
+    existingValue.d1s = percentageCalculator.calculatePercentage(existingValue.d1s, overallTotals.d1s)
+    existingValue.d0s = percentageCalculator.calculatePercentage(existingValue.d0s, overallTotals.d0s)
+    existingValue.c3s = percentageCalculator.calculatePercentage(existingValue.c3s, overallTotals.c3s)
+    existingValue.c2s = percentageCalculator.calculatePercentage(existingValue.c2s, overallTotals.c2s)
+    existingValue.c1s = percentageCalculator.calculatePercentage(existingValue.c1s, overallTotals.c1s)
+    existingValue.c0s = percentageCalculator.calculatePercentage(existingValue.c0s, overallTotals.c0s)
+    existingValue.b3s = percentageCalculator.calculatePercentage(existingValue.b3s, overallTotals.b3s)
+    existingValue.b2s = percentageCalculator.calculatePercentage(existingValue.b2s, overallTotals.b2s)
+    existingValue.b1s = percentageCalculator.calculatePercentage(existingValue.b1s, overallTotals.b1s)
+    existingValue.b0s = percentageCalculator.calculatePercentage(existingValue.b0s, overallTotals.b0s)
+    existingValue.a3s = percentageCalculator.calculatePercentage(existingValue.a3s, overallTotals.a3s)
+    existingValue.a2s = percentageCalculator.calculatePercentage(existingValue.a2s, overallTotals.a2s)
+    existingValue.a1s = percentageCalculator.calculatePercentage(existingValue.a1s, overallTotals.a1s)
+    existingValue.a0s = percentageCalculator.calculatePercentage(existingValue.a0s, overallTotals.a0s)
     existingValue.totalCases = percentageCalculator.calculatePercentage(existingValue.totalCases, overallTotals.totalCases)
   }
   const array = convertMapToArray(linkIdToCaseloadMap)
