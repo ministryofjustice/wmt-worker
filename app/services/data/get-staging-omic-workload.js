@@ -74,7 +74,7 @@ module.exports = function (range) {
       't2a.commtiera0 AS t2a_commtiera0s', 't2a.commtiera1 AS t2a_commtiera1s', 't2a.commtiera2 AS t2a_commtiera2s', 't2a.commtiera3 AS t2a_commtiera3s',
 
       // T2A Licence cases
-      't2a.licencetier0 AS t2a_licencetier0s',
+      't2a.licencetier0 AS t2a_licencetier0',
       't2a.licencetierd0 AS t2a_licencetierd0', 't2a.licencetierd1 AS t2a_licencetierd1', 't2a.licencetierd2 AS t2a_licencetierd2', 't2a.licencetierd3 AS t2a_licencetierd3',
       't2a.licencetierc0 AS t2a_licencetierc0', 't2a.licencetierc1 AS t2a_licencetierc1', 't2a.licencetierc2 AS t2a_licencetierc2', 't2a.licencetierc3 AS t2a_licencetierc3',
       't2a.licencetierb0 AS t2a_licencetierb0', 't2a.licencetierb1 AS t2a_licencetierb1', 't2a.licencetierb2 AS t2a_licencetierb2', 't2a.licencetierb3 AS t2a_licencetierb3',
