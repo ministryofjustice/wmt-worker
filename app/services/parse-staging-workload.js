@@ -34,7 +34,23 @@ module.exports = function (range) {
               result.commtiera0,
               result.commtiera1,
               result.commtiera2,
-              result.commtiera3
+              result.commtiera3,
+              result.commtierd0s,
+              result.commtierd1s,
+              result.commtierd2s,
+              result.commtierd3s,
+              result.commtierc0s,
+              result.commtierc1s,
+              result.commtierc2s,
+              result.commtierc3s,
+              result.commtierb0s,
+              result.commtierb1s,
+              result.commtierb2s,
+              result.commtierb3s,
+              result.commtiera0s,
+              result.commtiera1s,
+              result.commtiera2s,
+              result.commtiera3s
             )
 
             // WMT0229 Change needed here when extract column names are known
@@ -56,7 +72,23 @@ module.exports = function (range) {
               result.filtered_commtiera0,
               result.filtered_commtiera1,
               result.filtered_commtiera2,
-              result.filtered_commtiera3
+              result.filtered_commtiera3,
+              result.filtered_commtierd0s,
+              result.filtered_commtierd1s,
+              result.filtered_commtierd2s,
+              result.filtered_commtierd3s,
+              result.filtered_commtierc0s,
+              result.filtered_commtierc1s,
+              result.filtered_commtierc2s,
+              result.filtered_commtierc3s,
+              result.filtered_commtierb0s,
+              result.filtered_commtierb1s,
+              result.filtered_commtierb2s,
+              result.filtered_commtierb3s,
+              result.filtered_commtiera0s,
+              result.filtered_commtiera1s,
+              result.filtered_commtiera2s,
+              result.filtered_commtiera3s
             )
 
             // WMT0229 Change needed here when extract column names are known
@@ -78,7 +110,23 @@ module.exports = function (range) {
               result.licencetiera0,
               result.licencetiera1,
               result.licencetiera2,
-              result.licencetiera3
+              result.licencetiera3,
+              result.licencetierd0s,
+              result.licencetierd1s,
+              result.licencetierd2s,
+              result.licencetierd3s,
+              result.licencetierc0s,
+              result.licencetierc1s,
+              result.licencetierc2s,
+              result.licencetierc3s,
+              result.licencetierb0s,
+              result.licencetierb1s,
+              result.licencetierb2s,
+              result.licencetierb3s,
+              result.licencetiera0s,
+              result.licencetiera1s,
+              result.licencetiera2s,
+              result.licencetiera3s
             )
 
             // WMT0229 Change needed here when extract column names are known
@@ -100,7 +148,23 @@ module.exports = function (range) {
               result.filtered_licencetiera0,
               result.filtered_licencetiera1,
               result.filtered_licencetiera2,
-              result.filtered_licencetiera3
+              result.filtered_licencetiera3,
+              result.filtered_licencetierd0s,
+              result.filtered_licencetierd1s,
+              result.filtered_licencetierd2s,
+              result.filtered_licencetierd3s,
+              result.filtered_licencetierc0s,
+              result.filtered_licencetierc1s,
+              result.filtered_licencetierc2s,
+              result.filtered_licencetierc3s,
+              result.filtered_licencetierb0s,
+              result.filtered_licencetierb1s,
+              result.filtered_licencetierb2s,
+              result.filtered_licencetierb3s,
+              result.filtered_licencetiera0s,
+              result.filtered_licencetiera1s,
+              result.filtered_licencetiera2s,
+              result.filtered_licencetiera3s
             )
 
             // WMT0229 Change needed here when extract column names are known
@@ -122,7 +186,23 @@ module.exports = function (range) {
               result.custtiera0,
               result.custtiera1,
               result.custtiera2,
-              result.custtiera3
+              result.custtiera3,
+              result.custtierd0s,
+              result.custtierd1s,
+              result.custtierd2s,
+              result.custtierd3s,
+              result.custtierc0s,
+              result.custtierc1s,
+              result.custtierc2s,
+              result.custtierc3s,
+              result.custtierb0s,
+              result.custtierb1s,
+              result.custtierb2s,
+              result.custtierb3s,
+              result.custtiera0s,
+              result.custtiera1s,
+              result.custtiera2s,
+              result.custtiera3s
             )
 
             // WMT0229 Change needed here when extract column names are known
@@ -144,7 +224,23 @@ module.exports = function (range) {
               result.filtered_custtiera0,
               result.filtered_custtiera1,
               result.filtered_custtiera2,
-              result.filtered_custtiera3
+              result.filtered_custtiera3,
+              result.filtered_custtierd0s,
+              result.filtered_custtierd1s,
+              result.filtered_custtierd2s,
+              result.filtered_custtierd3s,
+              result.filtered_custtierc0s,
+              result.filtered_custtierc1s,
+              result.filtered_custtierc2s,
+              result.filtered_custtierc3s,
+              result.filtered_custtierb0s,
+              result.filtered_custtierb1s,
+              result.filtered_custtierb2s,
+              result.filtered_custtierb3s,
+              result.filtered_custtiera0s,
+              result.filtered_custtiera1s,
+              result.filtered_custtiera2s,
+              result.filtered_custtiera3s
             )
 
             // WMT0229 Change needed here when extract column names are known
@@ -166,7 +262,23 @@ module.exports = function (range) {
               result.t2a_commtiera0,
               result.t2a_commtiera1,
               result.t2a_commtiera2,
-              result.t2a_commtiera3
+              result.t2a_commtiera3,
+              result.t2a_commtierd0s,
+              result.t2a_commtierd1s,
+              result.t2a_commtierd2s,
+              result.t2a_commtierd3s,
+              result.t2a_commtierc0s,
+              result.t2a_commtierc1s,
+              result.t2a_commtierc2s,
+              result.t2a_commtierc3s,
+              result.t2a_commtierb0s,
+              result.t2a_commtierb1s,
+              result.t2a_commtierb2s,
+              result.t2a_commtierb3s,
+              result.t2a_commtiera0s,
+              result.t2a_commtiera1s,
+              result.t2a_commtiera2s,
+              result.t2a_commtiera3s
             )
 
             // WMT0229 Change needed here when extract column names are known
@@ -188,7 +300,23 @@ module.exports = function (range) {
               result.t2a_licencetiera0,
               result.t2a_licencetiera1,
               result.t2a_licencetiera2,
-              result.t2a_licencetiera3
+              result.t2a_licencetiera3,
+              result.t2a_licencetierd0s,
+              result.t2a_licencetierd1s,
+              result.t2a_licencetierd2s,
+              result.t2a_licencetierd3s,
+              result.t2a_licencetierc0s,
+              result.t2a_licencetierc1s,
+              result.t2a_licencetierc2s,
+              result.t2a_licencetierc3s,
+              result.t2a_licencetierb0s,
+              result.t2a_licencetierb1s,
+              result.t2a_licencetierb2s,
+              result.t2a_licencetierb3s,
+              result.t2a_licencetiera0s,
+              result.t2a_licencetiera1s,
+              result.t2a_licencetiera2s,
+              result.t2a_licencetiera3s
             )
 
             // WMT0229 Change needed here when extract column names are known
@@ -210,7 +338,23 @@ module.exports = function (range) {
               result.t2a_custtiera0,
               result.t2a_custtiera1,
               result.t2a_custtiera2,
-              result.t2a_custtiera3
+              result.t2a_custtiera3,
+              result.t2a_custtierd0s,
+              result.t2a_custtierd1s,
+              result.t2a_custtierd2s,
+              result.t2a_custtierd3s,
+              result.t2a_custtierc0s,
+              result.t2a_custtierc1s,
+              result.t2a_custtierc2s,
+              result.t2a_custtierc3s,
+              result.t2a_custtierb0s,
+              result.t2a_custtierb1s,
+              result.t2a_custtierb2s,
+              result.t2a_custtierb3s,
+              result.t2a_custtiera0s,
+              result.t2a_custtiera1s,
+              result.t2a_custtiera2s,
+              result.t2a_custtiera3s
             )
 
             const casesSummary = new CasesSummary(

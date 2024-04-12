@@ -26,7 +26,23 @@ module.exports = function (summary, details, t2a = false) {
     zeroIfNull(summary.a0) +
     zeroIfNull(summary.a1) +
     zeroIfNull(summary.a2) +
-    zeroIfNull(summary.a3)
+    zeroIfNull(summary.a3) +
+    zeroIfNull(summary.d0s) +
+    zeroIfNull(summary.d1s) +
+    zeroIfNull(summary.d2s) +
+    zeroIfNull(summary.d3s) +
+    zeroIfNull(summary.c0s) +
+    zeroIfNull(summary.c1s) +
+    zeroIfNull(summary.c2s) +
+    zeroIfNull(summary.c3s) +
+    zeroIfNull(summary.b0s) +
+    zeroIfNull(summary.b1s) +
+    zeroIfNull(summary.b2s) +
+    zeroIfNull(summary.b3s) +
+    zeroIfNull(summary.a0s) +
+    zeroIfNull(summary.a1s) +
+    zeroIfNull(summary.a2s) +
+    zeroIfNull(summary.a3s)
 
   if (t2a) {
     // For T2A cases they are identical to normal cases and there are no different
@@ -50,6 +66,22 @@ module.exports = function (summary, details, t2a = false) {
       getTierCounts(zeroIfNull(summary.d2), [], 14),
       getTierCounts(zeroIfNull(summary.d1), [], 15),
       getTierCounts(zeroIfNull(summary.d0), [], 16),
+      getTierCounts(zeroIfNull(summary.a3s), [], 17),
+      getTierCounts(zeroIfNull(summary.a2s), [], 18),
+      getTierCounts(zeroIfNull(summary.a1s), [], 19),
+      getTierCounts(zeroIfNull(summary.a0s), [], 20),
+      getTierCounts(zeroIfNull(summary.b3s), [], 21),
+      getTierCounts(zeroIfNull(summary.b2s), [], 22),
+      getTierCounts(zeroIfNull(summary.b1s), [], 23),
+      getTierCounts(zeroIfNull(summary.b0s), [], 24),
+      getTierCounts(zeroIfNull(summary.c3s), [], 25),
+      getTierCounts(zeroIfNull(summary.c2s), [], 26),
+      getTierCounts(zeroIfNull(summary.c1s), [], 27),
+      getTierCounts(zeroIfNull(summary.c0s), [], 28),
+      getTierCounts(zeroIfNull(summary.d3s), [], 29),
+      getTierCounts(zeroIfNull(summary.d2s), [], 30),
+      getTierCounts(zeroIfNull(summary.d1s), [], 31),
+      getTierCounts(zeroIfNull(summary.d0s), [], 32),
       total
     )
   } else {
@@ -75,6 +107,22 @@ module.exports = function (summary, details, t2a = false) {
       getTierCounts(zeroIfNull(summary.d2), details.filter(tierCodeFilter('14')), 14),
       getTierCounts(zeroIfNull(summary.d1), details.filter(tierCodeFilter('15')), 15),
       getTierCounts(zeroIfNull(summary.d0), details.filter(tierCodeFilter('16')), 16),
+      getTierCounts(zeroIfNull(summary.a3s), details.filter(tierCodeFilter('17')), 17),
+      getTierCounts(zeroIfNull(summary.a2s), details.filter(tierCodeFilter('18')), 18),
+      getTierCounts(zeroIfNull(summary.a1s), details.filter(tierCodeFilter('19')), 19),
+      getTierCounts(zeroIfNull(summary.a0s), details.filter(tierCodeFilter('20')), 20),
+      getTierCounts(zeroIfNull(summary.b3s), details.filter(tierCodeFilter('21')), 21),
+      getTierCounts(zeroIfNull(summary.b2s), details.filter(tierCodeFilter('22')), 22),
+      getTierCounts(zeroIfNull(summary.b1s), details.filter(tierCodeFilter('23')), 23),
+      getTierCounts(zeroIfNull(summary.b0s), details.filter(tierCodeFilter('24')), 24),
+      getTierCounts(zeroIfNull(summary.c3s), details.filter(tierCodeFilter('25')), 25),
+      getTierCounts(zeroIfNull(summary.c2s), details.filter(tierCodeFilter('26')), 26),
+      getTierCounts(zeroIfNull(summary.c1s), details.filter(tierCodeFilter('27')), 27),
+      getTierCounts(zeroIfNull(summary.c0s), details.filter(tierCodeFilter('28')), 28),
+      getTierCounts(zeroIfNull(summary.d3s), details.filter(tierCodeFilter('29')), 29),
+      getTierCounts(zeroIfNull(summary.d2s), details.filter(tierCodeFilter('30')), 30),
+      getTierCounts(zeroIfNull(summary.d1s), details.filter(tierCodeFilter('31')), 31),
+      getTierCounts(zeroIfNull(summary.d0s), details.filter(tierCodeFilter('32')), 32),
       total
     )
   }

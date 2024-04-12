@@ -81,7 +81,7 @@ module.exports.insertDependencies = function (inserts, startingStagingId = 1, om
       ids.forEach(({ id }) => {
         inserts.push({ table: 'workload', id, schema: 'app' })
         for (let i = 0; i < 3; i++) {
-          for (let j = 0; j < 17; j++) {
+          for (let j = 0; j < 33; j++) {
             cases.push({
               workload_id: id,
               tier_number: j,

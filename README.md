@@ -11,6 +11,9 @@ On OSX (using [homebrew](https://brew.sh/)):
 Install Node version 18
 - `nvm install 18`
 
+(you may need to downgrade your NPM to v9 to make it work with wmt-worker)
+- `npm install -g npm@9`
+
 Install Husky
 - `npm install -g husky`
 
