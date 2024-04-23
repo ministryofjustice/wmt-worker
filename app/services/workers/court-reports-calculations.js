@@ -28,16 +28,22 @@ module.exports.execute = async function (task) {
 
   return getAppCourtReports(startingStagingId, maxStagingId, reportId)
     .then(function (courtReports) {
+      logger.info('in get app court reports - crc')
       return arrayToPromise(courtReports, function (courtReport) {
+        logger.info('in array to promise court reports - crc')
         const workloadOwnerId = courtReport.workloadOwnerId
         const courtReportsId = courtReport.id
 
         return getWorkloadPointsConfiguration()
           .then(function (pointsConfiguration) {
+            logger.info('before get app reductions - crc')
             return getAppReductions(workloadOwnerId)
               .then(function (reductions) {
+                logger.info('before get contracted hours - crc')
                 return getContractedHours(workloadOwnerId)
                   .then(function (contractedHours) {
+                    logger.info('before switch operation type - crc')
+                    logger.info(operationType)
                     switch (operationType) {
                       case operationTypes.INSERT:
                         return insertCourtReportsCalculations(
