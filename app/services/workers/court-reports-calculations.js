@@ -44,6 +44,11 @@ module.exports.execute = async function (task) {
                   .then(function (contractedHours) {
                     logger.info('before switch operation type - crc')
                     logger.info(operationType)
+                    logger.info('reportid ' + reportId)
+                    logger.info('pointsconfigid ' + pointsConfiguration.id)
+                    logger.info('court reports id ' + courtReportsId)
+                    logger.info('contracted hours ' + contractedHours)
+                    logger.info('reductions ' + reductions)
                     switch (operationType) {
                       case operationTypes.INSERT:
                         return insertCourtReportsCalculations(
