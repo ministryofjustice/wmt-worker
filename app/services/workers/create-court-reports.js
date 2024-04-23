@@ -20,12 +20,16 @@ module.exports.execute = async function (task) {
 
   return getStgCourtReporters([startingStagingId, endingStagingId])
     .then(function (stagingCourtReports) {
+      logger.info('reached 1st line - create-court-reports')
       return arrayToPromise(stagingCourtReports, function (stagingCourtReport) {
+        logger.info('reached array-to-promise - create-court-reports')
         const caseSummary = stagingCourtReport.casesSummary
         if (caseSummary.omKey !== null) {
+          logger.info('case summary om_key not null - create-court-reports')
           return insertWorkloadOwnerAndDependencies(caseSummary)
             .then(function (workloadOwnerId) {
               const courtReportToInsert = mapCourtReports(stagingCourtReport, parseInt(workloadOwnerId), parseInt(workloadReportId))
+              logger.info('insert courtreport setup - create-court-report')
               return insertCourtReports(courtReportToInsert)
                 .then(function (insertedId) {
                   logger.info('Court Report with id ' + insertedId + ' added')

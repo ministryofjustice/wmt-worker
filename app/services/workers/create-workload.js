@@ -18,13 +18,18 @@ module.exports.execute = async function (task) {
   const workloadReportId = task.workloadReportId
 
   return parseStagingWorkload([startingStagingId, endingStagingId]).then(function (stagingWorkloads) {
+    logger.info('reached 1st line - create-workload')
     return arrayToPromise(stagingWorkloads, function (stagingWorkload) {
+      logger.info('reached array-to-promise - create-workload')
       const caseSummary = stagingWorkload.casesSummary
       if (caseSummary.omKey !== null) {
+        logger.info('case summary om_key not null - create-workload')
         return insertWorkloadOwnerAndDependencies(caseSummary)
           .then(function (workloadOwnerId) {
+            logger.info('insert workload setup - create-workload')
             const workloadToInsert = mapWorkload(stagingWorkload, parseInt(workloadOwnerId), parseInt(workloadReportId))
             const caseDetails = stagingWorkload.caseDetails
+            logger.info('about to insert workload - create-workload')
             return insertWorkload(workloadToInsert, caseDetails)
           })
       }
