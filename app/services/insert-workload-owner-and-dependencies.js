@@ -14,14 +14,19 @@ const Region = require('./probation-rules').Region
 const filterOmGradeCode = require('./probation-rules').filterOmGradeCode
 const getDefaultContractedHours = require('./data/get-default-contracted-hours')
 
+const logger = require('./log')
+
 module.exports = function (caseSummary) {
   let gradeCode = ''
   let contractedHours = 0
+  logger.info('Case Summary' + caseSummary)
   return insertOffenderManagerTypeId(filterOmGradeCode(caseSummary.omGradeCode))
     .then(function (typeId) {
+      logger.info('inside insert offender manager type id')
       gradeCode = filterOmGradeCode(caseSummary.omGradeCode)
       return getDefaultContractedHours(gradeCode)
         .then(function (hours) {
+          logger.info('inside get default contracted hours')
           contractedHours = hours
           return insertOffenderManager(
             new OffenderManager(
@@ -34,6 +39,7 @@ module.exports = function (caseSummary) {
             )
           )
             .then(function (offenderManagerId) {
+              logger.info('before insert region')
               return insertRegion(
                 new Region(
                   undefined,
@@ -42,6 +48,7 @@ module.exports = function (caseSummary) {
                 )
               )
                 .then(function (regionId) {
+                  logger.info('before insert ldu')
                   return insertLdu(
                     new Ldu(
                       undefined,
@@ -51,6 +58,7 @@ module.exports = function (caseSummary) {
                     )
                   )
                     .then(function (lduId) {
+                      logger.info('before insert team')
                       return insertTeam(
                         new Team(
                           undefined,
@@ -60,6 +68,7 @@ module.exports = function (caseSummary) {
                         )
                       )
                         .then(function (teamId) {
+                          logger.info('before insert workload owner')
                           return insertWorkloadOwner(
                             new WorkloadOwner(
                               undefined,
@@ -69,7 +78,9 @@ module.exports = function (caseSummary) {
                               parseInt(contractedHours)
                             )
                           ).then(function (result) {
+                            logger.info('after insert workload manager owner')
                             if (result.type === 'CREATE') {
+                              logger.info('before insert audit contracted hours create')
                               return auditContractedHoursCreate(caseSummary.omForename,
                                 caseSummary.omSurname, caseSummary.teamCode,
                                 caseSummary.teamDesc, caseSummary.lduCode,
