@@ -24,6 +24,7 @@ module.exports = function (caseSummary) {
     .then(function (typeId) {
       logger.info('inside insert offender manager type id')
       gradeCode = filterOmGradeCode(caseSummary.omGradeCode)
+      logger.info('inside insert offender manager type id 2')
       return getDefaultContractedHours(gradeCode)
         .then(function (hours) {
           logger.info('inside get default contracted hours')
