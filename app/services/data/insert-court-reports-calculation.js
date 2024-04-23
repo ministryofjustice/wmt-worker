@@ -1,8 +1,10 @@
 const knex = require('../../../knex').appSchema
+const logger = require('../log')
 
 module.exports = function (courtReportCalculation) {
+  logger.info('crc ' + courtReportCalculation)
   const dbObject = mapToDbObject(courtReportCalculation)
-
+  logger.info('dbObject ' + dbObject)
   return knex('court_reports_calculations')
     .withSchema('app')
     .returning('id')
