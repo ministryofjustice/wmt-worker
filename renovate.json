@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "github>ministryofjustice/hmpps-renovate-config:jvm",
+    "github>ministryofjustice/hmpps-renovate-config:jvm"
   ],
   "packageRules": [
   {
@@ -11,5 +11,5 @@
     "groupName": "all non major dependencies",
     "groupSlug": "all-minor-patch"
   }
-],
+]
 }
