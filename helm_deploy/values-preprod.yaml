@@ -3,7 +3,7 @@ generic-service:
   env:
     NODE_ENV: "production"
     PGSSLMODE: "no-verify"
-    EXTRACT_LISTENER_CRON: "35 9 25 6 *"
+    EXTRACT_LISTENER_CRON: "50 8 25 6 *"
 
   HMPPS_SQS_USE_WEB_TOKEN: "true"
 
