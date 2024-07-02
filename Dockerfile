@@ -16,7 +16,7 @@ RUN addgroup --gid 2000 --system appgroup && \
 # Install AWS RDS Root cert into Java truststore
 RUN mkdir /home/appuser/.postgresql \
   && curl https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem \
-    > /home/appuser/.postgresql/root.crt \
+    > /home/appuser/.postgresql/root.crt
 
 WORKDIR /app
 
