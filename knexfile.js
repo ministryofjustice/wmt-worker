@@ -16,6 +16,8 @@ module.exports = {
       max: 50,
       idleTimeoutMillis: 5000
     },
+    ssl: true,
+    sslmode: 'verify-full',
     acquireConnectionTimeout: 1200000
   },
   app: {
@@ -27,6 +29,8 @@ module.exports = {
       max: 50,
       idleTimeoutMillis: 5000
     },
+    ssl: true,
+    sslmode: 'verify-full',
     acquireConnectionTimeout: 150000
   }
 }
