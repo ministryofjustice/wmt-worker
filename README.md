@@ -1,18 +1,15 @@
 # Workload Management Tool - Worker application
 
 ## Pre-requisites
-- Node v18 (managed using [nvm](https://github.com/creationix/nvm))
+- Node v22 (managed using [nvm](https://github.com/creationix/nvm))
 
 On OSX (using [homebrew](https://brew.sh/)):
 
 - `brew install nvm`
 - Follow the instructions in the brew installer output
 
-Install Node version 18
-- `nvm install 18`
-
-(you may need to downgrade your NPM to v9 to make it work with wmt-worker)
-- `npm install -g npm@9`
+Install Node version 22
+- `nvm install 22`
 
 Install Husky
 - `npm install -g husky`
