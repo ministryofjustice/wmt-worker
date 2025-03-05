@@ -7,8 +7,8 @@
   "author": "Tom Swann",
   "license": "MIT",
   "engines": {
-    "node": "^18",
-    "npm": "^8 || ^9"
+    "node": "^22",
+    "npm": "^10"
   },
   "scripts": {
     "prepare": "husky",
