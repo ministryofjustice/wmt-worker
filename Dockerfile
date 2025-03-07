@@ -13,8 +13,6 @@ RUN apt-get update && apt-get install -y curl ca-certificates
 RUN addgroup --gid 2000 --system appgroup && \
     adduser --uid 2000 --system appuser --gid 2000
 
-
-
 # Install AWS RDS Root cert into Java truststore
 RUN mkdir -p /home/appuser/.postgresql \
   && curl https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem \
@@ -31,7 +29,8 @@ RUN apt-get update && \
         apt-get autoremove -y && \
         rm -rf /var/lib/apt/lists/*
 
-RUN npm i -g npm@8
+# Install the required version of npm
+RUN npm install -g npm@10
 
 # Stage: build assets
 FROM base as build
@@ -53,7 +52,7 @@ RUN export BUILD_NUMBER=${BUILD_NUMBER} && \
     export GIT_REF=${GIT_REF} && \
     npm run record-build-info
 
-RUN npm prune --no-audit --production
+RUN npm prune --omit=dev
 
 # Stage: copy production assets and dependencies
 FROM base
