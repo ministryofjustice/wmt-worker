@@ -31,7 +31,8 @@ RUN apt-get update && \
         apt-get autoremove -y && \
         rm -rf /var/lib/apt/lists/*
 
-RUN npm i -g npm@8
+# Install the required version of npm
+RUN npm install -g npm@10
 
 # Stage: build assets
 FROM base as build
@@ -53,7 +54,7 @@ RUN export BUILD_NUMBER=${BUILD_NUMBER} && \
     export GIT_REF=${GIT_REF} && \
     npm run record-build-info
 
-RUN npm prune --no-audit --production
+RUN npm prune --omit=dev
 
 # Stage: copy production assets and dependencies
 FROM base
