@@ -16,10 +16,11 @@ RUN addgroup --gid 2000 --system appgroup && \
 
 
 # Install AWS RDS Root cert into Java truststore
-RUN --chown=appuser:appgroup --chmod=644 mkdir /home/appuser/.postgresql \
+RUN mkdir -p /home/appuser/.postgresql \
   && curl https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem \
     --output /home/appuser/.postgresql/root.crt \
-    --chown=appuser:appgroup --chmod=644
+  && chown appuser:appgroup /home/appuser/.postgresql/root.crt \
+  && chmod 644 /home/appuser/.postgresql/root.crt
 
 WORKDIR /app
 
