@@ -1,4 +1,4 @@
-FROM node:22.14-bookworm-slim AS base
+FROM node:22.14-bullseye-slim AS base
 
 ARG BUILD_NUMBER=1_0_0
 ARG GIT_REF=not-available
@@ -24,7 +24,7 @@ RUN mkdir -p /home/appuser/.postgresql \
 
 WORKDIR /app
 
-ENV BUILD_NUMBER ${BUILD_NUMBER:-1_0_0}
+ENV BUILD_NUMBER=${BUILD_NUMBER:-1_0_0}
 
 RUN apt-get update && \
         apt-get upgrade -y && \
@@ -40,15 +40,15 @@ ARG BUILD_NUMBER=1_0_0
 ARG GIT_REF=not-available
 
 RUN apt-get update && \
-        apt-get install -y make python g++ git
+        apt-get install -y --no-install-recommends make python g++ git && rm -rf /var/lib/apt/lists/*
 
 COPY package*.json ./
 RUN CYPRESS_INSTALL_BINARY=0 npm ci --no-audit
 
 COPY . .
 
-ENV BUILD_NUMBER ${BUILD_NUMBER:-1_0_0}
-ENV GIT_REF ${GIT_REF:-dummy}
+ENV BUILD_NUMBER=${BUILD_NUMBER:-1_0_0}
+ENV GIT_REF=${GIT_REF:-dummy}
 RUN export BUILD_NUMBER=${BUILD_NUMBER} && \
     export GIT_REF=${GIT_REF} && \
     npm run record-build-info
