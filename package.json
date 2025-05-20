@@ -43,7 +43,7 @@
     "chai": "4.3.7",
     "glob": "10.3.0",
     "husky": "8.0.3",
-    "mocha": "10.2.0",
+    "mocha": "10.8.2",
     "mocha-simple-html-reporter": "2.0.0",
     "nyc": "15.1.0",
     "proxyquire": "2.1.3",
