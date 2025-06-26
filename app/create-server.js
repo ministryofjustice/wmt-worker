@@ -15,7 +15,7 @@ const requestListener = function (req, res) {
   }
   if (req.url === '/health' && req.method === 'GET') {
     res.writeHead(200, { 'Content-Type': 'application/json' })
-    res.end(JSON.stringify({ status: 'ok' }))
+    res.end(JSON.stringify({ status: 'UP' }))
     return
   }
   log.info(`request ${req.method} ${req.url} not found`)
