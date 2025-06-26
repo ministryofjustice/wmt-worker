@@ -13,6 +13,11 @@ const requestListener = function (req, res) {
       res.end('App is not live')
     })
   }
+  if (req.url === '/health' && req.method === 'GET') {
+    res.writeHead(200, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify({ status: 'ok' }))
+    return
+  }
   log.info(`request ${req.method} ${req.url} not found`)
   res.writeHead(404)
   res.end()
