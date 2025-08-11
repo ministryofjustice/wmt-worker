@@ -49,53 +49,32 @@ jobs:
           path: hmpps-workload
           # ref: main
 
-      # Clean once, then migrate each location (no more dropping in-between)
-      - name: Discover migration dirs
-        id: mig
-        shell: bash
-        run: |
-          set -euo pipefail
-          mapfile -t MIG_DIRS < <(find hmpps-workload -type d -path '*/src/main/resources/db/migration' | sort)
-          if [ ${#MIG_DIRS[@]} -eq 0 ]; then
-            echo "❌ No migration directories found under hmpps-workload"; exit 1
-          fi
-          printf '%s\n' "${MIG_DIRS[@]}" > mig_dirs.txt
-          echo "count=${#MIG_DIRS[@]}" >> "$GITHUB_OUTPUT"
-          echo "Found migration dirs:"; cat mig_dirs.txt
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
 
-      - name: Flyway clean (schema=app)
-        shell: bash
-        run: |
-          docker run --rm --network host \
-            flyway/flyway:10 \
-            -url=jdbc:postgresql://127.0.0.1:5432/postgres \
-            -user=postgres \
-            -password=postgres \
-            -connectRetries=60 \
-            -defaultSchema=app \
-            -schemas=app \
-            -cleanDisabled=false \
-            clean
+      - name: Build workload app (Boot jar)
+        working-directory: hmpps-workload
+        run: ./gradlew --no-daemon bootJar
 
-      - name: Flyway migrate all dirs (schema=app)
-        shell: bash
+      - name: Apply Flyway migrations via Spring Boot
+        working-directory: hmpps-workload
+        env:
+          SPRING_DATASOURCE_URL: jdbc:postgresql://127.0.0.1:5432/postgres
+          SPRING_DATASOURCE_USERNAME: postgres
+          SPRING_DATASOURCE_PASSWORD: postgres
+          SPRING_FLYWAY_ENABLED: "true"
+          SPRING_FLYWAY_SCHEMAS: app
+          SPRING_FLYWAY_BASELINE_ON_MIGRATE: "true"
+          SPRING_MAIN_WEB_APPLICATION_TYPE: none
+
         run: |
-          set -euo pipefail
-          while IFS= read -r D; do
-            echo "▶ Migrating $D"
-            docker run --rm --network host \
-              -v "$PWD/$D":/flyway/sql \
-              flyway/flyway:10 \
-              -url=jdbc:postgresql://127.0.0.1:5432/postgres \
-              -user=postgres \
-              -password=postgres \
-              -connectRetries=60 \
-              -defaultSchema=app \
-              -schemas=app \
-              -baselineOnMigrate=true \
-              -locations=filesystem:/flyway/sql \
-              migrate
-          done < mig_dirs.txt
+          JAR=$(find build/libs -name '*.jar' | head -n1)
+          [ -z "$JAR" ] && echo "No jar found" && exit 1
+    
+          timeout 120s java -jar "$JAR" --spring.main.web-application-type=none || true
 
       - name: Sanity check schema contents
         run: |
