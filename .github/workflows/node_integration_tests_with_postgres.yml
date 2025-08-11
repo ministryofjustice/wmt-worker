@@ -81,6 +81,7 @@ jobs:
           SPRING_FLYWAY_BASELINE_ON_MIGRATE: "true"
           SPRING_FLYWAY_TARGET: "1.30"
           SPRING_MAIN_WEB_APPLICATION_TYPE: none
+          SPRING_AUTOCONFIGURE_EXCLUDE: uk.gov.justice.digital.hmpps.hmppsworkload.config.WebClientUserEnhancementConfiguration
         run: |
           JAR=$(find build/libs -name '*.jar' | head -n1)
           [ -z "$JAR" ] && echo "No jar found" && exit 1
@@ -121,6 +122,7 @@ jobs:
           SPRING_FLYWAY_SCHEMAS: app
           SPRING_FLYWAY_BASELINE_ON_MIGRATE: "true"
           SPRING_MAIN_WEB_APPLICATION_TYPE: none
+          SPRING_AUTOCONFIGURE_EXCLUDE: uk.gov.justice.digital.hmpps.hmppsworkload.config.WebClientUserEnhancementConfiguration
         run: |
           JAR=$(find build/libs -name '*.jar' | head -n1)
           timeout 180s java -jar "$JAR" --spring.main.web-application-type=none || true
@@ -129,9 +131,6 @@ jobs:
       - name: Sanity check schema contents
         run: |
           psql "postgres://postgres:postgres@127.0.0.1:5432/postgres" -c "\dt app.*" || true
-
-
-
 
       - name: Setup Node
         uses: actions/setup-node@v4
