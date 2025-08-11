@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       node_version_file:
-        description: "Passed to setup-node action to specify where to source the version of node from"
+        description: "setup-node reads Node version from here"
         required: false
         type: string
         default: ".nvmrc"
@@ -34,10 +34,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Wait for Postgres and create app DB
+      - name: Wait for Postgres
         shell: bash
-        env:
-          PSQL: postgres://postgres:postgres@127.0.0.1:5432/postgres
         run: |
           for i in {1..60}; do
             pg_isready -h 127.0.0.1 -p 5432 -U postgres -d postgres && break
@@ -49,8 +47,11 @@ jobs:
         with:
           repository: ministryofjustice/hmpps-workload
           path: hmpps-workload
-          # ref: main  # optionally pin a branch/sha
-      - name: Run Flyway migrations from hmpps-workload (all migration dirs)
+          # ref: main
+
+      # Clean once, then migrate each location (no more dropping in-between)
+      - name: Discover migration dirs
+        id: mig
         shell: bash
         run: |
           set -euo pipefail
@@ -58,11 +59,30 @@ jobs:
           if [ ${#MIG_DIRS[@]} -eq 0 ]; then
             echo "❌ No migration directories found under hmpps-workload"; exit 1
           fi
-          echo "Found migration dirs:"; printf ' - %s\n' "${MIG_DIRS[@]}"
+          printf '%s\n' "${MIG_DIRS[@]}" > mig_dirs.txt
+          echo "count=${#MIG_DIRS[@]}" >> "$GITHUB_OUTPUT"
+          echo "Found migration dirs:"; cat mig_dirs.txt
 
-          # Start from a clean schema each CI run
-          for D in "${MIG_DIRS[@]}"; do
-            echo "▶ Running Flyway for $D"
+      - name: Flyway clean (schema=app)
+        shell: bash
+        run: |
+          docker run --rm --network host \
+            flyway/flyway:10 \
+            -url=jdbc:postgresql://127.0.0.1:5432/postgres \
+            -user=postgres \
+            -password=postgres \
+            -connectRetries=60 \
+            -defaultSchema=app \
+            -schemas=app \
+            -cleanDisabled=false \
+            clean
+
+      - name: Flyway migrate all dirs (schema=app)
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r D; do
+            echo "▶ Migrating $D"
             docker run --rm --network host \
               -v "$PWD/$D":/flyway/sql \
               flyway/flyway:10 \
@@ -72,34 +92,45 @@ jobs:
               -connectRetries=60 \
               -defaultSchema=app \
               -schemas=app \
-              -cleanDisabled=false \
-              clean migrate
-          done
+              -baselineOnMigrate=true \
+              -locations=filesystem:/flyway/sql \
+              migrate
+          done < mig_dirs.txt
 
-      # --- now start your deps/app and run integration tests as you already do ---
+      - name: Sanity check schema contents
+        run: |
+          psql "postgres://postgres:postgres@127.0.0.1:5432/postgres" -c "\dn+"
+          psql "postgres://postgres:postgres@127.0.0.1:5432/postgres" -c "\dt app.*"
+
       - name: Get WireMock
         run: curl -sSLo wiremock.jar https://repo1.maven.org/maven2/org/wiremock/wiremock-standalone/3.9.1/wiremock-standalone-3.9.1.jar
 
       - name: Start WireMock(s)
         run: |
-          for p in 9091; do
-            nohup java -jar wiremock.jar --port "$p" >/tmp/wm-$p.log 2>&1 &
-          done
+          nohup java -jar wiremock.jar --port 9091 >/tmp/wm-9091.log 2>&1 &
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ${{ inputs.node_version_file }}
+          cache: npm
 
       - name: Install deps
         run: npm ci
 
       - name: Start app & run integration tests
         env:
-          # Ensure your app uses these (or DATABASE_URL) to connect
-            DATABASE_SERVER: 127.0.0.1
-            DATABASE_USERNAME: postgres
-            DATABASE_PASSWORD: postgres
-            DATABASE: postgres
-            DATABASE_PORT: "5432"
-            DATABASE_SSL: "false"
-          # DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/wmt?sslmode=disable
+          DATABASE_SERVER: 127.0.0.1
+          DATABASE_USERNAME: postgres
+          DATABASE_PASSWORD: postgres
+          DATABASE: postgres
+          DATABASE_PORT: "5432"
+          DATABASE_SSL: "false"
         run: |
+          # Show what config resolves to (helps catch wrong env)
+          node -e 'const c=require("./config"); console.log("DB cfg ->",{server:c.DATABASE_SERVER,user:c.DATABASE_USERNAME,db:c.DATABASE});'
+
           nohup npm run start-feature >/tmp/app.log 2>&1 &
+          # Optionally: wait for a health endpoint here
           sleep 5
           npm run integration-test
