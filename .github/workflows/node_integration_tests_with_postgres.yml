@@ -47,19 +47,54 @@ jobs:
           repository: ministryofjustice/hmpps-workload
           path: hmpps-workload
 
-      - name: Set up JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 21
-
+      # --- Pass 1: migrate up to just before 1.31 ---
       - name: Build workload app (skip tests)
         working-directory: hmpps-workload
         run: |
           chmod +x ./gradlew
           ./gradlew --no-daemon bootJar -x test
 
-      - name: Apply Flyway migrations via Spring Boot (no web)
+      - name: Flyway migrate to 1.30 (stop before 1.31)
+        working-directory: hmpps-workload
+        env:
+          SPRING_DATASOURCE_URL: jdbc:postgresql://127.0.0.1:5432/postgres
+          SPRING_DATASOURCE_USERNAME: postgres
+          SPRING_DATASOURCE_PASSWORD: postgres
+          SPRING_FLYWAY_ENABLED: "true"
+          SPRING_FLYWAY_SCHEMAS: app
+          SPRING_FLYWAY_BASELINE_ON_MIGRATE: "true"
+          SPRING_FLYWAY_TARGET: "1.30"
+          SPRING_MAIN_WEB_APPLICATION_TYPE: none
+        run: |
+          JAR=$(find build/libs -name '*.jar' | head -n1)
+          [ -z "$JAR" ] && echo "No jar found" && exit 1
+          timeout 180s java -jar "$JAR" --spring.main.web-application-type=none
+
+      # --- Drop dependent views that block 1.31 ---
+      - name: Drop case_details dependent views (prep for 1.31)
+        run: |
+          psql "postgres://postgres:postgres@127.0.0.1:5432/postgres" -v ON_ERROR_STOP=1 <<'SQL'
+          CREATE SCHEMA IF NOT EXISTS app;
+          DO $$
+          BEGIN
+            IF EXISTS (SELECT 1 FROM pg_views WHERE schemaname='app' AND viewname='case_details_view')
+              THEN EXECUTE 'DROP VIEW app.case_details_view';
+            END IF;
+            IF EXISTS (SELECT 1 FROM pg_views WHERE schemaname='app' AND viewname='suspended_lifers_export_view')
+              THEN EXECUTE 'DROP VIEW app.suspended_lifers_export_view';
+            END IF;
+            IF EXISTS (SELECT 1 FROM pg_views WHERE schemaname='app' AND viewname='team_case_details_view')
+              THEN EXECUTE 'DROP VIEW app.team_case_details_view';
+            END IF;
+            -- materialized view
+            IF EXISTS (SELECT 1 FROM pg_matviews WHERE schemaname='app' AND matviewname='case_details_export_view')
+              THEN EXECUTE 'DROP MATERIALIZED VIEW app.case_details_export_view';
+            END IF;
+          END$$;
+          SQL
+
+      # --- Pass 2: migrate the rest (this runs 1.31 and beyond) ---
+      - name: Flyway migrate to latest (apply 1.31+)
         working-directory: hmpps-workload
         env:
           SPRING_DATASOURCE_URL: jdbc:postgresql://127.0.0.1:5432/postgres
@@ -71,13 +106,15 @@ jobs:
           SPRING_MAIN_WEB_APPLICATION_TYPE: none
         run: |
           JAR=$(find build/libs -name '*.jar' | head -n1)
-          [ -z "$JAR" ] && echo "No jar found" && exit 1
-          # give it up to 3 minutes to migrate then exit
           timeout 180s java -jar "$JAR" --spring.main.web-application-type=none || true
 
-      - name: Sanity check schema
+      # (optional) Prove the tables/views you need exist now
+      - name: Sanity check schema contents
         run: |
           psql "postgres://postgres:postgres@127.0.0.1:5432/postgres" -c "\dt app.*" || true
+
+
+
 
       - name: Setup Node
         uses: actions/setup-node@v4
