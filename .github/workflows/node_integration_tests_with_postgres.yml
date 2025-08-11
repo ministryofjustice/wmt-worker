@@ -1,39 +1,26 @@
-name: Integration tests
-
-on:
-  workflow_call:
-    inputs:
-      node_version_file:
-        description: "Passed to setup-node action to specify where to source the version of node from"
-        required: false
-        type: string
-        default: ".nvmrc"
-
-permissions:
-  contents: read
-
 jobs:
-  integration_test:
-    name: Run the integration tests
+  integration-tests:
     runs-on: ubuntu-latest
+
     services:
       postgres:
         image: postgres:15
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: wmt
+          POSTGRES_DB: postgres
         ports:
           - 5432:5432
         options: >-
-          --health-cmd="pg_isready -U postgres -d wmt"
+          --health-cmd="pg_isready -U postgres -d postgres"
           --health-interval=5s
           --health-timeout=5s
-          --health-retries=10
+          --health-retries=20
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Wait for Postgres and create DB
+      - name: Wait for Postgres and create app DB
         shell: bash
         env:
           PSQL: postgres://postgres:postgres@127.0.0.1:5432/postgres
@@ -46,38 +33,35 @@ jobs:
           psql "$PSQL" -v ON_ERROR_STOP=1 -tc "SELECT 1 FROM pg_database WHERE datname='wmt'" | grep -q 1 || \
             psql "$PSQL" -v ON_ERROR_STOP=1 -c "CREATE DATABASE wmt;"
 
-      # --- run Flyway migrations from hmpps-workload repo ---
       - name: Checkout hmpps-workload
         uses: actions/checkout@v4
         with:
           repository: ministryofjustice/hmpps-workload
           path: hmpps-workload
-          # ref: main   # optionally pin a branch/sha
+          # ref: main  # optionally pin a branch/sha
 
-      - name: Set up JDK (Flyway via Gradle)
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: 21
-
-      - name: Run Flyway migrations from hmpps-workload
-        working-directory: hmpps-workload
-        env:
-          FLYWAY_URL: jdbc:postgresql://127.0.0.1:5432/wmt
-          FLYWAY_USER: postgres
-          FLYWAY_PASSWORD: postgres
-          # Adjust schema(s) if hmpps-workload uses a custom one:
-          FLYWAY_SCHEMAS: public
+      - name: Run Flyway migrations from hmpps-workload (CLI)
+        shell: bash
         run: |
-          # If the project is multi-module, set -p <submodule> accordingly.
-          # Common variants to try if the root task isn't present:
-          #   ./gradlew -p server flywayMigrate
-          #   ./gradlew -p api flywayMigrate
-          ./gradlew flywayMigrate \
-            -Dflyway.url="$FLYWAY_URL" \
-            -Dflyway.user="$FLYWAY_USER" \
-            -Dflyway.password="$FLYWAY_PASSWORD" \
-            -Dflyway.schemas="$FLYWAY_SCHEMAS"
+          set -euo pipefail
+          # Find the migrations directory inside hmpps-workload
+          MIG_DIR=$(find hmpps-workload -type d -path '*/src/main/resources/db/migration' | head -n1)
+          if [ -z "$MIG_DIR" ]; then
+            echo "❌ Could not find src/main/resources/db/migration in hmpps-workload"
+            exit 1
+          fi
+          echo "Using migrations at: $MIG_DIR"
+
+          # Run Flyway CLI via Docker; --network host lets Docker reach 127.0.0.1:5432 on the runner
+          docker run --rm --network host \
+            -v "$PWD/$MIG_DIR":/flyway/sql \
+            flyway/flyway:10 \
+            -url=jdbc:postgresql://127.0.0.1:5432/wmt \
+            -user=postgres \
+            -password=postgres \
+            -connectRetries=60 \
+            -locations=filesystem:/flyway/sql \
+            migrate
 
       # --- now start your deps/app and run integration tests as you already do ---
       - name: Get WireMock
