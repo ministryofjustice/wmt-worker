@@ -69,72 +69,54 @@ jobs:
           java -version
           ./gradlew --no-daemon bootJar -x test
 
-      - name: Flyway migrate to 1.30 (stop before 1.31)
-        working-directory: hmpps-workload
-        env:
-          JAVA_HOME: ${{ steps.jdk21.outputs.path }}
-          SPRING_DATASOURCE_URL: jdbc:postgresql://127.0.0.1:5432/postgres
-          SPRING_DATASOURCE_USERNAME: postgres
-          SPRING_DATASOURCE_PASSWORD: postgres
-          SPRING_FLYWAY_ENABLED: "true"
-          SPRING_FLYWAY_SCHEMAS: app
-          SPRING_FLYWAY_BASELINE_ON_MIGRATE: "true"
-          SPRING_FLYWAY_TARGET: "1.30"
-          SPRING_MAIN_WEB_APPLICATION_TYPE: none
-          HMPPS_TIER_ENDPOINT_URL: http://127.0.0.1:0
-          ASSESS_RISKS_NEEDS_ENDPOINT_URL: http://127.0.0.1:0
-          WORKFORCE_ALLOCATIONS_TO_DELIUS_ENDPOINT_URL: http://127.0.0.1:0
-          OFFENDER_SEARCH_ENDPOINT_URL: http://127.0.0.1:0
-          HMPPS_AUTH_URL: http://127.0.0.1:0
+      - name: Flyway migrate to 1.30
         run: |
-          JAR=$(find build/libs -name '*.jar' | head -n1)
-          [ -z "$JAR" ] && echo "No jar found" && exit 1
-          java -version
-          timeout 180s java -jar "$JAR" --spring.main.web-application-type=none
+          docker run --rm --network host \
+          -v "$PWD/flyway_jars":/flyway/jars \
+          flyway/flyway:10 \
+          -url=jdbc:postgresql://127.0.0.1:5432/postgres \
+          -user=postgres \
+          -password=postgres \
+          -connectRetries=60 \
+          -defaultSchema=app \
+          -schemas=app \
+          -jarDirs=/flyway/jars \
+          -locations=classpath*:db/migration \
+          -baselineOnMigrate=true \
+          -target=1.30 \
+          migrate
 
       # --- Drop dependent views that block 1.31 ---
-      - name: Drop case_details dependent views (prep for 1.31)
+      - name: Drop case_details dependent views
         run: |
-          psql "postgres://postgres:postgres@127.0.0.1:5432/postgres" -v ON_ERROR_STOP=1 <<'SQL'
-          CREATE SCHEMA IF NOT EXISTS app;
-          DO $$
+          psql "postgres://postgres:postgres@127.0.0.1:5432/postgres" -v ON_ERROR_STOP=1 -c "DO $$
           BEGIN
             IF EXISTS (SELECT 1 FROM pg_views WHERE schemaname='app' AND viewname='case_details_view')
-              THEN EXECUTE 'DROP VIEW app.case_details_view';
-            END IF;
+              THEN EXECUTE 'DROP VIEW app.case_details_view'; END IF;
             IF EXISTS (SELECT 1 FROM pg_views WHERE schemaname='app' AND viewname='suspended_lifers_export_view')
-              THEN EXECUTE 'DROP VIEW app.suspended_lifers_export_view';
-            END IF;
+              THEN EXECUTE 'DROP VIEW app.suspended_lifers_export_view'; END IF;
             IF EXISTS (SELECT 1 FROM pg_views WHERE schemaname='app' AND viewname='team_case_details_view')
-              THEN EXECUTE 'DROP VIEW app.team_case_details_view';
-            END IF;
-            -- materialized view
+              THEN EXECUTE 'DROP VIEW app.team_case_details_view'; END IF;
             IF EXISTS (SELECT 1 FROM pg_matviews WHERE schemaname='app' AND matviewname='case_details_export_view')
-              THEN EXECUTE 'DROP MATERIALIZED VIEW app.case_details_export_view';
-            END IF;
-          END$$;
-          SQL
+              THEN EXECUTE 'DROP MATERIALIZED VIEW app.case_details_export_view'; END IF;
+          END$$;"
 
       # --- Pass 2: migrate the rest (this runs 1.31 and beyond) ---
-      - name: Flyway migrate to latest (apply 1.31+)
-        working-directory: hmpps-workload
-        env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://127.0.0.1:5432/postgres
-          SPRING_DATASOURCE_USERNAME: postgres
-          SPRING_DATASOURCE_PASSWORD: postgres
-          SPRING_FLYWAY_ENABLED: "true"
-          SPRING_FLYWAY_SCHEMAS: app
-          SPRING_FLYWAY_BASELINE_ON_MIGRATE: "true"
-          SPRING_MAIN_WEB_APPLICATION_TYPE: none
-          SPRING_FLYWAY_OUT_OF_ORDER: "true"
-          HMPPS_TIER_ENDPOINT_URL: http://127.0.0.1:0
-          ASSESS_RISKS_NEEDS_ENDPOINT_URL: http://127.0.0.1:0
-          WORKFORCE_ALLOCATIONS_TO_DELIUS_ENDPOINT_URL: http://127.0.0.1:0
-          OFFENDER_SEARCH_ENDPOINT_URL: http://127.0.0.1:0
-          HMPPS_AUTH_URL: http://127.0.0.1:0
+      - name: Flyway migrate to latest (includes 1.31+)
         run: |
-          JAR=$(find build/libs -name '*.jar' | head -n1)
-          timeout 180s java -jar "$JAR" --spring.main.web-application-type=none || true
+          docker run --rm --network host \
+            -v "$PWD/flyway_jars":/flyway/jars \
+            flyway/flyway:10 \
+            -url=jdbc:postgresql://127.0.0.1:5432/postgres \
+            -user=postgres \
+            -password=postgres \
+            -connectRetries=60 \
+            -defaultSchema=app \
+            -schemas=app \
+            -jarDirs=/flyway/jars \
+            -locations=classpath*:db/migration \
+            -baselineOnMigrate=true \
+            migrate
 
       # (optional) Prove the tables/views you need exist now
       - name: Sanity check schema contents
