@@ -74,6 +74,7 @@ jobs:
             -user=postgres \
             -password=postgres \
             -connectRetries=60 \
+            -schemas=app \
             -locations=filesystem:/flyway/sql \
             migrate
 
