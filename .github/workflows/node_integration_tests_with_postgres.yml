@@ -18,44 +18,37 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # pull hmpps-workload alongside your repo
       - name: Checkout hmpps-workload
         uses: actions/checkout@v4
         with:
           repository: ministryofjustice/hmpps-workload
           path: hmpps-workload
 
-      - name: Set up JDK for Gradle
+      - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 21
 
-      # start the same Postgres hmpps-workload uses
-      - name: Start Postgres via hmpps-workload docker-compose
+      - name: Build workload app (skip tests)
         working-directory: hmpps-workload
-        run: |
-          docker compose up -d postgres
-          # wait for PG
-          for i in {1..60}; do
-            pg_isready -h 127.0.0.1 -p 5432 -U postgres -d postgres && break
-            sleep 1
-          done
+        run: ./gradlew --no-daemon bootJar -x test
 
-      # run their build so Spring runs Flyway in the right order
-      - name: Run hmpps-workload migrations (gradle check)
+      - name: Apply Flyway migrations via Spring Boot (no web)
         working-directory: hmpps-workload
         env:
           SPRING_DATASOURCE_URL: jdbc:postgresql://127.0.0.1:5432/postgres
           SPRING_DATASOURCE_USERNAME: postgres
           SPRING_DATASOURCE_PASSWORD: postgres
+          SPRING_FLYWAY_ENABLED: "true"
+          SPRING_FLYWAY_SCHEMAS: app
           SPRING_FLYWAY_BASELINE_ON_MIGRATE: "true"
-        run: ./gradlew --no-daemon clean check
-
-      # sanity check the schema if you want
-      - name: Sanity check schema
+          SPRING_MAIN_WEB_APPLICATION_TYPE: none
         run: |
-          psql "postgres://postgres:postgres@127.0.0.1:5432/postgres" -c "\dt app.*" || true
+          JAR=$(find build/libs -name '*.jar' | head -n1)
+          [ -z "$JAR" ] && echo "No jar found" && exit 1
+      # give it up to 3 minutes to migrate then exit
+          timeout 180s java -jar "$JAR" --spring.main.web-application-type=none
 
       # your existing wiremock + app + tests
       - name: Setup Node
