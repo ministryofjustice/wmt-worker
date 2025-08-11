@@ -12,6 +12,7 @@
   },
   "scripts": {
     "prepare": "husky",
+    "start-feature": "npm run start",
     "start": "node --max-old-space-size=5120 start.js",
     "build": "mkdir -p build && echo '{}' > build/placeholder.json",
     "int-test": "npm run integration-test",
