@@ -82,6 +82,10 @@ jobs:
           SPRING_FLYWAY_TARGET: "1.30"
           SPRING_MAIN_WEB_APPLICATION_TYPE: none
           HMPPS_TIER_ENDPOINT_URL: http://127.0.0.1:0
+          ASSESS_RISKS_NEEDS_ENDPOINT_URL: http://127.0.0.1:0
+          WORKFORCE_ALLOCATIONS_TO_DELIUS_ENDPOINT_URL: http://127.0.0.1:0
+          OFFENDER_SEARCH_ENDPOINT_URL: http://127.0.0.1:0
+          HMPPS_AUTH_URL: http://127.0.0.1:0
         run: |
           JAR=$(find build/libs -name '*.jar' | head -n1)
           [ -z "$JAR" ] && echo "No jar found" && exit 1
@@ -124,6 +128,10 @@ jobs:
           SPRING_MAIN_WEB_APPLICATION_TYPE: none
           SPRING_FLYWAY_OUT_OF_ORDER: "true"
           HMPPS_TIER_ENDPOINT_URL: http://127.0.0.1:0
+          ASSESS_RISKS_NEEDS_ENDPOINT_URL: http://127.0.0.1:0
+          WORKFORCE_ALLOCATIONS_TO_DELIUS_ENDPOINT_URL: http://127.0.0.1:0
+          OFFENDER_SEARCH_ENDPOINT_URL: http://127.0.0.1:0
+          HMPPS_AUTH_URL: http://127.0.0.1:0
         run: |
           JAR=$(find build/libs -name '*.jar' | head -n1)
           timeout 180s java -jar "$JAR" --spring.main.web-application-type=none || true
