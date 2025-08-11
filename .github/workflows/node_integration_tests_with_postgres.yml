@@ -83,7 +83,7 @@ jobs:
           -jarDirs=/flyway/jars \
           -locations=classpath:db/migration \
           -baselineOnMigrate=true \
-          -target=1.30.999 \
+          -target="1.30" \
           migrate
 
       # --- Drop dependent views that block 1.31 ---
