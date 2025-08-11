@@ -81,7 +81,7 @@ jobs:
           SPRING_FLYWAY_BASELINE_ON_MIGRATE: "true"
           SPRING_FLYWAY_TARGET: "1.30"
           SPRING_MAIN_WEB_APPLICATION_TYPE: none
-          SPRING_AUTOCONFIGURE_EXCLUDE: uk.gov.justice.digital.hmpps.hmppsworkload.config.WebClientUserEnhancementConfiguration
+          HMPPS_TIER_ENDPOINT_URL: http://127.0.0.1:0
         run: |
           JAR=$(find build/libs -name '*.jar' | head -n1)
           [ -z "$JAR" ] && echo "No jar found" && exit 1
@@ -122,7 +122,8 @@ jobs:
           SPRING_FLYWAY_SCHEMAS: app
           SPRING_FLYWAY_BASELINE_ON_MIGRATE: "true"
           SPRING_MAIN_WEB_APPLICATION_TYPE: none
-          SPRING_AUTOCONFIGURE_EXCLUDE: uk.gov.justice.digital.hmpps.hmppsworkload.config.WebClientUserEnhancementConfiguration
+          SPRING_FLYWAY_OUT_OF_ORDER: "true"
+          HMPPS_TIER_ENDPOINT_URL: http://127.0.0.1:0
         run: |
           JAR=$(find build/libs -name '*.jar' | head -n1)
           timeout 180s java -jar "$JAR" --spring.main.web-application-type=none || true
