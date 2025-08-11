@@ -32,7 +32,8 @@ jobs:
 
       - name: Build workload app (skip tests)
         working-directory: hmpps-workload
-        run: ./gradlew --no-daemon bootJar -x test
+        run: |
+          ./gradlew --no-daemon bootJar -x test
 
       - name: Apply Flyway migrations via Spring Boot (no web)
         working-directory: hmpps-workload
