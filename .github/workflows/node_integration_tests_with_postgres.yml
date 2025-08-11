@@ -43,9 +43,6 @@ jobs:
             pg_isready -h 127.0.0.1 -p 5432 -U postgres -d postgres && break
             sleep 1
           done
-          psql "$PSQL" -v ON_ERROR_STOP=1 -c "SELECT 1;"
-          psql "$PSQL" -v ON_ERROR_STOP=1 -tc "SELECT 1 FROM pg_database WHERE datname='wmt'" | grep -q 1 || \
-          psql "$PSQL" -v ON_ERROR_STOP=1 -c "CREATE DATABASE wmt;"
 
       - name: Checkout hmpps-workload
         uses: actions/checkout@v4
@@ -69,7 +66,7 @@ jobs:
             docker run --rm --network host \
               -v "$PWD/$D":/flyway/sql \
               flyway/flyway:10 \
-              -url=jdbc:postgresql://127.0.0.1:5432/wmt \
+              -url=jdbc:postgresql://127.0.0.1:5432/postgres \
               -user=postgres \
               -password=postgres \
               -connectRetries=60 \
@@ -98,7 +95,7 @@ jobs:
             DATABASE_SERVER: 127.0.0.1
             DATABASE_USERNAME: postgres
             DATABASE_PASSWORD: postgres
-            DATABASE: wmt
+            DATABASE: postgres
             DATABASE_PORT: "5432"
             DATABASE_SSL: "false"
           # DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/wmt?sslmode=disable
