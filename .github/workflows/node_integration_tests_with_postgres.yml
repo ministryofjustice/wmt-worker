@@ -15,89 +15,61 @@ permissions:
 jobs:
   integration-tests:
     runs-on: ubuntu-latest
-
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: postgres
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd="pg_isready -U postgres -d postgres"
-          --health-interval=5s
-          --health-timeout=5s
-          --health-retries=20
-
     steps:
       - uses: actions/checkout@v4
 
-      - name: Wait for Postgres
-        shell: bash
-        run: |
-          for i in {1..60}; do
-            pg_isready -h 127.0.0.1 -p 5432 -U postgres -d postgres && break
-            sleep 1
-          done
-
+      # pull hmpps-workload alongside your repo
       - name: Checkout hmpps-workload
         uses: actions/checkout@v4
         with:
           repository: ministryofjustice/hmpps-workload
           path: hmpps-workload
-          # ref: main
 
-      - name: Set up JDK
+      - name: Set up JDK for Gradle
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 21
 
-      - name: Build workload app (Boot jar)
+      # start the same Postgres hmpps-workload uses
+      - name: Start Postgres via hmpps-workload docker-compose
         working-directory: hmpps-workload
-        run: ./gradlew --no-daemon bootJar
+        run: |
+          docker compose up -d postgres
+          # wait for PG
+          for i in {1..60}; do
+            pg_isready -h 127.0.0.1 -p 5432 -U postgres -d postgres && break
+            sleep 1
+          done
 
-      - name: Apply Flyway migrations via Spring Boot
+      # run their build so Spring runs Flyway in the right order
+      - name: Run hmpps-workload migrations (gradle check)
         working-directory: hmpps-workload
         env:
           SPRING_DATASOURCE_URL: jdbc:postgresql://127.0.0.1:5432/postgres
           SPRING_DATASOURCE_USERNAME: postgres
           SPRING_DATASOURCE_PASSWORD: postgres
-          SPRING_FLYWAY_ENABLED: "true"
-          SPRING_FLYWAY_SCHEMAS: app
           SPRING_FLYWAY_BASELINE_ON_MIGRATE: "true"
-          SPRING_MAIN_WEB_APPLICATION_TYPE: none
+        run: ./gradlew --no-daemon clean check
 
+      # sanity check the schema if you want
+      - name: Sanity check schema
         run: |
-          JAR=$(find build/libs -name '*.jar' | head -n1)
-          [ -z "$JAR" ] && echo "No jar found" && exit 1
-    
-          timeout 120s java -jar "$JAR" --spring.main.web-application-type=none || true
+          psql "postgres://postgres:postgres@127.0.0.1:5432/postgres" -c "\dt app.*" || true
 
-      - name: Sanity check schema contents
-        run: |
-          psql "postgres://postgres:postgres@127.0.0.1:5432/postgres" -c "\dn+"
-          psql "postgres://postgres:postgres@127.0.0.1:5432/postgres" -c "\dt app.*"
-
-      - name: Get WireMock
-        run: curl -sSLo wiremock.jar https://repo1.maven.org/maven2/org/wiremock/wiremock-standalone/3.9.1/wiremock-standalone-3.9.1.jar
-
-      - name: Start WireMock(s)
-        run: |
-          nohup java -jar wiremock.jar --port 9091 >/tmp/wm-9091.log 2>&1 &
-
+      # your existing wiremock + app + tests
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version-file: ${{ inputs.node_version_file }}
+          node-version-file: .nvmrc
           cache: npm
 
-      - name: Install deps
-        run: npm ci
+      - run: npm ci
 
-      - name: Start app & run integration tests
+      - name: Start WireMock
+        run: nohup java -jar wiremock.jar --port 9091 >/tmp/wm-9091.log 2>&1 &
+
+      - name: Run integration tests against same DB
         env:
           DATABASE_SERVER: 127.0.0.1
           DATABASE_USERNAME: postgres
@@ -106,10 +78,6 @@ jobs:
           DATABASE_PORT: "5432"
           DATABASE_SSL: "false"
         run: |
-          # Show what config resolves to (helps catch wrong env)
-          node -e 'const c=require("./config"); console.log("DB cfg ->",{server:c.DATABASE_SERVER,user:c.DATABASE_USERNAME,db:c.DATABASE});'
-
           nohup npm run start-feature >/tmp/app.log 2>&1 &
-          # Optionally: wait for a health endpoint here
           sleep 5
           npm run integration-test
