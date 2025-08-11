@@ -45,20 +45,7 @@ jobs:
           done
           psql "$PSQL" -v ON_ERROR_STOP=1 -c "SELECT 1;"
           psql "$PSQL" -v ON_ERROR_STOP=1 -tc "SELECT 1 FROM pg_database WHERE datname='wmt'" | grep -q 1 || \
-            psql "$PSQL" -v ON_ERROR_STOP=1 -c "CREATE DATABASE wmt;"
-
-      - name: Create root role (fallback)
-        run: |
-          psql "postgres://postgres:postgres@127.0.0.1:5432/postgres" -c "DO $$
-          BEGIN
-            IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'root') THEN
-              CREATE ROLE root LOGIN PASSWORD 'dev';
-            END IF;
-          END$$;"
-          psql "postgres://postgres:postgres@127.0.0.1:5432/postgres" -c "GRANT ALL PRIVILEGES ON DATABASE wmt TO root;"
-          # optional if you already created tables:
-          psql "postgres://postgres:postgres@127.0.0.1:5432/wmt" -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO root;"
-          psql "postgres://postgres:postgres@127.0.0.1:5432/wmt" -c "GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO root;"
+          psql "$PSQL" -v ON_ERROR_STOP=1 -c "CREATE DATABASE wmt;"
 
       - name: Checkout hmpps-workload
         uses: actions/checkout@v4
@@ -106,12 +93,12 @@ jobs:
       - name: Start app & run integration tests
         env:
           # Ensure your app uses these (or DATABASE_URL) to connect
-          PGHOST: 127.0.0.1
-          PGPORT: "5432"
-          PGUSER: postgres
-          PGPASSWORD: postgres
-          PGDATABASE: wmt
-          PGSSLMODE: disable
+            DATABASE_SERVER: 127.0.0.1
+            DATABASE_USERNAME: postgres
+            DATABASE_PASSWORD: postgres
+            DATABASE: wmt
+            DATABASE_PORT: "5432"
+            DATABASE_SSL: "false"
           # DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/wmt?sslmode=disable
         run: |
           nohup npm run start-feature >/tmp/app.log 2>&1 &
