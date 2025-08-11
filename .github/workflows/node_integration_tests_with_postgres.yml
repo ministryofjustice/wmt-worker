@@ -64,7 +64,6 @@ jobs:
         working-directory: hmpps-workload
         env:
           JAVA_HOME: ${{ steps.jdk21.outputs.path }}
-          PATH: ${{ steps.jdk21.outputs.path }}/bin:${{ env.PATH }}
         run: |
           chmod +x ./gradlew
           java -version
@@ -74,7 +73,6 @@ jobs:
         working-directory: hmpps-workload
         env:
           JAVA_HOME: ${{ steps.jdk21.outputs.path }}
-          PATH: ${{ steps.jdk21.outputs.path }}/bin:${{ env.PATH }}
           SPRING_DATASOURCE_URL: jdbc:postgresql://127.0.0.1:5432/postgres
           SPRING_DATASOURCE_USERNAME: postgres
           SPRING_DATASOURCE_PASSWORD: postgres
