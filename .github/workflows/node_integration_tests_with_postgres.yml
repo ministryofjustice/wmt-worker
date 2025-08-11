@@ -53,34 +53,31 @@ jobs:
           repository: ministryofjustice/hmpps-workload
           path: hmpps-workload
           # ref: main  # optionally pin a branch/sha
-      - name: Locate hmpps-workload migration dir (the one with CREATE_CASE_DETAILS)
-        id: migdir
+      - name: Run Flyway migrations from hmpps-workload (all migration dirs)
         shell: bash
         run: |
           set -euo pipefail
-          MIG_DIR=$(grep -RIl --include='V1_31__CREATE_CASE_DETAILS.sql' ./**/src/main/resources/db/migration | sed 's#/V1_31__CREATE_CASE_DETAILS.sql##' | head -n1)
-          if [ -z "${MIG_DIR:-}" ]; then
-            echo "Could not find V1_31__CREATE_CASE_DETAILS.sql"; exit 1
+          mapfile -t MIG_DIRS < <(find hmpps-workload -type d -path '*/src/main/resources/db/migration' | sort)
+          if [ ${#MIG_DIRS[@]} -eq 0 ]; then
+            echo "❌ No migration directories found under hmpps-workload"; exit 1
           fi
-          echo "MIG_DIR=$MIG_DIR" >> $GITHUB_OUTPUT
-          echo "Using migration directory: $MIG_DIR"
+          echo "Found migration dirs:"; printf ' - %s\n' "${MIG_DIRS[@]}"
 
-      - name: Flyway clean + migrate (schema=app)
-        shell: bash
-        run: |
-          set -euo pipefail
-          # Mount only the located migration directory so ordering stays as designed
-          docker run --rm --network host \
-            -v "$PWD/${{ steps.migdir.outputs.MIG_DIR }}":/flyway/sql \
-            flyway/flyway:10 \
-            -url=jdbc:postgresql://127.0.0.1:5432/wmt \
-            -user=postgres \
-            -password=postgres \
-            -connectRetries=60 \
-            -defaultSchema=app \
-            -schemas=app \
-            -cleanDisabled=false \
-            clean migrate
+          # Start from a clean schema each CI run
+          for D in "${MIG_DIRS[@]}"; do
+            echo "▶ Running Flyway for $D"
+            docker run --rm --network host \
+              -v "$PWD/$D":/flyway/sql \
+              flyway/flyway:10 \
+              -url=jdbc:postgresql://127.0.0.1:5432/wmt \
+              -user=postgres \
+              -password=postgres \
+              -connectRetries=60 \
+              -defaultSchema=app \
+              -schemas=app \
+              -cleanDisabled=false \
+              clean migrate
+          done
 
       # --- now start your deps/app and run integration tests as you already do ---
       - name: Get WireMock
