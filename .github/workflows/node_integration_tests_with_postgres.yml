@@ -81,7 +81,7 @@ jobs:
           -defaultSchema=app \
           -schemas=app \
           -jarDirs=/flyway/jars \
-          -locations=classpath*:db/migration \
+          -locations=classpath:db/migration \
           -baselineOnMigrate=true \
           -target=1.30 \
           migrate
@@ -114,7 +114,7 @@ jobs:
             -defaultSchema=app \
             -schemas=app \
             -jarDirs=/flyway/jars \
-            -locations=classpath*:db/migration \
+            -locations=classpath:db/migration \
             -baselineOnMigrate=true \
             migrate
 
