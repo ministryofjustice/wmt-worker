@@ -11,8 +11,8 @@ module.exports = {
   // DB
   DATABASE_SERVER: process.env.WMT_DB_SERVER || '127.0.0.1',
   DATABASE: process.env.WMT_DB_NAME || 'postgres',
-  DATABASE_USERNAME: process.env.WMT_DB_USERNAME || 'root',
-  DATABASE_PASSWORD: process.env.WMT_DB_PASSWORD || 'dev',
+  DATABASE_USERNAME: process.env.WMT_DB_USERNAME || 'postgres',
+  DATABASE_PASSWORD: process.env.WMT_DB_PASSWORD || 'postgres',
   DB_APP_SCHEMA: 'app',
   DB_STG_SCHEMA: 'staging',
 
