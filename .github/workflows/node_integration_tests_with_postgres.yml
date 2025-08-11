@@ -46,17 +46,35 @@ jobs:
         with:
           repository: ministryofjustice/hmpps-workload
           path: hmpps-workload
+      - name: Set up JDK 21
+        id: jdk21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          check-latest: true
+
+      - name: Verify Java
+        run: |
+          echo "JAVA_HOME=$JAVA_HOME"
+          java -version
 
       # --- Pass 1: migrate up to just before 1.31 ---
       - name: Build workload app (skip tests)
         working-directory: hmpps-workload
+        env:
+          JAVA_HOME: ${{ steps.jdk21.outputs.path }}
+          PATH: ${{ steps.jdk21.outputs.path }}/bin:${{ env.PATH }}
         run: |
           chmod +x ./gradlew
+          java -version
           ./gradlew --no-daemon bootJar -x test
 
       - name: Flyway migrate to 1.30 (stop before 1.31)
         working-directory: hmpps-workload
         env:
+          JAVA_HOME: ${{ steps.jdk21.outputs.path }}
+          PATH: ${{ steps.jdk21.outputs.path }}/bin:${{ env.PATH }}
           SPRING_DATASOURCE_URL: jdbc:postgresql://127.0.0.1:5432/postgres
           SPRING_DATASOURCE_USERNAME: postgres
           SPRING_DATASOURCE_PASSWORD: postgres
@@ -68,6 +86,7 @@ jobs:
         run: |
           JAR=$(find build/libs -name '*.jar' | head -n1)
           [ -z "$JAR" ] && echo "No jar found" && exit 1
+          java -version
           timeout 180s java -jar "$JAR" --spring.main.web-application-type=none
 
       # --- Drop dependent views that block 1.31 ---
