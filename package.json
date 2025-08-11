@@ -13,6 +13,7 @@
   "scripts": {
     "prepare": "husky",
     "start": "node --max-old-space-size=5120 start.js",
+    "build": "echo \"no build step for wmt-worker\"",
     "integration-test": "nyc mocha --recursive test/integration/ --timeout 60000 --exit --reporter mocha-simple-html-reporter --reporter-options output=test_results/integration-test-reports.html",
     "test": "npm run lint && nyc mocha --recursive test/unit/ --timeout 6000 --exit --reporter mocha-simple-html-reporter --reporter-options output=test_results/unit-test-reports.html",
     "record-build-info": "node ./bin/record-build-info",
