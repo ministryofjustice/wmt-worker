@@ -46,7 +46,7 @@ jobs:
 
         options: >-
           --entrypoint /bin/sh
-        command: -c "sleep 10 && java -javaagent:/app/agent.jar -jar /app/app.jar"
+          command: -c "sleep 10 && java -javaagent:/app/agent.jar -jar /app/app.jar"
 
     steps:
       - uses: actions/checkout@v4
