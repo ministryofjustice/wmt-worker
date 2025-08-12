@@ -194,3 +194,7 @@ jobs:
           nohup npm run start-feature >/tmp/app.log 2>&1 &
           sleep 5
           npm run integration-test
+      - name: Re-run tests with spec reporter (diagnostic)
+        if: failure()
+        run: |
+          npx mocha --recursive test/integration --timeout 60000 --exit -R spec || true
