@@ -104,6 +104,12 @@ jobs:
               END IF;
               EXECUTE 'CREATE TABLE public.event_manager (LIKE app.event_manager INCLUDING ALL)';
             END IF;
+            IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema='app' AND table_name='case_details') THEN
+              IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema='public' AND table_name='case_details') THEN
+                EXECUTE 'DROP TABLE public.case_details';
+              END IF;
+              EXECUTE 'CREATE TABLE public.case_details (LIKE app.case_details INCLUDING ALL)';
+            END IF;
           END$$;
           SQL
 
