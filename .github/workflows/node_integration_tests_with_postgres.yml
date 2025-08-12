@@ -20,198 +20,50 @@ jobs:
       postgres:
         image: postgres:15
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: postgres
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: dev
         ports:
           - 5432:5432
         options: >-
-          --health-cmd="pg_isready -U postgres -d postgres"
+          --health-cmd="pg_isready -U root -d postgres"
           --health-interval=5s
           --health-timeout=5s
           --health-retries=20
       localstack:
-        image: localstack/localstack:3
+        image: localstack/localstack:latest
         ports:
           - 4566:4566
         env:
           SERVICES: s3,sqs,sns
-          DEBUG: "1"
+      hmpps_workload:
+        image: quay.io/hmpps/hmpps-workload:latest
+        env:
+          SPRING_PROFILES_ACTIVE: dev,docker
+          DATABASE_USERNAME: root
+          DATABASE_PASSWORD: dev
+          DATABASE_ENDPOINT: postgres:5432
+          HMPPS_SQS_LOCALSTACK_URL: http://localstack:4566
+
         options: >-
-          --health-cmd="curl -f http://localhost:4566/_localstack/health || exit 1"
-          --health-interval=5s
-          --health-timeout=5s
-          --health-retries=30
+          --entrypoint /bin/sh
+        command: -c "sleep 10 && java -javaagent:/app/agent.jar -jar /app/app.jar"
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Seed LocalStack S3
-        env:
-          AWS_ACCESS_KEY_ID: foobar
-          AWS_SECRET_ACCESS_KEY: foobar
-          AWS_DEFAULT_REGION: eu-west-2
-          AWS_ENDPOINT: http://127.0.0.1:4566
-          DASHBOARD_BUCKET: wmt-worker-dashboard
-          DASHBOARD_TEMPLATE_KEY: ./app/templates/dashboard_template.xlsx
+      - name: Wait for services
         run: |
-          set -e
-          aws --endpoint-url "$AWS_ENDPOINT" s3api create-bucket --bucket "$DASHBOARD_BUCKET" --create-bucket-configuration LocationConstraint=$AWS_DEFAULT_REGION || true
-          mkdir -p seed && echo "<html>placeholder</html>" > seed/template.html
-          aws --endpoint-url "$AWS_ENDPOINT" s3 cp seed/template.html "s3://${DASHBOARD_BUCKET}/${DASHBOARD_TEMPLATE_KEY}"
-
-      - name: Wait for Postgres
-        run: |
-          for i in {1..60}; do
-            pg_isready -h 127.0.0.1 -p 5432 -U postgres -d postgres && break
-            sleep 1
-          done
-
-      - name: Checkout hmpps-workload
-        uses: actions/checkout@v4
-        with:
-          repository: ministryofjustice/hmpps-workload
-          path: hmpps-workload
-      - name: Set up JDK 21
-        id: jdk21
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '21'
-          check-latest: true
-
-      - name: Verify Java
-        run: |
-          echo "JAVA_HOME=$JAVA_HOME"
-          java -version
-
-      # --- Pass 1: migrate up to just before 1.31 ---
-      - name: Build workload app (skip tests)
-        working-directory: hmpps-workload
-        env:
-          JAVA_HOME: ${{ steps.jdk21.outputs.path }}
-        run: |
-          chmod +x ./gradlew
-          ./gradlew --no-daemon bootJar -x test
-
-
-      # extract SQL migrations to ./migrations
-      - name: Extract migrations from jar
-        run: |
-          JAR=$(ls -1 hmpps-workload/build/libs/*.jar | head -n1)
-          rm -rf migrations extracted && mkdir -p migrations
-          unzip -q "$JAR" 'BOOT-INF/classes/db/migration/*' -d extracted
-          mv extracted/BOOT-INF/classes/db/migration/* migrations/
-          rm -rf extracted
-          echo "Found $(ls -1 migrations | wc -l) migration files"
-
-      # add a Flyway callback that runs before EACH migration
-      - name: Add Flyway callback to drop blocking views
-        run: |
-          cat > migrations/beforeEachMigrate.sql <<'SQL'
-          -- Drop views/materialized views that depend on app.case_details (safe if missing)
-          DO $$
-          BEGIN
-            IF EXISTS (SELECT 1 FROM pg_views WHERE schemaname='app' AND viewname='case_details_view')
-              THEN EXECUTE 'DROP VIEW app.case_details_view'; END IF;
-            IF EXISTS (SELECT 1 FROM pg_views WHERE schemaname='app' AND viewname='suspended_lifers_export_view')
-              THEN EXECUTE 'DROP VIEW app.suspended_lifers_export_view'; END IF;
-            IF EXISTS (SELECT 1 FROM pg_views WHERE schemaname='app' AND viewname='team_case_details_view')
-              THEN EXECUTE 'DROP VIEW app.team_case_details_view'; END IF;
-            IF EXISTS (SELECT 1 FROM pg_matviews WHERE schemaname='app' AND matviewname='case_details_export_view')
-              THEN EXECUTE 'DROP MATERIALIZED VIEW app.case_details_export_view'; END IF;
-          END$$;
-          DO $$
-          BEGIN
-            IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema='app' AND table_name='event_manager') THEN
-              -- Recreate the shim fresh each time so new columns (e.g., is_active) are present
-              IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema='public' AND table_name='event_manager') THEN
-                EXECUTE 'DROP TABLE public.event_manager';
-              END IF;
-              EXECUTE 'CREATE TABLE public.event_manager (LIKE app.event_manager INCLUDING ALL)';
-            END IF;
-            IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema='app' AND table_name='case_details') THEN
-              IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema='public' AND table_name='case_details') THEN
-                EXECUTE 'DROP TABLE public.case_details';
-              END IF;
-              EXECUTE 'CREATE TABLE public.case_details (LIKE app.case_details INCLUDING ALL)';
-            END IF;
-          END$$;
-          SQL
-
-      - name: Reset app schema
-        run: |
-          psql "postgres://postgres:postgres@127.0.0.1:5432/postgres" -v ON_ERROR_STOP=1 <<'SQL'
-          DROP SCHEMA IF EXISTS app CASCADE;
-          CREATE SCHEMA app;
-          SQL
-
-      # single-pass migrate to latest (NO -target)
-      - name: Flyway migrate (latest)
-        run: |
-          docker run --rm --network host \
-            -v "$PWD/migrations":/flyway/sql \
-            flyway/flyway:10 \
-            -url=jdbc:postgresql://127.0.0.1:5432/postgres \
-            -user=postgres \
-            -password=postgres \
-            -connectRetries=60 \
-            -defaultSchema=app \
-            -schemas=app \
-            -locations=filesystem:/flyway/sql \
-            -baselineOnMigrate=true \
-            migrate
-
-      # (optional) Prove the tables/views you need exist now
-      - name: Sanity check schema contents
-        run: |
-          psql "postgres://postgres:postgres@127.0.0.1:5432/postgres" -c "\dt app.*" || true
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: ${{ inputs.node_version_file }}
-          cache: npm
+          for i in {1..60}; do pg_isready -h 127.0.0.1 -p 5432 -U root -d postgres && break; sleep 1; done
+          curl -sfS --retry 20 --retry-connrefused --retry-delay 2 http://127.0.0.1:4566/health || exit 1
 
       - name: Install deps
         run: npm ci
 
-      - name: Get WireMock
-        run: curl -sSLo wiremock.jar https://repo1.maven.org/maven2/org/wiremock/wiremock-standalone/3.9.1/wiremock-standalone-3.9.1.jar
-
-      - name: Start WireMock
-        run: nohup java -jar wiremock.jar --port 9091 >/tmp/wm-9091.log 2>&1 &
-
-      - name: Run integration tests against same DB
+      - name: Run integration tests
         env:
           DATABASE_SERVER: 127.0.0.1
-          DATABASE_USERNAME: postgres
-          DATABASE_PASSWORD: postgres
+          DATABASE_USERNAME: root
+          DATABASE_PASSWORD: dev
           DATABASE: postgres
           DATABASE_PORT: "5432"
           DATABASE_SSL: "false"
-        run: |
-          nohup npm run start-feature >/tmp/app.log 2>&1 &
-          sleep 5
-          npm run integration-test
-      - name: Show recent logs on failure
-        if: failure()
-        run: |
-          echo "=== /tmp/app.log (last 300 lines) ==="
-          tail -n 300 /tmp/app.log || true
-          echo "=== WireMock 9091 (last 200 lines) ==="
-          tail -n 200 /tmp/wm-9091.log || true
-
-      - name: Upload integration artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: integration-test-artifacts
-          path: |
-            test_results/**
-            /tmp/app.log
-            /tmp/wm-*.log
-      - name: Re-run tests with spec reporter (diagnostic)
-        if: failure()
-        run: |
-          npx mocha --recursive test/integration --timeout 60000 --exit -R spec || true
+        run: npm run integration-test
