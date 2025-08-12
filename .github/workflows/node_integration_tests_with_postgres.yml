@@ -112,9 +112,10 @@ jobs:
                 Condition:{ArnEquals:{"aws:SourceArn":("arn:aws:s3:::"+$bucket)}}
               }]}')
           
+          S3Q_ATTRS=$(jq -c -n --arg policy "$S3Q_POLICY" '{Policy:$policy}')
           aws --endpoint-url=$LS sqs set-queue-attributes \
             --queue-url "$S3Q_URL" \
-            --attributes "Policy=$S3Q_POLICY"
+            --attributes "$S3Q_ATTRS"
           
           # S3 notifications -> SQS
           aws --endpoint-url=$LS s3api put-bucket-notification-configuration \
@@ -135,9 +136,10 @@ jobs:
                 Condition:{ArnEquals:{"aws:SourceArn":$topic}}
               }]}')
           
+          DEQ_ATTRS=$(jq -c -n --arg policy "$DEQ_POLICY" '{Policy:$policy}')
           aws --endpoint-url=$LS sqs set-queue-attributes \
             --queue-url "$DEQ_URL" \
-            --attributes "Policy=$DEQ_POLICY"
+            --attributes "$DEQ_ATTRS"
           
           # Subscribe with filter
           aws --endpoint-url=$LS sns subscribe \
