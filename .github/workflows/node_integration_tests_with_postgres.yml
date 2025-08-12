@@ -79,7 +79,7 @@ jobs:
 
           # Get ARNs/URLs we need
           S3Q_URL=$(aws --endpoint-url=$LS sqs get-queue-url --queue-name s3_extract_event_queue --query QueueUrl --output text)
-          S3Q_ARN=$(aws --endpoint-url=$LS sqs get-queue-attributes --queue-url "$S3Q_URL" --attribute-names QueueArn --query 'Attributes.QueueArn' ---output text)
+          S3Q_ARN=$(aws --endpoint-url=$LS sqs get-queue-attributes --queue-url "$S3Q_URL" --attribute-names QueueArn --query 'Attributes.QueueArn' --output text)
 
           DEQ_URL=$(aws --endpoint-url=$LS sqs get-queue-url --queue-name domain_event_queue --query QueueUrl --output text)
           DEQ_ARN=$(aws --endpoint-url=$LS sqs get-queue-attributes --queue-url "$DEQ_URL" --attribute-names QueueArn --query 'Attributes.QueueArn' --output text)
