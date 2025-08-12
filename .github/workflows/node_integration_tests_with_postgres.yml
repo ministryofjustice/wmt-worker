@@ -97,13 +97,11 @@ jobs:
           END$$;
           DO $$
           BEGIN
-            IF NOT EXISTS (
-              SELECT 1 FROM information_schema.tables
-              WHERE table_schema = 'public' AND table_name = 'event_manager'
-            ) AND EXISTS (
-              SELECT 1 FROM information_schema.tables
-              WHERE table_schema = 'app' AND table_name = 'event_manager'
-            ) THEN
+            IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema='app' AND table_name='event_manager') THEN
+              -- Recreate the shim fresh each time so new columns (e.g., is_active) are present
+              IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema='public' AND table_name='event_manager') THEN
+                EXECUTE 'DROP TABLE public.event_manager';
+              END IF;
               EXECUTE 'CREATE TABLE public.event_manager (LIKE app.event_manager INCLUDING ALL)';
             END IF;
           END$$;
