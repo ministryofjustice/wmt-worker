@@ -96,8 +96,19 @@ jobs:
               THEN EXECUTE 'DROP MATERIALIZED VIEW app.case_details_export_view'; END IF;
           END$$;
           SQL
+          DO $$
+          BEGIN
+            IF NOT EXISTS (
+              SELECT 1 FROM information_schema.tables
+              WHERE table_schema = 'public' AND table_name = 'event_manager'
+            ) AND EXISTS (
+              SELECT 1 FROM information_schema.tables
+              WHERE table_schema = 'app' AND table_name = 'event_manager'
+            ) THEN
+              EXECUTE 'CREATE TABLE public.event_manager (LIKE app.event_manager INCLUDING ALL)';
+            END IF;
+          END$$;
 
-      # (optional) start from a clean schema to keep CI deterministic
       - name: Reset app schema
         run: |
           psql "postgres://postgres:postgres@127.0.0.1:5432/postgres" -v ON_ERROR_STOP=1 <<'SQL'
