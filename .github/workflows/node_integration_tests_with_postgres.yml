@@ -20,12 +20,12 @@ jobs:
       postgres:
         image: postgres:15
         env:
-          POSTGRES_USER: root
-          POSTGRES_PASSWORD: dev
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
         ports:
           - 5432:5432
         options: >-
-          --health-cmd="pg_isready -U root -d postgres"
+          --health-cmd="pg_isready -U postgres -d postgres"
           --health-interval=5s
           --health-timeout=5s
           --health-retries=20
@@ -40,7 +40,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Wait for services
         run: |
-          for i in {1..60}; do pg_isready -h 127.0.0.1 -p 5432 -U root -d postgres && break; sleep 1; done
+          for i in {1..60}; do pg_isready -h 127.0.0.1 -p 5432 -U postgres -d postgres && break; sleep 1; done
           curl -sfS --retry 20 --retry-connrefused --retry-delay 2 http://127.0.0.1:4566/health || exit 1
       - name: Start hmpps_workload container
         run: |
@@ -53,6 +53,19 @@ jobs:
             -e HMPPS_SQS_LOCALSTACK_URL=http://host.docker.internal:4566 \
             ghcr.io/ministryofjustice/hmpps-workload:latest \
             /bin/sh -lc 'sleep 10 && java -javaagent:/app/agent.jar -jar /app/app.jar'
+
+      - name: Wait for DB schema
+        env:
+          PGPASSWORD: postgres
+        run: |
+          for i in {1..120}; do
+            docker run --rm --network host -e PGPASSWORD=$PGPASSWORD postgres:15 \
+              psql -h 127.0.0.1 -U postgres -d postgres -tAc "SELECT 1 FROM information_schema.tables WHERE table_name='flyway_schema_history'" \
+              | grep -q 1 && exit 0
+            sleep 2
+          done
+          echo "Schema not ready in time"; docker logs hmpps_workload || true; exit 1
+
 
       - name: Install deps
         run: npm ci
