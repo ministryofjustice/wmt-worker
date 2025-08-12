@@ -44,7 +44,10 @@ jobs:
           curl -sfS --retry 20 --retry-connrefused --retry-delay 2 http://127.0.0.1:4566/_localstack/health || exit 1
       - name: Provide dockerized AWS CLI as `aws`
         env:
-          AWS_CLI_IMG: public.ecr.aws/aws-cli/aws-cli:latest   # or amazon/aws-cli:latest
+          AWS_CLI_IMG: public.ecr.aws/aws-cli/aws-cli:latest
+          AWS_ACCESS_KEY_ID: foobar
+          AWS_SECRET_ACCESS_KEY: foobar
+          AWS_DEFAULT_REGION: eu-west-2
         run: |
           cat > aws <<'SH'
           #!/usr/bin/env bash
