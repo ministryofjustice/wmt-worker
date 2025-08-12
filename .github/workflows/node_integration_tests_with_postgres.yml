@@ -63,13 +63,7 @@ jobs:
           which aws || true
           aws --version
           jq --version
-      - name: Use host AWS CLI (remove dockerized wrapper)
-        run: |
-          sudo rm -f /usr/local/bin/aws || true
-          sudo apt-get update -y
-          sudo apt-get install -y awscli jq
-          aws --version
-          jq --version
+      
 
       - name: Create AWS resources in LocalStack
         env:
