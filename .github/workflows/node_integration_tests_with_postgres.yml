@@ -78,13 +78,13 @@ jobs:
           aws --endpoint-url=$LS sns create-topic --name domain-events >/dev/null || true
 
           # Get ARNs/URLs we need
-          S3Q_URL=$(aws --endpoint-url=$LS sqs get-queue-url --queue-name s3_extract_event_queue --query QueueUrl -r text)
-          S3Q_ARN=$(aws --endpoint-url=$LS sqs get-queue-attributes --queue-url "$S3Q_URL" --attribute-names QueueArn --query 'Attributes.QueueArn' -r text)
+          S3Q_URL=$(aws --endpoint-url=$LS sqs get-queue-url --queue-name s3_extract_event_queue --query QueueUrl --output text)
+          S3Q_ARN=$(aws --endpoint-url=$LS sqs get-queue-attributes --queue-url "$S3Q_URL" --attribute-names QueueArn --query 'Attributes.QueueArn' ---output text)
 
-          DEQ_URL=$(aws --endpoint-url=$LS sqs get-queue-url --queue-name domain_event_queue --query QueueUrl -r text)
-          DEQ_ARN=$(aws --endpoint-url=$LS sqs get-queue-attributes --queue-url "$DEQ_URL" --attribute-names QueueArn --query 'Attributes.QueueArn' -r text)
+          DEQ_URL=$(aws --endpoint-url=$LS sqs get-queue-url --queue-name domain_event_queue --query QueueUrl --output text)
+          DEQ_ARN=$(aws --endpoint-url=$LS sqs get-queue-attributes --queue-url "$DEQ_URL" --attribute-names QueueArn --query 'Attributes.QueueArn' --output text)
 
-          TOPIC_ARN=$(aws --endpoint-url=$LS sns create-topic --name domain-events --query TopicArn -r text)
+          TOPIC_ARN=$(aws --endpoint-url=$LS sns create-topic --name domain-events --query TopicArn --output text)
 
           # Allow S3 to send to s3_extract_event_queue (policy)
           cat > /tmp/s3q-policy.json <<POL
