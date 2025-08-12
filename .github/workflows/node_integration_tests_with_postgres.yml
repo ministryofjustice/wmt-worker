@@ -30,9 +30,39 @@ jobs:
           --health-interval=5s
           --health-timeout=5s
           --health-retries=20
+      localstack:
+        image: localstack/localstack:3
+        ports:
+          - 4566:4566
+        env:
+          SERVICES: s3,sqs,sns            # add others if you use them
+          DEBUG: "1"
+        options: >-
+          --health-cmd="curl -f http://localhost:4566/_localstack/health || exit 1"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=30
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install AWS CLI
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y awscli
+      - name: Seed LocalStack S3
+        env:
+          AWS_ACCESS_KEY_ID: foobar
+          AWS_SECRET_ACCESS_KEY: foobar
+          AWS_DEFAULT_REGION: eu-west-2
+          AWS_ENDPOINT: http://127.0.0.1:4566
+          DASHBOARD_BUCKET: wmt-worker-dashboard
+          DASHBOARD_TEMPLATE_KEY: ./app/templates/dashboard_template.xlsx
+        run: |
+          set -e
+          aws --endpoint-url "$AWS_ENDPOINT" s3api create-bucket --bucket "$DASHBOARD_BUCKET" --create-bucket-configuration LocationConstraint=$AWS_DEFAULT_REGION || true
+          mkdir -p seed && echo "<html>placeholder</html>" > seed/template.html
+          aws --endpoint-url "$AWS_ENDPOINT" s3 cp seed/template.html "s3://${DASHBOARD_BUCKET}/${DASHBOARD_TEMPLATE_KEY}"
 
       - name: Wait for Postgres
         run: |
