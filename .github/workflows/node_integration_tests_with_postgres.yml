@@ -35,7 +35,7 @@ jobs:
         ports:
           - 4566:4566
         env:
-          SERVICES: s3,sqs,sns            # add others if you use them
+          SERVICES: s3,sqs,sns
           DEBUG: "1"
         options: >-
           --health-cmd="curl -f http://localhost:4566/_localstack/health || exit 1"
@@ -46,10 +46,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install AWS CLI
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install -y awscli
       - name: Seed LocalStack S3
         env:
           AWS_ACCESS_KEY_ID: foobar
