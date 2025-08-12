@@ -43,21 +43,16 @@ jobs:
           for i in {1..60}; do pg_isready -h 127.0.0.1 -p 5432 -U postgres -d postgres && break; sleep 1; done
           curl -sfS --retry 20 --retry-connrefused --retry-delay 2 http://127.0.0.1:4566/_localstack/health || exit 1
       - name: Provide dockerized AWS CLI as `aws`
-        env:
-          AWS_CLI_IMG: public.ecr.aws/aws-cli/aws-cli:latest
-          AWS_ACCESS_KEY_ID: foobar
-          AWS_SECRET_ACCESS_KEY: foobar
-          AWS_DEFAULT_REGION: eu-west-2
         run: |
-          cat > aws <<'SH'
+          sudo tee /usr/local/bin/aws >/dev/null <<'SH'
           #!/usr/bin/env bash
           set -euo pipefail
-          docker run --rm --network host \
+          IMG="${AWS_CLI_IMG:-public.ecr.aws/aws-cli/aws-cli:latest}"
+          exec docker run --rm --network host \
             -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_DEFAULT_REGION \
-            "$AWS_CLI_IMG" "$@"
+            "$IMG" "$@"
           SH
-          chmod +x aws
-          sudo mv aws /usr/local/bin/aws
+          sudo chmod +x /usr/local/bin/aws
 
       - name: Create AWS resources in LocalStack (ported from CircleCI)
         env:
