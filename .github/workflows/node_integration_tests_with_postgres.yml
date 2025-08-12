@@ -39,8 +39,8 @@ jobs:
         image: ghcr.io/ministryofjustice/hmpps-workload:latest
         env:
           SPRING_PROFILES_ACTIVE: dev,docker
-          DATABASE_USERNAME: root
-          DATABASE_PASSWORD: dev
+          DATABASE_USERNAME: postgres
+          DATABASE_PASSWORD: postgres
           DATABASE_ENDPOINT: postgres:5432
           HMPPS_SQS_LOCALSTACK_URL: http://localstack:4566
 
@@ -61,8 +61,8 @@ jobs:
       - name: Run integration tests
         env:
           DATABASE_SERVER: 127.0.0.1
-          DATABASE_USERNAME: root
-          DATABASE_PASSWORD: dev
+          DATABASE_USERNAME: postgres
+          DATABASE_PASSWORD: postgres
           DATABASE: postgres
           DATABASE_PORT: "5432"
           DATABASE_SSL: "false"
