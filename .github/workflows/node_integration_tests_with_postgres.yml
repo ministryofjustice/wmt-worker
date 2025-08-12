@@ -194,6 +194,23 @@ jobs:
           nohup npm run start-feature >/tmp/app.log 2>&1 &
           sleep 5
           npm run integration-test
+      - name: Show recent logs on failure
+        if: failure()
+        run: |
+          echo "=== /tmp/app.log (last 300 lines) ==="
+          tail -n 300 /tmp/app.log || true
+          echo "=== WireMock 9091 (last 200 lines) ==="
+          tail -n 200 /tmp/wm-9091.log || true
+
+      - name: Upload integration artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-test-artifacts
+          path: |
+            test_results/**
+            /tmp/app.log
+            /tmp/wm-*.log
       - name: Re-run tests with spec reporter (diagnostic)
         if: failure()
         run: |
