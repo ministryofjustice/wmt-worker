@@ -42,30 +42,39 @@ jobs:
         run: |
           for i in {1..60}; do pg_isready -h 127.0.0.1 -p 5432 -U postgres -d postgres && break; sleep 1; done
           curl -sfS --retry 20 --retry-connrefused --retry-delay 2 http://127.0.0.1:4566/_localstack/health || exit 1
-      - name: Provide dockerized AWS CLI as `aws`
+      - name: Use host AWS CLI (remove dockerized wrapper)
         run: |
-          sudo tee /usr/local/bin/aws >/dev/null <<'SH'
-          #!/usr/bin/env bash
-          set -euo pipefail
-          IMG="${AWS_CLI_IMG:-public.ecr.aws/aws-cli/aws-cli:latest}"
-          exec docker run --rm --network host \
-            -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_DEFAULT_REGION \
-            "$IMG" "$@"
-          SH
-          sudo chmod +x /usr/local/bin/aws
+          sudo rm -f /usr/local/bin/aws || true
+          sudo apt-get update -y
+          sudo apt-get install -y awscli jq
+          aws --version
+          jq --version
 
-      - name: Create AWS resources in LocalStack (ported from CircleCI)
+      - name: Create AWS resources in LocalStack
         env:
           AWS_ACCESS_KEY_ID: foobar
           AWS_SECRET_ACCESS_KEY: foobar
           AWS_DEFAULT_REGION: eu-west-2
         run: |
-          set -euo pipefail
+          set -xeuo pipefail
           LS=http://127.0.0.1:4566
           BUCKET=wmt-worker
           
-          # ... your create-bucket / create-queue / create-topic calls ...
+          # Buckets (idempotent)
+          aws --endpoint-url=$LS s3api create-bucket --bucket "$BUCKET" \
+            --region $AWS_DEFAULT_REGION --create-bucket-configuration LocationConstraint=$AWS_DEFAULT_REGION || true
+          aws --endpoint-url=$LS s3api create-bucket --bucket wmt-worker-dashboard \
+            --region $AWS_DEFAULT_REGION --create-bucket-configuration LocationConstraint=$AWS_DEFAULT_REGION || true
           
+          # Queues (idempotent)
+          aws --endpoint-url=$LS sqs create-queue --queue-name s3_extract_event_queue >/dev/null || true
+          aws --endpoint-url=$LS sqs create-queue --queue-name audit_event_queue          >/dev/null || true
+          aws --endpoint-url=$LS sqs create-queue --queue-name domain_event_queue         >/dev/null || true
+          
+          # Topic (idempotent)
+          aws --endpoint-url=$LS sns create-topic --name domain-events >/dev/null || true
+          
+          # Resolve ARNs/URLs
           S3Q_URL=$(aws --endpoint-url=$LS sqs get-queue-url --queue-name s3_extract_event_queue --query 'QueueUrl' --output text)
           S3Q_ARN=$(aws --endpoint-url=$LS sqs get-queue-attributes --queue-url "$S3Q_URL" --attribute-names QueueArn --query 'Attributes.QueueArn' --output text)
           
@@ -74,61 +83,58 @@ jobs:
           
           TOPIC_ARN=$(aws --endpoint-url=$LS sns create-topic --name domain-events --query 'TopicArn' --output text)
           
-          # --- ensure jq is available (once per job is fine) ---
-          if ! command -v jq >/dev/null; then
-          sudo apt-get update -y && sudo apt-get install -y jq
-          fi
-          
-          # ----- S3 -> SQS queue policy -----
+          # S3 -> SQS policy (compact JSON)
           S3Q_POLICY=$(jq -c --null-input \
-          --arg qArn "$S3Q_ARN" \
-          --arg bucket "$BUCKET" \
-          '{Version:"2012-10-17",
-            Statement:[{
-              Sid:"AllowS3SendMessage",
-              Effect:"Allow",
-              Principal:{Service:"s3.amazonaws.com"},
-              Action:"sqs:SendMessage",
-              Resource:$qArn,
-              Condition:{ArnEquals:{"aws:SourceArn":("arn:aws:s3:::"+$bucket)}}
-            }]}')
+            --arg qArn "$S3Q_ARN" \
+            --arg bucket "$BUCKET" \
+            '{Version:"2012-10-17",
+              Statement:[{
+                Sid:"AllowS3SendMessage",
+                Effect:"Allow",
+                Principal:{Service:"s3.amazonaws.com"},
+                Action:"sqs:SendMessage",
+                Resource:$qArn,
+                Condition:{ArnEquals:{"aws:SourceArn":("arn:aws:s3:::"+$bucket)}}
+              }]}')
           
           aws --endpoint-url=$LS sqs set-queue-attributes \
-          --queue-url "$S3Q_URL" \
-          --attributes "Policy=$S3Q_POLICY"
+            --queue-url "$S3Q_URL" \
+            --attributes "Policy=$S3Q_POLICY"
           
-          # Wire S3 notifications -> SQS
+          # S3 notifications -> SQS
           aws --endpoint-url=$LS s3api put-bucket-notification-configuration \
-          --bucket "$BUCKET" \
-          --notification-configuration "{\"QueueConfigurations\":[{\"QueueArn\":\"$S3Q_ARN\",\"Events\":[\"s3:ObjectCreated:*\"]}]}"
+            --bucket "$BUCKET" \
+            --notification-configuration "{\"QueueConfigurations\":[{\"QueueArn\":\"$S3Q_ARN\",\"Events\":[\"s3:ObjectCreated:*\"]}]}"
           
-          # ----- SNS -> SQS queue policy -----
+          # SNS -> SQS policy
           DEQ_POLICY=$(jq -c --null-input \
-          --arg qArn "$DEQ_ARN" \
-          --arg topic "$TOPIC_ARN" \
-          '{Version:"2012-10-17",
-            Statement:[{
-              Sid:"AllowSnsSendMessage",
-              Effect:"Allow",
-              Principal:{Service:"sns.amazonaws.com"},
-              Action:"sqs:SendMessage",
-              Resource:$qArn,
-              Condition:{ArnEquals:{"aws:SourceArn":$topic}}
-            }]}')
+            --arg qArn "$DEQ_ARN" \
+            --arg topic "$TOPIC_ARN" \
+            '{Version:"2012-10-17",
+              Statement:[{
+                Sid:"AllowSnsSendMessage",
+                Effect:"Allow",
+                Principal:{Service:"sns.amazonaws.com"},
+                Action:"sqs:SendMessage",
+                Resource:$qArn,
+                Condition:{ArnEquals:{"aws:SourceArn":$topic}}
+              }]}')
           
           aws --endpoint-url=$LS sqs set-queue-attributes \
-          --queue-url "$DEQ_URL" \
-          --attributes "Policy=$DEQ_POLICY"
+            --queue-url "$DEQ_URL" \
+            --attributes "Policy=$DEQ_POLICY"
           
-          # Subscribe domain_event_queue to topic (with filter)
+          # Subscribe with filter
           aws --endpoint-url=$LS sns subscribe \
-          --topic-arn "$TOPIC_ARN" \
-          --protocol sqs \
-          --notification-endpoint "$DEQ_ARN" \
-          --attributes '{"FilterPolicy":"{\"eventType\":[\"staff.available.hours.changed\"]}","RawMessageDelivery":"true"}'
+            --topic-arn "$TOPIC_ARN" \
+            --protocol sqs \
+            --notification-endpoint "$DEQ_ARN" \
+            --attributes '{"FilterPolicy":"{\"eventType\":[\"staff.available.hours.changed\"]}","RawMessageDelivery":"true"}'
           
-          echo "LocalStack AWS resources ready."
-
+          # Sanity checks (optional)
+          aws --endpoint-url=$LS s3 ls
+          aws --endpoint-url=$LS sqs list-queues
+          aws --endpoint-url=$LS sns list-topics
 
       - name: Start hmpps_workload container
         run: |
