@@ -36,7 +36,7 @@ jobs:
         env:
           SERVICES: s3,sqs,sns
       hmpps_workload:
-        image: quay.io/hmpps/hmpps-workload:latest
+        image: ghcr.io/ministryofjustice/hmpps-workload:latest
         env:
           SPRING_PROFILES_ACTIVE: dev,docker
           DATABASE_USERNAME: root
