@@ -62,6 +62,7 @@ jobs:
         run: |
           set -euo pipefail
           LS=http://127.0.0.1:4566
+          BUCKET=wmt-worker
 
           # S3 buckets (idempotent)
           aws --endpoint-url=$LS s3api create-bucket --bucket wmt-worker \
@@ -103,7 +104,7 @@ jobs:
           }
           POL
           # Fill bucket name for condition
-          sed -i "s/\$${BUCKET}/wmt-worker/g" /tmp/s3q-policy.json
+          # sed -i "s/\$${BUCKET}/wmt-worker/g" /tmp/s3q-policy.json
           aws --endpoint-url=$LS sqs set-queue-attributes \
             --queue-url "$S3Q_URL" \
             --attributes Policy="$(cat /tmp/s3q-policy.json)"
