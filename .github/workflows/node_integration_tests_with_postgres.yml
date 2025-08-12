@@ -1,0 +1,192 @@
+name: Integration tests
+
+on:
+  workflow_call:
+    inputs:
+      node_version_file:
+        description: "setup-node reads Node version from here"
+        required: false
+        type: string
+        default: ".nvmrc"
+
+permissions:
+  contents: read
+
+jobs:
+  integration-tests:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres -d postgres"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+      localstack:
+        image: localstack/localstack:latest
+        ports:
+          - 4566:4566
+        env:
+          SERVICES: s3,sqs,sns
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Wait for services
+        run: |
+          for i in {1..60}; do pg_isready -h 127.0.0.1 -p 5432 -U postgres -d postgres && break; sleep 1; done
+          curl -sfS --retry 20 --retry-connrefused --retry-delay 2 http://127.0.0.1:4566/_localstack/health || exit 1
+      - name: Ensure real AWS CLI + jq
+        run: |
+          # remove any dockerized wrapper we created earlier
+          sudo rm -f /usr/local/bin/aws || true
+
+          # jq from apt (still available)
+          sudo apt-get update -y
+          sudo apt-get install -y jq
+
+          # AWS CLI v1 via pip (works fine for our commands)
+          python3 -m pip install --user --upgrade pip
+          python3 -m pip install --user "awscli==1.*"
+
+          # add ~/.local/bin to PATH for subsequent steps
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Verify aws/jq
+        run: |
+          which aws || true
+          aws --version
+          jq --version
+      
+
+      - name: Create AWS resources in LocalStack
+        env:
+          AWS_ACCESS_KEY_ID: foobar
+          AWS_SECRET_ACCESS_KEY: foobar
+          AWS_DEFAULT_REGION: eu-west-2
+        run: |
+          set -xeuo pipefail
+          LS=http://127.0.0.1:4566
+          BUCKET=wmt-worker
+          
+          # Buckets (idempotent)
+          aws --endpoint-url=$LS s3api create-bucket --bucket "$BUCKET" \
+            --region $AWS_DEFAULT_REGION --create-bucket-configuration LocationConstraint=$AWS_DEFAULT_REGION || true
+          aws --endpoint-url=$LS s3api create-bucket --bucket wmt-worker-dashboard \
+            --region $AWS_DEFAULT_REGION --create-bucket-configuration LocationConstraint=$AWS_DEFAULT_REGION || true
+          
+          # Queues (idempotent)
+          aws --endpoint-url=$LS sqs create-queue --queue-name s3_extract_event_queue >/dev/null || true
+          aws --endpoint-url=$LS sqs create-queue --queue-name audit_event_queue          >/dev/null || true
+          aws --endpoint-url=$LS sqs create-queue --queue-name domain_event_queue         >/dev/null || true
+          
+          # Topic (idempotent)
+          aws --endpoint-url=$LS sns create-topic --name domain-events >/dev/null || true
+          
+          # Resolve ARNs/URLs
+          S3Q_URL=$(aws --endpoint-url=$LS sqs get-queue-url --queue-name s3_extract_event_queue --query 'QueueUrl' --output text)
+          S3Q_ARN=$(aws --endpoint-url=$LS sqs get-queue-attributes --queue-url "$S3Q_URL" --attribute-names QueueArn --query 'Attributes.QueueArn' --output text)
+          
+          DEQ_URL=$(aws --endpoint-url=$LS sqs get-queue-url --queue-name domain_event_queue --query 'QueueUrl' --output text)
+          DEQ_ARN=$(aws --endpoint-url=$LS sqs get-queue-attributes --queue-url "$DEQ_URL" --attribute-names QueueArn --query 'Attributes.QueueArn' --output text)
+          
+          TOPIC_ARN=$(aws --endpoint-url=$LS sns create-topic --name domain-events --query 'TopicArn' --output text)
+          
+          # S3 -> SQS policy (compact JSON)
+          S3Q_POLICY=$(jq -c --null-input \
+            --arg qArn "$S3Q_ARN" \
+            --arg bucket "$BUCKET" \
+            '{Version:"2012-10-17",
+              Statement:[{
+                Sid:"AllowS3SendMessage",
+                Effect:"Allow",
+                Principal:{Service:"s3.amazonaws.com"},
+                Action:"sqs:SendMessage",
+                Resource:$qArn,
+                Condition:{ArnEquals:{"aws:SourceArn":("arn:aws:s3:::"+$bucket)}}
+              }]}')
+          
+          S3Q_ATTRS=$(jq -c -n --arg policy "$S3Q_POLICY" '{Policy:$policy}')
+          aws --endpoint-url=$LS sqs set-queue-attributes \
+            --queue-url "$S3Q_URL" \
+            --attributes "$S3Q_ATTRS"
+          
+          # S3 notifications -> SQS
+          aws --endpoint-url=$LS s3api put-bucket-notification-configuration \
+            --bucket "$BUCKET" \
+            --notification-configuration "{\"QueueConfigurations\":[{\"QueueArn\":\"$S3Q_ARN\",\"Events\":[\"s3:ObjectCreated:*\"]}]}"
+          
+          # SNS -> SQS policy
+          DEQ_POLICY=$(jq -c --null-input \
+            --arg qArn "$DEQ_ARN" \
+            --arg topic "$TOPIC_ARN" \
+            '{Version:"2012-10-17",
+              Statement:[{
+                Sid:"AllowSnsSendMessage",
+                Effect:"Allow",
+                Principal:{Service:"sns.amazonaws.com"},
+                Action:"sqs:SendMessage",
+                Resource:$qArn,
+                Condition:{ArnEquals:{"aws:SourceArn":$topic}}
+              }]}')
+          
+          DEQ_ATTRS=$(jq -c -n --arg policy "$DEQ_POLICY" '{Policy:$policy}')
+          aws --endpoint-url=$LS sqs set-queue-attributes \
+            --queue-url "$DEQ_URL" \
+            --attributes "$DEQ_ATTRS"
+          
+          # Subscribe with filter
+          aws --endpoint-url=$LS sns subscribe \
+            --topic-arn "$TOPIC_ARN" \
+            --protocol sqs \
+            --notification-endpoint "$DEQ_ARN" \
+            --attributes '{"FilterPolicy":"{\"eventType\":[\"staff.available.hours.changed\"]}","RawMessageDelivery":"true"}'
+          
+          # Sanity checks (optional)
+          aws --endpoint-url=$LS s3 ls
+          aws --endpoint-url=$LS sqs list-queues
+          aws --endpoint-url=$LS sns list-topics
+
+      - name: Start hmpps_workload container
+        run: |
+          docker run -d --name hmpps_workload \
+            --add-host=host.docker.internal:host-gateway \
+            -e SPRING_PROFILES_ACTIVE=dev,docker \
+            -e DATABASE_USERNAME=postgres \
+            -e DATABASE_PASSWORD=postgres \
+            -e DATABASE_ENDPOINT=host.docker.internal:5432 \
+            -e HMPPS_SQS_LOCALSTACK_URL=http://host.docker.internal:4566 \
+            ghcr.io/ministryofjustice/hmpps-workload:latest \
+            /bin/sh -lc 'sleep 10 && java -javaagent:/app/agent.jar -jar /app/app.jar'
+
+      - name: Wait for DB schema
+        env:
+          PGPASSWORD: postgres
+        run: |
+          for i in {1..120}; do
+            docker run --rm --network host -e PGPASSWORD=$PGPASSWORD postgres:15 \
+              psql -h 127.0.0.1 -U postgres -d postgres -tAc "SELECT 1 FROM information_schema.tables WHERE table_name='flyway_schema_history'" \
+              | grep -q 1 && exit 0
+            sleep 2
+          done
+          echo "Schema not ready in time"; docker logs hmpps_workload || true; exit 1
+
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Run integration tests
+        env:
+          DATABASE_SERVER: 127.0.0.1
+          DATABASE_USERNAME: postgres
+          DATABASE_PASSWORD: postgres
+          DATABASE: postgres
+          DATABASE_PORT: "5432"
+          DATABASE_SSL: "false"
+        run: npm run integration-test

@@ -6,7 +6,7 @@ generic-service:
     enabled: false
 
   image:
-    repository: quay.io/hmpps/wmt-worker
+    repository: ghcr.io/ministryofjustice/wmt-worker
     tag: app_version    # override at deployment time
     port: 3000
   resources:

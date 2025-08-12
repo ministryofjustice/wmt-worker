@@ -12,9 +12,13 @@
   },
   "scripts": {
     "prepare": "husky",
+    "start-feature": "npm run start",
     "start": "node --max-old-space-size=5120 start.js",
+    "build": "mkdir -p build && echo '{}' > build/placeholder.json",
+    "int-test": "npm run integration-test",
     "integration-test": "nyc mocha --recursive test/integration/ --timeout 60000 --exit --reporter mocha-simple-html-reporter --reporter-options output=test_results/integration-test-reports.html",
     "test": "npm run lint && nyc mocha --recursive test/unit/ --timeout 6000 --exit --reporter mocha-simple-html-reporter --reporter-options output=test_results/unit-test-reports.html",
+    "test:ci": "npm run test",
     "record-build-info": "node ./bin/record-build-info",
     "security_audit": "npx audit-ci --config audit-ci.json",
     "lint": "standard"
