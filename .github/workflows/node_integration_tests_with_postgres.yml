@@ -95,7 +95,6 @@ jobs:
             IF EXISTS (SELECT 1 FROM pg_matviews WHERE schemaname='app' AND matviewname='case_details_export_view')
               THEN EXECUTE 'DROP MATERIALIZED VIEW app.case_details_export_view'; END IF;
           END$$;
-          SQL
           DO $$
           BEGIN
             IF NOT EXISTS (
@@ -108,6 +107,7 @@ jobs:
               EXECUTE 'CREATE TABLE public.event_manager (LIKE app.event_manager INCLUDING ALL)';
             END IF;
           END$$;
+          SQL
 
       - name: Reset app schema
         run: |
