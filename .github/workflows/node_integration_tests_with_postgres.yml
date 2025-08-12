@@ -66,30 +66,25 @@ jobs:
           JAVA_HOME: ${{ steps.jdk21.outputs.path }}
         run: |
           chmod +x ./gradlew
-          java -version
           ./gradlew --no-daemon bootJar -x test
 
-      - name: Flyway migrate to 1.30
-        run: |
-          docker run --rm --network host \
-          -v "$PWD/flyway_jars":/flyway/jars \
-          flyway/flyway:10 \
-          -url=jdbc:postgresql://127.0.0.1:5432/postgres \
-          -user=postgres \
-          -password=postgres \
-          -connectRetries=60 \
-          -defaultSchema=app \
-          -schemas=app \
-          -jarDirs=/flyway/jars \
-          -locations=classpath:db/migration \
-          -baselineOnMigrate=true \
-          -target="1.30" \
-          migrate
 
-      # --- Drop dependent views that block 1.31 ---
-      - name: Drop case_details dependent views
+      # extract SQL migrations to ./migrations
+      - name: Extract migrations from jar
         run: |
-          psql "postgres://postgres:postgres@127.0.0.1:5432/postgres" -v ON_ERROR_STOP=1 -c "DO $$
+          JAR=$(ls -1 hmpps-workload/build/libs/*.jar | head -n1)
+          rm -rf migrations extracted && mkdir -p migrations
+          unzip -q "$JAR" 'BOOT-INF/classes/db/migration/*' -d extracted
+          mv extracted/BOOT-INF/classes/db/migration/* migrations/
+          rm -rf extracted
+          echo "Found $(ls -1 migrations | wc -l) migration files"
+
+      # add a Flyway callback that runs before EACH migration
+      - name: Add Flyway callback to drop blocking views
+        run: |
+          cat > migrations/beforeEachMigrate.sql <<'SQL'
+          -- Drop views/materialized views that depend on app.case_details (safe if missing)
+          DO $$
           BEGIN
             IF EXISTS (SELECT 1 FROM pg_views WHERE schemaname='app' AND viewname='case_details_view')
               THEN EXECUTE 'DROP VIEW app.case_details_view'; END IF;
@@ -99,13 +94,22 @@ jobs:
               THEN EXECUTE 'DROP VIEW app.team_case_details_view'; END IF;
             IF EXISTS (SELECT 1 FROM pg_matviews WHERE schemaname='app' AND matviewname='case_details_export_view')
               THEN EXECUTE 'DROP MATERIALIZED VIEW app.case_details_export_view'; END IF;
-          END$$;"
+          END$$;
+          SQL
 
-      # --- Pass 2: migrate the rest (this runs 1.31 and beyond) ---
-      - name: Flyway migrate to latest (includes 1.31+)
+      # (optional) start from a clean schema to keep CI deterministic
+      - name: Reset app schema
+        run: |
+          psql "postgres://postgres:postgres@127.0.0.1:5432/postgres" -v ON_ERROR_STOP=1 <<'SQL'
+          DROP SCHEMA IF EXISTS app CASCADE;
+          CREATE SCHEMA app;
+          SQL
+
+      # single-pass migrate to latest (NO -target)
+      - name: Flyway migrate (latest)
         run: |
           docker run --rm --network host \
-            -v "$PWD/flyway_jars":/flyway/jars \
+            -v "$PWD/migrations":/flyway/sql \
             flyway/flyway:10 \
             -url=jdbc:postgresql://127.0.0.1:5432/postgres \
             -user=postgres \
@@ -113,8 +117,7 @@ jobs:
             -connectRetries=60 \
             -defaultSchema=app \
             -schemas=app \
-            -jarDirs=/flyway/jars \
-            -locations=classpath:db/migration \
+            -locations=filesystem:/flyway/sql \
             -baselineOnMigrate=true \
             migrate
 
