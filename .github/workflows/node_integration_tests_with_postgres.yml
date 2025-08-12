@@ -35,18 +35,6 @@ jobs:
           - 4566:4566
         env:
           SERVICES: s3,sqs,sns
-      hmpps_workload:
-        image: ghcr.io/ministryofjustice/hmpps-workload:latest
-        env:
-          SPRING_PROFILES_ACTIVE: dev,docker
-          DATABASE_USERNAME: postgres
-          DATABASE_PASSWORD: postgres
-          DATABASE_ENDPOINT: postgres:5432
-          HMPPS_SQS_LOCALSTACK_URL: http://localstack:4566
-
-        options: >-
-          --entrypoint /bin/sh
-        command: -c "sleep 10 && java -javaagent:/app/agent.jar -jar /app/app.jar"
 
     steps:
       - uses: actions/checkout@v4
@@ -54,6 +42,17 @@ jobs:
         run: |
           for i in {1..60}; do pg_isready -h 127.0.0.1 -p 5432 -U root -d postgres && break; sleep 1; done
           curl -sfS --retry 20 --retry-connrefused --retry-delay 2 http://127.0.0.1:4566/health || exit 1
+      - name: Start hmpps_workload container
+        run: |
+          docker run -d --name hmpps_workload \
+            --add-host=host.docker.internal:host-gateway \
+            -e SPRING_PROFILES_ACTIVE=dev,docker \
+            -e DATABASE_USERNAME=postgres \
+            -e DATABASE_PASSWORD=postgres \
+            -e DATABASE_ENDPOINT=host.docker.internal:5432 \
+            -e HMPPS_SQS_LOCALSTACK_URL=http://host.docker.internal:4566 \
+            ghcr.io/ministryofjustice/hmpps-workload:latest \
+            /bin/sh -lc 'sleep 10 && java -javaagent:/app/agent.jar -jar /app/app.jar'
 
       - name: Install deps
         run: npm ci
