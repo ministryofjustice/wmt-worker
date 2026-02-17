@@ -47,7 +47,6 @@ jobs:
         with:
           path: |
             ${{ env.PROJECT_DIR }}/node_modules
-            ~/.cache/Cypress
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Install deps
