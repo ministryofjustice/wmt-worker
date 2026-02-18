@@ -21,7 +21,8 @@
     "test:ci": "npm run test",
     "record-build-info": "node ./bin/record-build-info",
     "security_audit": "npx audit-ci --config audit-ci.json",
-    "lint": "standard"
+    "lint": "standard",
+    "setup": "npm ci && hmpps-npm-script-run-allowlist"
   },
   "nyc": {
     "exclude": [
@@ -44,6 +45,7 @@
     ]
   },
   "devDependencies": {
+    "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.3",
     "chai": "4.3.7",
     "glob": "10.5.0",
     "husky": "8.0.3",
