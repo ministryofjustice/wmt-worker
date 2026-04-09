@@ -1,7 +1,7 @@
 version: "3"
 services:
     localstack:
-        image: localstack/localstack:latest
+        image: localstack/localstack:4.14
         networks:
           - hmpps
         container_name: hmpps-workload-localstack

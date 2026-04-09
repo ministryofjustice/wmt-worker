@@ -30,14 +30,14 @@ jobs:
           --health-timeout=5s
           --health-retries=20
       localstack:
-        image: localstack/localstack:latest
+        image: localstack/localstack:4.14
         ports:
           - 4566:4566
         env:
           SERVICES: s3,sqs,sns
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
       - name: Wait for services
         run: |
           for i in {1..60}; do pg_isready -h 127.0.0.1 -p 5432 -U postgres -d postgres && break; sleep 1; done
