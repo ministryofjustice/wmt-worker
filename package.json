@@ -48,7 +48,7 @@
     "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.3",
     "chai": "4.3.7",
     "glob": "10.5.0",
-    "husky": "8.0.3",
+    "husky": "9.1.7",
     "mocha": "10.8.2",
     "mocha-simple-html-reporter": "2.0.0",
     "nyc": "15.1.0",
