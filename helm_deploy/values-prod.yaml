@@ -1,6 +1,10 @@
 ---
 
 generic-service:
+  env:
+    ASYNC_WORKER_CRON: "0 * 31 2 *"
+    EXTRACT_LISTENER_CRON: "0 * 31 2 *"
+    
   namespace_secrets:
     hmpps-workload:
       APPINSIGHTS_INSTRUMENTATIONKEY: "APPINSIGHTS_INSTRUMENTATIONKEY"
