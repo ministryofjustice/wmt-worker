@@ -1,4 +1,4 @@
-FROM node:22.14-bullseye-slim AS base
+FROM node:24.12.0-bookworm-slim AS base
 
 ARG BUILD_NUMBER=1_0_0
 ARG GIT_REF=not-available
@@ -41,7 +41,8 @@ ARG BUILD_NUMBER=1_0_0
 ARG GIT_REF=not-available
 
 RUN apt-get update && \
-        apt-get install -y --no-install-recommends make python g++ git && rm -rf /var/lib/apt/lists/*
+        apt-get install -y python-is-python3 && \
+        apt-get install -y --no-install-recommends make python3 g++ git && rm -rf /var/lib/apt/lists/*
 
 COPY package*.json ./
 RUN CYPRESS_INSTALL_BINARY=0 npm ci --no-audit
