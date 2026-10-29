@@ -1,4 +1,4 @@
-FROM node:24.12.0-bookworm-slim AS base
+FROM node:24.22.2-bookworm-slim AS base
 
 ARG BUILD_NUMBER=1_0_0
 ARG GIT_REF=not-available
